@@ -9,7 +9,7 @@
       "agent_id": "agent-001",
       "name": "AI Writing Agent",
       "status": "ready",
-      "github_repo": "",
+      "github_repo": "https://github.com/reginaldalfret/agent-001-ai-writing",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8101",
