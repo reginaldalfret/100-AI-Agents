@@ -1,0 +1,14 @@
+{
+  "name": "100-to-1-release-controller",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Release controller for the 100 → 1 AI Agent Challenge",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "check": "node --check src/index.js && node --check src/state.js && node --check src/validator.js"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
