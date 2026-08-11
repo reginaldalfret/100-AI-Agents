@@ -3,5 +3,28 @@
   "version": "1.0.0",
   "total_agents": 100,
   "completed_agents": 0,
-  "agents": []
+  "agents": [
+    {
+      "day": 1,
+      "agent_id": "agent-001",
+      "name": "AI Writing Agent",
+      "status": "planned",
+      "github_repo": "",
+      "vercel_project": "",
+      "vercel_url": "",
+      "api_url": "",
+      "health_url": ""
+    },
+    {
+      "day": 2,
+      "agent_id": "agent-002",
+      "name": "AI Email Agent",
+      "status": "planned",
+      "github_repo": "",
+      "vercel_project": "",
+      "vercel_url": "",
+      "api_url": "",
+      "health_url": ""
+    }
+  ]
 }
