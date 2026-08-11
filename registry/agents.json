@@ -8,12 +8,14 @@
       "day": 1,
       "agent_id": "agent-001",
       "name": "AI Writing Agent",
-      "status": "planned",
+      "status": "ready",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": ""
+      "api_url": "http://127.0.0.1:8101",
+      "health_url": "http://127.0.0.1:8101/api/health",
+      "model": "qwen3.5:9b",
+      "backend": "http://127.0.0.1:11435"
     },
     {
       "day": 2,
