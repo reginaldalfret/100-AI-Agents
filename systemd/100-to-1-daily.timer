@@ -1,0 +1,12 @@
+[Unit]
+Description=Run 100 → 1 Daily AI Agent Release at 08:00 IST
+
+[Timer]
+OnCalendar=*-*-* 08:00:00 Asia/Kolkata
+Persistent=true
+AccuracySec=1s
+
+Unit=100-to-1-daily.service
+
+[Install]
+WantedBy=timers.target

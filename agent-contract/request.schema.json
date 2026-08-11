@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://100-to-1.dev/schemas/agent-request.json",
+  "title": "100-to-1 Agent Request",
+  "type": "object",
+  "required": [
+    "task"
+  ],
+  "properties": {
+    "task": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 20000
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "parameters": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "output_format": {
+      "type": "string",
+      "enum": [
+        "text",
+        "json",
+        "markdown",
+        "structured"
+      ],
+      "default": "structured"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,7 @@
+{
+  "project": "100-to-1",
+  "version": "1.0.0",
+  "total_agents": 100,
+  "completed_agents": 0,
+  "agents": []
+}

@@ -1,0 +1,25 @@
+[Unit]
+Description=100 → 1 Daily AI Agent Release
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+
+User=ai
+Group=ai
+
+WorkingDirectory=/home/ai/100-to-1/100-to-1-automation
+
+ExecStart=/home/ai/100-to-1/100-to-1-automation/scripts/daily-release.sh
+
+Environment=HOME=/home/ai
+
+NoNewPrivileges=true
+PrivateTmp=true
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

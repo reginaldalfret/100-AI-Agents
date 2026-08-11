@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://100-to-1.dev/schemas/agent-response.json",
+  "title": "100-to-1 Agent Response",
+  "type": "object",
+  "required": [
+    "agent_id",
+    "status",
+    "result"
+  ],
+  "properties": {
+    "agent_id": {
+      "type": "string"
+    },
+    "agent_name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "error",
+        "partial"
+      ]
+    },
+    "result": {},
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
