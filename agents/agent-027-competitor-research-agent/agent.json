@@ -1,0 +1,15 @@
+{
+  "day": 27,
+  "agent_id": "agent-027",
+  "name": "AI Competitor Research Agent",
+  "slug": "competitor-research-agent",
+  "category": "research",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Competitor Research Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

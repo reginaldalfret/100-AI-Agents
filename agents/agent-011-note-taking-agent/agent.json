@@ -1,0 +1,15 @@
+{
+  "day": 11,
+  "agent_id": "agent-011",
+  "name": "AI Note-Taking Agent",
+  "slug": "note-taking-agent",
+  "category": "foundation",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Note-Taking Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

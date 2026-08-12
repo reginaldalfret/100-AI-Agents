@@ -1,0 +1,15 @@
+{
+  "day": 84,
+  "agent_id": "agent-084",
+  "name": "AI Business Analyst Agent",
+  "slug": "business-analyst-agent",
+  "category": "business",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Business Analyst Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

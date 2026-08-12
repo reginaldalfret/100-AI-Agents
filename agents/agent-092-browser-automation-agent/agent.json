@@ -1,0 +1,15 @@
+{
+  "day": 92,
+  "agent_id": "agent-092",
+  "name": "AI Browser Automation Agent",
+  "slug": "browser-automation-agent",
+  "category": "advanced",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Browser Automation Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

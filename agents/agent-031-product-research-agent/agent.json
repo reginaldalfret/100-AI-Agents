@@ -1,0 +1,15 @@
+{
+  "day": 31,
+  "agent_id": "agent-031",
+  "name": "AI Product Research Agent",
+  "slug": "product-research-agent",
+  "category": "research",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Product Research Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "day": 54,
+  "agent_id": "agent-054",
+  "name": "AI Voice Assistant Agent",
+  "slug": "voice-assistant-agent",
+  "category": "productivity",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Voice Assistant Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

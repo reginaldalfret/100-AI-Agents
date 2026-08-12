@@ -1,0 +1,15 @@
+{
+  "day": 75,
+  "agent_id": "agent-075",
+  "name": "AI Full-Stack Developer Agent",
+  "slug": "full-stack-developer-agent",
+  "category": "developer",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Full-Stack Developer Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

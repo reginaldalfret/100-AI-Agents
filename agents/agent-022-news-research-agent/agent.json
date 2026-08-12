@@ -1,0 +1,15 @@
+{
+  "day": 22,
+  "agent_id": "agent-022",
+  "name": "AI News Research Agent",
+  "slug": "news-research-agent",
+  "category": "research",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI News Research Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

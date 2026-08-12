@@ -1,0 +1,15 @@
+{
+  "day": 32,
+  "agent_id": "agent-032",
+  "name": "AI Travel Research Agent",
+  "slug": "travel-research-agent",
+  "category": "research",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Travel Research Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

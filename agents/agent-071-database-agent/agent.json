@@ -1,0 +1,15 @@
+{
+  "day": 71,
+  "agent_id": "agent-071",
+  "name": "AI Database Agent",
+  "slug": "database-agent",
+  "category": "developer",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Database Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

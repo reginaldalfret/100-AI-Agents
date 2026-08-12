@@ -1,0 +1,15 @@
+{
+  "day": 45,
+  "agent_id": "agent-045",
+  "name": "AI PDF Processing Agent",
+  "slug": "pdf-processing-agent",
+  "category": "productivity",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI PDF Processing Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

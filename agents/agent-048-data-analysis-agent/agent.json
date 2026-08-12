@@ -1,0 +1,15 @@
+{
+  "day": 48,
+  "agent_id": "agent-048",
+  "name": "AI Data Analysis Agent",
+  "slug": "data-analysis-agent",
+  "category": "productivity",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Data Analysis Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

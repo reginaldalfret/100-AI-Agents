@@ -1,0 +1,15 @@
+{
+  "day": 6,
+  "agent_id": "agent-006",
+  "name": "AI Grammar Agent",
+  "slug": "grammar-agent",
+  "category": "foundation",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Grammar Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

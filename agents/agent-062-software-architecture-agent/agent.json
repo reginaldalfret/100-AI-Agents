@@ -1,0 +1,15 @@
+{
+  "day": 62,
+  "agent_id": "agent-062",
+  "name": "AI Software Architecture Agent",
+  "slug": "software-architecture-agent",
+  "category": "developer",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Software Architecture Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "day": 97,
+  "agent_id": "agent-097",
+  "name": "AI AI-Research Scientist Agent",
+  "slug": "ai-research-scientist-agent",
+  "category": "advanced",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI AI-Research Scientist Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

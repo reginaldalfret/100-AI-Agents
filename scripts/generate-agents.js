@@ -88,6 +88,7 @@ function renderPackage(agent) {
     type: "module",
     scripts: {
       start: "node backend/src/server.js",
+      check: "node --check backend/src/server.js && node --check backend/src/agent.js && node --check backend/src/config.js && node --check backend/src/model.js",
       test: "node --test tests/contract.test.js"
     },
     engines: { node: ">=20" }
@@ -127,8 +128,6 @@ function generate(agent) {
     "backend/src/config.js",
     "backend/src/model.js",
     "frontend/index.html",
-    "frontend/app.js",
-    "frontend/styles.css",
     "tests/contract.test.js"
   ];
 

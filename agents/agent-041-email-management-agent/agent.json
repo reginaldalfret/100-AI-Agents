@@ -1,0 +1,15 @@
+{
+  "day": 41,
+  "agent_id": "agent-041",
+  "name": "AI Email Management Agent",
+  "slug": "email-management-agent",
+  "category": "productivity",
+  "model": "qwen3.5:9b",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Email Management Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}
