@@ -1,16 +1,13 @@
 import { generateWithOllama, modelHealth, DEFAULT_MODEL, DEFAULT_OLLAMA_URL } from "./model.js";
-
-const AGENT_ID = process.env.AGENT_ID || "agent-template";
-const AGENT_NAME = process.env.AGENT_NAME || "100-to-1 Agent Template";
-const AGENT_VERSION = process.env.AGENT_VERSION || "1.0.0";
-const SYSTEM_PROMPT = process.env.AGENT_SYSTEM_PROMPT ||
-  "You are a specialized 100-to-1 AI agent. Perform the requested task accurately, follow the provided context and parameters, and return useful structured output.";
+import { AGENT_CONFIG } from "./config.js";
 
 export function agentInfo() {
   return {
-    agent_id: AGENT_ID,
-    agent_name: AGENT_NAME,
-    version: AGENT_VERSION,
+    agent_id: AGENT_CONFIG.id,
+    agent_name: AGENT_CONFIG.name,
+    version: AGENT_CONFIG.version,
+    category: AGENT_CONFIG.category,
+    capabilities: AGENT_CONFIG.capabilities,
     model: DEFAULT_MODEL,
     backend: DEFAULT_OLLAMA_URL
   };
@@ -20,9 +17,9 @@ export async function health() {
   const model = await modelHealth();
   return {
     status: model.available ? "ok" : "offline",
-    agent_id: AGENT_ID,
-    agent_name: AGENT_NAME,
-    version: AGENT_VERSION,
+    agent_id: AGENT_CONFIG.id,
+    agent_name: AGENT_CONFIG.name,
+    version: AGENT_CONFIG.version,
     timestamp: new Date().toISOString(),
     model: DEFAULT_MODEL,
     backend: DEFAULT_OLLAMA_URL,
@@ -42,7 +39,7 @@ export async function runAgent(request) {
     : 0.4;
 
   const system = [
-    SYSTEM_PROMPT,
+    AGENT_CONFIG.systemPrompt,
     "Return the best possible answer for the user's task.",
     `Context JSON: ${JSON.stringify(context)}`,
     `Parameters JSON: ${JSON.stringify(parameters)}`
@@ -55,21 +52,18 @@ export async function runAgent(request) {
     model: parameters.model || DEFAULT_MODEL
   });
 
-  const result = typeof modelResponse.response === "string"
-    ? modelResponse.response
-    : modelResponse;
+  const result = typeof modelResponse.response === "string" ? modelResponse.response : modelResponse;
 
   return {
-    agent_id: AGENT_ID,
-    agent_name: AGENT_NAME,
+    agent_id: AGENT_CONFIG.id,
+    agent_name: AGENT_CONFIG.name,
     status: "success",
     result,
     metadata: {
       model: modelResponse.model || parameters.model || DEFAULT_MODEL,
       output_format: request.output_format || "structured",
-      duration_ms: modelResponse.total_duration
-        ? Math.round(modelResponse.total_duration / 1e6)
-        : null
+      capabilities: AGENT_CONFIG.capabilities,
+      duration_ms: modelResponse.total_duration ? Math.round(modelResponse.total_duration / 1e6) : null
     },
     error: null
   };
