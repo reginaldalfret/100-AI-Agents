@@ -2407,136 +2407,72 @@ body::after {
      ======================================================= */
 
   function renderAbout() {
+  if (!currentAgent) return;
 
-    updateAgent();
+  const agent = currentAgent;
 
-    const agent =
-      currentAgent || getAgentFromPage();
+  const capabilities =
+    Array.isArray(agent.capabilities)
+      ? agent.capabilities
+      : [];
 
-    const capabilities =
-      capabilityMap[agent.id] ||
-      genericCapabilities;
+  const description =
+    agent.description ||
+    agent.system_prompt ||
+    `The ${agent.name} is a specialized AI agent designed to handle tasks within its assigned domain.`;
 
-    const panel =
-      createPanel();
+  agentInfoPanel.innerHTML = `
+    <div class="agent-panel-inner">
 
-    panel.innerHTML = `
-
-      <div class="agent-info-header">
-
-        <div>
-
-          <div class="agent-info-title">
-            ${agent.name}
-          </div>
-
-          <div class="agent-info-subtitle">
-            ${agent.id} · ${agent.category}
-          </div>
-
-        </div>
-
-        <button
-          class="agent-info-close"
-          onclick="window.agentTabs.close()">
-          ×
-        </button>
-
+      <div class="agent-panel-kicker">
+        ${escapeHtml(agent.agent_id)}
+        ·
+        ${escapeHtml(agent.category || "general")}
       </div>
 
+      <h2>${escapeHtml(agent.name)}</h2>
 
-      <div class="agent-info-grid">
+      <div class="agent-detail-grid">
 
-        <div class="agent-info-card">
-          <div class="agent-info-card-label">
-            Agent ID
-          </div>
-
-          <div class="agent-info-card-value">
-            ${agent.id}
-          </div>
+        <div class="agent-detail-card">
+          <span>Agent ID</span>
+          <strong>${escapeHtml(agent.agent_id)}</strong>
         </div>
 
-
-        <div class="agent-info-card">
-          <div class="agent-info-card-label">
-            Category
-          </div>
-
-          <div class="agent-info-card-value">
-            ${agent.category}
-          </div>
+        <div class="agent-detail-card">
+          <span>Category</span>
+          <strong>${escapeHtml(agent.category || "general")}</strong>
         </div>
 
-
-        <div class="agent-info-card">
-          <div class="agent-info-card-label">
-            Status
-          </div>
-
-          <div class="agent-info-card-value">
-            <span style="color:#00ff9d">
-              ● Online
-            </span>
-          </div>
+        <div class="agent-detail-card">
+          <span>Model</span>
+          <strong>${escapeHtml(agent.model || "qwen3.5:9b")}</strong>
         </div>
 
-
-        <div class="agent-info-card">
-          <div class="agent-info-card-label">
-            Model
-          </div>
-
-          <div class="agent-info-card-value">
-            qwen3.5:9b
-          </div>
+        <div class="agent-detail-card">
+          <span>Capabilities</span>
+          <strong>${capabilities.length}</strong>
         </div>
 
       </div>
-
 
       <div class="agent-info-section">
+        <h3>About this agent</h3>
+        <p>${escapeHtml(description)}</p>
+      </div>
 
-        <h3>
-          About this agent
-        </h3>
-
+      <div class="agent-info-section">
+        <h3>Specialization</h3>
         <p>
-          ${agent.name} is a specialized AI agent
-          within the 100 AI Agents platform.
-          It is designed to handle tasks related
-          to its assigned specialty while working
-          through the common 100-to-1 AI gateway.
+          This agent is specialized for its declared capabilities.
+          Requests outside its specialization are politely rejected
+          instead of being handled as unrelated general-purpose requests.
         </p>
-
       </div>
 
-
-      <div class="agent-info-section">
-
-        <h3>
-          What it can do
-        </h3>
-
-        <ul class="agent-capability-list">
-
-          ${capabilities.map(
-            capability => `
-              <li class="agent-capability-item">
-                ${capability}
-              </li>
-            `
-          ).join("")}
-
-        </ul>
-
-      </div>
-
-    `;
-
-    panel.classList.add("visible");
-
-  }
+    </div>
+  `;
+}
 
 
   /* =======================================================
@@ -2544,114 +2480,51 @@ body::after {
      ======================================================= */
 
   function renderCapabilities() {
+  if (!currentAgent) return;
 
-    updateAgent();
+  const agent = currentAgent;
 
-    const agent =
-      currentAgent || getAgentFromPage();
+  const capabilities =
+    Array.isArray(agent.capabilities)
+      ? agent.capabilities
+      : [];
 
-    const capabilities =
-      capabilityMap[agent.id] ||
-      genericCapabilities;
-
-    const panel =
-      createPanel();
-
-    panel.innerHTML = `
-
-      <div class="agent-info-header">
-
-        <div>
-
-          <div class="agent-info-title">
-            Capabilities
-          </div>
-
-          <div class="agent-info-subtitle">
-            What ${agent.name} can help you accomplish
-          </div>
-
+  const capabilityHTML = capabilities.length
+    ? capabilities.map(capability => `
+        <div class="agent-capability-chip">
+          ${escapeHtml(capability)}
         </div>
+      `).join("")
+    : `
+        <div class="agent-empty-state">
+          No capabilities declared.
+        </div>
+      `;
 
-        <button
-          class="agent-info-close"
-          onclick="window.agentTabs.close()">
-          ×
-        </button>
+  agentInfoPanel.innerHTML = `
+    <div class="agent-panel-inner">
 
+      <div class="agent-panel-kicker">
+        CAPABILITIES
       </div>
 
-
-      <div class="agent-info-grid">
-
-        <div class="agent-info-card">
-
-          <div class="agent-info-card-label">
-            Specialty
-          </div>
-
-          <div class="agent-info-card-value">
-            ${agent.category}
-          </div>
-
-        </div>
-
-
-        <div class="agent-info-card">
-
-          <div class="agent-info-card-label">
-            Agent
-          </div>
-
-          <div class="agent-info-card-value">
-            ${agent.id}
-          </div>
-
-        </div>
-
-
-        <div class="agent-info-card">
-
-          <div class="agent-info-card-label">
-            Availability
-          </div>
-
-          <div class="agent-info-card-value">
-            <span style="color:#00ff9d">
-              ● Online
-            </span>
-          </div>
-
-        </div>
-
-      </div>
-
+      <h2>${escapeHtml(agent.name)}</h2>
 
       <div class="agent-info-section">
+        <h3>Specialized capabilities</h3>
 
-        <h3>
-          Core capabilities
-        </h3>
+        <p>
+          This agent is designed specifically for the following capabilities:
+        </p>
 
-        <ul class="agent-capability-list">
-
-          ${capabilities.map(
-            capability => `
-              <li class="agent-capability-item">
-                ${capability}
-              </li>
-            `
-          ).join("")}
-
-        </ul>
-
+        <div class="agent-capability-grid">
+          ${capabilityHTML}
+        </div>
       </div>
 
-    `;
-
-    panel.classList.add("visible");
-
-  }
+    </div>
+  `;
+}
 
 
   /* =======================================================
@@ -2659,101 +2532,134 @@ body::after {
      ======================================================= */
 
   function renderExamples() {
+  if (!currentAgent) return;
 
-    updateAgent();
+  const agent = currentAgent;
 
-    const agent =
-      currentAgent || getAgentFromPage();
+  const text = (
+    `${agent.name || ""} ` +
+    `${agent.slug || ""} ` +
+    `${agent.category || ""} ` +
+    `${Array.isArray(agent.capabilities)
+      ? agent.capabilities.join(" ")
+      : ""}`
+  ).toLowerCase();
 
-    const examples =
-      exampleMap[agent.id] ||
-      genericExamples;
+  let examples = [];
 
-    const panel =
-      createPanel();
+  if (text.includes("email")) {
+    examples = [
+      "Write a professional internship application email.",
+      "Rewrite this email to sound more professional.",
+      "Write a polite follow-up email after an interview."
+    ];
+  } else if (text.includes("quiz") || text.includes("question")) {
+    examples = [
+      "Generate 10 multiple-choice questions about DBMS.",
+      "Create a 20-question quiz about Artificial Intelligence.",
+      "Generate questions with answers and explanations."
+    ];
+  } else if (text.includes("grammar") || text.includes("proofread")) {
+    examples = [
+      "Correct the grammar in this paragraph.",
+      "Proofread this email.",
+      "Improve the grammar and sentence structure."
+    ];
+  } else if (text.includes("translation")) {
+    examples = [
+      "Translate this paragraph into Tamil.",
+      "Translate this document into English.",
+      "Translate this text while preserving its tone."
+    ];
+  } else if (text.includes("resume")) {
+    examples = [
+      "Improve my resume for this job description.",
+      "Make my resume ATS-friendly.",
+      "Rewrite these resume bullet points."
+    ];
+  } else if (
+    text.includes("research") ||
+    text.includes("fact") ||
+    text.includes("source")
+  ) {
+    examples = [
+      "Research this topic and summarize the findings.",
+      "Compare these two technologies.",
+      "Verify this claim using reliable sources."
+    ];
+  } else if (
+    text.includes("code") ||
+    text.includes("developer") ||
+    text.includes("debug")
+  ) {
+    examples = [
+      "Debug this Python program.",
+      "Design a REST API for this application.",
+      "Explain how to implement this feature."
+    ];
+  } else if (
+    text.includes("image") ||
+    text.includes("visual")
+  ) {
+    examples = [
+      "Analyze this image.",
+      "Describe the important objects in this image.",
+      "Extract useful information from this image."
+    ];
+  } else {
+    examples = [
+      `Give ${agent.name} a task related to its specialization.`,
+      `Ask ${agent.name} to solve a domain-specific problem.`,
+      `Ask ${agent.name} to create a practical solution.`
+    ];
+  }
 
-    panel.innerHTML = `
+  agentInfoPanel.innerHTML = `
+    <div class="agent-panel-inner">
 
-      <div class="agent-info-header">
+      <div class="agent-panel-kicker">
+        EXAMPLES
+      </div>
 
-        <div>
+      <h2>${escapeHtml(agent.name)}</h2>
 
-          <div class="agent-info-title">
-            Examples
-          </div>
+      <div class="agent-info-section">
+        <h3>Example prompts</h3>
 
-          <div class="agent-info-subtitle">
-            Try one of these tasks with ${agent.name}
-          </div>
+        <p>
+          Try one of these prompts with this specialized agent.
+        </p>
+
+        <div class="agent-example-list">
+
+          ${examples.map((example, index) => `
+            <button
+              type="button"
+              class="agent-example-card"
+              data-example="${escapeHtml(example)}"
+            >
+              <span>Example ${index + 1}</span>
+              <strong>${escapeHtml(example)}</strong>
+            </button>
+          `).join("")}
 
         </div>
-
-        <button
-          class="agent-info-close"
-          onclick="window.agentTabs.close()">
-          ×
-        </button>
-
       </div>
 
+    </div>
+  `;
 
-      <div class="agent-example-list">
-
-        ${examples.map(
-          (example, index) => `
-
-            <button
-              class="agent-example"
-              data-example-index="${index}">
-
-              <div class="agent-example-title">
-                ${example[0]}
-              </div>
-
-              <div class="agent-example-text">
-                ${example[1]}
-              </div>
-
-              <div class="agent-example-use">
-                Use this example →
-              </div>
-
-            </button>
-
-          `
-        ).join("")}
-
-      </div>
-
-    `;
-
-    panel.classList.add("visible");
-
-
-    panel
-      .querySelectorAll(".agent-example")
-      .forEach(function (button) {
-
-        button.addEventListener(
-          "click",
-          function () {
-
-            const index =
-              Number(
-                button.dataset.exampleIndex
-              );
-
-            const example =
-              examples[index];
-
-            useExample(example[1]);
-
-          }
-        );
-
+  agentInfoPanel
+    .querySelectorAll(".agent-example-card")
+    .forEach(button => {
+      button.addEventListener("click", () => {
+        input.value = button.dataset.example || "";
+        resizeInput();
+        showChat();
+        input.focus();
       });
-
-  }
+    });
+}
 
 
   /* =======================================================
@@ -2976,6 +2882,322 @@ body::after {
 })();
 
 </script>
+
+
+<style id="agent-ui-polish">
+
+.logo {
+  width: 48px !important;
+  height: 48px !important;
+  flex: 0 0 48px;
+
+  display: grid !important;
+  place-items: center;
+
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,234,255,.14),
+      rgba(139,61,255,.20),
+      rgba(255,34,215,.16)
+    );
+
+  border: 1px solid rgba(0,234,255,.42);
+
+  box-shadow:
+    0 0 20px rgba(0,234,255,.20),
+    0 0 35px rgba(139,61,255,.12);
+}
+
+.logo svg {
+  width: 31px;
+  height: 31px;
+  display: block;
+}
+
+.header-actions {
+  margin-left: auto !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+
+  gap: 10px;
+
+  min-width: max-content;
+  flex-wrap: nowrap;
+}
+
+.header-actions .status-pill,
+.header-actions .count-pill {
+  height: 36px;
+
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+
+  white-space: nowrap;
+  line-height: 1;
+
+  border-radius: 999px;
+}
+
+.header-actions .count-pill {
+  padding: 0 15px;
+}
+
+.agent-info-panel {
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  top: 135px;
+  bottom: 92px;
+
+  overflow-y: auto;
+
+  padding: 32px clamp(20px, 7vw, 100px) 120px;
+
+  z-index: 10;
+}
+
+.agent-panel-inner {
+  width: min(100%, 980px);
+  margin: 0 auto;
+}
+
+.agent-panel-kicker {
+  margin-bottom: 10px;
+
+  color: var(--cyan);
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.agent-panel-inner h2 {
+  margin: 0;
+
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.1;
+
+  background:
+    linear-gradient(
+      90deg,
+      #f4fbff,
+      #8beaff,
+      #d58bff,
+      #ff8ce9
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  color: transparent;
+}
+
+.agent-detail-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 10px;
+
+  margin-top: 28px;
+}
+
+.agent-detail-card {
+  padding: 15px;
+
+  border-radius: 15px;
+
+  border: 1px solid rgba(255,255,255,.08);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.045),
+      rgba(139,61,255,.035)
+    );
+}
+
+.agent-detail-card span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #737c96;
+
+  font-size: 10px;
+
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.agent-detail-card strong {
+  display: block;
+
+  color: #eef2ff;
+
+  font-size: 12px;
+
+  overflow-wrap: anywhere;
+}
+
+.agent-info-section {
+  margin-top: 30px;
+}
+
+.agent-info-section h3 {
+  margin: 0 0 9px;
+
+  color: #f3f6ff;
+
+  font-size: 18px;
+}
+
+.agent-info-section p {
+  margin: 0;
+
+  max-width: 850px;
+
+  color: #aeb7cf;
+
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.agent-capability-grid {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 9px;
+
+  margin-top: 18px;
+}
+
+.agent-capability-chip {
+  padding: 9px 13px;
+
+  border-radius: 999px;
+
+  border: 1px solid rgba(0,234,255,.18);
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(0,234,255,.07),
+      rgba(139,61,255,.07)
+    );
+
+  color: #dce7ff;
+
+  font-size: 11px;
+}
+
+.agent-example-list {
+  display: grid;
+
+  gap: 10px;
+
+  max-width: 900px;
+
+  margin-top: 18px;
+}
+
+.agent-example-card {
+  width: 100%;
+
+  padding: 15px 17px;
+
+  text-align: left;
+
+  border-radius: 15px;
+
+  border: 1px solid rgba(255,255,255,.08);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,234,255,.035),
+      rgba(139,61,255,.055),
+      rgba(255,34,215,.035)
+    );
+
+  color: #eaf0ff;
+
+  cursor: pointer;
+
+  transition: .2s ease;
+}
+
+.agent-example-card:hover {
+  transform: translateY(-1px);
+
+  border-color: rgba(0,234,255,.30);
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.18);
+}
+
+.agent-example-card span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: var(--cyan);
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.agent-example-card strong {
+  display: block;
+
+  color: #eaf0ff;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.agent-empty-state {
+  padding: 15px;
+
+  color: #8d96ad;
+
+  font-size: 12px;
+}
+
+@media (max-width: 800px) {
+  .agent-detail-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .agent-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .agent-info-panel {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}
+
+</style>
 
 </head>
 
