@@ -3199,6 +3199,247 @@ body::after {
 
 </style>
 
+
+<style id="logo-fix">
+.logo {
+  width: 48px !important;
+  height: 48px !important;
+  flex: 0 0 48px;
+
+  display: grid !important;
+  place-items: center;
+
+  border-radius: 15px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0,234,255,.14),
+      rgba(139,61,255,.20),
+      rgba(255,34,215,.16)
+    );
+
+  border: 1px solid rgba(0,234,255,.42);
+
+  box-shadow:
+    0 0 20px rgba(0,234,255,.20),
+    0 0 35px rgba(139,61,255,.12);
+}
+
+.logo svg {
+  width: 31px;
+  height: 31px;
+  display: block;
+}
+</style>
+
+
+<style id="agent-specific-ui-fix">
+
+/* =========================================================
+   AGENT INFORMATION TABS
+   ========================================================= */
+
+.agent-info-panel {
+  width: min(900px, calc(100% - 48px));
+  margin: 24px auto 0;
+
+  padding: 28px;
+
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(10, 22, 35, .92),
+      rgba(27, 13, 45, .92)
+    );
+
+  border: 1px solid rgba(0, 234, 255, .18);
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.28),
+    0 0 35px rgba(139,61,255,.08);
+
+  color: #e9f7ff;
+
+  animation: agentPanelIn .2s ease;
+}
+
+@keyframes agentPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.agent-info-panel h2 {
+  margin: 0 0 8px;
+
+  font-size: 24px;
+  font-weight: 700;
+
+  background:
+    linear-gradient(
+      90deg,
+      #00eaff,
+      #8b3dff,
+      #ff22d7
+    );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.agent-info-panel .agent-info-subtitle {
+  margin-bottom: 22px;
+
+  color: #8e9aaa;
+
+  font-size: 14px;
+}
+
+.agent-info-section-title {
+  margin: 22px 0 12px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: .08em;
+
+  color: #7eeeff;
+}
+
+.agent-capability-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.agent-capability {
+  padding: 7px 11px;
+
+  border-radius: 999px;
+
+  background: rgba(0,234,255,.07);
+
+  border: 1px solid rgba(0,234,255,.18);
+
+  color: #bcefff;
+
+  font-size: 12px;
+}
+
+.agent-example-list {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px, 1fr));
+
+  gap: 10px;
+}
+
+.agent-example {
+  padding: 13px 15px;
+
+  border-radius: 12px;
+
+  background: rgba(255,255,255,.025);
+
+  border: 1px solid rgba(255,255,255,.07);
+
+  color: #c7d0dc;
+
+  font-size: 13px;
+
+  transition:
+    border-color .15s ease,
+    background .15s ease;
+}
+
+.agent-example:hover {
+  background: rgba(139,61,255,.08);
+
+  border-color:
+    rgba(139,61,255,.35);
+}
+
+/* =========================================================
+   TOP RIGHT ONLINE COUNT
+   ========================================================= */
+
+.agent-top-online-count {
+  position: relative;
+
+  display: inline-flex !important;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 142px;
+  height: 42px;
+
+  padding: 0 17px;
+
+  margin-left: 12px;
+
+  box-sizing: border-box;
+
+  white-space: nowrap;
+
+  border-radius: 999px;
+
+  border: 1px solid rgba(139,61,255,.38);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(20,18,42,.94),
+      rgba(34,17,51,.94)
+    );
+
+  color: #d7c8ff;
+
+  font-size: 13px;
+
+  line-height: 1;
+
+  text-align: center;
+
+  box-shadow:
+    0 0 20px rgba(139,61,255,.08);
+}
+
+/*
+ * Prevent the top-right count from being affected by
+ * flex stretching or inherited alignment.
+ */
+.agent-top-online-count * {
+  line-height: 1;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .agent-info-panel {
+    width: calc(100% - 28px);
+    padding: 20px;
+  }
+
+  .agent-top-online-count {
+    min-width: 120px;
+    padding: 0 12px;
+  }
+}
+
+</style>
+
 </head>
 
 <body>
@@ -3212,7 +3453,37 @@ body::after {
   <aside class="sidebar glass" id="sidebar">
 
     <div class="brand">
-      <div class="logo">100→</div>
+      <div class="logo" aria-label="100 AI Agents">
+  <svg viewBox="0 0 48 48" aria-hidden="true">
+    <defs>
+      <linearGradient
+        id="agentLogoGradient"
+        x1="5"
+        y1="5"
+        x2="43"
+        y2="43"
+      >
+        <stop offset="0%" stop-color="#00eaff"/>
+        <stop offset="55%" stop-color="#8b3dff"/>
+        <stop offset="100%" stop-color="#ff22d7"/>
+      </linearGradient>
+    </defs>
+
+    <path
+      d="M14 31L23 14L34 34"
+      fill="none"
+      stroke="url(#agentLogoGradient)"
+      stroke-width="3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+
+    <circle cx="14" cy="31" r="4" fill="#00eaff"/>
+    <circle cx="23" cy="14" r="4" fill="#8b3dff"/>
+    <circle cx="34" cy="34" r="4" fill="#ff22d7"/>
+    <circle cx="24" cy="26" r="3" fill="#ffffff"/>
+  </svg>
+</div>
 
       <div>
         <div class="brand-title">100 AI Agents</div>
@@ -4615,6 +4886,1340 @@ function escapeHtml(value) {
 
 loadAgents();
 
+</script>
+
+
+<script id="agent-specific-tabs-engine">
+
+(function () {
+
+  function normalize(value) {
+    return String(value || "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+
+  function findAgentTabs() {
+
+    const candidates =
+      Array.from(
+        document.querySelectorAll(
+          "button, a, [role='tab'], .tab"
+        )
+      );
+
+    const result = {};
+
+    for (const element of candidates) {
+
+      const text =
+        normalize(element.textContent)
+          .toLowerCase();
+
+      if (
+        text === "about" ||
+        text === "capabilities" ||
+        text === "examples"
+      ) {
+
+        result[text] = element;
+
+      }
+
+    }
+
+    return result;
+
+  }
+
+
+  function getSelectedAgent() {
+
+    /*
+     * The existing frontend already maintains selectedAgent.
+     */
+
+    if (
+      typeof selectedAgent !== "undefined" &&
+      selectedAgent
+    ) {
+      return selectedAgent;
+    }
+
+    /*
+     * Fallback: determine the selected agent from the
+     * highlighted agent item.
+     */
+
+    if (
+      typeof agents !== "undefined" &&
+      Array.isArray(agents)
+    ) {
+
+      const selected =
+        document.querySelector(
+          "[data-agent-id].active, " +
+          "[data-agent-id].selected, " +
+          ".agent-item.active, " +
+          ".agent-item.selected"
+        );
+
+      if (selected) {
+
+        const id =
+          selected.dataset.agentId ||
+          selected.getAttribute("data-agent-id");
+
+        if (id) {
+
+          return agents.find(
+            agent =>
+              agent.agent_id === id
+          );
+
+        }
+
+      }
+
+    }
+
+    return null;
+
+  }
+
+
+  function createPanel() {
+
+    let panel =
+      document.getElementById(
+        "agent-specific-info-panel"
+      );
+
+    if (panel) {
+      return panel;
+    }
+
+    panel =
+      document.createElement("section");
+
+    panel.id =
+      "agent-specific-info-panel";
+
+    panel.className =
+      "agent-info-panel";
+
+    panel.style.display = "none";
+
+    /*
+     * Put the panel below the tab navigation.
+     */
+
+    const tabs =
+      findAgentTabs();
+
+    const firstTab =
+      tabs.about ||
+      tabs.capabilities ||
+      tabs.examples;
+
+    if (firstTab) {
+
+      const parent =
+        firstTab.closest(
+          "nav, .tabs, .tab-bar, .navigation-tabs"
+        ) ||
+        firstTab.parentElement;
+
+      if (parent) {
+        parent.insertAdjacentElement(
+          "afterend",
+          panel
+        );
+      }
+
+    }
+
+    if (!panel.parentElement) {
+
+      const main =
+        document.querySelector(
+          "main, .main, .content, .chat-container"
+        );
+
+      if (main) {
+        main.prepend(panel);
+      }
+
+    }
+
+    return panel;
+
+  }
+
+
+  function capabilities(agent) {
+
+    if (
+      !agent ||
+      !Array.isArray(agent.capabilities)
+    ) {
+      return [];
+    }
+
+    return agent.capabilities
+      .map(normalize)
+      .filter(Boolean);
+
+  }
+
+
+  function examplesForAgent(agent) {
+
+    const caps =
+      capabilities(agent);
+
+    const examples = [];
+
+    function has(text) {
+
+      return caps.some(
+        capability =>
+          capability.includes(text)
+      );
+
+    }
+
+
+    if (has("email")) {
+
+      examples.push(
+        "Write a professional internship application email."
+      );
+
+      examples.push(
+        "Rewrite this email in a more professional tone."
+      );
+
+      examples.push(
+        "Create a concise follow-up email."
+      );
+
+    }
+
+
+    if (
+      has("quiz") ||
+      has("mcq") ||
+      has("question")
+    ) {
+
+      examples.push(
+        "Generate 10 multiple-choice questions about DBMS."
+      );
+
+      examples.push(
+        "Create a quiz with answers and explanations."
+      );
+
+    }
+
+
+    if (
+      has("grammar") ||
+      has("proofreading")
+    ) {
+
+      examples.push(
+        "Check this paragraph for grammar mistakes."
+      );
+
+      examples.push(
+        "Proofread and improve this text."
+      );
+
+    }
+
+
+    if (
+      has("translation")
+    ) {
+
+      examples.push(
+        "Translate this text into Tamil."
+      );
+
+    }
+
+
+    if (
+      has("resume") ||
+      has("ats")
+    ) {
+
+      examples.push(
+        "Improve my resume for an ATS."
+      );
+
+      examples.push(
+        "Analyze my resume for this job description."
+      );
+
+    }
+
+
+    if (
+      has("research") ||
+      has("research-assistant")
+    ) {
+
+      examples.push(
+        "Research this topic and summarize the findings."
+      );
+
+    }
+
+
+    if (
+      has("code") ||
+      has("debug") ||
+      has("software")
+    ) {
+
+      examples.push(
+        "Debug this Python program."
+      );
+
+      examples.push(
+        "Design the architecture for this application."
+      );
+
+    }
+
+
+    if (examples.length === 0) {
+
+      examples.push(
+        `Ask ${agent?.name || "this agent"} to perform a task related to its specialization.`
+      );
+
+      examples.push(
+        `Request help using its declared capabilities.`
+      );
+
+    }
+
+
+    return examples.slice(0, 6);
+
+  }
+
+
+  function renderTab(tab, agent) {
+
+    const panel =
+      createPanel();
+
+    if (!panel) {
+      return;
+    }
+
+    const name =
+      normalize(
+        agent?.name ||
+        "AI Agent"
+      );
+
+    const id =
+      normalize(
+        agent?.agent_id ||
+        ""
+      );
+
+    const category =
+      normalize(
+        agent?.category ||
+        "specialized"
+      );
+
+    const caps =
+      capabilities(agent);
+
+    /*
+     * Remove active state from all tabs.
+     */
+
+    const tabs =
+      findAgentTabs();
+
+    Object.values(tabs).forEach(
+      element => {
+
+        element.classList.remove(
+          "active",
+          "selected"
+        );
+
+        element.setAttribute(
+          "aria-selected",
+          "false"
+        );
+
+      }
+    );
+
+    const selectedTab =
+      tabs[tab];
+
+    if (selectedTab) {
+
+      selectedTab.classList.add(
+        "active"
+      );
+
+      selectedTab.setAttribute(
+        "aria-selected",
+        "true"
+      );
+
+    }
+
+
+    let html = "";
+
+
+    if (tab === "about") {
+
+      html = `
+        <h2>${name}</h2>
+
+        <div class="agent-info-subtitle">
+          ${id ? `${id} · ` : ""}
+          ${category}
+        </div>
+
+        <div class="agent-info-section-title">
+          About this agent
+        </div>
+
+        <p>
+          ${name} is a specialized AI agent in the
+          100 AI Agents platform. It is designed to
+          handle tasks specifically related to its
+          declared area of expertise.
+        </p>
+
+        <div class="agent-info-section-title">
+          Specialization
+        </div>
+
+        <p>
+          This agent should be used for requests that
+          match its capabilities. Requests outside its
+          specialization are politely rejected instead
+          of being handled as unrelated tasks.
+        </p>
+      `;
+
+    }
+
+
+    else if (tab === "capabilities") {
+
+      html = `
+        <h2>${name}</h2>
+
+        <div class="agent-info-subtitle">
+          Capabilities
+        </div>
+
+        <div class="agent-capability-list">
+
+          ${
+            caps.length
+              ? caps.map(
+                  capability =>
+                    `<span class="agent-capability">${capability}</span>`
+                ).join("")
+              : `
+                <span class="agent-capability">
+                  Specialized task handling
+                </span>
+              `
+          }
+
+        </div>
+      `;
+
+    }
+
+
+    else if (tab === "examples") {
+
+      const examples =
+        examplesForAgent(agent);
+
+      html = `
+        <h2>${name}</h2>
+
+        <div class="agent-info-subtitle">
+          Example requests
+        </div>
+
+        <div class="agent-example-list">
+
+          ${examples.map(
+            example =>
+              `<div class="agent-example">${example}</div>`
+          ).join("")}
+
+        </div>
+      `;
+
+    }
+
+
+    panel.innerHTML = html;
+
+    panel.style.display =
+      "block";
+
+    /*
+     * Keep the information panel below
+     * the navigation rather than replacing chat.
+     */
+
+    panel.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest"
+    });
+
+  }
+
+
+  function setupTabs() {
+
+    const tabs =
+      findAgentTabs();
+
+    if (
+      !tabs.about &&
+      !tabs.capabilities &&
+      !tabs.examples
+    ) {
+      return;
+    }
+
+
+    Object.entries(tabs)
+      .forEach(
+        ([tab, element]) => {
+
+          /*
+           * Avoid duplicate listeners.
+           */
+
+          if (
+            element.dataset.agentTabsBound === "true"
+          ) {
+            return;
+          }
+
+          element.dataset.agentTabsBound =
+            "true";
+
+          element.addEventListener(
+            "click",
+            function (event) {
+
+              event.preventDefault();
+
+              const agent =
+                getSelectedAgent();
+
+              renderTab(
+                tab,
+                agent
+              );
+
+            }
+          );
+
+        }
+      );
+
+  }
+
+
+  function setupOnlineCount() {
+
+    const elements =
+      Array.from(
+        document.querySelectorAll("*")
+      )
+      .filter(
+        element =>
+          normalize(element.textContent)
+            .toLowerCase() ===
+          "101 agents online"
+      );
+
+
+    /*
+     * The screenshot contains two counts:
+     *
+     * 1. top-right header
+     * 2. sidebar status card
+     *
+     * Only style the top-right one.
+     */
+
+    const top =
+      elements.find(
+        element => {
+
+          const rect =
+            element.getBoundingClientRect();
+
+          return (
+            rect.top >= 0 &&
+            rect.top < 150 &&
+            rect.left > window.innerWidth * .55
+          );
+
+        }
+      );
+
+
+    if (!top) {
+      return;
+    }
+
+
+    top.classList.add(
+      "agent-top-online-count"
+    );
+
+
+    /*
+     * Make sure the element itself is the
+     * visible badge rather than an inner span.
+     */
+
+    const parent =
+      top.parentElement;
+
+    if (
+      parent &&
+      parent !== document.body
+    ) {
+
+      parent.style.alignItems =
+        "center";
+
+      parent.style.justifyContent =
+        "center";
+
+    }
+
+  }
+
+
+  function initializeAgentUI() {
+
+    setupTabs();
+
+    setupOnlineCount();
+
+  }
+
+
+  /*
+   * Initial load.
+   */
+
+  if (
+    document.readyState ===
+    "loading"
+  ) {
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      initializeAgentUI
+    );
+
+  } else {
+
+    initializeAgentUI();
+
+  }
+
+
+  /*
+   * The existing application changes
+   * selectedAgent dynamically.
+   *
+   * Re-bind after UI updates.
+   */
+
+  const observer =
+    new MutationObserver(
+      function () {
+
+        setupTabs();
+        setupOnlineCount();
+
+      }
+    );
+
+
+  observer.observe(
+    document.body,
+    {
+      childList: true,
+      subtree: true
+    }
+  );
+
+
+})();
+
+</script>
+
+
+<style id="final-agent-tabs-style">
+
+/* =========================================================
+   FINAL AGENT INFORMATION PANEL
+   ========================================================= */
+
+#finalAgentInfoPanel {
+  width: min(920px, calc(100% - 48px));
+  margin: 18px auto 0;
+  padding: 26px 30px;
+  border: 1px solid rgba(0, 234, 255, 0.20);
+  border-radius: 18px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 234, 255, 0.055),
+      rgba(139, 61, 255, 0.055),
+      rgba(255, 34, 215, 0.045)
+    );
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.22);
+  color: #eef5ff;
+  display: none;
+  box-sizing: border-box;
+}
+
+#finalAgentInfoPanel .final-agent-kicker {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.58;
+  margin-bottom: 8px;
+}
+
+#finalAgentInfoPanel h2 {
+  margin: 0;
+  font-size: 25px;
+  line-height: 1.2;
+}
+
+#finalAgentInfoPanel .final-agent-subtitle {
+  margin-top: 7px;
+  color: #9ca9bd;
+  font-size: 13px;
+}
+
+#finalAgentInfoPanel .final-agent-description {
+  margin-top: 22px;
+  color: #cbd5e1;
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+#finalAgentInfoPanel .final-agent-section {
+  margin-top: 24px;
+}
+
+#finalAgentInfoPanel .final-agent-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+#finalAgentInfoPanel .final-agent-capabilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+#finalAgentInfoPanel .final-agent-capability {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 234, 255, 0.18);
+  background: rgba(0, 234, 255, 0.055);
+  color: #d9faff;
+  font-size: 12px;
+}
+
+#finalAgentInfoPanel .final-agent-example {
+  padding: 13px 15px;
+  margin-bottom: 9px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.035);
+  color: #dbe5f3;
+  line-height: 1.5;
+}
+
+#finalAgentInfoPanel .final-agent-example strong {
+  display: block;
+  color: #ffffff;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.final-agent-tab-active {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+@media (max-width: 700px) {
+  #finalAgentInfoPanel {
+    width: calc(100% - 24px);
+    padding: 20px;
+  }
+}
+
+</style>
+
+<script id="final-agent-tabs-fix">
+(function () {
+
+  "use strict";
+
+  let activeFinalTab = null;
+
+  function escape(value) {
+    return String(value ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function getAgent() {
+    if (
+      typeof selectedAgent !== "undefined" &&
+      selectedAgent
+    ) {
+      return selectedAgent;
+    }
+
+    if (
+      typeof window.selectedAgent !== "undefined" &&
+      window.selectedAgent
+    ) {
+      return window.selectedAgent;
+    }
+
+    return null;
+  }
+
+  function getPanel() {
+
+    let panel =
+      document.getElementById(
+        "finalAgentInfoPanel"
+      );
+
+    if (panel) {
+      return panel;
+    }
+
+    panel =
+      document.createElement("section");
+
+    panel.id =
+      "finalAgentInfoPanel";
+
+    /*
+     * Put the panel directly after the top navigation.
+     */
+    const possibleNav =
+      document.querySelector(
+        ".tabs, .agent-tabs, .top-tabs, .nav-tabs"
+      );
+
+    if (possibleNav) {
+
+      possibleNav.insertAdjacentElement(
+        "afterend",
+        panel
+      );
+
+    } else {
+
+      const main =
+        document.querySelector(
+          "main, .main, .content, .chat"
+        );
+
+      if (main) {
+        main.prepend(panel);
+      } else {
+        document.body.appendChild(panel);
+      }
+
+    }
+
+    return panel;
+  }
+
+  function capabilities(agent) {
+
+    if (
+      agent &&
+      Array.isArray(agent.capabilities)
+    ) {
+      return agent.capabilities;
+    }
+
+    return [];
+  }
+
+  function examples(agent) {
+
+    const caps =
+      capabilities(agent);
+
+    const name =
+      agent?.name ||
+      "this agent";
+
+    /*
+     * Generate examples from the actual
+     * capabilities of the selected agent.
+     */
+    if (!caps.length) {
+
+      return [
+        [
+          "Ask the agent",
+          `What can ${name} help me with?`
+        ],
+        [
+          "Use its specialty",
+          `Give me an example of a task ${name} can handle.`
+        ]
+      ];
+
+    }
+
+    const output = [];
+
+    caps.slice(0, 6).forEach(
+      capability => {
+
+        const pretty =
+          String(capability)
+            .replace(/[-_]+/g, " ")
+            .replace(/\b\w/g, c =>
+              c.toUpperCase()
+            );
+
+        output.push([
+          pretty,
+          `Help me with ${pretty.toLowerCase()}.`
+        ]);
+
+      }
+    );
+
+    return output;
+  }
+
+  function findTabs() {
+
+    const result = {};
+
+    /*
+     * Find tabs by their visible text.
+     * This avoids depending on broken/mismatched IDs.
+     */
+    Array.from(
+      document.querySelectorAll(
+        "button, a, div, span"
+      )
+    ).forEach(element => {
+
+      if (
+        element.children.length > 3
+      ) {
+        return;
+      }
+
+      const text =
+        element.textContent
+          .replace(/\s+/g, " ")
+          .trim()
+          .toLowerCase();
+
+      if (
+        text === "about" ||
+        text === "ⓘ about"
+      ) {
+        result.about = element;
+      }
+
+      if (
+        text === "capabilities" ||
+        text === "⌘ capabilities"
+      ) {
+        result.capabilities = element;
+      }
+
+      if (
+        text === "examples" ||
+        text === "↝ examples"
+      ) {
+        result.examples = element;
+      }
+
+    });
+
+    return result;
+  }
+
+  function markActive(tab) {
+
+    const tabs =
+      findTabs();
+
+    Object.values(tabs)
+      .forEach(element => {
+
+        if (!element) {
+          return;
+        }
+
+        element.classList.remove(
+          "final-agent-tab-active"
+        );
+
+      });
+
+    if (tabs[tab]) {
+
+      tabs[tab]
+        .classList.add(
+          "final-agent-tab-active"
+        );
+
+    }
+
+  }
+
+  function render(tab) {
+
+    const agent =
+      getAgent();
+
+    const panel =
+      getPanel();
+
+    if (!agent) {
+
+      panel.innerHTML = `
+        <div class="final-agent-description">
+          Select an AI agent to view its information.
+        </div>
+      `;
+
+      panel.style.display = "block";
+
+      return;
+
+    }
+
+    activeFinalTab = tab;
+
+    markActive(tab);
+
+    const name =
+      agent.name ||
+      agent.agent_name ||
+      "AI Agent";
+
+    const id =
+      agent.agent_id ||
+      "";
+
+    const category =
+      agent.category ||
+      "specialized";
+
+    const caps =
+      capabilities(agent);
+
+    if (tab === "about") {
+
+      const description =
+        agent.description ||
+        "";
+
+      panel.innerHTML = `
+
+        <div class="final-agent-kicker">
+          ${escape(id)} · ${escape(category)}
+        </div>
+
+        <h2>
+          ${escape(name)}
+        </h2>
+
+        <div class="final-agent-subtitle">
+          About this AI agent
+        </div>
+
+        <div class="final-agent-description">
+
+          ${
+            description
+              ? escape(description)
+              : `${escape(name)} is a specialized AI
+                 agent designed to handle tasks within
+                 its declared area of expertise.`
+          }
+
+        </div>
+
+        <div class="final-agent-section">
+
+          <div class="final-agent-section-title">
+            Specialization
+          </div>
+
+          <div class="final-agent-description"
+               style="margin-top:0">
+
+            This agent is intended for tasks that
+            match its capabilities. Requests outside
+            its specialization are politely rejected.
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+    else if (tab === "capabilities") {
+
+      panel.innerHTML = `
+
+        <div class="final-agent-kicker">
+          ${escape(id)} · ${escape(category)}
+        </div>
+
+        <h2>
+          ${escape(name)}
+        </h2>
+
+        <div class="final-agent-subtitle">
+          Capabilities
+        </div>
+
+        <div class="final-agent-section">
+
+          <div class="final-agent-capabilities">
+
+            ${
+              caps.length
+                ? caps.map(capability => `
+                    <span
+                      class="final-agent-capability"
+                    >
+                      ${escape(capability)}
+                    </span>
+                  `).join("")
+                : `
+                    <span
+                      class="final-agent-capability"
+                    >
+                      Specialized task handling
+                    </span>
+                  `
+            }
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+    else if (tab === "examples") {
+
+      const items =
+        examples(agent);
+
+      panel.innerHTML = `
+
+        <div class="final-agent-kicker">
+          ${escape(id)} · ${escape(category)}
+        </div>
+
+        <h2>
+          ${escape(name)}
+        </h2>
+
+        <div class="final-agent-subtitle">
+          Example requests
+        </div>
+
+        <div class="final-agent-section">
+
+          ${
+            items.map(item => `
+              <div
+                class="final-agent-example"
+              >
+                <strong>
+                  ${escape(item[0])}
+                </strong>
+
+                ${escape(item[1])}
+              </div>
+            `).join("")
+          }
+
+        </div>
+
+      `;
+
+    }
+
+    panel.style.display =
+      "block";
+
+  }
+
+  /*
+   * EVENT DELEGATION
+   *
+   * This deliberately runs in capture phase so it
+   * works even if the old tab engine is broken.
+   */
+  document.addEventListener(
+    "click",
+    function (event) {
+
+      let element =
+        event.target;
+
+      while (
+        element &&
+        element !== document.body
+      ) {
+
+        const text =
+          element.textContent
+            ?.replace(/\s+/g, " ")
+            .trim()
+            .toLowerCase();
+
+        let tab = null;
+
+        if (
+          text === "about" ||
+          text === "ⓘ about"
+        ) {
+          tab = "about";
+        }
+
+        else if (
+          text === "capabilities" ||
+          text === "⌘ capabilities"
+        ) {
+          tab = "capabilities";
+        }
+
+        else if (
+          text === "examples" ||
+          text === "↝ examples"
+        ) {
+          tab = "examples";
+        }
+
+        if (tab) {
+
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
+
+          render(tab);
+
+          return;
+
+        }
+
+        element =
+          element.parentElement;
+
+      }
+
+    },
+    true
+  );
+
+  /*
+   * When an agent changes, automatically refresh
+   * the currently open information tab.
+   */
+  let lastAgentId = null;
+
+  setInterval(
+    function () {
+
+      const agent =
+        getAgent();
+
+      const id =
+        agent?.agent_id ||
+        null;
+
+      if (
+        id &&
+        id !== lastAgentId
+      ) {
+
+        lastAgentId = id;
+
+        if (activeFinalTab) {
+          render(activeFinalTab);
+        }
+
+      }
+
+    },
+    300
+  );
+
+  console.log(
+    "FINAL AGENT TABS FIX: READY"
+  );
+
+})();
 </script>
 
 </body>
