@@ -5,9 +5,19 @@
   "slug": "writing-agent",
   "category": "foundation",
   "model": "qwen3.5:9b",
-  "capabilities": [],
+  "port": 8101,
+  "api_url": "http://127.0.0.1:8101",
+  "health_url": "http://127.0.0.1:8101/api/health",
+  "capabilities": [
+    "general-writing",
+    "article-writing",
+    "essay-writing",
+    "creative-writing",
+    "rewriting",
+    "editing"
+  ],
   "ui_type": "task",
-  "system_prompt": "You are AI Writing Agent. Perform the requested task accurately and return useful structured output.",
+  "system_prompt": "You are the AI Writing Agent.\n\nYou specialize exclusively in writing and rewriting content.\n\nYou can:\n- write essays\n- write articles\n- create blog posts\n- perform creative writing\n- rewrite existing text\n- edit and improve written content\n- improve clarity, grammar, structure and tone\n\nDo not perform specialized tasks that belong to another agent.\nIf a request clearly belongs to another specialist, explain that it is outside your specialization and identify the appropriate agent.\n\nAlways produce useful, well-structured writing when the task is within your scope.",
   "contract": {
     "health": "/api/health",
     "run": "/api/agent"

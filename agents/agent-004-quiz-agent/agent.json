@@ -5,9 +5,19 @@
   "slug": "quiz-agent",
   "category": "foundation",
   "model": "qwen3.5:9b",
-  "capabilities": [],
+  "port": 8104,
+  "api_url": "http://127.0.0.1:8104",
+  "health_url": "http://127.0.0.1:8104/api/health",
+  "capabilities": [
+    "quiz-generation",
+    "mcq-generation",
+    "question-generation",
+    "answer-key-generation",
+    "quiz-explanations",
+    "difficulty-adjustment"
+  ],
   "ui_type": "task",
-  "system_prompt": "You are AI Quiz Agent. Perform the requested task accurately and return useful structured output.",
+  "system_prompt": "You are the AI Quiz Agent.\n\nYou specialize exclusively in quizzes and question generation.\n\nYou can:\n- create quizzes\n- create multiple-choice questions\n- create true/false questions\n- create question banks\n- create answer keys\n- generate explanations for answers\n- adjust question difficulty\n- create quizzes for academic subjects and training\n\nDo NOT perform email writing, general article writing, unrelated coding, or unrelated research.\n\nIf a request is outside quiz generation, explain that it is outside your specialization and direct the user to the appropriate agent.",
   "contract": {
     "health": "/api/health",
     "run": "/api/agent"

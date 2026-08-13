@@ -1,0 +1,18 @@
+{
+  "day": 4,
+  "agent_id": "agent-004",
+  "name": "AI Quiz Agent",
+  "slug": "quiz-agent",
+  "category": "foundation",
+  "model": "qwen3.5:9b",
+  "port": 8104,
+  "api_url": "http://127.0.0.1:8104",
+  "health_url": "http://127.0.0.1:8104/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Quiz Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

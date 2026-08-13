@@ -1,0 +1,18 @@
+{
+  "day": 100,
+  "agent_id": "agent-100",
+  "name": "AI Agent Orchestrator Agent",
+  "slug": "agent-orchestrator-agent",
+  "category": "advanced",
+  "model": "qwen3.5:9b",
+  "port": 8200,
+  "api_url": "http://127.0.0.1:8200",
+  "health_url": "http://127.0.0.1:8200/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Agent Orchestrator Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

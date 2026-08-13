@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{AGENT_NAME}}</title>
+  <style>
+    :root{font-family:Inter,system-ui,sans-serif;color:#eaf0f8;background:#0b1020;color-scheme:dark}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#1a2540,#0b1020 52%,#070a12)}
+    main{width:min(900px,calc(100% - 32px));margin:0 auto;padding:48px 0 72px}.eyebrow{font-size:12px;letter-spacing:.14em;color:#8ea7d5;font-weight:800}
+    h1{font-size:44px;margin:8px 0}.muted{color:#91a0bb}.card{background:#11192a;border:1px solid #28354f;border-radius:18px;padding:20px;margin-top:20px}
+    textarea,select{width:100%;color:#eef3fb;background:#0a1120;border:1px solid #2e3a52;border-radius:10px;padding:12px;margin-top:8px}
+    textarea{min-height:180px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0}
+    button{width:100%;border:1px solid #6684c7;background:#466ab3;color:white;border-radius:10px;padding:12px;font-weight:800;cursor:pointer}
+    pre{white-space:pre-wrap;word-break:break-word;min-height:160px;background:#070c16;border:1px solid #222d42;border-radius:12px;padding:16px;line-height:1.5}
+    .status{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid #2d7653;color:#83e6b2}
+    @media(max-width:700px){.row{grid-template-columns:1fr}h1{font-size:34px}}
+  </style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">100 → 1 · AI AGENT</div>
+  <h1>{{AGENT_NAME}}</h1>
+  <p class="muted">Agent ID: {{AGENT_ID}} · Category: {{AGENT_CATEGORY}}</p>
+  <div id="health" class="status">Checking health…</div>
+  <section class="card">
+    <label for="task">Task</label>
+    <textarea id="task" placeholder="Describe what you want the agent to do..."></textarea>
+    <div class="row">
+      <label>Output format
+        <select id="format"><option>text</option><option>markdown</option><option>json</option><option selected>structured</option></select>
+      </label>
+      <label>Tone
+        <select id="tone"><option>professional</option><option>friendly</option><option>formal</option><option>concise</option><option>creative</option></select>
+      </label>
+    </div>
+    <button id="run">Run Agent</button>
+  </section>
+  <section class="card">
+    <h2>Result</h2>
+    <pre id="result">Result will appear here.</pre>
+  </section>
+</main>
+<script>
+const health=document.getElementById('health');
+const result=document.getElementById('result');
+document.getElementById('run').addEventListener('click',async()=>{
+  const task=document.getElementById('task').value.trim();
+  if(!task){result.textContent='Enter a task first.';return;}
+  result.textContent='Processing…';
+  try{
+    const r=await fetch('/api/agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task,context:{},parameters:{tone:document.getElementById('tone').value},output_format:document.getElementById('format').value})});
+    const data=await r.json();
+    result.textContent=typeof data.result==='string'?data.result:JSON.stringify(data,null,2);
+  }catch(e){result.textContent='Request failed: '+e.message;}
+});
+(async()=>{try{const r=await fetch('/api/health');const d=await r.json();health.textContent=d.status==='ok'?'Healthy':'Offline';if(d.status!=='ok')health.style.borderColor='#8b3c46',health.style.color='#ff9ca6';}catch{health.textContent='Offline';health.style.borderColor='#8b3c46';health.style.color='#ff9ca6';}})();
+</script>
+</body>
+</html>

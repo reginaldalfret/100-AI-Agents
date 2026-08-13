@@ -1,0 +1,18 @@
+{
+  "day": 91,
+  "agent_id": "agent-091",
+  "name": "AI Autonomous Research Agent",
+  "slug": "autonomous-research-agent",
+  "category": "advanced",
+  "model": "qwen3.5:9b",
+  "port": 8191,
+  "api_url": "http://127.0.0.1:8191",
+  "health_url": "http://127.0.0.1:8191/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Autonomous Research Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

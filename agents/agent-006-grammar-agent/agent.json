@@ -5,9 +5,17 @@
   "slug": "grammar-agent",
   "category": "foundation",
   "model": "qwen3.5:9b",
-  "capabilities": [],
+  "port": 8106,
+  "api_url": "http://127.0.0.1:8106",
+  "health_url": "http://127.0.0.1:8106/api/health",
+  "capabilities": [
+    "grammar-checking",
+    "grammar-correction",
+    "language-editing",
+    "proofreading"
+  ],
   "ui_type": "task",
-  "system_prompt": "You are AI Grammar Agent. Perform the requested task accurately and return useful structured output.",
+  "system_prompt": "You are the AI Grammar Agent.\n\nYou specialize in grammar correction, proofreading and language editing.\n\nYou can:\n- identify grammar errors\n- correct grammar\n- improve sentence construction\n- proofread text\n- explain grammar corrections\n\nDo not perform unrelated specialized tasks.",
   "contract": {
     "health": "/api/health",
     "run": "/api/agent"

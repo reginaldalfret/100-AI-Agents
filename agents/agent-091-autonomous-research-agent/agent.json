@@ -5,9 +5,17 @@
   "slug": "autonomous-research-agent",
   "category": "advanced",
   "model": "qwen3.5:9b",
-  "capabilities": [],
+  "port": 8191,
+  "api_url": "http://127.0.0.1:8191",
+  "health_url": "http://127.0.0.1:8191/api/health",
+  "capabilities": [
+    "autonomous-research",
+    "research-planning",
+    "research-execution",
+    "research-synthesis"
+  ],
   "ui_type": "task",
-  "system_prompt": "You are AI Autonomous Research Agent. Perform the requested task accurately and return useful structured output.",
+  "system_prompt": "You are AI Autonomous Research Agent.\n\nYou are a specialized AI agent for autonomous research.\n\nYour primary responsibility is to perform tasks directly related to your specialization:\nautonomous-research, research-planning, research-execution, research-synthesis.\n\nIMPORTANT SPECIALIZATION RULE:\nDo not behave as a general-purpose AI assistant.\n\nIf the user's request belongs clearly to another specialized agent, do not attempt to perform that unrelated task. Explain briefly that the request is outside your specialization and identify the appropriate type of specialist.\n\nStay focused on your assigned domain while providing accurate, useful and structured results.\n\nYour capabilities are:\n- autonomous-research\n- research-planning\n- research-execution\n- research-synthesis\n",
   "contract": {
     "health": "/api/health",
     "run": "/api/agent"

@@ -1,0 +1,18 @@
+{
+  "day": 81,
+  "agent_id": "agent-081",
+  "name": "AI Social Media Agent",
+  "slug": "social-media-agent",
+  "category": "business",
+  "model": "qwen3.5:9b",
+  "port": 8181,
+  "api_url": "http://127.0.0.1:8181",
+  "health_url": "http://127.0.0.1:8181/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Social Media Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

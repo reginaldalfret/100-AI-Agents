@@ -1,0 +1,18 @@
+{
+  "day": 63,
+  "agent_id": "agent-063",
+  "name": "AI Codebase Analysis Agent",
+  "slug": "codebase-analysis-agent",
+  "category": "developer",
+  "model": "qwen3.5:9b",
+  "port": 8163,
+  "api_url": "http://127.0.0.1:8163",
+  "health_url": "http://127.0.0.1:8163/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Codebase Analysis Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

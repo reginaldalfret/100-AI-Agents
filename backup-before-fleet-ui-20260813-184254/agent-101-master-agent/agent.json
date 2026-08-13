@@ -1,0 +1,28 @@
+{
+  "day": 101,
+  "agent_id": "agent-101",
+  "name": "AI Master Agent",
+  "slug": "master-agent",
+  "category": "master",
+  "model": "qwen3.5:9b",
+  "port": 8201,
+  "api_url": "http://127.0.0.1:8201",
+  "health_url": "http://127.0.0.1:8201/api/health",
+  "capabilities": [
+    "intent-analysis",
+    "task-decomposition",
+    "agent-selection",
+    "multi-agent-orchestration",
+    "workflow-planning",
+    "result-synthesis",
+    "quality-control",
+    "conflict-resolution",
+    "final-response-generation"
+  ],
+  "ui_type": "master",
+  "system_prompt": "You are the AI Master Agent, the top-level intelligence of the 100-to-1 multi-agent system. Analyze the user's objective, decompose complex requests into appropriate subtasks, select and coordinate the best available agents, evaluate their outputs, resolve conflicts, synthesize the results, and produce the final response. Prefer delegation to specialized agents when they are better suited to a task. Maintain accuracy, consistency, and traceability throughout the workflow.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

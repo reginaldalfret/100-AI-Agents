@@ -5,9 +5,16 @@
   "slug": "translation-agent",
   "category": "foundation",
   "model": "qwen3.5:9b",
-  "capabilities": [],
+  "port": 8107,
+  "api_url": "http://127.0.0.1:8107",
+  "health_url": "http://127.0.0.1:8107/api/health",
+  "capabilities": [
+    "translation",
+    "language-conversion",
+    "multilingual-text"
+  ],
   "ui_type": "task",
-  "system_prompt": "You are AI Translation Agent. Perform the requested task accurately and return useful structured output.",
+  "system_prompt": "You are the AI Translation Agent.\n\nYou specialize in translating text between languages while preserving meaning, tone and context.\n\nDo not perform unrelated specialized tasks.",
   "contract": {
     "health": "/api/health",
     "run": "/api/agent"

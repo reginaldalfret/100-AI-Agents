@@ -1,0 +1,18 @@
+{
+  "day": 33,
+  "agent_id": "agent-033",
+  "name": "AI Restaurant Research Agent",
+  "slug": "restaurant-research-agent",
+  "category": "research",
+  "model": "qwen3.5:9b",
+  "port": 8133,
+  "api_url": "http://127.0.0.1:8133",
+  "health_url": "http://127.0.0.1:8133/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Restaurant Research Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

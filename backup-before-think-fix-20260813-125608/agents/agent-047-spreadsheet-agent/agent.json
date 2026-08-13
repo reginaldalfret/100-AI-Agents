@@ -1,0 +1,18 @@
+{
+  "day": 47,
+  "agent_id": "agent-047",
+  "name": "AI Spreadsheet Agent",
+  "slug": "spreadsheet-agent",
+  "category": "productivity",
+  "model": "qwen3.5:9b",
+  "port": 8147,
+  "api_url": "http://127.0.0.1:8147",
+  "health_url": "http://127.0.0.1:8147/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Spreadsheet Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

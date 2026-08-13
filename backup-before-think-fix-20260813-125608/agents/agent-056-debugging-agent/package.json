@@ -1,0 +1,14 @@
+{
+  "name": "agent-056",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "check": "node --check backend/src/server.js && node --check backend/src/agent.js && node --check backend/src/config.js && node --check backend/src/model.js",
+    "test": "node --test tests/contract.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

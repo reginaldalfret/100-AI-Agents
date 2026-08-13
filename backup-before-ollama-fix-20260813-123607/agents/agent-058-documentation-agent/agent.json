@@ -1,0 +1,18 @@
+{
+  "day": 58,
+  "agent_id": "agent-058",
+  "name": "AI Documentation Agent",
+  "slug": "documentation-agent",
+  "category": "productivity",
+  "model": "qwen3.5:9b",
+  "port": 8158,
+  "api_url": "http://127.0.0.1:8158",
+  "health_url": "http://127.0.0.1:8158/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Documentation Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

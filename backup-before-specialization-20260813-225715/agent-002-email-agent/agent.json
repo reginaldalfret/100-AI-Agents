@@ -1,0 +1,18 @@
+{
+  "day": 2,
+  "agent_id": "agent-002",
+  "name": "AI Email Agent",
+  "slug": "email-agent",
+  "category": "foundation",
+  "model": "qwen3.5:9b",
+  "port": 8102,
+  "api_url": "http://127.0.0.1:8102",
+  "health_url": "http://127.0.0.1:8102/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Email Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "day": 93,
+  "agent_id": "agent-093",
+  "name": "AI RAG Knowledge Agent",
+  "slug": "rag-knowledge-agent",
+  "category": "advanced",
+  "model": "qwen3.5:9b",
+  "port": 8193,
+  "api_url": "http://127.0.0.1:8193",
+  "health_url": "http://127.0.0.1:8193/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI RAG Knowledge Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

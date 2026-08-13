@@ -1,0 +1,18 @@
+{
+  "day": 46,
+  "agent_id": "agent-046",
+  "name": "AI Invoice Processing Agent",
+  "slug": "invoice-processing-agent",
+  "category": "productivity",
+  "model": "qwen3.5:9b",
+  "port": 8146,
+  "api_url": "http://127.0.0.1:8146",
+  "health_url": "http://127.0.0.1:8146/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Invoice Processing Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

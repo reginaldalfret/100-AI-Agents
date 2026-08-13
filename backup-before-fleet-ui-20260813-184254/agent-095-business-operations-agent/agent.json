@@ -1,0 +1,18 @@
+{
+  "day": 95,
+  "agent_id": "agent-095",
+  "name": "AI Business Operations Agent",
+  "slug": "business-operations-agent",
+  "category": "advanced",
+  "model": "qwen3.5:9b",
+  "port": 8195,
+  "api_url": "http://127.0.0.1:8195",
+  "health_url": "http://127.0.0.1:8195/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Business Operations Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

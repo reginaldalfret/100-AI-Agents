@@ -1,7 +1,7 @@
 {
   "project": "100-to-1",
   "version": "1.0.0",
-  "total_agents": 100,
+  "total_agents": 101,
   "completed_agents": 0,
   "agents": [
     {
@@ -14,10 +14,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8101",
+      "health_url": "http://127.0.0.1:8101/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8101
     },
     {
       "day": 2,
@@ -29,10 +30,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8102",
+      "health_url": "http://127.0.0.1:8102/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8102
     },
     {
       "day": 3,
@@ -44,10 +46,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8103",
+      "health_url": "http://127.0.0.1:8103/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8103
     },
     {
       "day": 4,
@@ -59,10 +62,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8104",
+      "health_url": "http://127.0.0.1:8104/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8104
     },
     {
       "day": 5,
@@ -74,10 +78,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8105",
+      "health_url": "http://127.0.0.1:8105/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8105
     },
     {
       "day": 6,
@@ -89,10 +94,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8106",
+      "health_url": "http://127.0.0.1:8106/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8106
     },
     {
       "day": 7,
@@ -104,10 +110,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8107",
+      "health_url": "http://127.0.0.1:8107/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8107
     },
     {
       "day": 8,
@@ -119,10 +126,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8108",
+      "health_url": "http://127.0.0.1:8108/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8108
     },
     {
       "day": 9,
@@ -134,10 +142,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8109",
+      "health_url": "http://127.0.0.1:8109/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8109
     },
     {
       "day": 10,
@@ -149,10 +158,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8110",
+      "health_url": "http://127.0.0.1:8110/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8110
     },
     {
       "day": 11,
@@ -164,10 +174,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8111",
+      "health_url": "http://127.0.0.1:8111/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8111
     },
     {
       "day": 12,
@@ -179,10 +190,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8112",
+      "health_url": "http://127.0.0.1:8112/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8112
     },
     {
       "day": 13,
@@ -194,10 +206,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8113",
+      "health_url": "http://127.0.0.1:8113/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8113
     },
     {
       "day": 14,
@@ -209,10 +222,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8114",
+      "health_url": "http://127.0.0.1:8114/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8114
     },
     {
       "day": 15,
@@ -224,10 +238,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8115",
+      "health_url": "http://127.0.0.1:8115/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8115
     },
     {
       "day": 16,
@@ -239,10 +254,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8116",
+      "health_url": "http://127.0.0.1:8116/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8116
     },
     {
       "day": 17,
@@ -254,10 +270,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8117",
+      "health_url": "http://127.0.0.1:8117/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8117
     },
     {
       "day": 18,
@@ -269,10 +286,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8118",
+      "health_url": "http://127.0.0.1:8118/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8118
     },
     {
       "day": 19,
@@ -284,10 +302,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8119",
+      "health_url": "http://127.0.0.1:8119/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8119
     },
     {
       "day": 20,
@@ -299,10 +318,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8120",
+      "health_url": "http://127.0.0.1:8120/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8120
     },
     {
       "day": 21,
@@ -314,10 +334,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8121",
+      "health_url": "http://127.0.0.1:8121/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8121
     },
     {
       "day": 22,
@@ -329,10 +350,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8122",
+      "health_url": "http://127.0.0.1:8122/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8122
     },
     {
       "day": 23,
@@ -344,10 +366,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8123",
+      "health_url": "http://127.0.0.1:8123/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8123
     },
     {
       "day": 24,
@@ -359,10 +382,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8124",
+      "health_url": "http://127.0.0.1:8124/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8124
     },
     {
       "day": 25,
@@ -374,10 +398,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8125",
+      "health_url": "http://127.0.0.1:8125/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8125
     },
     {
       "day": 26,
@@ -389,10 +414,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8126",
+      "health_url": "http://127.0.0.1:8126/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8126
     },
     {
       "day": 27,
@@ -404,10 +430,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8127",
+      "health_url": "http://127.0.0.1:8127/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8127
     },
     {
       "day": 28,
@@ -419,10 +446,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8128",
+      "health_url": "http://127.0.0.1:8128/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8128
     },
     {
       "day": 29,
@@ -434,10 +462,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8129",
+      "health_url": "http://127.0.0.1:8129/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8129
     },
     {
       "day": 30,
@@ -449,10 +478,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8130",
+      "health_url": "http://127.0.0.1:8130/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8130
     },
     {
       "day": 31,
@@ -464,10 +494,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8131",
+      "health_url": "http://127.0.0.1:8131/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8131
     },
     {
       "day": 32,
@@ -479,10 +510,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8132",
+      "health_url": "http://127.0.0.1:8132/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8132
     },
     {
       "day": 33,
@@ -494,10 +526,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8133",
+      "health_url": "http://127.0.0.1:8133/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8133
     },
     {
       "day": 34,
@@ -509,10 +542,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8134",
+      "health_url": "http://127.0.0.1:8134/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8134
     },
     {
       "day": 35,
@@ -524,10 +558,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8135",
+      "health_url": "http://127.0.0.1:8135/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8135
     },
     {
       "day": 36,
@@ -539,10 +574,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8136",
+      "health_url": "http://127.0.0.1:8136/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8136
     },
     {
       "day": 37,
@@ -554,10 +590,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8137",
+      "health_url": "http://127.0.0.1:8137/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8137
     },
     {
       "day": 38,
@@ -569,10 +606,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8138",
+      "health_url": "http://127.0.0.1:8138/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8138
     },
     {
       "day": 39,
@@ -584,10 +622,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8139",
+      "health_url": "http://127.0.0.1:8139/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8139
     },
     {
       "day": 40,
@@ -599,10 +638,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8140",
+      "health_url": "http://127.0.0.1:8140/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8140
     },
     {
       "day": 41,
@@ -614,10 +654,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8141",
+      "health_url": "http://127.0.0.1:8141/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8141
     },
     {
       "day": 42,
@@ -629,10 +670,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8142",
+      "health_url": "http://127.0.0.1:8142/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8142
     },
     {
       "day": 43,
@@ -644,10 +686,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8143",
+      "health_url": "http://127.0.0.1:8143/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8143
     },
     {
       "day": 44,
@@ -659,10 +702,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8144",
+      "health_url": "http://127.0.0.1:8144/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8144
     },
     {
       "day": 45,
@@ -674,10 +718,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8145",
+      "health_url": "http://127.0.0.1:8145/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8145
     },
     {
       "day": 46,
@@ -689,10 +734,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8146",
+      "health_url": "http://127.0.0.1:8146/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8146
     },
     {
       "day": 47,
@@ -704,10 +750,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8147",
+      "health_url": "http://127.0.0.1:8147/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8147
     },
     {
       "day": 48,
@@ -719,10 +766,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8148",
+      "health_url": "http://127.0.0.1:8148/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8148
     },
     {
       "day": 49,
@@ -734,10 +782,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8149",
+      "health_url": "http://127.0.0.1:8149/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8149
     },
     {
       "day": 50,
@@ -749,10 +798,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8150",
+      "health_url": "http://127.0.0.1:8150/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8150
     },
     {
       "day": 51,
@@ -764,10 +814,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8151",
+      "health_url": "http://127.0.0.1:8151/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8151
     },
     {
       "day": 52,
@@ -779,10 +830,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8152",
+      "health_url": "http://127.0.0.1:8152/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8152
     },
     {
       "day": 53,
@@ -794,10 +846,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8153",
+      "health_url": "http://127.0.0.1:8153/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8153
     },
     {
       "day": 54,
@@ -809,10 +862,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8154",
+      "health_url": "http://127.0.0.1:8154/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8154
     },
     {
       "day": 55,
@@ -824,10 +878,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8155",
+      "health_url": "http://127.0.0.1:8155/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8155
     },
     {
       "day": 56,
@@ -839,10 +894,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8156",
+      "health_url": "http://127.0.0.1:8156/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8156
     },
     {
       "day": 57,
@@ -854,10 +910,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8157",
+      "health_url": "http://127.0.0.1:8157/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8157
     },
     {
       "day": 58,
@@ -869,10 +926,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8158",
+      "health_url": "http://127.0.0.1:8158/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8158
     },
     {
       "day": 59,
@@ -884,10 +942,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8159",
+      "health_url": "http://127.0.0.1:8159/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8159
     },
     {
       "day": 60,
@@ -899,10 +958,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8160",
+      "health_url": "http://127.0.0.1:8160/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8160
     },
     {
       "day": 61,
@@ -914,10 +974,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8161",
+      "health_url": "http://127.0.0.1:8161/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8161
     },
     {
       "day": 62,
@@ -929,10 +990,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8162",
+      "health_url": "http://127.0.0.1:8162/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8162
     },
     {
       "day": 63,
@@ -944,10 +1006,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8163",
+      "health_url": "http://127.0.0.1:8163/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8163
     },
     {
       "day": 64,
@@ -959,10 +1022,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8164",
+      "health_url": "http://127.0.0.1:8164/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8164
     },
     {
       "day": 65,
@@ -974,10 +1038,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8165",
+      "health_url": "http://127.0.0.1:8165/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8165
     },
     {
       "day": 66,
@@ -989,10 +1054,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8166",
+      "health_url": "http://127.0.0.1:8166/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8166
     },
     {
       "day": 67,
@@ -1004,10 +1070,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8167",
+      "health_url": "http://127.0.0.1:8167/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8167
     },
     {
       "day": 68,
@@ -1019,10 +1086,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8168",
+      "health_url": "http://127.0.0.1:8168/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8168
     },
     {
       "day": 69,
@@ -1034,10 +1102,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8169",
+      "health_url": "http://127.0.0.1:8169/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8169
     },
     {
       "day": 70,
@@ -1049,10 +1118,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8170",
+      "health_url": "http://127.0.0.1:8170/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8170
     },
     {
       "day": 71,
@@ -1064,10 +1134,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8171",
+      "health_url": "http://127.0.0.1:8171/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8171
     },
     {
       "day": 72,
@@ -1079,10 +1150,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8172",
+      "health_url": "http://127.0.0.1:8172/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8172
     },
     {
       "day": 73,
@@ -1094,10 +1166,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8173",
+      "health_url": "http://127.0.0.1:8173/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8173
     },
     {
       "day": 74,
@@ -1109,10 +1182,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8174",
+      "health_url": "http://127.0.0.1:8174/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8174
     },
     {
       "day": 75,
@@ -1124,10 +1198,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8175",
+      "health_url": "http://127.0.0.1:8175/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8175
     },
     {
       "day": 76,
@@ -1139,10 +1214,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8176",
+      "health_url": "http://127.0.0.1:8176/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8176
     },
     {
       "day": 77,
@@ -1154,10 +1230,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8177",
+      "health_url": "http://127.0.0.1:8177/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8177
     },
     {
       "day": 78,
@@ -1169,10 +1246,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8178",
+      "health_url": "http://127.0.0.1:8178/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8178
     },
     {
       "day": 79,
@@ -1184,10 +1262,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8179",
+      "health_url": "http://127.0.0.1:8179/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8179
     },
     {
       "day": 80,
@@ -1199,10 +1278,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8180",
+      "health_url": "http://127.0.0.1:8180/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8180
     },
     {
       "day": 81,
@@ -1214,10 +1294,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8181",
+      "health_url": "http://127.0.0.1:8181/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8181
     },
     {
       "day": 82,
@@ -1229,10 +1310,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8182",
+      "health_url": "http://127.0.0.1:8182/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8182
     },
     {
       "day": 83,
@@ -1244,10 +1326,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8183",
+      "health_url": "http://127.0.0.1:8183/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8183
     },
     {
       "day": 84,
@@ -1259,10 +1342,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8184",
+      "health_url": "http://127.0.0.1:8184/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8184
     },
     {
       "day": 85,
@@ -1274,10 +1358,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8185",
+      "health_url": "http://127.0.0.1:8185/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8185
     },
     {
       "day": 86,
@@ -1289,10 +1374,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8186",
+      "health_url": "http://127.0.0.1:8186/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8186
     },
     {
       "day": 87,
@@ -1304,10 +1390,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8187",
+      "health_url": "http://127.0.0.1:8187/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8187
     },
     {
       "day": 88,
@@ -1319,10 +1406,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8188",
+      "health_url": "http://127.0.0.1:8188/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8188
     },
     {
       "day": 89,
@@ -1334,10 +1422,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8189",
+      "health_url": "http://127.0.0.1:8189/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8189
     },
     {
       "day": 90,
@@ -1349,10 +1438,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8190",
+      "health_url": "http://127.0.0.1:8190/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8190
     },
     {
       "day": 91,
@@ -1364,10 +1454,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8191",
+      "health_url": "http://127.0.0.1:8191/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8191
     },
     {
       "day": 92,
@@ -1379,10 +1470,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8192",
+      "health_url": "http://127.0.0.1:8192/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8192
     },
     {
       "day": 93,
@@ -1394,10 +1486,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8193",
+      "health_url": "http://127.0.0.1:8193/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8193
     },
     {
       "day": 94,
@@ -1409,10 +1502,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8194",
+      "health_url": "http://127.0.0.1:8194/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8194
     },
     {
       "day": 95,
@@ -1424,10 +1518,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8195",
+      "health_url": "http://127.0.0.1:8195/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8195
     },
     {
       "day": 96,
@@ -1439,10 +1534,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8196",
+      "health_url": "http://127.0.0.1:8196/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8196
     },
     {
       "day": 97,
@@ -1454,10 +1550,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8197",
+      "health_url": "http://127.0.0.1:8197/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8197
     },
     {
       "day": 98,
@@ -1469,10 +1566,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8198",
+      "health_url": "http://127.0.0.1:8198/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8198
     },
     {
       "day": 99,
@@ -1484,10 +1582,11 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8199",
+      "health_url": "http://127.0.0.1:8199/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8199
     },
     {
       "day": 100,
@@ -1499,10 +1598,40 @@
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
-      "api_url": "",
-      "health_url": "",
+      "api_url": "http://127.0.0.1:8200",
+      "health_url": "http://127.0.0.1:8200/api/health",
       "model": "qwen3.5:9b",
-      "backend": "http://127.0.0.1:11435"
+      "backend": "http://127.0.0.1:11434",
+      "port": 8200
+    },
+    {
+      "day": 101,
+      "agent_id": "agent-101",
+      "name": "AI Master Agent",
+      "slug": "master-agent",
+      "category": "master",
+      "status": "planned",
+      "github_repo": "",
+      "vercel_project": "",
+      "vercel_url": "",
+      "api_url": "http://127.0.0.1:8201",
+      "health_url": "http://127.0.0.1:8201/api/health",
+      "model": "qwen3.5:9b",
+      "backend": "http://127.0.0.1:11434",
+      "capabilities": [
+        "intent-analysis",
+        "task-decomposition",
+        "agent-selection",
+        "multi-agent-orchestration",
+        "workflow-planning",
+        "result-synthesis",
+        "quality-control",
+        "conflict-resolution",
+        "final-response-generation"
+      ],
+      "ui_type": "master",
+      "system_prompt": "You are the AI Master Agent, the top-level intelligence of the 100-to-1 multi-agent system. Analyze the user's objective, decompose complex requests into appropriate subtasks, select and coordinate the best available agents, evaluate their outputs, resolve conflicts, synthesize the results, and produce the final response. Prefer delegation to specialized agents when they are better suited to a task. Maintain accuracy, consistency, and traceability throughout the workflow.",
+      "port": 8201
     }
   ]
 }

@@ -1,0 +1,18 @@
+{
+  "day": 68,
+  "agent_id": "agent-068",
+  "name": "AI Dependency Analysis Agent",
+  "slug": "dependency-analysis-agent",
+  "category": "developer",
+  "model": "qwen3.5:9b",
+  "port": 8168,
+  "api_url": "http://127.0.0.1:8168",
+  "health_url": "http://127.0.0.1:8168/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Dependency Analysis Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

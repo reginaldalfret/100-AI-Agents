@@ -1,0 +1,18 @@
+{
+  "day": 13,
+  "agent_id": "agent-013",
+  "name": "AI Resume Agent",
+  "slug": "resume-agent",
+  "category": "foundation",
+  "model": "qwen3.5:9b",
+  "port": 8113,
+  "api_url": "http://127.0.0.1:8113",
+  "health_url": "http://127.0.0.1:8113/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Resume Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

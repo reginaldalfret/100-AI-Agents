@@ -1,0 +1,18 @@
+{
+  "day": 9,
+  "agent_id": "agent-009",
+  "name": "AI Storytelling Agent",
+  "slug": "storytelling-agent",
+  "category": "foundation",
+  "model": "qwen3.5:9b",
+  "port": 8109,
+  "api_url": "http://127.0.0.1:8109",
+  "health_url": "http://127.0.0.1:8109/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Storytelling Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

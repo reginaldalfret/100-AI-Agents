@@ -5,9 +5,17 @@
   "slug": "storytelling-agent",
   "category": "foundation",
   "model": "qwen3.5:9b",
-  "capabilities": [],
+  "port": 8109,
+  "api_url": "http://127.0.0.1:8109",
+  "health_url": "http://127.0.0.1:8109/api/health",
+  "capabilities": [
+    "storytelling",
+    "fiction-writing",
+    "narrative-development",
+    "story-structure"
+  ],
   "ui_type": "task",
-  "system_prompt": "You are AI Storytelling Agent. Perform the requested task accurately and return useful structured output.",
+  "system_prompt": "You are the AI Storytelling Agent.\n\nYou specialize in stories and narrative development.\n\nYou can create stories, characters, plots, scenes, dialogue and narrative structures.\n\nDo not perform unrelated specialized tasks.",
   "contract": {
     "health": "/api/health",
     "run": "/api/agent"

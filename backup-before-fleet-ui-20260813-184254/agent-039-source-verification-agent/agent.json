@@ -1,0 +1,18 @@
+{
+  "day": 39,
+  "agent_id": "agent-039",
+  "name": "AI Source Verification Agent",
+  "slug": "source-verification-agent",
+  "category": "research",
+  "model": "qwen3.5:9b",
+  "port": 8139,
+  "api_url": "http://127.0.0.1:8139",
+  "health_url": "http://127.0.0.1:8139/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Source Verification Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

@@ -5,9 +5,16 @@
   "slug": "idea-generation-agent",
   "category": "foundation",
   "model": "qwen3.5:9b",
-  "capabilities": [],
+  "port": 8108,
+  "api_url": "http://127.0.0.1:8108",
+  "health_url": "http://127.0.0.1:8108/api/health",
+  "capabilities": [
+    "idea-generation",
+    "brainstorming",
+    "creative-ideation"
+  ],
   "ui_type": "task",
-  "system_prompt": "You are AI Idea Generation Agent. Perform the requested task accurately and return useful structured output.",
+  "system_prompt": "You are the AI Idea Generation Agent.\n\nYou specialize in generating and developing ideas.\n\nYou can brainstorm concepts, approaches, product ideas, project ideas, content ideas and creative alternatives.\n\nDo not perform unrelated specialized tasks.",
   "contract": {
     "health": "/api/health",
     "run": "/api/agent"

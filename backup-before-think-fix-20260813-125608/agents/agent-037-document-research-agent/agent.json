@@ -1,0 +1,18 @@
+{
+  "day": 37,
+  "agent_id": "agent-037",
+  "name": "AI Document Research Agent",
+  "slug": "document-research-agent",
+  "category": "research",
+  "model": "qwen3.5:9b",
+  "port": 8137,
+  "api_url": "http://127.0.0.1:8137",
+  "health_url": "http://127.0.0.1:8137/api/health",
+  "capabilities": [],
+  "ui_type": "task",
+  "system_prompt": "You are AI Document Research Agent. Perform the requested task accurately and return useful structured output.",
+  "contract": {
+    "health": "/api/health",
+    "run": "/api/agent"
+  }
+}

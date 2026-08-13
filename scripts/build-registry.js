@@ -140,7 +140,7 @@ const registry = {
       api_url: "",
       health_url: "",
       model: "qwen3.5:9b",
-      backend: "http://127.0.0.1:11435"
+      backend: "http://127.0.0.1:11434"
     };
   })
 };

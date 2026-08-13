@@ -2,7 +2,7 @@ import http from "node:http";
 import { agentInfo, health, runAgent } from "./agent.js";
 
 const HOST = process.env.HOST || "127.0.0.1";
-const PORT = Number(process.env.PORT || 8100);
+const PORT = Number(process.env.PORT || "__PORT__");
 
 function json(res, status, body) {
   const text = JSON.stringify(body);

@@ -19,13 +19,49 @@ const REGISTRY_PATH = path.join(ROOT, "registry", "agents.json");
 const TEMPLATE_ROOT = path.join(ROOT, "agent-template");
 const OUTPUT_ROOT = path.join(ROOT, "agents");
 
-const args = new Set(process.argv.slice(2));
+const argv = process.argv.slice(2);
+const args = new Set(argv);
+
+if (args.has("--help") || args.has("-h")) {
+  console.log(`
+100-to-1 Agent Generator
+
+Usage:
+  node scripts/generate-agents.js --only agent-002
+  node scripts/generate-agents.js --only agent-101
+  node scripts/generate-agents.js --all
+  node scripts/generate-agents.js --all --force
+
+Options:
+  --only <agent-id>   Generate one specific agent
+  --all               Generate all agents
+  --force             Replace an existing generated agent
+  --help, -h          Show this help
+
+Safety:
+  No agents are generated unless --only or --all is explicitly supplied.
+`);
+  process.exit(0);
+}
+
 const onlyIndex = process.argv.indexOf("--only");
 const only = onlyIndex >= 0 ? process.argv[onlyIndex + 1] : null;
 const force = args.has("--force");
+const all = args.has("--all");
 
 if (onlyIndex >= 0 && !only) {
   throw new Error("--only requires an agent id, e.g. --only agent-002");
+}
+
+if (only && all) {
+  throw new Error("--only and --all cannot be used together");
+}
+
+if (!only && !all) {
+  console.error("No generation target specified.");
+  console.error("Use --only <agent-id> or --all.");
+  console.error("Run --help for usage.");
+  process.exit(1);
 }
 
 function loadJson(file) {
@@ -58,6 +94,9 @@ function renderAgentConfig(agent) {
     slug: agent.slug,
     category: agent.category,
     model: agent.model,
+    port: agent.port ?? (8100 + Number(agent.day)),
+    api_url: agent.api_url ?? `http://127.0.0.1:${8100 + Number(agent.day)}`,
+    health_url: agent.health_url ?? `http://127.0.0.1:${8100 + Number(agent.day)}/api/health`,
     capabilities: agent.capabilities ?? [],
     ui_type: agent.ui_type ?? "task",
     system_prompt: agent.system_prompt ?? `You are ${agent.name}. Perform the requested task accurately and return useful structured output.`,
@@ -88,7 +127,9 @@ function renderPackage(agent) {
     type: "module",
     scripts: {
       start: "node backend/src/server.js",
-      check: "node --check backend/src/server.js && node --check backend/src/agent.js && node --check backend/src/config.js && node --check backend/src/model.js",
+      check: agent.agent_id === "agent-101"
+        ? "node --check backend/src/server.js && node --check backend/src/agent.js && node --check backend/src/config.js && node --check backend/src/model.js && node --check backend/src/registry.js && node --check backend/src/planner.js && node --check backend/src/delegator.js && node --check backend/src/synthesizer.js"
+        : "node --check backend/src/server.js && node --check backend/src/agent.js && node --check backend/src/config.js && node --check backend/src/model.js",
       test: "node --test tests/contract.test.js"
     },
     engines: { node: ">=20" }
@@ -117,7 +158,8 @@ function generate(agent) {
     "__AGENT_VERSION__": "1.0.0",
     "__AGENT_SYSTEM_PROMPT__": agent.system_prompt ?? `You are ${agent.name}. Perform the requested task accurately and return useful structured output.`,
     "__MODEL__": agent.model ?? "qwen3.5:9b",
-    "__OLLAMA_URL__": agent.backend ?? "http://127.0.0.1:11435"
+    "__OLLAMA_URL__": agent.backend ?? "http://127.0.0.1:11434",
+    "__PORT__": String(agent.port ?? (8100 + Number(agent.day)))
   };
 
   fs.mkdirSync(destination, { recursive: true });
@@ -131,7 +173,43 @@ function generate(agent) {
     "tests/contract.test.js"
   ];
 
-  for (const file of files) copyTemplate(file, destination, replacements);
+  for (const file of files) {
+    copyTemplate(file, destination, replacements);
+  }
+
+  if (agent.agent_id === "agent-101") {
+    const masterFiles = [
+      "registry.js",
+      "planner.js",
+      "delegator.js",
+      "synthesizer.js"
+    ];
+
+    for (const file of masterFiles) {
+      const source = path.join(
+        TEMPLATE_ROOT,
+        "master",
+        "backend",
+        "src",
+        file
+      );
+
+      const target = path.join(
+        destination,
+        "backend",
+        "src",
+        file
+      );
+
+      let content = fs.readFileSync(source, "utf8");
+
+      for (const [token, value] of Object.entries(replacements)) {
+        content = content.split(token).join(value);
+      }
+
+      writeText(target, content);
+    }
+  }
 
   writeText(path.join(destination, "agent.json"), renderAgentConfig(agent));
   writeText(path.join(destination, "README.md"), renderReadme(agent));

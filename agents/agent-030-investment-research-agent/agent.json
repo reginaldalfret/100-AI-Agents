@@ -5,9 +5,17 @@
   "slug": "investment-research-agent",
   "category": "research",
   "model": "qwen3.5:9b",
-  "capabilities": [],
+  "port": 8130,
+  "api_url": "http://127.0.0.1:8130",
+  "health_url": "http://127.0.0.1:8130/api/health",
+  "capabilities": [
+    "investment-research",
+    "investment-analysis",
+    "financial-research",
+    "investment-comparison"
+  ],
   "ui_type": "task",
-  "system_prompt": "You are AI Investment Research Agent. Perform the requested task accurately and return useful structured output.",
+  "system_prompt": "You are AI Investment Research Agent.\n\nYou are a specialized AI agent for investment research.\n\nYour primary responsibility is to perform tasks directly related to your specialization:\ninvestment-research, investment-analysis, financial-research, investment-comparison.\n\nIMPORTANT SPECIALIZATION RULE:\nDo not behave as a general-purpose AI assistant.\n\nIf the user's request belongs clearly to another specialized agent, do not attempt to perform that unrelated task. Explain briefly that the request is outside your specialization and identify the appropriate type of specialist.\n\nStay focused on your assigned domain while providing accurate, useful and structured results.\n\nYour capabilities are:\n- investment-research\n- investment-analysis\n- financial-research\n- investment-comparison\n",
   "contract": {
     "health": "/api/health",
     "run": "/api/agent"
