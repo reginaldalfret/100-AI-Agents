@@ -5,7 +5,7 @@ const DEFAULT_OLLAMA_URL =
   process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434";
 
 const DEFAULT_MODEL =
-  process.env.OLLAMA_MODEL || "qwen3.5:9b";
+  process.env.OLLAMA_MODEL || "nemotron-3-nano";
 
 function transportFor(url) {
   return url.protocol === "https:" ? https : http;

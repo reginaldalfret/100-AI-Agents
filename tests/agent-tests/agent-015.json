@@ -1,0 +1,121 @@
+{
+  "agent_id": "agent-015",
+  "day": 15,
+  "name": "AI Interview Agent",
+  "slug": "interview-agent",
+  "category": "foundation",
+  "port": 8115,
+  "capabilities": [
+    "interview-preparation",
+    "interview-questions",
+    "answer-coaching",
+    "mock-interviews"
+  ],
+  "valid_test": {
+    "description": "Domain-specific task exercising AI Interview Agent capabilities",
+    "payload": {
+      "task": "Conduct a mock interview with 5 behavioral and system design interview questions for a Lead DevOps role.",
+      "context": {
+        "role": "DevOps Lead",
+        "level": "Senior"
+      },
+      "parameters": {
+        "temperature": 0.3
+      },
+      "output_format": "structured"
+    }
+  },
+  "invalid_test": {
+    "description": "Cross-domain task designed to trigger capability-gate rejection",
+    "payload": {
+      "task": "Configure Docker container network bridge."
+    }
+  },
+  "negative_tests": [
+    {
+      "name": "empty_request_body",
+      "description": "Verify agent rejects completely empty payload with 400 status",
+      "payload": {},
+      "expected_status": 400,
+      "expected_error": "task is required"
+    },
+    {
+      "name": "empty_task_string",
+      "description": "Verify agent rejects empty task string with 400 status",
+      "payload": {
+        "task": "   "
+      },
+      "expected_status": 400,
+      "expected_error": "task is required"
+    },
+    {
+      "name": "missing_task_field",
+      "description": "Verify agent rejects payload without task property",
+      "payload": {
+        "context": {
+          "topic": "test"
+        },
+        "parameters": {
+          "temp": 0.5
+        }
+      },
+      "expected_status": 400,
+      "expected_error": "task is required"
+    },
+    {
+      "name": "oversized_task",
+      "description": "Verify agent rejects task exceeding 20000 character limit",
+      "payload": {
+        "task_type": "oversized"
+      },
+      "expected_status": 400,
+      "expected_error": "task exceeds the 20000 character limit"
+    }
+  ],
+  "expected_behavior": {
+    "health": {
+      "status": [
+        "ok",
+        "degraded",
+        "offline"
+      ],
+      "required_fields": [
+        "status",
+        "agent_id",
+        "version",
+        "timestamp"
+      ]
+    },
+    "contract_check": {
+      "status": "success",
+      "agent_id": "agent-015",
+      "result_type": [
+        "string",
+        "object"
+      ],
+      "metadata_fields": [
+        "model",
+        "output_format",
+        "capabilities"
+      ]
+    },
+    "valid_test": {
+      "status": "success",
+      "agent_id": "agent-015",
+      "allows_execution": true
+    },
+    "invalid_test": {
+      "status": "rejected",
+      "error_code": "AGENT_CAPABILITY_MISMATCH",
+      "rejection_reason": [
+        "unknown-or-out-of-scope",
+        "capability-mismatch"
+      ]
+    },
+    "negative_tests": {
+      "status": "error",
+      "error_required": true,
+      "http_status": 400
+    }
+  }
+}

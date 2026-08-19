@@ -1,0 +1,1017 @@
+{
+  "timestamp": "2026-08-19T05:49:17.450Z",
+  "total_agents": 101,
+  "healthy_count": 101,
+  "agents": [
+    {
+      "agent_id": "agent-001",
+      "name": "AI Writing Agent",
+      "category": "foundation",
+      "port": 8101,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 61,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-002",
+      "name": "AI Email Agent",
+      "category": "foundation",
+      "port": 8102,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 58,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-003",
+      "name": "AI Study Agent",
+      "category": "foundation",
+      "port": 8103,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 56,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-004",
+      "name": "AI Quiz Agent",
+      "category": "foundation",
+      "port": 8104,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 53,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-005",
+      "name": "AI Summarization Agent",
+      "category": "foundation",
+      "port": 8105,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 51,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-006",
+      "name": "AI Grammar Agent",
+      "category": "foundation",
+      "port": 8106,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 49,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-007",
+      "name": "AI Translation Agent",
+      "category": "foundation",
+      "port": 8107,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 46,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-008",
+      "name": "AI Idea Generation Agent",
+      "category": "foundation",
+      "port": 8108,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 44,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-009",
+      "name": "AI Storytelling Agent",
+      "category": "foundation",
+      "port": 8109,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 43,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-010",
+      "name": "AI Goal Planning Agent",
+      "category": "foundation",
+      "port": 8110,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 34,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-011",
+      "name": "AI Note-Taking Agent",
+      "category": "foundation",
+      "port": 8111,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 65,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-012",
+      "name": "AI Task Management Agent",
+      "category": "foundation",
+      "port": 8112,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 62,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-013",
+      "name": "AI Resume Agent",
+      "category": "foundation",
+      "port": 8113,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 57,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-014",
+      "name": "AI Job Matching Agent",
+      "category": "foundation",
+      "port": 8114,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 49,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-015",
+      "name": "AI Interview Agent",
+      "category": "foundation",
+      "port": 8115,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 46,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-016",
+      "name": "AI Communication Agent",
+      "category": "foundation",
+      "port": 8116,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 42,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-017",
+      "name": "AI SWOT Analysis Agent",
+      "category": "foundation",
+      "port": 8117,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 39,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-018",
+      "name": "AI Career Advisor Agent",
+      "category": "foundation",
+      "port": 8118,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 36,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-019",
+      "name": "AI Decision-Making Agent",
+      "category": "foundation",
+      "port": 8119,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 31,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-020",
+      "name": "AI Brainstorming Agent",
+      "category": "foundation",
+      "port": 8120,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 26,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-021",
+      "name": "AI Web Research Agent",
+      "category": "research",
+      "port": 8121,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 62,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-022",
+      "name": "AI News Research Agent",
+      "category": "research",
+      "port": 8122,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 56,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-023",
+      "name": "AI Research Paper Agent",
+      "category": "research",
+      "port": 8123,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 69,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-024",
+      "name": "AI Literature Review Agent",
+      "category": "research",
+      "port": 8124,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 55,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-025",
+      "name": "AI Book Research Agent",
+      "category": "research",
+      "port": 8125,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 53,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-026",
+      "name": "AI Company Research Agent",
+      "category": "research",
+      "port": 8126,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 55,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-027",
+      "name": "AI Competitor Research Agent",
+      "category": "research",
+      "port": 8127,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 57,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-028",
+      "name": "AI Market Research Agent",
+      "category": "research",
+      "port": 8128,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 48,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-029",
+      "name": "AI Startup Research Agent",
+      "category": "research",
+      "port": 8129,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 48,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-030",
+      "name": "AI Investment Research Agent",
+      "category": "research",
+      "port": 8130,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 46,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-031",
+      "name": "AI Product Research Agent",
+      "category": "research",
+      "port": 8131,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 53,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-032",
+      "name": "AI Travel Research Agent",
+      "category": "research",
+      "port": 8132,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 59,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-033",
+      "name": "AI Restaurant Research Agent",
+      "category": "research",
+      "port": 8133,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 51,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-034",
+      "name": "AI Course Research Agent",
+      "category": "research",
+      "port": 8134,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 45,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-035",
+      "name": "AI College Research Agent",
+      "category": "research",
+      "port": 8135,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 49,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-036",
+      "name": "AI GitHub Research Agent",
+      "category": "research",
+      "port": 8136,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 37,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-037",
+      "name": "AI Document Research Agent",
+      "category": "research",
+      "port": 8137,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 30,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-038",
+      "name": "AI Fact-Checking Agent",
+      "category": "research",
+      "port": 8138,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 35,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-039",
+      "name": "AI Source Verification Agent",
+      "category": "research",
+      "port": 8139,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 37,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-040",
+      "name": "AI Research Assistant Agent",
+      "category": "research",
+      "port": 8140,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 30,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-041",
+      "name": "AI Email Management Agent",
+      "category": "productivity",
+      "port": 8141,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 47,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-042",
+      "name": "AI Calendar Management Agent",
+      "category": "productivity",
+      "port": 8142,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 45,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-043",
+      "name": "AI Task Automation Agent",
+      "category": "productivity",
+      "port": 8143,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 44,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-044",
+      "name": "AI File Organization Agent",
+      "category": "productivity",
+      "port": 8144,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 45,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-045",
+      "name": "AI PDF Processing Agent",
+      "category": "productivity",
+      "port": 8145,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 43,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-046",
+      "name": "AI Invoice Processing Agent",
+      "category": "productivity",
+      "port": 8146,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 42,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-047",
+      "name": "AI Spreadsheet Agent",
+      "category": "productivity",
+      "port": 8147,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 37,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-048",
+      "name": "AI Data Analysis Agent",
+      "category": "productivity",
+      "port": 8148,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 34,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-049",
+      "name": "AI Report Generation Agent",
+      "category": "productivity",
+      "port": 8149,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 32,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-050",
+      "name": "AI Presentation Agent",
+      "category": "productivity",
+      "port": 8150,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 28,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-051",
+      "name": "AI Image Analysis Agent",
+      "category": "productivity",
+      "port": 8151,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 57,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-052",
+      "name": "AI Video Analysis Agent",
+      "category": "productivity",
+      "port": 8152,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 52,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-053",
+      "name": "AI Meeting Assistant Agent",
+      "category": "productivity",
+      "port": 8153,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 51,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-054",
+      "name": "AI Voice Assistant Agent",
+      "category": "productivity",
+      "port": 8154,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 45,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-055",
+      "name": "AI Code Review Agent",
+      "category": "productivity",
+      "port": 8155,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 44,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-056",
+      "name": "AI Debugging Agent",
+      "category": "productivity",
+      "port": 8156,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 40,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-057",
+      "name": "AI Test Generation Agent",
+      "category": "productivity",
+      "port": 8157,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 36,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-058",
+      "name": "AI Documentation Agent",
+      "category": "productivity",
+      "port": 8158,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 33,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-059",
+      "name": "AI Workflow Automation Agent",
+      "category": "productivity",
+      "port": 8159,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 26,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-060",
+      "name": "AI Personal Assistant Agent",
+      "category": "productivity",
+      "port": 8160,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 25,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-061",
+      "name": "AI Code Generation Agent",
+      "category": "developer",
+      "port": 8161,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 48,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-062",
+      "name": "AI Software Architecture Agent",
+      "category": "developer",
+      "port": 8162,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 42,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-063",
+      "name": "AI Codebase Analysis Agent",
+      "category": "developer",
+      "port": 8163,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 42,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-064",
+      "name": "AI Bug Hunting Agent",
+      "category": "developer",
+      "port": 8164,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 40,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-065",
+      "name": "AI Performance Optimization Agent",
+      "category": "developer",
+      "port": 8165,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 35,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-066",
+      "name": "AI Security Audit Agent",
+      "category": "developer",
+      "port": 8166,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 35,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-067",
+      "name": "AI Test Engineer Agent",
+      "category": "developer",
+      "port": 8167,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 31,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-068",
+      "name": "AI Dependency Analysis Agent",
+      "category": "developer",
+      "port": 8168,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 29,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-069",
+      "name": "AI API Documentation Agent",
+      "category": "developer",
+      "port": 8169,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 28,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-070",
+      "name": "AI Code Refactoring Agent",
+      "category": "developer",
+      "port": 8170,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 24,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-071",
+      "name": "AI Database Agent",
+      "category": "developer",
+      "port": 8171,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 50,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-072",
+      "name": "AI DevOps Agent",
+      "category": "developer",
+      "port": 8172,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 46,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-073",
+      "name": "AI Docker Agent",
+      "category": "developer",
+      "port": 8173,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 38,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-074",
+      "name": "AI CI/CD Agent",
+      "category": "developer",
+      "port": 8174,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 39,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-075",
+      "name": "AI Full-Stack Developer Agent",
+      "category": "developer",
+      "port": 8175,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 33,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-076",
+      "name": "AI Sales Agent",
+      "category": "business",
+      "port": 8176,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 32,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-077",
+      "name": "AI Lead Generation Agent",
+      "category": "business",
+      "port": 8177,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 30,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-078",
+      "name": "AI Lead Qualification Agent",
+      "category": "business",
+      "port": 8178,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 29,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-079",
+      "name": "AI Customer Support Agent",
+      "category": "business",
+      "port": 8179,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 25,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-080",
+      "name": "AI Marketing Agent",
+      "category": "business",
+      "port": 8180,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 22,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-081",
+      "name": "AI Social Media Agent",
+      "category": "business",
+      "port": 8181,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 50,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-082",
+      "name": "AI SEO Agent",
+      "category": "business",
+      "port": 8182,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 47,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-083",
+      "name": "AI Content Marketing Agent",
+      "category": "business",
+      "port": 8183,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 45,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-084",
+      "name": "AI Business Analyst Agent",
+      "category": "business",
+      "port": 8184,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 39,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-085",
+      "name": "AI Financial Analysis Agent",
+      "category": "business",
+      "port": 8185,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 38,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-086",
+      "name": "AI Accounting Assistant Agent",
+      "category": "business",
+      "port": 8186,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 36,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-087",
+      "name": "AI E-Commerce Agent",
+      "category": "business",
+      "port": 8187,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 34,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-088",
+      "name": "AI Supply Chain Agent",
+      "category": "business",
+      "port": 8188,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 28,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-089",
+      "name": "AI HR & Recruitment Agent",
+      "category": "business",
+      "port": 8189,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 26,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-090",
+      "name": "AI Project Manager Agent",
+      "category": "business",
+      "port": 8190,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 22,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-091",
+      "name": "AI Autonomous Research Agent",
+      "category": "advanced",
+      "port": 8191,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 50,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-092",
+      "name": "AI Browser Automation Agent",
+      "category": "advanced",
+      "port": 8192,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 45,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-093",
+      "name": "AI RAG Knowledge Agent",
+      "category": "advanced",
+      "port": 8193,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 43,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-094",
+      "name": "AI Multi-Agent Debate Agent",
+      "category": "advanced",
+      "port": 8194,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 41,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-095",
+      "name": "AI Business Operations Agent",
+      "category": "advanced",
+      "port": 8195,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 39,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-096",
+      "name": "AI Autonomous Coding Agent",
+      "category": "advanced",
+      "port": 8196,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 36,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-097",
+      "name": "AI AI-Research Scientist Agent",
+      "category": "advanced",
+      "port": 8197,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 34,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-098",
+      "name": "AI Startup Builder Agent",
+      "category": "advanced",
+      "port": 8198,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 32,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-099",
+      "name": "AI Multi-Agent Coordinator Agent",
+      "category": "advanced",
+      "port": 8199,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 28,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-100",
+      "name": "AI Agent Orchestrator Agent",
+      "category": "advanced",
+      "port": 8200,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 27,
+      "reachable": true
+    },
+    {
+      "agent_id": "agent-101",
+      "name": "AI Master Agent",
+      "category": "master",
+      "port": 8201,
+      "status": "ok",
+      "model": "qwen3.5:9b",
+      "latency_ms": 12,
+      "reachable": true
+    }
+  ]
+}
