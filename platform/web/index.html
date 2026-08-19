@@ -3,734 +3,657 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#03050c">
-  <title>SA-S03 · Educational Intelligent Workflow Platform</title>
+  <meta name="theme-color" content="#07090e">
+  <title>SA-S03 · Educational AI Operations Center</title>
   
   <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   
-  <!-- Base Theme Styles -->
-  <style>
-    * { box-sizing: border-box; }
-    
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      overflow: hidden;
-      background: #03050c;
-      color: #f5f7ff;
-      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-      position: relative;
-    }
-
-    /* Ambient RGB Liquid Glow Background */
-    body::before, body::after {
-      content: "";
-      position: fixed;
-      inset: -20%;
-      pointer-events: none;
-      z-index: -3;
-    }
-
-    body::before {
-      background:
-        radial-gradient(circle at 15% 20%, rgba(0, 234, 255, 0.14), transparent 30%),
-        radial-gradient(circle at 85% 15%, rgba(255, 34, 215, 0.12), transparent 30%),
-        radial-gradient(circle at 75% 85%, rgba(139, 61, 255, 0.15), transparent 35%),
-        radial-gradient(circle at 20% 85%, rgba(0, 120, 255, 0.12), transparent 30%);
-      filter: blur(80px);
-      animation: ambientGlow 20s ease-in-out infinite alternate;
-    }
-
-    body::after {
-      background: linear-gradient(135deg, transparent 30%, rgba(0, 234, 255, 0.03), transparent 50%, rgba(255, 34, 215, 0.03), transparent 70%);
-      filter: blur(40px);
-    }
-
-    @keyframes ambientGlow {
-      0% { transform: translate(-2%, -2%) scale(1); }
-      50% { transform: translate(3%, 2%) scale(1.05); }
-      100% { transform: translate(-1%, 3%) scale(1.02); }
-    }
-
-    /* Custom Scrollbars */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: rgba(0, 0, 0, 0.2);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(0, 234, 255, 0.4);
-    }
-
-    /* Legacy Chat Layout Elements for 100 Agent Fleet Chat */
-    .sidebar {
-      width: 290px;
-      min-width: 290px;
-      height: 100%;
-      border-radius: 20px;
-      background: rgba(12, 16, 33, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      backdrop-filter: blur(25px);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .sidebar-header {
-      padding: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .categories {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      padding: 10px 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .category {
-      padding: 5px 10px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      color: #8c96b5;
-      font-size: 11px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.2s ease;
-    }
-
-    .category:hover, .category.active {
-      color: #fff;
-      background: rgba(0, 234, 255, 0.12);
-      border-color: rgba(0, 234, 255, 0.35);
-    }
-
-    .agent-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .agent-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .agent-item:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .agent-item.active {
-      background: linear-gradient(135deg, rgba(0, 234, 255, 0.12), rgba(139, 61, 255, 0.15));
-      border-color: rgba(0, 234, 255, 0.4);
-    }
-
-    .agent-item-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      background: rgba(0, 234, 255, 0.1);
-      border: 1px solid rgba(0, 234, 255, 0.25);
-      display: grid;
-      place-items: center;
-      color: #00eaff;
-      font-size: 13px;
-    }
-
-    .agent-item-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .agent-item-name {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: #fff;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .agent-item-desc {
-      font-size: 10.5px;
-      color: #8c96b5;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .chat-main {
-      flex: 1;
-      min-width: 0;
-      height: 100%;
-      border-radius: 20px;
-      background: rgba(12, 16, 33, 0.75);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      backdrop-filter: blur(25px);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .chat-header {
-      height: 64px;
-      padding: 0 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .chat-tabs {
-      display: flex;
-      gap: 18px;
-      padding: 0 20px;
-      height: 42px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .chat-agent-subtab {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      font-size: 12px;
-      font-weight: 600;
-      color: #8c96b5;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .chat-agent-subtab.active {
-      color: #00eaff;
-    }
-
-    .chat-agent-subtab.active::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      height: 2px;
-      background: linear-gradient(90deg, #00eaff, #8b3dff);
-      box-shadow: 0 0 8px rgba(0, 234, 255, 0.6);
-    }
-
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px clamp(16px, 4vw, 60px) 120px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .message {
-      display: flex;
-      gap: 12px;
-      animation: msgIn 0.3s ease;
-    }
-
-    @keyframes msgIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .message.user {
-      justify-content: flex-end;
-    }
-
-    .message-avatar {
-      width: 32px;
-      height: 32px;
-      min-width: 32px;
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      font-size: 11px;
-      font-weight: 800;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .message.ai .message-avatar {
-      color: #00eaff;
-      border-color: rgba(0, 234, 255, 0.3);
-      box-shadow: 0 0 12px rgba(0, 234, 255, 0.15);
-    }
-
-    .bubble {
-      max-width: min(800px, 80%);
-      padding: 14px 18px;
-      border-radius: 16px;
-      font-size: 13.5px;
-      line-height: 1.65;
-      white-space: pre-wrap;
-      word-break: break-word;
-      color: #f1f5f9;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .message.ai .bubble {
-      border-color: rgba(139, 61, 255, 0.25);
-      background: linear-gradient(135deg, rgba(0, 234, 255, 0.04), rgba(139, 61, 255, 0.06));
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .message.user .bubble {
-      border-color: rgba(0, 234, 255, 0.25);
-      background: linear-gradient(135deg, rgba(0, 234, 255, 0.1), rgba(40, 123, 255, 0.1));
-    }
-
-    .chat-composer-wrap {
-      position: absolute;
-      left: clamp(16px, 4vw, 60px);
-      right: clamp(16px, 4vw, 60px);
-      bottom: 20px;
-      z-index: 20;
-    }
-
-    .chat-composer {
-      border-radius: 16px;
-      border: 1px solid rgba(0, 234, 255, 0.25);
-      background: rgba(10, 14, 30, 0.85);
-      backdrop-filter: blur(20px);
-      display: flex;
-      align-items: center;
-      padding: 6px 10px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    }
-
-    .chat-input {
-      flex: 1;
-      height: 44px;
-      border: 0;
-      outline: 0;
-      background: transparent;
-      color: #fff;
-      font-family: inherit;
-      font-size: 13.5px;
-      padding: 0 10px;
-    }
-
-    .chat-send-btn {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      border: 1px solid rgba(0, 234, 255, 0.4);
-      background: linear-gradient(135deg, #00eaff, #8b3dff);
-      color: #fff;
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      font-size: 16px;
-      transition: all 0.2s ease;
-    }
-
-    .chat-send-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(0, 234, 255, 0.4);
-    }
-  </style>
-
-  <!-- External Polish Stylesheet -->
+  <!-- Enterprise Design System Stylesheet -->
   <link rel="stylesheet" href="ui-polish.css">
 </head>
 
 <body>
+  <div class="app-shell">
 
-  <!-- =======================================================
-       TOP NAVIGATION BAR
-       ======================================================= -->
-  <header class="top-navbar">
-    <div class="top-nav-left">
-      <div class="platform-brand" onclick="document.querySelector('[data-tab=\'workflow-center\']').click()">
-        <div class="platform-logo-box">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00eaff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+    <!-- =======================================================
+         PERSISTENT SIDEBAR NAVIGATION
+         ======================================================= -->
+    <aside class="app-sidebar" id="appSidebar">
+      <!-- Brand Header -->
+      <div class="sidebar-header">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
           </svg>
         </div>
-        <div>
-          <div class="platform-title">
+        <div class="brand-info">
+          <div class="brand-title">
             <span>SA-S03</span>
-            <span class="platform-version">INTELLIGENT WORKFLOW</span>
+            <span class="brand-tag">AI OPS</span>
           </div>
-          <div class="platform-subtitle">Educational Workflow Management Platform</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5 Main Navigation Tabs -->
-    <nav class="top-nav-tabs">
-      <button class="top-nav-tab active" data-tab="workflow-center">
-        <span>⚡</span>
-        <span>Workflow Center</span>
-      </button>
-
-      <button class="top-nav-tab" data-tab="agent-workforce">
-        <span>🎓</span>
-        <span>Educational Workforce (100 Agents)</span>
-        <span class="nav-tab-badge">101</span>
-      </button>
-
-      <button class="top-nav-tab" data-tab="approvals-queue">
-        <span>⚖️</span>
-        <span>Human Approvals Queue</span>
-        <span class="nav-tab-badge" id="pendingApprovalsBadge" style="display: none;">0</span>
-      </button>
-
-      <button class="top-nav-tab" data-tab="institutional-records">
-        <span>🏛️</span>
-        <span>Institutional Records &amp; Audit</span>
-      </button>
-
-      <button class="top-nav-tab" data-tab="agent-fleet">
-        <span>🤖</span>
-        <span>Fleet Chat</span>
-      </button>
-    </nav>
-
-    <!-- Top Nav Right Indicator -->
-    <div class="top-nav-right">
-      <div class="system-status-indicator">
-        <span class="status-dot-pulse"></span>
-        <span>Gateway Online :8300</span>
-      </div>
-    </div>
-  </header>
-
-  <!-- =======================================================
-       MAIN VIEW CONTAINER
-       ======================================================= -->
-  <main class="app-view-container">
-
-    <!-- =====================================================
-         VIEW 1: WORKFLOW AUTOMATION CENTER
-         ===================================================== -->
-    <section class="app-view active" id="view-workflow-center">
-      <!-- Summary Statistics Row -->
-      <div class="workflow-stats-row">
-        <div class="stat-card">
-          <div class="stat-icon-box stat-icon-cyan">⚡</div>
-          <div class="stat-info">
-            <div class="stat-value" id="statTotalWorkflows">0</div>
-            <div class="stat-label">Total Workflow Runs</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon-box stat-icon-green">⏳</div>
-          <div class="stat-info">
-            <div class="stat-value" id="statActivePipelines">0</div>
-            <div class="stat-label">Active Pipelines</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon-box stat-icon-amber">⚠️</div>
-          <div class="stat-info">
-            <div class="stat-value" id="statPendingApprovals">0</div>
-            <div class="stat-label">Approvals Needed</div>
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-icon-box stat-icon-purple">✓</div>
-          <div class="stat-info">
-            <div class="stat-value" id="statCompletedWorkflows">0</div>
-            <div class="stat-label">Completed Pipelines</div>
-          </div>
+          <span class="brand-subtitle">Educational Operations</span>
         </div>
       </div>
 
-      <!-- Main Center Grid: Left Launcher/List + Right Step Visualizer -->
-      <div class="workflow-center-grid">
-        
-        <!-- Left Column -->
-        <div style="display: flex; flex-direction: column; gap: 20px; min-height: 0;">
-          
-          <!-- Launcher Card -->
-          <div class="wf-panel">
-            <div class="wf-panel-header">
-              <span class="wf-panel-title"><span>🚀</span> Workflow Launcher</span>
-              <span class="wf-panel-badge">Autonomous Initiation</span>
-            </div>
+      <!-- Navigation Tree -->
+      <nav class="sidebar-nav">
+        <!-- Section: Overview -->
+        <div>
+          <div class="nav-section-title">Core Operations</div>
+          <ul class="nav-items">
+            <li>
+              <button class="nav-item-btn active" data-view="dashboard">
+                <span class="nav-icon">📊</span>
+                <span>Operations Overview</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view="workflows">
+                <span class="nav-icon">⚡</span>
+                <span>Workflow Center</span>
+                <span class="nav-badge" id="navWorkflowCountBadge">5</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view="workforce">
+                <span class="nav-icon">🎓</span>
+                <span>100 AI Workforce</span>
+                <span class="nav-badge">101</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view="approvals">
+                <span class="nav-icon">⚖️</span>
+                <span>Human Approvals</span>
+                <span class="nav-badge alert" id="navApprovalBadge" style="display: none;">0</span>
+              </button>
+            </li>
+          </ul>
+        </div>
 
-            <div class="launcher-form">
-              <!-- Flagship Judge Demo Banner -->
-              <div style="background: linear-gradient(135deg, rgba(0, 234, 255, 0.12), rgba(139, 61, 255, 0.12)); border: 1px solid rgba(0, 234, 255, 0.35); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="font-size: 11.5px; font-weight: 800; color: #00eaff; text-transform: uppercase; letter-spacing: 0.05em;">
-                    ★ Flagship Judge Demonstration
-                  </span>
-                  <span style="font-size: 10px; background: rgba(0, 234, 255, 0.2); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 700;">
-                    9 Agents Coordinated
-                  </span>
+        <!-- Section: Data & Intelligence -->
+        <div>
+          <div class="nav-section-title">Intelligence &amp; Records</div>
+          <ul class="nav-items">
+            <li>
+              <button class="nav-item-btn" data-view="documents">
+                <span class="nav-icon">📄</span>
+                <span>Document Workspace</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view="records">
+                <span class="nav-icon">🏛️</span>
+                <span>Institutional Data</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view="audit">
+                <span class="nav-icon">📜</span>
+                <span>Audit &amp; Evidence Trail</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section: Fleet & System -->
+        <div>
+          <div class="nav-section-title">Fleet &amp; Observability</div>
+          <ul class="nav-items">
+            <li>
+              <button class="nav-item-btn" data-view="chat">
+                <span class="nav-icon">🤖</span>
+                <span>Fleet Console &amp; Chat</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view="health">
+                <span class="nav-icon">🖥️</span>
+                <span>System Observability</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <!-- Sidebar Status Footer -->
+      <div class="sidebar-footer">
+        <div class="footer-status-pill">
+          <span class="status-dot"></span>
+          <span>101/101 Fleet Operational</span>
+        </div>
+        <div class="footer-meta">Nemotron 3 Nano · RTX 2050</div>
+      </div>
+    </aside>
+
+    <!-- =======================================================
+         MAIN APPLICATION CONTAINER
+         ======================================================= -->
+    <div class="app-container">
+
+      <!-- Top Bar -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="btnToggleSidebar">☰</button>
+          <div class="breadcrumb-nav">
+            <span class="breadcrumb-root">SA-S03 Platform</span>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current" id="topbarBreadcrumbTitle">Operations Overview</span>
+          </div>
+        </div>
+
+        <!-- Global Search -->
+        <div class="topbar-search">
+          <span class="topbar-search-icon">🔍</span>
+          <input type="text" id="globalSearchInput" class="topbar-search-input" placeholder="Search agents, workflows, students, or documents..." />
+        </div>
+
+        <!-- Actions & Status Pill -->
+        <div class="topbar-right">
+          <button class="btn-flagship-top" id="btnTopFlagshipDemo">
+            <span>★</span>
+            <span>Run Flagship Demo</span>
+          </button>
+          <div class="edge-indicator-pill">
+            <span class="status-dot"></span>
+            <span>Cloudflare Edge Active</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Viewport Area (9 Modular Views) -->
+      <main class="app-viewport" id="appViewport">
+
+        <!-- =====================================================
+             VIEW 1: OPERATIONS DASHBOARD (OVERVIEW)
+             ===================================================== -->
+        <section class="app-view active" id="view-dashboard">
+          <!-- Hero Operations Banner -->
+          <div class="card-panel" style="background: linear-gradient(135deg, rgba(16, 23, 38, 0.9), rgba(11, 15, 25, 0.95)); border-color: rgba(59, 130, 246, 0.25);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+              <div style="max-width: 620px;">
+                <div style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 4px; background: rgba(59, 130, 246, 0.15); color: #93c5fd; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">
+                  <span>★</span> Institutional Automation &amp; Governance
                 </div>
-                <div style="font-size: 11.5px; color: #e2e8f0; line-height: 1.4;">
-                  One-click end-to-end Scholarship &amp; Financial Aid verification for synthetic student <strong>STU-DEMO-001</strong> with document processing, multi-agent evaluation, and Dean approval.
-                </div>
-                <button id="btnRunFlagshipDemo" type="button" class="btn-launch" style="background: linear-gradient(135deg, #00eaff, #8b3dff); margin-top: 4px; padding: 10px 16px; font-size: 12.5px;">
+                <h1 style="font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 6px;">
+                  Educational AI Operations Center
+                </h1>
+                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+                  Coordinating 100 specialized AI agents to automate admissions, scholarships, prerequisite overrides, and degree audits with verifiable evidence and Human-in-the-Loop governance.
+                </p>
+              </div>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <button class="btn-flagship-top" id="btnDashboardFlagship" style="height: 40px; padding: 0 18px; font-size: 13px;">
                   <span>⚡</span> Run Flagship Scholarship Demo
                 </button>
               </div>
-
-              <div class="form-group" style="margin-top: 8px;">
-                <label class="form-label">Or Select Custom Workflow Pipeline</label>
-                <select id="workflowSelect" class="form-select">
-                  <option value="" disabled selected>Loading workflows...</option>
-                </select>
-              </div>
-
-              <div id="workflowDesc" style="font-size: 11.5px; color: var(--text-muted); line-height: 1.5; display: none;"></div>
-
-              <div id="workflowDynamicFields"></div>
-
-              <button id="btnLaunchWorkflow" class="btn-launch" type="button">
-                <span>⚡</span> Launch Autonomous Workflow
-              </button>
             </div>
           </div>
 
-          <!-- Active & Recent Pipelines Card -->
-          <div class="wf-panel" style="flex: 1;">
-            <div class="wf-panel-header">
-              <span class="wf-panel-title"><span>📋</span> Active &amp; Recent Pipelines</span>
-              <span class="wf-panel-badge" id="instanceCountBadge">Live Tracker</span>
-            </div>
-
-            <div class="instance-list-scroll" id="instanceListContainer">
-              <div style="padding:20px; text-align:center; color:var(--text-muted); font-size:12px;">
-                Loading workflow instances...
+          <!-- KPI Cards Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-blue">🎓</div>
+              <div class="kpi-info">
+                <div class="kpi-value" id="kpiTotalAgents">101</div>
+                <div class="kpi-label">Specialized AI Workforce</div>
               </div>
             </div>
-          </div>
-
-        </div>
-
-        <!-- Right Column: Interactive Step Visualizer -->
-        <div class="wf-panel" style="min-height: 0;">
-          <div class="wf-panel-header">
-            <span class="wf-panel-title"><span>🔍</span> Step Visualizer &amp; Pipeline Inspector</span>
-            <span class="wf-panel-badge" style="color:var(--cyan); border:1px solid rgba(0,234,255,0.3);">Zero Raw JSON</span>
-          </div>
-
-          <div class="visualizer-container" id="stepVisualizerContent">
-            <!-- Rendered by ui-polish.js -->
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- =====================================================
-         VIEW 2: EDUCATIONAL AGENT WORKFORCE MATRIX
-         ===================================================== -->
-    <section class="app-view" id="view-agent-workforce">
-      <div style="padding: 24px; display: flex; flex-direction: column; gap: 20px; height: 100%; overflow-y: auto;">
-        
-        <!-- Workforce Header & Stats -->
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
-          <div>
-            <h2 style="margin: 0; font-size: 24px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px;">
-              <span>🎓</span> SA-S03 Educational AI Agent Workforce
-            </h2>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-              Coordinated institutional workforce of 100 specialized AI agents + 1 Master Orchestrator across 10 functional domains.
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-green">⚡</div>
+              <div class="kpi-info">
+                <div class="kpi-value" id="kpiActiveWorkflows">5</div>
+                <div class="kpi-label">Automated Pipelines</div>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-amber">⚖️</div>
+              <div class="kpi-info">
+                <div class="kpi-value" id="kpiPendingApprovals">0</div>
+                <div class="kpi-label">Human Decisions Awaiting</div>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-purple">✓</div>
+              <div class="kpi-info">
+                <div class="kpi-value" id="kpiCompletedPipelines">0</div>
+                <div class="kpi-label">Completed Pipelines</div>
+              </div>
             </div>
           </div>
-          <div style="display: flex; gap: 10px; align-items: center;">
-            <div class="system-status-indicator" style="background: rgba(0, 234, 255, 0.1); border-color: rgba(0, 234, 255, 0.3);">
-              <span class="status-dot-pulse"></span>
-              <span>101/101 Operational · Nemotron 3 Nano</span>
+
+          <!-- Active Operations Table + Live Activity Stream -->
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+            <!-- Active Pipelines Card -->
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <span class="card-panel-title"><span>📋</span> Active Institutional Workflows</span>
+                <button class="segment-chip" onclick="switchMainView('workflows')">View All Pipelines →</button>
+              </div>
+              <div id="dashboardActivePipelinesContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Recent Activity Stream -->
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <span class="card-panel-title"><span>📡</span> Real-Time AI Event Stream</span>
+                <span class="card-panel-badge" style="color: var(--success);">● Live</span>
+              </div>
+              <div id="dashboardActivityStream" style="display: flex; flex-direction: column; gap: 12px; font-size: 12px;">
+                <!-- Populated dynamically -->
+              </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- Search and Domain Filter Row -->
-        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-          <input type="text" id="workforceSearchInput" class="form-input" placeholder="Search workforce agents by role, domain, tools, or ID..." style="max-width: 380px; padding: 10px 14px; font-size: 13px;" />
-          
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="workforceDomainFilters">
-            <button class="preset-chip active" data-domain="all">All Domains (101)</button>
-            <button class="preset-chip" data-domain="student-services">Student Services</button>
-            <button class="preset-chip" data-domain="admission">Admissions</button>
-            <button class="preset-chip" data-domain="academic">Academics</button>
-            <button class="preset-chip" data-domain="document-intelligence">Document Intelligence</button>
-            <button class="preset-chip" data-domain="finance">Finance</button>
-            <button class="preset-chip" data-domain="faculty-hr">Faculty &amp; HR</button>
-            <button class="preset-chip" data-domain="administration">Administration</button>
-            <button class="preset-chip" data-domain="communication">Communication</button>
-            <button class="preset-chip" data-domain="analytics">Analytics</button>
-            <button class="preset-chip" data-domain="workflow-intelligence">Workflow Intelligence</button>
-          </div>
-        </div>
-
-        <!-- Agent Workforce Grid -->
-        <div id="workforceAgentsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
-          <!-- Dynamically populated by ui-polish.js -->
-        </div>
-
-      </div>
-    </section>
-
-    <!-- =====================================================
-         VIEW 3: HUMAN APPROVALS QUEUE
-         ===================================================== -->
-    <section class="app-view" id="view-approvals-queue">
-      <div class="approvals-container">
-        <div class="approvals-header">
-          <div>
-            <h2 style="margin: 0; font-size: 22px; font-weight: 800; color: #fff;">Academic Committee &amp; Dean Approvals Queue</h2>
-            <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
-              Review pending institutional workflow decisions requiring sign-off from authorized personnel.
+        <!-- =====================================================
+             VIEW 2: WORKFLOW AUTOMATION CENTER
+             ===================================================== -->
+        <section class="app-view" id="view-workflows">
+          <div class="view-header">
+            <div class="view-title-group">
+              <h2 class="view-title"><span>⚡</span> Workflow Automation Center</h2>
+              <p class="view-subtitle">Execute multi-agent educational workflows with autonomous document verification, policy calculation, and committee sign-off.</p>
             </div>
           </div>
-          <button class="preset-chip" onclick="refreshApprovalsQueue()" style="color: var(--cyan); border-color: rgba(0,234,255,0.3);">
-            ↻ Refresh Queue
-          </button>
-        </div>
 
-        <div id="approvalsQueueList" style="display: flex; flex-direction: column; gap: 18px;">
-          <!-- Rendered dynamically -->
-        </div>
-      </div>
-    </section>
+          <!-- 5 Workflow Selection Deck Cards -->
+          <div class="workflow-deck-grid" id="workflowDeckGrid">
+            <!-- 1. Admission Verification -->
+            <div class="workflow-card">
+              <div class="workflow-card-top">
+                <div class="wf-card-icon">📝</div>
+                <div>
+                  <div class="wf-card-title">Student Admission &amp; Verification</div>
+                  <div class="wf-card-category">Admissions &amp; Enrollment</div>
+                </div>
+              </div>
+              <div class="wf-card-desc">Evaluates entrance dossiers, verifies high school transcripts with OCR, computes composite merit rank, and allocates seats.</div>
+              <div class="wf-card-meta">
+                <span class="meta-pill">8 Agents</span>
+                <span class="meta-pill">HITL Sign-Off</span>
+              </div>
+              <button class="btn-launch-wf" onclick="quickLaunchWorkflow('admission-verification')">⚡ Launch Pipeline</button>
+            </div>
 
-    <!-- =====================================================
-         VIEW 3: INSTITUTIONAL RECORDS & AUDIT
-         ===================================================== -->
-    <section class="app-view" id="view-institutional-records">
-      <div style="max-width: 1300px; margin: 0 auto; width: 100%;">
-        
-        <!-- Sub-Navigation -->
-        <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
-          <div class="records-subnav">
-            <button class="records-subtab active" data-subtab="students">🎓 Students Profile &amp; Documents</button>
-            <button class="records-subtab" data-subtab="courses">📚 Academic Catalog &amp; Courses</button>
-            <button class="records-subtab" data-subtab="scholarships">💰 Financial Aid Schemes</button>
-            <button class="records-subtab" data-subtab="audit">📜 Live Audit Log</button>
+            <!-- 2. Scholarship & Financial Aid -->
+            <div class="workflow-card">
+              <div class="workflow-card-top">
+                <div class="wf-card-icon">🎓</div>
+                <div>
+                  <div class="wf-card-title">Scholarship &amp; Financial Aid</div>
+                  <div class="wf-card-category">Financial Aid &amp; Bursar</div>
+                </div>
+              </div>
+              <div class="wf-card-desc">Audits income certificates, verifies academic GPA thresholds, calculates award eligibility, and credits tuition fee ledgers.</div>
+              <div class="wf-card-meta">
+                <span class="meta-pill">9 Agents</span>
+                <span class="meta-pill">Dean Sign-Off</span>
+              </div>
+              <button class="btn-launch-wf" onclick="quickLaunchWorkflow('scholarship-eligibility')">⚡ Launch Pipeline</button>
+            </div>
+
+            <!-- 3. Attendance Intervention -->
+            <div class="workflow-card">
+              <div class="workflow-card-top">
+                <div class="wf-card-icon">⚠️</div>
+                <div>
+                  <div class="wf-card-title">Attendance Audit &amp; Warning</div>
+                  <div class="wf-card-category">Academic Advisory</div>
+                </div>
+              </div>
+              <div class="wf-card-desc">Analyzes class attendance logs, identifies at-risk students below 75%, drafts personalized remedial schedules, and alerts advisors.</div>
+              <div class="wf-card-meta">
+                <span class="meta-pill">7 Agents</span>
+                <span class="meta-pill">Advisor Review</span>
+              </div>
+              <button class="btn-launch-wf" onclick="quickLaunchWorkflow('attendance-intervention')">⚡ Launch Pipeline</button>
+            </div>
+
+            <!-- 4. Course Prerequisite Override -->
+            <div class="workflow-card">
+              <div class="workflow-card-top">
+                <div class="wf-card-icon">📚</div>
+                <div>
+                  <div class="wf-card-title">Course Prerequisite Override</div>
+                  <div class="wf-card-category">Department Curriculum</div>
+                </div>
+              </div>
+              <div class="wf-card-desc">Audits completed coursework prerequisites, checks student aptitude, and coordinates Department Chair waiver approvals.</div>
+              <div class="wf-card-meta">
+                <span class="meta-pill">7 Agents</span>
+                <span class="meta-pill">Chair Waiver</span>
+              </div>
+              <button class="btn-launch-wf" onclick="quickLaunchWorkflow('course-override')">⚡ Launch Pipeline</button>
+            </div>
+
+            <!-- 5. Degree Audit & Graduation Clearance -->
+            <div class="workflow-card">
+              <div class="workflow-card-top">
+                <div class="wf-card-icon">📜</div>
+                <div>
+                  <div class="wf-card-title">Degree Audit &amp; Clearance</div>
+                  <div class="wf-card-category">Registrar Office</div>
+                </div>
+              </div>
+              <div class="wf-card-desc">Performs complete curriculum credit audit, validates zero-balance fee clearance, and prepares digital degree conferral.</div>
+              <div class="wf-card-meta">
+                <span class="meta-pill">10 Agents</span>
+                <span class="meta-pill">Registrar Approval</span>
+              </div>
+              <button class="btn-launch-wf" onclick="quickLaunchWorkflow('graduation-clearance')">⚡ Launch Pipeline</button>
+            </div>
           </div>
 
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <input type="text" id="recordsSearchInput" class="form-input table-search-input" placeholder="Search records, IDs, keywords..." />
-          </div>
-        </div>
+          <!-- Split Center: Left Interactive Launcher & Active List + Right Step Visualizer -->
+          <div class="wf-center-layout">
+            <!-- Left Side: Interactive Launcher Form & Instance List -->
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+              <!-- Launcher Card -->
+              <div class="card-panel">
+                <div class="card-panel-header">
+                  <span class="card-panel-title"><span>🚀</span> Pipeline Custom Launcher</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                  <div>
+                    <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">Selected Pipeline</label>
+                    <select id="wfCustomSelect" class="topbar-search-input" style="padding-left: 12px; margin-top: 4px;">
+                      <option value="" disabled selected>Select an academic pipeline...</option>
+                    </select>
+                  </div>
+                  <div id="wfDynamicFieldsContainer"></div>
+                  <button id="btnExecuteLaunch" class="btn-flagship-top" style="height: 38px; justify-content: center; width: 100%;">
+                    <span>⚡</span> Initiate Pipeline Execution
+                  </button>
+                </div>
+              </div>
 
-        <!-- Table Container -->
-        <div class="records-table-container">
-          <table class="custom-data-table">
-            <thead id="recordsTableHeader">
+              <!-- Previous / Running Instances -->
+              <div class="card-panel" style="flex: 1;">
+                <div class="card-panel-header">
+                  <span class="card-panel-title"><span>📋</span> Execution History</span>
+                  <span class="card-panel-badge" id="wfInstanceCountBadge">Live Tracker</span>
+                </div>
+                <div id="wfInstancesList" style="display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto;">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Side: Step Visualizer & Pipeline Inspector -->
+            <div class="card-panel" style="min-height: 520px;">
+              <div class="card-panel-header">
+                <span class="card-panel-title"><span>🔍</span> Multi-Agent Step Visualizer &amp; Evidence Inspector</span>
+                <span class="card-panel-badge" style="color: var(--accent-cyan); border-color: rgba(6, 182, 212, 0.3);">Zero Raw JSON</span>
+              </div>
+              <div id="wfVisualizerContainer" style="flex: 1; overflow-y: auto;">
+                <!-- Dynamically populated step cards -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================
+             VIEW 3: 100-AGENT WORKFORCE MATRIX
+             ===================================================== -->
+        <section class="app-view" id="view-workforce">
+          <div class="view-header">
+            <div class="view-title-group">
+              <h2 class="view-title"><span>🎓</span> Educational AI Workforce (100 Agents)</h2>
+              <p class="view-subtitle">Coordinated institutional workforce of 100 specialized AI agents + 1 Master Orchestrator categorized into 10 functional domains.</p>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <span class="edge-indicator-pill">
+                <span class="status-dot"></span>
+                <span>101/101 Agents Active · Nemotron 3 Nano</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Domain Segmented Filters -->
+          <div class="segmented-filters" id="workforceSegmentedFilters">
+            <button class="segment-chip active" data-domain="all">All Domains (101)</button>
+            <button class="segment-chip" data-domain="student-services">Student Services</button>
+            <button class="segment-chip" data-domain="admission">Admissions</button>
+            <button class="segment-chip" data-domain="academic">Academics</button>
+            <button class="segment-chip" data-domain="document-intelligence">Documents</button>
+            <button class="segment-chip" data-domain="finance">Finance</button>
+            <button class="segment-chip" data-domain="faculty-hr">Faculty &amp; HR</button>
+            <button class="segment-chip" data-domain="administration">Administration</button>
+            <button class="segment-chip" data-domain="communication">Communication</button>
+            <button class="segment-chip" data-domain="analytics">Analytics</button>
+            <button class="segment-chip" data-domain="workflow-intelligence">Workflow Intelligence</button>
+          </div>
+
+          <!-- Search Filter -->
+          <div style="max-width: 420px;">
+            <input type="text" id="workforceFilterInput" class="topbar-search-input" placeholder="Search agents by role, tools, domain, or ID..." style="padding-left: 12px;" />
+          </div>
+
+          <!-- Agent Grid -->
+          <div class="agent-grid" id="workforceCardsGrid">
+            <!-- Dynamically populated -->
+          </div>
+        </section>
+
+        <!-- =====================================================
+             VIEW 4: HUMAN APPROVALS QUEUE
+             ===================================================== -->
+        <section class="app-view" id="view-approvals">
+          <div class="view-header">
+            <div class="view-title-group">
+              <h2 class="view-title"><span>⚖️</span> Academic Committee &amp; Dean Approvals Queue</h2>
+              <p class="view-subtitle">Review pending institutional workflow decisions requiring sign-off from authorized personnel with evidence dossiers.</p>
+            </div>
+            <button class="btn-launch-wf" onclick="refreshApprovalsQueue()" style="width: auto; padding: 0 14px;">↻ Refresh Queue</button>
+          </div>
+
+          <div id="approvalsQueueContent" style="display: flex; flex-direction: column; gap: 16px;">
+            <!-- Dynamically populated approval cards -->
+          </div>
+        </section>
+
+        <!-- =====================================================
+             VIEW 5: DOCUMENT INTELLIGENCE WORKSPACE
+             ===================================================== -->
+        <section class="app-view" id="view-documents">
+          <div class="view-header">
+            <div class="view-title-group">
+              <h2 class="view-title"><span>📄</span> Document Intelligence Workspace</h2>
+              <p class="view-subtitle">Multimodal optical extraction, tamper verification hash analysis, and cross-document data conflict detection.</p>
+            </div>
+          </div>
+
+          <div class="split-workspace">
+            <!-- Left: Document Selector -->
+            <div class="card-panel">
+              <div class="card-panel-header">
+                <span class="card-panel-title">Institutional Dossiers</span>
+              </div>
+              <div id="documentsListContainer" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Right: Document Inspector & Data Extraction Details -->
+            <div class="dossier-panel" id="documentInspectorPanel">
+              <div style="padding: 40px; text-align: center; color: var(--text-muted);">
+                Select a document from the left to inspect optical extraction, cryptographic hash integrity, and validation status.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================
+             VIEW 6: INSTITUTIONAL RECORDS & DATA TABLES
+             ===================================================== -->
+        <section class="app-view" id="view-records">
+          <div class="view-header">
+            <div class="view-title-group">
+              <h2 class="view-title"><span>🏛️</span> Institutional Records &amp; Catalogs</h2>
+              <p class="view-subtitle">Authoritative repository of verified student demographics, academic courses, scholarship schemes, and faculty loads.</p>
+            </div>
+          </div>
+
+          <!-- Sub-tabs -->
+          <div class="segmented-filters" id="recordsSubTabs">
+            <button class="segment-chip active" data-subtab="students">Students Directory</button>
+            <button class="segment-chip" data-subtab="courses">Course Catalog</button>
+            <button class="segment-chip" data-subtab="scholarships">Scholarship Schemes</button>
+          </div>
+
+          <div style="max-width: 380px;">
+            <input type="text" id="recordsSearchInput" class="topbar-search-input" placeholder="Search institutional records..." style="padding-left: 12px;" />
+          </div>
+
+          <div class="data-table-container">
+            <table class="data-table" id="institutionalDataTable">
               <!-- Dynamically populated -->
-            </thead>
-            <tbody id="recordsTableBody">
-              <!-- Dynamically populated -->
-            </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+        </section>
 
+        <!-- =====================================================
+             VIEW 7: IMMUTABLE AUDIT TRAIL
+             ===================================================== -->
+        <section class="app-view" id="view-audit">
+          <div class="view-header">
+            <div class="view-title-group">
+              <h2 class="view-title"><span>📜</span> Immutable Audit &amp; Evidence Trail</h2>
+              <p class="view-subtitle">Cryptographically verified chronological log of all AI agent tool calls, institutional service queries, and committee sign-offs.</p>
+            </div>
+          </div>
+
+          <div class="card-panel">
+            <div id="auditTimelineContainer" style="display: flex; flex-direction: column; gap: 12px;">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================
+             VIEW 8: AI FLEET CONSOLE & CHAT
+             ===================================================== -->
+        <section class="app-view" id="view-chat">
+          <div class="chat-console-grid">
+            <!-- Left: Agent Directory -->
+            <div class="card-panel" style="padding: 14px;">
+              <input type="text" id="chatAgentSearch" class="topbar-search-input" placeholder="Filter 101 agents..." style="padding-left: 12px; margin-bottom: 10px;" />
+              <div id="chatAgentListContainer" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+
+            <!-- Center: Dialogue Stream -->
+            <div class="card-panel" style="padding: 0; display: flex; flex-direction: column;">
+              <div style="padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-size: 14px; font-weight: 700; color: #fff;" id="chatActiveAgentName">AI Writing Agent</div>
+                  <div style="font-size: 11px; color: var(--text-muted);" id="chatActiveAgentId">agent-001 · Foundation</div>
+                </div>
+                <span class="meta-pill" style="color: var(--accent-cyan);">⚡ Nemotron 3 Nano 4B</span>
+              </div>
+
+              <div class="chat-messages-stream" id="chatMessagesStream">
+                <div class="chat-bubble ai">
+                  Welcome to the Educational AI Fleet Operations Console. Select any specialist agent or instruct them on institutional tasks.
+                </div>
+              </div>
+
+              <div style="padding: 14px; border-top: 1px solid var(--border); display: flex; gap: 10px;">
+                <input type="text" id="chatInput" class="topbar-search-input" placeholder="Type instruction for selected agent..." style="padding-left: 14px;" />
+                <button id="btnSendChat" class="btn-flagship-top" style="padding: 0 16px;">Send</button>
+              </div>
+            </div>
+
+            <!-- Right: Agent Capability Inspector -->
+            <div class="card-panel" id="chatAgentContextPanel" style="padding: 16px;">
+              <div class="card-panel-title" style="margin-bottom: 12px;">Agent Specifications</div>
+              <div id="chatAgentDetailsBox" style="font-size: 12px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 10px;">
+                <!-- Populated dynamically -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =====================================================
+             VIEW 9: SYSTEM OBSERVABILITY & HEALTH
+             ===================================================== -->
+        <section class="app-view" id="view-health">
+          <div class="view-header">
+            <div class="view-title-group">
+              <h2 class="view-title"><span>🖥️</span> System Observability &amp; Runtime Metrics</h2>
+              <p class="view-subtitle">Continuous hardware telemetry, process health, and public edge connection status.</p>
+            </div>
+            <button class="btn-launch-wf" onclick="refreshSystemHealth()" style="width: auto; padding: 0 14px;">↻ Refresh Metrics</button>
+          </div>
+
+          <!-- Component Health Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-green">⚡</div>
+              <div class="kpi-info">
+                <div class="kpi-value" id="healthGatewayStatus">Healthy</div>
+                <div class="kpi-label">API Gateway (:8300)</div>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-blue">🤖</div>
+              <div class="kpi-info">
+                <div class="kpi-value" id="healthOllamaStatus">Healthy</div>
+                <div class="kpi-label">Ollama LLM Daemon (:11434)</div>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-purple">🎓</div>
+              <div class="kpi-info">
+                <div class="kpi-value" id="healthFleetStatus">101/101</div>
+                <div class="kpi-label">AI Agents Fleet Ready</div>
+              </div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-icon-box kpi-green">🔒</div>
+              <div class="kpi-info">
+                <div class="kpi-value">Connected</div>
+                <div class="kpi-label">Cloudflare Edge HTTPS</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Telemetry Specs -->
+          <div class="card-panel">
+            <div class="card-panel-title" style="margin-bottom: 14px;"><span>⚙️</span> Compute &amp; Hardware Telemetry</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; font-size: 13px;" id="systemTelemetryGrid">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- =======================================================
+         SLIDE-OUT INSPECTOR DRAWER
+         ======================================================= -->
+    <aside class="inspector-drawer" id="inspectorDrawer">
+      <div class="drawer-header">
+        <div style="font-size: 15px; font-weight: 700; color: #fff;" id="drawerTitle">Entity Inspector</div>
+        <button class="btn-close-drawer" id="btnCloseDrawer">✕</button>
       </div>
-    </section>
-
-    <!-- =====================================================
-         VIEW 4: 100 AI AGENT FLEET CHAT
-         ===================================================== -->
-    <section class="app-view" id="view-agent-fleet">
-      <div class="agent-fleet-layout">
-        
-        <!-- Sidebar -->
-        <aside class="sidebar">
-          <div class="sidebar-header">
-            <div style="font-size: 14px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
-              <span>🤖</span> 101 AI Agent Fleet
-            </div>
-            <input type="text" id="fleetAgentSearch" class="form-input" placeholder="Search 101 AI agents..." style="font-size: 12px; padding: 8px 12px;" />
-          </div>
-
-          <div class="categories" id="fleetCategories"></div>
-
-          <div class="agent-list" id="fleetAgentList"></div>
-        </aside>
-
-        <!-- Main Chat Area -->
-        <main class="chat-main">
-          <!-- Chat Header -->
-          <div class="chat-header">
-            <div>
-              <div style="font-size: 16px; font-weight: 800; color: #fff;" id="chatHeaderTitle">AI Writing Agent</div>
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;" id="chatHeaderMeta">agent-001 · Category: foundation</div>
-            </div>
-            <div>
-              <span class="nemotron-badge" id="chatHeaderNemotron">⚡ Model: nemotron-3-nano</span>
-            </div>
-          </div>
-
-          <!-- Chat Agent Subtabs -->
-          <div class="chat-tabs">
-            <div class="chat-agent-subtab active" data-subtab="chat">💬 Chat</div>
-            <div class="chat-agent-subtab" data-subtab="about">ℹ️ About Agent</div>
-            <div class="chat-agent-subtab" data-subtab="capabilities">⌘ Capabilities</div>
-            <div class="chat-agent-subtab" data-subtab="examples">↝ Example Prompts</div>
-          </div>
-
-          <!-- Messages Stream -->
-          <div class="messages" id="fleetMessages">
-            <div class="message ai">
-              <div class="message-avatar">✦</div>
-              <div class="bubble">Welcome to the 100 AI Agent Educational Fleet! Select any specialized agent from the directory or ask a question directly.</div>
-            </div>
-          </div>
-
-          <!-- Agent Info Panel (About/Capabilities/Examples) -->
-          <div id="fleetInfoPanel" style="flex:1; overflow-y:auto; display:none;"></div>
-
-          <!-- Composer -->
-          <div class="chat-composer-wrap">
-            <div class="chat-composer">
-              <input type="text" id="fleetInput" class="chat-input" placeholder="Type a message or instruction for this agent..." autocomplete="off" />
-              <button id="fleetSendBtn" class="chat-send-btn" type="button">➤</button>
-            </div>
-          </div>
-        </main>
-
+      <div class="drawer-body" id="drawerContent">
+        <!-- Dynamically populated -->
       </div>
-    </section>
+    </aside>
 
-  </main>
+    <!-- Floating Toast Notifications -->
+    <div id="toastContainer" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;"></div>
+
+  </div>
 
   <!-- External Controller JS -->
   <script src="ui-polish.js"></script>

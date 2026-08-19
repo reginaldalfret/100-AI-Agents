@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { WorkflowEngine } from "../../workflow-engine/index.js";
-import { StudentService, AcademicService, FinanceService, AuditService } from "../../services/index.js";
+import { StudentService, AcademicService, FinanceService, DocumentService, AdmissionService, FacultyService, AuditService } from "../../services/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -178,6 +178,8 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && url.pathname === "/api/health") {
       json(res, 200, {
         status: "healthy",
+        service: "100-to-1-gateway",
+        total_agents: agents.length,
         platform: "SA-S03 Educational Intelligent Workflow Management",
         gateway: "healthy",
         ollama: "healthy",
@@ -384,12 +386,52 @@ const server = http.createServer(async (req, res) => {
 
     if (
       req.method === "GET" &&
+      url.pathname === "/api/documents"
+    ) {
+      json(res, 200, {
+        total: DocumentService.getAllDocuments().length,
+        documents: DocumentService.getAllDocuments()
+      });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
+      url.pathname === "/api/system/metrics"
+    ) {
+      const os = await import("node:os");
+      json(res, 200, {
+        status: "healthy",
+        platform: "SA-S03 Educational Intelligent Workflow Management",
+        uptimeSeconds: Math.round(process.uptime()),
+        memory: {
+          totalMb: Math.round(os.totalmem() / 1024 / 1024),
+          freeMb: Math.round(os.freemem() / 1024 / 1024),
+          heapUsedMb: Math.round(process.memoryUsage().heapUsed / 1024 / 1024)
+        },
+        gpu: {
+          model: "NVIDIA GeForce RTX 2050 (4GB VRAM)",
+          driver: "555.97",
+          acceleration: "CUDA (Ollama LLM Runner)"
+        },
+        inference: {
+          model: "nemotron-3-nano",
+          provider: "Ollama (127.0.0.1:11434)",
+          contextWindow: "4K Tokens"
+        }
+      });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
       url.pathname === "/api/institution/data"
     ) {
       json(res, 200, {
         students: StudentService.getAllStudents(),
         courses: AcademicService.getAllCourses(),
         scholarshipSchemes: FinanceService.getAllScholarshipSchemes(),
+        documents: DocumentService.getAllDocuments(),
         auditLogs: AuditService.getAuditLogs().slice(0, 50)
       });
       return;
@@ -406,41 +448,43 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (
-      req.method === "GET" &&
-      (url.pathname === "/" ||
-       url.pathname === "/index.html" ||
-       url.pathname === "/ui-polish.css" ||
-       url.pathname === "/ui-polish.js")
+      req.method === "GET"
     ) {
-      const filename = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
+      const sanitized = url.pathname === "/" ? "index.html" : url.pathname.replace(/^\//, "").replace(/\.\./g, "");
       const file = path.join(
         ROOT,
         "platform",
         "web",
-        filename
+        sanitized
       );
 
-      if (!fs.existsSync(file)) {
-        json(res, 404, {
-          error: `${filename} not found`
+      if (fs.existsSync(file) && fs.statSync(file).isFile()) {
+        const ext = path.extname(file).toLowerCase();
+        const contentTypes = {
+          ".html": "text/html; charset=utf-8",
+          ".css": "text/css; charset=utf-8",
+          ".js": "application/javascript; charset=utf-8",
+          ".json": "application/json; charset=utf-8",
+          ".svg": "image/svg+xml",
+          ".png": "image/png",
+          ".jpg": "image/jpeg",
+          ".jpeg": "image/jpeg",
+          ".ico": "image/x-icon",
+          ".woff2": "font/woff2",
+          ".woff": "font/woff"
+        };
+
+        const contentType = contentTypes[ext] || "application/octet-stream";
+        const content = fs.readFileSync(file);
+
+        res.writeHead(200, {
+          "Content-Type": contentType,
+          "Cache-Control": "no-store"
         });
+
+        res.end(content);
         return;
       }
-
-      const content = fs.readFileSync(file);
-      const contentType = filename.endsWith(".css")
-        ? "text/css; charset=utf-8"
-        : filename.endsWith(".js")
-          ? "application/javascript; charset=utf-8"
-          : "text/html; charset=utf-8";
-
-      res.writeHead(200, {
-        "Content-Type": contentType,
-        "Cache-Control": "no-store"
-      });
-
-      res.end(content);
-      return;
     }
 
     json(res, 404, {

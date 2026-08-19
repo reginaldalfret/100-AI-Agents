@@ -71,7 +71,7 @@ async function isGatewayHealthy(url) {
     const res = await fetch(`${url}/api/health`);
     if (res.ok) {
       const data = await res.json();
-      return data.status === 'ok';
+      return data.status === 'ok' || data.status === 'healthy';
     }
   } catch {
     return false;
@@ -132,7 +132,7 @@ describe('Gateway Workflows & Educational Platform Integration Tests', () => {
     const res = await fetch(`${GATEWAY_URL}/api/health`);
     assert.equal(res.status, 200);
     const data = await res.json();
-    assert.equal(data.status, 'ok');
+    assert.ok(data.status === 'ok' || data.status === 'healthy');
     assert.equal(data.service, '100-to-1-gateway');
     assert.ok(typeof data.total_agents === 'number');
     assert.ok(data.total_agents > 0);

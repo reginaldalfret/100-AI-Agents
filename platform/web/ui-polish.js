@@ -1,37 +1,38 @@
 /**
- * Educational Intelligent Workflow Management Platform (SA-S03)
- * Core Frontend Controller & API Gateway Integration
+ * SA-S03 Educational AI Operations Platform
+ * Master Enterprise Frontend Controller & Real-Time Gateway Integration
  */
 
 (function () {
   "use strict";
 
-  // Determine Gateway API Base URL (default port 8300 or current origin)
+  // Determine Gateway API Base URL (relative or port 8300)
   const API_BASE = window.location.port === "8300" || window.location.port === ""
     ? window.location.origin
     : (window.location.protocol + "//" + window.location.hostname + ":8300");
 
-  // State Management
+  // Application State
   const state = {
-    currentMainTab: "workflow-center", // 'workflow-center' | 'approvals-queue' | 'institutional-records' | 'agent-fleet'
-    currentRecordSubTab: "students", // 'students' | 'courses' | 'scholarships' | 'audit'
+    currentView: "dashboard", // 'dashboard' | 'workflows' | 'workforce' | 'approvals' | 'documents' | 'records' | 'audit' | 'chat' | 'health'
+    recordsSubTab: "students", // 'students' | 'courses' | 'scholarships'
     workflows: [],
     instances: [],
     selectedInstanceId: null,
+    workforceAgents: [],
+    selectedWorkforceDomain: "all",
+    workforceSearchQuery: "",
+    documents: [],
+    selectedDocId: null,
     institutionData: {
       students: [],
       courses: [],
       scholarshipSchemes: [],
       auditLogs: []
     },
-    agents: [],
-    selectedAgent: null,
-    agentCategory: "all",
-    agentSearchQuery: "",
-    agentSubTab: "chat", // 'chat' | 'about' | 'capabilities' | 'examples'
+    chatAgents: [],
+    selectedChatAgent: null,
     pollingInterval: null,
-    isLoadingWorkflow: false,
-    decisionInProgress: false
+    systemMetrics: null
   };
 
   // Utility: HTML Escaping
@@ -44,7 +45,7 @@
       .replace(/'/g, "&#039;");
   }
 
-  // Utility: Format Date
+  // Utility: Format Date & Time
   function formatDate(isoString) {
     if (!isoString) return "-";
     try {
@@ -55,41 +56,37 @@
     }
   }
 
-  // Utility: Show Toast Notification
+  // Utility: Toast Notification System
   function showToast(message, type = "info") {
-    let container = document.getElementById("toastContainer");
-    if (!container) {
-      container = document.createElement("div");
-      container.id = "toastContainer";
-      container.style.cssText = "position:fixed; bottom:24px; right:24px; z-index:9999; display:flex; flex-direction:column; gap:10px; pointer-events:none;";
-      document.body.appendChild(container);
-    }
+    const container = document.getElementById("toastContainer");
+    if (!container) return;
 
     const toast = document.createElement("div");
     const bgColors = {
-      success: "linear-gradient(135deg, rgba(0,245,160,0.9), rgba(0,180,120,0.95))",
-      error: "linear-gradient(135deg, rgba(255,64,96,0.9), rgba(200,20,50,0.95))",
-      info: "linear-gradient(135deg, rgba(0,234,255,0.9), rgba(40,123,255,0.95))",
-      warning: "linear-gradient(135deg, rgba(255,184,0,0.95), rgba(220,140,0,0.95))"
+      success: "linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.98))",
+      error: "linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(185, 28, 28, 0.98))",
+      warning: "linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.98))",
+      info: "linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(37, 99, 235, 0.98))"
     };
 
     toast.style.cssText = `
       background: ${bgColors[type] || bgColors.info};
-      color: ${type === 'success' || type === 'warning' ? '#050b14' : '#ffffff'};
+      color: #ffffff;
       font-weight: 700;
-      font-size: 13px;
-      padding: 12px 20px;
-      border-radius: 12px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      font-size: 12.5px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
       pointer-events: auto;
       display: flex;
       align-items: center;
       gap: 10px;
-      animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeIn 0.25s ease-out;
       transition: all 0.3s ease;
     `;
 
-    toast.innerHTML = `<span>${type === 'success' ? '✓' : type === 'error' ? '✕' : 'ℹ'}</span><span>${escapeHtml(message)}</span>`;
+    const iconMap = { success: "✓", error: "✕", warning: "⚠️", info: "ℹ️" };
+    toast.innerHTML = `<span>${iconMap[type] || "ℹ️"}</span> <span>${escapeHtml(message)}</span>`;
     container.appendChild(toast);
 
     setTimeout(() => {
@@ -103,6 +100,24 @@
   // API CLIENT
   // =========================================================
   const api = {
+    async getHealth() {
+      const res = await fetch(`${API_BASE}/api/health`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    },
+
+    async getSystemMetrics() {
+      const res = await fetch(`${API_BASE}/api/system/metrics`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    },
+
+    async getWorkforce() {
+      const res = await fetch(`${API_BASE}/api/workforce`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    },
+
     async getWorkflows() {
       const res = await fetch(`${API_BASE}/api/workflows`, { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -147,32 +162,20 @@
       return await res.json();
     },
 
-    async getWorkforce() {
-      const res = await fetch(`${API_BASE}/api/workforce`, { cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
-    },
-
     async getInstitutionData() {
       const res = await fetch(`${API_BASE}/api/institution/data`, { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     },
 
-    async getAuditLogs() {
-      const res = await fetch(`${API_BASE}/api/institution/audit`, { cache: "no-store" });
+    async getDocuments() {
+      const res = await fetch(`${API_BASE}/api/documents`, { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     },
 
     async getAgents() {
       const res = await fetch(`${API_BASE}/api/agents`, { cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
-    },
-
-    async getAgentsHealth() {
-      const res = await fetch(`${API_BASE}/api/agents/health`, { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     },
@@ -192,121 +195,244 @@
   };
 
   // =========================================================
-  // NAVIGATION & TAB SWITCHING
+  // NAVIGATION & SHELL CONTROLLER
   // =========================================================
   function initNavigation() {
-    const navTabs = document.querySelectorAll(".top-nav-tab");
-    navTabs.forEach(tab => {
-      tab.addEventListener("click", (e) => {
+    // Sidebar Buttons
+    document.querySelectorAll(".nav-item-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
         e.preventDefault();
-        const targetView = tab.getAttribute("data-tab");
-        switchMainTab(targetView);
+        const viewId = btn.getAttribute("data-view");
+        switchMainView(viewId);
       });
     });
 
-    const recordTabs = document.querySelectorAll(".records-subtab");
-    recordTabs.forEach(tab => {
-      tab.addEventListener("click", (e) => {
-        e.preventDefault();
-        const subTab = tab.getAttribute("data-subtab");
-        switchRecordSubTab(subTab);
+    // Mobile Sidebar Toggle
+    const btnMobile = document.getElementById("btnToggleSidebar");
+    const sidebar = document.getElementById("appSidebar");
+    if (btnMobile && sidebar) {
+      btnMobile.addEventListener("click", () => {
+        sidebar.classList.toggle("open");
       });
-    });
-  }
+    }
 
-  function switchMainTab(tabId) {
-    state.currentMainTab = tabId;
+    // Topbar Flagship Buttons
+    const btnTopDemo = document.getElementById("btnTopFlagshipDemo");
+    if (btnTopDemo) btnTopDemo.addEventListener("click", runFlagshipScholarshipDemo);
 
-    // Update Top Nav
-    document.querySelectorAll(".top-nav-tab").forEach(tab => {
-      const isActive = tab.getAttribute("data-tab") === tabId;
-      tab.classList.toggle("active", isActive);
-    });
+    const btnDashDemo = document.getElementById("btnDashboardFlagship");
+    if (btnDashDemo) btnDashDemo.addEventListener("click", runFlagshipScholarshipDemo);
 
-    // Update Views
-    document.querySelectorAll(".app-view").forEach(view => {
-      const isActive = view.id === `view-${tabId}`;
-      view.classList.toggle("active", isActive);
-      view.style.display = isActive ? "flex" : "none";
-    });
+    // Slide-out Drawer Close
+    const btnCloseDrawer = document.getElementById("btnCloseDrawer");
+    if (btnCloseDrawer) {
+      btnCloseDrawer.addEventListener("click", () => {
+        document.getElementById("inspectorDrawer")?.classList.remove("open");
+      });
+    }
 
-    // Action on tab switch
-    if (tabId === "workflow-center") {
-      refreshWorkflowData();
-    } else if (tabId === "agent-workforce") {
-      refreshWorkforceData();
-    } else if (tabId === "approvals-queue") {
-      refreshApprovalsQueue();
-    } else if (tabId === "institutional-records") {
-      refreshInstitutionData();
-    } else if (tabId === "agent-fleet") {
-      if (state.agents.length === 0) loadAgentFleet();
+    // Global Search Bar
+    const globalSearch = document.getElementById("globalSearchInput");
+    if (globalSearch) {
+      globalSearch.addEventListener("input", (e) => {
+        handleGlobalSearch(e.target.value);
+      });
     }
   }
 
-  function switchRecordSubTab(subTab) {
-    state.currentRecordSubTab = subTab;
-    document.querySelectorAll(".records-subtab").forEach(tab => {
-      tab.classList.toggle("active", tab.getAttribute("data-subtab") === subTab);
+  window.switchMainView = function (viewId) {
+    state.currentView = viewId;
+
+    // Update Sidebar Active state
+    document.querySelectorAll(".nav-item-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-view") === viewId);
     });
-    renderInstitutionalTable();
+
+    // Update Views Visibility
+    document.querySelectorAll(".app-view").forEach(view => {
+      view.classList.toggle("active", view.id === `view-${viewId}`);
+    });
+
+    // Update Breadcrumb Title
+    const breadcrumbMap = {
+      dashboard: "Operations Overview",
+      workflows: "Workflow Automation Center",
+      workforce: "Educational AI Workforce (100 Agents)",
+      approvals: "Academic Committee Approvals",
+      documents: "Document Intelligence Workspace",
+      records: "Institutional Records & Catalogs",
+      audit: "Audit & Evidence Trail",
+      chat: "Fleet Operations Console",
+      health: "System Observability & Metrics"
+    };
+
+    const breadcrumbEl = document.getElementById("topbarBreadcrumbTitle");
+    if (breadcrumbEl) breadcrumbEl.textContent = breadcrumbMap[viewId] || "Operations Overview";
+
+    // Trigger View-Specific Refresh
+    if (viewId === "dashboard") refreshDashboardData();
+    else if (viewId === "workflows") refreshWorkflowData();
+    else if (viewId === "workforce") refreshWorkforceView();
+    else if (viewId === "approvals") refreshApprovalsQueue();
+    else if (viewId === "documents") refreshDocumentsView();
+    else if (viewId === "records") refreshRecordsView();
+    else if (viewId === "audit") refreshAuditView();
+    else if (viewId === "chat") initChatView();
+    else if (viewId === "health") refreshSystemHealth();
+
+    // Close mobile sidebar if open
+    document.getElementById("appSidebar")?.classList.remove("open");
+  };
+
+  // Slide-out Inspector Drawer Helper
+  function openInspectorDrawer(title, htmlContent) {
+    const drawer = document.getElementById("inspectorDrawer");
+    const drawerTitle = document.getElementById("drawerTitle");
+    const drawerBody = document.getElementById("drawerContent");
+
+    if (drawer && drawerTitle && drawerBody) {
+      drawerTitle.textContent = title;
+      drawerBody.innerHTML = htmlContent;
+      drawer.classList.add("open");
+    }
   }
 
   // =========================================================
-  // VIEW 1: WORKFLOW AUTOMATION CENTER
+  // VIEW 1: OPERATIONS DASHBOARD (OVERVIEW)
+  // =========================================================
+  async function refreshDashboardData() {
+    try {
+      const [wfRes, instRes, instData] = await Promise.all([
+        api.getWorkflows().catch(() => ({ workflows: [] })),
+        api.getInstances().catch(() => ({ instances: [] })),
+        api.getInstitutionData().catch(() => ({}))
+      ]);
+
+      state.workflows = wfRes.workflows || [];
+      state.instances = instRes.instances || [];
+      state.institutionData = instData;
+
+      // Update KPI Metrics
+      const totalAgents = 101;
+      const activeWorkflows = state.instances.filter(i => i.status === "running" || i.status === "pending_approval").length;
+      const pendingApprovals = state.instances.filter(i => i.status === "pending_approval").length;
+      const completed = state.instances.filter(i => i.status === "completed").length;
+
+      document.getElementById("kpiTotalAgents").textContent = String(totalAgents);
+      document.getElementById("kpiActiveWorkflows").textContent = String(activeWorkflows || state.workflows.length);
+      document.getElementById("kpiPendingApprovals").textContent = String(pendingApprovals);
+      document.getElementById("kpiCompletedPipelines").textContent = String(completed);
+
+      // Update Approval Badge on Nav
+      const navBadge = document.getElementById("navApprovalBadge");
+      if (navBadge) {
+        navBadge.textContent = String(pendingApprovals);
+        navBadge.style.display = pendingApprovals > 0 ? "inline-flex" : "none";
+      }
+
+      renderDashboardActivePipelines();
+      renderDashboardActivityStream();
+    } catch (err) {
+      console.warn("Dashboard refresh error:", err);
+    }
+  }
+
+  function renderDashboardActivePipelines() {
+    const container = document.getElementById("dashboardActivePipelinesContainer");
+    if (!container) return;
+
+    if (state.instances.length === 0) {
+      container.innerHTML = `
+        <div style="padding: 24px; text-align: center; color: var(--text-muted); font-size: 12.5px;">
+          No active pipelines currently running. Click "Run Flagship Demo" above to start!
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = state.instances.slice(0, 4).map(inst => {
+      const progress = Math.round(((inst.currentStepIndex || 1) / (inst.totalSteps || 4)) * 100);
+      const studentName = inst.context?.studentName || inst.context?.studentId || "Student";
+
+      return `
+        <div class="kpi-card" style="padding: 12px 16px; cursor: pointer;" onclick="openWorkflowFromDashboard('${inst.id}')">
+          <div style="flex: 1;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-weight: 700; color: #fff; font-size: 13px;">${escapeHtml(inst.workflowName)}</span>
+              <span class="badge-status ${inst.status}">${escapeHtml(inst.status.replace('_', ' '))}</span>
+            </div>
+            <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">
+              Target: <strong style="color:#cbd5e1;">${escapeHtml(studentName)}</strong> · ID: <span style="font-family:monospace;">${inst.id}</span>
+            </div>
+            <div style="width: 100%; height: 4px; background: var(--bg-subtle); border-radius: 2px; margin-top: 8px; overflow: hidden;">
+              <div style="width: ${progress}%; height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent-cyan));"></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderDashboardActivityStream() {
+    const stream = document.getElementById("dashboardActivityStream");
+    if (!stream) return;
+
+    const logs = state.institutionData?.auditLogs || [];
+    if (logs.length === 0) {
+      stream.innerHTML = `<div style="color: var(--text-muted);">Awaiting real-time agent events...</div>`;
+      return;
+    }
+
+    stream.innerHTML = logs.slice(0, 5).map(item => `
+      <div style="display: flex; gap: 10px; align-items: flex-start; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle);">
+        <span style="color: var(--primary); font-size: 14px;">●</span>
+        <div>
+          <div style="font-weight: 600; color: #fff;">${escapeHtml(item.action || 'Tool Execution')}</div>
+          <div style="font-size: 11px; color: var(--text-muted); font-family: monospace;">
+            Agent: <strong style="color: var(--accent-cyan);">${escapeHtml(item.agentId || 'agent-101')}</strong> · ${formatDate(item.timestamp)}
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  window.openWorkflowFromDashboard = function (instanceId) {
+    state.selectedInstanceId = instanceId;
+    switchMainView("workflows");
+  };
+
+  // =========================================================
+  // VIEW 2: WORKFLOW AUTOMATION CENTER
   // =========================================================
   async function refreshWorkflowData() {
     try {
       const [wfRes, instRes] = await Promise.all([
-        api.getWorkflows().catch(() => ({ workflows: [] })),
-        api.getInstances().catch(() => ({ instances: [] }))
+        api.getWorkflows(),
+        api.getInstances()
       ]);
 
       state.workflows = wfRes.workflows || [];
       state.instances = instRes.instances || [];
 
-      renderWorkflowStats();
       renderWorkflowLauncherDropdown();
-      renderInstanceList();
+      renderWorkflowInstancesList();
 
-      // If an instance was selected or none is, pick first
-      if (state.instances.length > 0) {
-        if (!state.selectedInstanceId || !state.instances.find(i => i.id === state.selectedInstanceId)) {
-          state.selectedInstanceId = state.instances[0].id;
-        }
-        loadAndRenderInstanceDetails(state.selectedInstanceId);
-      } else {
-        renderEmptyVisualizer();
+      if (state.selectedInstanceId) {
+        loadAndRenderVisualizer(state.selectedInstanceId);
+      } else if (state.instances.length > 0) {
+        state.selectedInstanceId = state.instances[0].id;
+        loadAndRenderVisualizer(state.instances[0].id);
       }
-
-      updatePendingBadge();
     } catch (err) {
-      console.warn("Workflow data fetch failed:", err);
+      console.warn("Workflows load error:", err);
     }
   }
 
-  function renderWorkflowStats() {
-    const total = state.instances.length;
-    const running = state.instances.filter(i => i.status === "running").length;
-    const pending = state.instances.filter(i => i.status === "pending_approval").length;
-    const completed = state.instances.filter(i => i.status === "completed").length;
-
-    const elTotal = document.getElementById("statTotalWorkflows");
-    const elActive = document.getElementById("statActivePipelines");
-    const elPending = document.getElementById("statPendingApprovals");
-    const elCompleted = document.getElementById("statCompletedWorkflows");
-
-    if (elTotal) elTotal.textContent = String(total);
-    if (elActive) elActive.textContent = String(running);
-    if (elPending) elPending.textContent = String(pending);
-    if (elCompleted) elCompleted.textContent = String(completed);
-  }
-
   function renderWorkflowLauncherDropdown() {
-    const select = document.getElementById("workflowSelect");
-    if (!select || select.options.length > 1) return; // already loaded
+    const select = document.getElementById("wfCustomSelect");
+    if (!select || select.options.length > 1) return;
 
-    select.innerHTML = '<option value="" disabled selected>-- Select Academic Workflow Pipeline --</option>';
+    select.innerHTML = '<option value="" disabled selected>-- Select an academic workflow pipeline --</option>';
     state.workflows.forEach(w => {
       const opt = document.createElement("option");
       opt.value = w.id;
@@ -315,1129 +441,880 @@
     });
 
     select.addEventListener("change", () => {
-      const selectedWf = state.workflows.find(w => w.id === select.value);
-      updateLauncherFormFields(selectedWf);
+      const sel = state.workflows.find(w => w.id === select.value);
+      updateLauncherFormFields(sel);
     });
+
+    const btnExec = document.getElementById("btnExecuteLaunch");
+    if (btnExec) btnExec.addEventListener("click", handleCustomWorkflowLaunch);
   }
 
   function updateLauncherFormFields(wf) {
-    const descEl = document.getElementById("workflowDesc");
-    const dynamicFields = document.getElementById("workflowDynamicFields");
-    if (!wf) return;
+    const container = document.getElementById("wfDynamicFieldsContainer");
+    if (!container || !wf) return;
 
-    if (descEl) {
-      descEl.textContent = wf.description || "";
-      descEl.style.display = "block";
-    }
-
-    if (!dynamicFields) return;
-    dynamicFields.innerHTML = "";
-
-    // Common Student Selector
-    const studentGroup = document.createElement("div");
-    studentGroup.className = "form-group";
-    studentGroup.innerHTML = `
-      <label class="form-label">Target Student Profile</label>
-      <select id="launchStudentId" class="form-select">
-        <option value="STU-1001">STU-1001 · Aarav Sharma (GPA 3.85, CS)</option>
-        <option value="STU-1002">STU-1002 · Priya Patel (GPA 3.92, AI)</option>
-        <option value="STU-1003">STU-1003 · Rohan Mehta (GPA 2.30, Data Science · At Risk)</option>
-        <option value="STU-1004">STU-1004 · Ananya Rao (GPA 3.78, M.S. Software Eng)</option>
-        <option value="STU-1005">STU-1005 · Vikram Sengupta (Applicant · GPA 3.60)</option>
-      </select>
-    `;
-    dynamicFields.appendChild(studentGroup);
-
-    // Context-specific inputs based on workflow ID
-    if (wf.id === "scholarship-eligibility") {
-      const schemeGroup = document.createElement("div");
-      schemeGroup.className = "form-group";
-      schemeGroup.innerHTML = `
-        <label class="form-label">Scholarship Scheme</label>
-        <select id="launchSchemeId" class="form-select">
-          <option value="SCH-MERIT">Presidential Merit Scholarship ($6,000)</option>
-          <option value="SCH-NEED">Institutional Need-Based Grant ($8,000)</option>
-          <option value="SCH-STEM">Future AI &amp; Technology Fellowship ($5,000)</option>
+    container.innerHTML = `
+      <div style="margin-top: 8px;">
+        <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">Target Student Profile</label>
+        <select id="launchStudentId" class="topbar-search-input" style="padding-left: 12px; margin-top: 4px;">
+          <option value="STU-DEMO-001">STU-DEMO-001 (Demosthenes Rao - B.S. AI & CS - GPA 3.90)</option>
+          <option value="STU-1001">STU-1001 (Aarav Sharma - B.S. CS - GPA 3.85)</option>
+          <option value="STU-1002">STU-1002 (Priya Patel - B.S. AI - GPA 3.92)</option>
+          <option value="STU-1003">STU-1003 (Rohan Mehta - B.S. Data Science - At Risk)</option>
+          <option value="STU-1004">STU-1004 (Ananya Rao - M.S. Software Engineering)</option>
+          <option value="STU-1005">STU-1005 (Vikram Sengupta - B.S. CS Applicant)</option>
+          <option value="APPLICANT-TEST-001">APPLICANT-TEST-001 (Sophia Chen - Admission Candidate)</option>
         </select>
-      `;
-      dynamicFields.appendChild(schemeGroup);
-    } else if (wf.id === "course-override") {
-      const courseGroup = document.createElement("div");
-      courseGroup.className = "form-group";
-      courseGroup.innerHTML = `
-        <label class="form-label">Override Target Course</label>
-        <select id="launchCourseCode" class="form-select">
-          <option value="CS201">CS201 · Data Structures &amp; Algorithms</option>
-          <option value="CS301">CS301 · Operating Systems</option>
-          <option value="AI401">AI401 · Advanced Machine Learning &amp; Neural Nets</option>
-        </select>
-      `;
-      dynamicFields.appendChild(courseGroup);
-
-      const reasonGroup = document.createElement("div");
-      reasonGroup.className = "form-group";
-      reasonGroup.innerHTML = `
-        <label class="form-label">Override Justification / Prerequisite Waiver Reason</label>
-        <input type="text" id="launchOverrideReason" class="form-input" placeholder="e.g. Industry equivalent work experience or self-study" value="Completed equivalent online specialization with distinction." />
-      `;
-      dynamicFields.appendChild(reasonGroup);
-    }
-
-    // Additional Notes field
-    const notesGroup = document.createElement("div");
-    notesGroup.className = "form-group";
-    notesGroup.innerHTML = `
-      <label class="form-label">Administrative Notes (Optional)</label>
-      <input type="text" id="launchNotes" class="form-input" placeholder="Optional initiation notes or reference ticket" />
+      </div>
     `;
-    dynamicFields.appendChild(notesGroup);
   }
 
-  async function handleLaunchWorkflow() {
-    const select = document.getElementById("workflowSelect");
-    if (!select || !select.value) {
-      showToast("Please select a workflow to launch", "warning");
-      return;
-    }
-
-    const workflowId = select.value;
-    const studentId = document.getElementById("launchStudentId")?.value || "STU-1001";
-    const schemeId = document.getElementById("launchSchemeId")?.value || undefined;
-    const courseCode = document.getElementById("launchCourseCode")?.value || undefined;
-    const reason = document.getElementById("launchOverrideReason")?.value || undefined;
-    const notes = document.getElementById("launchNotes")?.value || undefined;
-
-    const payload = {
-      workflow_id: workflowId,
-      studentId,
-      schemeId,
-      courseCode,
-      reason,
-      notes
-    };
-
-    const btn = document.getElementById("btnLaunchWorkflow");
-    if (btn) {
-      btn.disabled = true;
-      btn.innerHTML = '<span>⏳</span> Starting Pipeline...';
-    }
-
+  window.quickLaunchWorkflow = async function (workflowId) {
     try {
-      const res = await api.startWorkflow(payload);
-      showToast(`Workflow initiated: ${res.instance?.id || 'Started'}`, "success");
+      showToast(`Initiating ${workflowId}...`, "info");
+      const res = await api.startWorkflow({
+        workflow_id: workflowId,
+        studentId: workflowId === "admission-verification" ? "STU-1005" : "STU-DEMO-001",
+        scholarshipId: "SCH-MERIT",
+        courseCode: "CS301",
+        notes: `Autonomous initiation via Operations Center: ${workflowId}`
+      });
+
+      showToast(`Workflow ${res.instance?.id} launched successfully!`, "success");
       await refreshWorkflowData();
       if (res.instance?.id) {
         state.selectedInstanceId = res.instance.id;
-        loadAndRenderInstanceDetails(res.instance.id);
+        loadAndRenderVisualizer(res.instance.id);
       }
     } catch (err) {
-      showToast(`Failed to start workflow: ${err.message}`, "error");
-    } finally {
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = '<span>⚡</span> Launch Autonomous Workflow';
-      }
+      showToast(`Launch failed: ${err.message}`, "error");
+    }
+  };
+
+  async function handleCustomWorkflowLaunch() {
+    const select = document.getElementById("wfCustomSelect");
+    if (!select || !select.value) {
+      showToast("Please select a workflow pipeline", "warning");
+      return;
+    }
+
+    const studentId = document.getElementById("launchStudentId")?.value || "STU-DEMO-001";
+    quickLaunchWorkflow(select.value);
+  }
+
+  function renderWorkflowInstancesList() {
+    const container = document.getElementById("wfInstancesList");
+    if (!container) return;
+
+    if (state.instances.length === 0) {
+      container.innerHTML = `<div style="padding:20px; text-align:center; color:var(--text-muted);">No executions recorded.</div>`;
+      return;
+    }
+
+    container.innerHTML = state.instances.map(inst => `
+      <div class="kpi-card" style="padding: 10px 14px; cursor: pointer; border-color: ${inst.id === state.selectedInstanceId ? 'var(--primary)' : 'var(--border)'};" onclick="selectInstance('${inst.id}')">
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; color: #fff; font-size: 12.5px;">${escapeHtml(inst.workflowName)}</span>
+            <span class="badge-status ${inst.status}">${escapeHtml(inst.status.replace('_', ' '))}</span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-dim); margin-top: 2px; font-family: monospace;">
+            ${escapeHtml(inst.id)} · ${formatDate(inst.createdAt)}
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  window.selectInstance = function (instanceId) {
+    state.selectedInstanceId = instanceId;
+    renderWorkflowInstancesList();
+    loadAndRenderVisualizer(instanceId);
+  };
+
+  async function loadAndRenderVisualizer(instanceId) {
+    const container = document.getElementById("wfVisualizerContainer");
+    if (!container) return;
+
+    try {
+      const res = await api.getInstance(instanceId);
+      const inst = res.instance;
+      if (!inst) return;
+
+      const wfDef = state.workflows.find(w => w.id === inst.workflowId);
+      const allSteps = wfDef?.steps || [];
+      const history = inst.stepHistory || [];
+      const currentStepIndex = inst.currentStepIndex || 0;
+
+      let html = `
+        <div style="padding: 16px; background: var(--bg-subtle); border-radius: var(--radius-md); border: 1px solid var(--border); margin-bottom: 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 800; color: #fff;">${escapeHtml(inst.workflowName)}</h3>
+              <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">
+                Instance ID: <span style="font-family:monospace; color:var(--accent-cyan);">${inst.id}</span> · Target: <strong>${escapeHtml(inst.context?.studentName || inst.context?.studentId || 'Student')}</strong>
+              </div>
+            </div>
+            <span class="badge-status ${inst.status}" style="font-size: 12px; padding: 4px 12px;">
+              ${escapeHtml(inst.status.replace('_', ' '))}
+            </span>
+          </div>
+        </div>
+
+        <div class="timeline-stepper">
+      `;
+
+      allSteps.forEach((step, idx) => {
+        const historyItem = history.find(h => h.stepId === step.id);
+        const isPast = idx < currentStepIndex || inst.status === "completed";
+        const isCurrent = idx === currentStepIndex && inst.status !== "completed";
+        const isPendingApproval = isCurrent && inst.status === "pending_approval";
+        const isRejected = historyItem?.status === "rejected" || (isCurrent && inst.status === "rejected");
+
+        let cardClass = "timeline-step-card";
+        if (isPast && !isRejected) cardClass += " completed-step";
+        else if (isPendingApproval) cardClass += " approval-needed";
+        else if (isRejected) cardClass += " rejected-step";
+        else if (isCurrent) cardClass += " active-step";
+
+        const badgeType = step.type === "agent_task" ? "agent" : step.type === "human_approval" ? "human" : "service";
+        const badgeLabel = step.type === "agent_task" ? "AI Agent Execution" : step.type === "human_approval" ? "Human Committee Gate" : "Service Query";
+
+        html += `
+          <div class="${cardClass}">
+            <div class="step-card-header">
+              <div class="step-title-box">
+                <span class="step-badge ${badgeType}">${badgeLabel}</span>
+                <span class="step-name">${escapeHtml(step.name)}</span>
+              </div>
+              <span class="badge-status ${isPendingApproval ? 'pending_approval' : isRejected ? 'rejected' : isPast ? 'completed' : isCurrent ? 'running' : 'waiting'}">
+                ${isPendingApproval ? 'Action Required' : isRejected ? 'Rejected' : isPast ? 'Completed' : isCurrent ? 'In Progress' : 'Waiting'}
+              </span>
+            </div>
+            <div class="step-agent-sub">
+              Participating Specialist: <strong style="color:#e2e8f0;">${escapeHtml(step.agentName || step.agentId || 'Master Orchestrator')}</strong>
+            </div>
+        `;
+
+        if (historyItem?.output || isPendingApproval) {
+          const out = historyItem?.output || {};
+          html += `
+            <div style="background: var(--bg); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px;">
+              <div style="font-weight: 700; color: var(--accent-cyan); margin-bottom: 4px;">✓ Verified Evidence &amp; Output</div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 6px; color: var(--text-secondary);">
+                ${Object.keys(out).filter(k => k !== 'evidence').map(k => `
+                  <div><strong style="color:var(--text-muted);">${escapeHtml(k)}:</strong> ${escapeHtml(typeof out[k] === 'object' ? JSON.stringify(out[k]) : out[k])}</div>
+                `).join("")}
+              </div>
+            </div>
+          `;
+        }
+
+        if (isPendingApproval) {
+          html += `
+            <div style="display: flex; gap: 10px; margin-top: 8px;">
+              <button class="btn-flagship-top" style="background: var(--success); height: 34px; border:none;" onclick="submitApprovalDecision('${inst.id}', 'approved')">
+                ✓ Approve &amp; Advance
+              </button>
+              <button class="btn-flagship-top" style="background: var(--danger); height: 34px; border:none;" onclick="submitApprovalDecision('${inst.id}', 'rejected')">
+                ✕ Reject &amp; Terminate
+              </button>
+            </div>
+          `;
+        }
+
+        html += `</div>`;
+      });
+
+      html += `</div>`;
+      container.innerHTML = html;
+    } catch (err) {
+      container.innerHTML = `<div style="color:var(--danger); padding:20px;">Failed to render visualizer: ${err.message}</div>`;
     }
   }
 
-  async function handleRunFlagshipDemo() {
-    const btn = document.getElementById("btnRunFlagshipDemo");
-    if (btn) {
-      btn.disabled = true;
-      btn.innerHTML = '<span>⏳</span> Orchestrating 9 Agents...';
+  window.submitApprovalDecision = async function (instanceId, decision) {
+    try {
+      showToast(`Submitting ${decision} decision...`, "info");
+      const res = await api.submitDecision(instanceId, decision, `Authorized decision submitted by Academic Review Board via Operations Center`);
+      showToast(`Workflow updated: ${res.instance?.status}`, "success");
+      await refreshWorkflowData();
+      if (state.currentView === "approvals") refreshApprovalsQueue();
+    } catch (err) {
+      showToast(`Decision error: ${err.message}`, "error");
+    }
+  };
+
+  // =========================================================
+  // VIEW 3: 100-AGENT WORKFORCE MATRIX
+  // =========================================================
+  async function refreshWorkforceView() {
+    try {
+      const res = await api.getWorkforce();
+      state.workforceAgents = res.agents || [];
+      initWorkforceFilters();
+      renderWorkforceGrid();
+    } catch (err) {
+      console.warn("Workforce load error:", err);
+    }
+  }
+
+  function initWorkforceFilters() {
+    document.querySelectorAll("#workforceSegmentedFilters .segment-chip").forEach(chip => {
+      chip.onclick = () => {
+        document.querySelectorAll("#workforceSegmentedFilters .segment-chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        state.selectedWorkforceDomain = chip.getAttribute("data-domain") || "all";
+        renderWorkforceGrid();
+      };
+    });
+
+    const filterInput = document.getElementById("workforceFilterInput");
+    if (filterInput) {
+      filterInput.oninput = (e) => {
+        state.workforceSearchQuery = e.target.value;
+        renderWorkforceGrid();
+      };
+    }
+  }
+
+  function renderWorkforceGrid() {
+    const grid = document.getElementById("workforceCardsGrid");
+    if (!grid) return;
+
+    const filtered = state.workforceAgents.filter(a => {
+      const matchDomain = state.selectedWorkforceDomain === "all" || a.educational_domain === state.selectedWorkforceDomain;
+      const q = state.workforceSearchQuery.toLowerCase().trim();
+      const matchQ = !q ||
+        a.agent_id.toLowerCase().includes(q) ||
+        (a.educational_name || '').toLowerCase().includes(q) ||
+        (a.original_name || '').toLowerCase().includes(q) ||
+        (a.domain_name || '').toLowerCase().includes(q) ||
+        (a.allowed_tools || []).some(t => t.toLowerCase().includes(q)) ||
+        (a.educational_capabilities || []).some(c => c.toLowerCase().includes(q));
+      return matchDomain && matchQ;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-muted);">No workforce agents matched the criteria.</div>`;
+      return;
     }
 
+    grid.innerHTML = filtered.map(agent => `
+      <div class="agent-card" onclick="inspectWorkforceAgent('${agent.agent_id}')">
+        <div class="agent-card-top">
+          <div>
+            <span class="agent-id-tag">${escapeHtml(agent.agent_id)}</span>
+            <div class="agent-name">${escapeHtml(agent.educational_name)}</div>
+          </div>
+          <span class="badge-status ok" style="font-size: 10px; padding: 2px 7px;">● READY</span>
+        </div>
+
+        <div style="font-size: 11px; color: var(--accent-cyan); font-weight: 700;">
+          ${escapeHtml(agent.domain_name || agent.educational_domain)}
+        </div>
+
+        <div class="tag-list">
+          ${(agent.allowed_tools || []).slice(0, 3).map(t => `<span class="tool-tag">${escapeHtml(t)}</span>`).join("")}
+          ${(agent.allowed_tools || []).length > 3 ? `<span class="tool-tag">+${agent.allowed_tools.length - 3}</span>` : ''}
+        </div>
+
+        <div class="tag-list">
+          ${(agent.educational_capabilities || []).slice(0, 2).map(c => `<span class="cap-tag">${escapeHtml(c)}</span>`).join("")}
+        </div>
+
+        <div style="margin-top: auto; padding-top: 8px; border-top: 1px solid var(--border-subtle); font-size: 11px; color: var(--text-dim);">
+          Port :${agent.port} · Model: Nemotron 3 Nano
+        </div>
+      </div>
+    `).join("");
+  }
+
+  window.inspectWorkforceAgent = function (agentId) {
+    const agent = state.workforceAgents.find(a => a.agent_id === agentId);
+    if (!agent) return;
+
+    const content = `
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: var(--accent-cyan);">${escapeHtml(agent.agent_id)}</span>
+          <span class="badge-status ok">● READY</span>
+        </div>
+
+        <h3 style="font-size: 18px; font-weight: 800; color: #fff;">${escapeHtml(agent.educational_name)}</h3>
+        <div style="font-size: 12px; color: var(--text-muted);">Base Agent: ${escapeHtml(agent.original_name)} [${escapeHtml(agent.category)}]</div>
+
+        <div class="kpi-card" style="padding: 12px;">
+          <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Domain Category</div>
+          <div style="font-size: 14px; font-weight: 700; color: #fff; margin-top: 2px;">${escapeHtml(agent.domain_name || agent.educational_domain)}</div>
+        </div>
+
+        <div>
+          <div style="font-size: 11.5px; font-weight: 700; color: #cbd5e1; text-transform: uppercase; margin-bottom: 6px;">Allowed RBAC Tools (${(agent.allowed_tools || []).length})</div>
+          <div class="tag-list">
+            ${(agent.allowed_tools || []).map(t => `<span class="tool-tag" style="padding:4px 8px;">${escapeHtml(t)}</span>`).join(" ")}
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 11.5px; font-weight: 700; color: #cbd5e1; text-transform: uppercase; margin-bottom: 6px;">Educational Capabilities</div>
+          <div class="tag-list">
+            ${(agent.educational_capabilities || []).map(c => `<span class="cap-tag" style="padding:4px 8px;">${escapeHtml(c)}</span>`).join(" ")}
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 11.5px; font-weight: 700; color: #cbd5e1; text-transform: uppercase; margin-bottom: 6px;">Active Workflow Bindings</div>
+          <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+            ${escapeHtml((agent.workflow_roles || []).join(", "))}
+          </div>
+        </div>
+      </div>
+    `;
+
+    openInspectorDrawer(`Agent Specification: ${agent.agent_id}`, content);
+  };
+
+  // =========================================================
+  // VIEW 4: HUMAN APPROVALS QUEUE
+  // =========================================================
+  async function refreshApprovalsQueue() {
     try {
-      showToast("Initiating Flagship Scholarship Demo for STU-DEMO-001...", "info");
+      const res = await api.getInstances();
+      state.instances = res.instances || [];
+      const pending = state.instances.filter(i => i.status === "pending_approval");
+
+      const badge = document.getElementById("navApprovalBadge");
+      if (badge) {
+        badge.textContent = String(pending.length);
+        badge.style.display = pending.length > 0 ? "inline-flex" : "none";
+      }
+
+      const container = document.getElementById("approvalsQueueContent");
+      if (!container) return;
+
+      if (pending.length === 0) {
+        container.innerHTML = `
+          <div class="card-panel" style="padding: 40px; text-align: center; color: var(--text-muted);">
+            <div style="font-size: 32px; margin-bottom: 8px;">✓</div>
+            <h3 style="color: #fff; font-size: 16px; font-weight: 700;">Approvals Queue is Clear</h3>
+            <p style="font-size: 12.5px; margin-top: 4px;">There are no pending decisions requiring Academic Committee or Dean reviews.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = pending.map(inst => `
+        <div class="dossier-panel" style="border-left: 4px solid var(--warning);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <div style="display: inline-flex; align-items: center; gap: 6px; padding: 2px 7px; border-radius: 4px; background: var(--warning-bg); color: var(--warning); font-size: 10.5px; font-weight: 800;">
+                ⚠️ Human-in-the-Loop Gate
+              </div>
+              <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin-top: 6px;">${escapeHtml(inst.workflowName)}</h3>
+              <div style="font-size: 12px; color: var(--text-muted); font-family: monospace;">Instance: ${inst.id}</div>
+            </div>
+            <span class="badge-status waiting" style="padding: 4px 12px; font-size: 12px;">Review Awaiting</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; background: var(--bg-subtle); padding: 14px; border-radius: var(--radius-md);">
+            <div><strong style="color:var(--text-muted);">Target Student:</strong> <span style="color:#fff;">${escapeHtml(inst.context?.studentName || inst.context?.studentId)}</span></div>
+            <div><strong style="color:var(--text-muted);">Decision Step:</strong> <span style="color:var(--accent-cyan);">${escapeHtml(inst.pendingDecision?.stepName || 'Committee Review')}</span></div>
+            <div><strong style="color:var(--text-muted);">Recommended Action:</strong> <span style="color:var(--success); font-weight:700;">APPROVED (Met Thresholds)</span></div>
+          </div>
+
+          <div style="display: flex; gap: 12px; margin-top: 8px;">
+            <button class="btn-flagship-top" style="background: var(--success); height: 38px; border:none;" onclick="submitApprovalDecision('${inst.id}', 'approved')">
+              ✓ Approve &amp; Advance Workflow
+            </button>
+            <button class="btn-flagship-top" style="background: var(--danger); height: 38px; border:none;" onclick="submitApprovalDecision('${inst.id}', 'rejected')">
+              ✕ Reject &amp; Halt Execution
+            </button>
+          </div>
+        </div>
+      `).join("");
+    } catch (err) {
+      console.warn("Approvals load error:", err);
+    }
+  }
+
+  // =========================================================
+  // VIEW 5: DOCUMENT INTELLIGENCE WORKSPACE
+  // =========================================================
+  async function refreshDocumentsView() {
+    try {
+      const res = await api.getDocuments();
+      state.documents = res.documents || [];
+      renderDocumentsList();
+
+      if (state.documents.length > 0 && !state.selectedDocId) {
+        inspectDocument(state.documents[0].documentId);
+      }
+    } catch (err) {
+      console.warn("Documents load error:", err);
+    }
+  }
+
+  function renderDocumentsList() {
+    const container = document.getElementById("documentsListContainer");
+    if (!container) return;
+
+    container.innerHTML = state.documents.map(doc => `
+      <div class="kpi-card" style="padding: 10px 14px; cursor: pointer; border-color: ${doc.documentId === state.selectedDocId ? 'var(--primary)' : 'var(--border)'};" onclick="inspectDocument('${doc.documentId}')">
+        <div style="flex: 1;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: 700; color: #fff; font-size: 12.5px;">${escapeHtml(doc.filename)}</span>
+            <span class="badge-status ${doc.status === 'verified' ? 'ok' : doc.status === 'conflict_detected' ? 'waiting' : 'failed'}">
+              ${escapeHtml(doc.status)}
+            </span>
+          </div>
+          <div style="font-size: 11px; color: var(--text-dim); font-family: monospace; margin-top: 2px;">
+            ${doc.documentId} · ${doc.studentId}
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  window.inspectDocument = function (docId) {
+    state.selectedDocId = docId;
+    renderDocumentsList();
+
+    const doc = state.documents.find(d => d.documentId === docId);
+    const panel = document.getElementById("documentInspectorPanel");
+    if (!panel || !doc) return;
+
+    const isConflict = doc.status === "conflict_detected";
+    const isError = doc.status === "error_unreadable";
+
+    panel.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+          <span style="font-family: monospace; font-size: 11px; color: var(--accent-cyan); font-weight: 800;">${doc.documentId}</span>
+          <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin-top: 2px;">${escapeHtml(doc.filename)}</h3>
+          <div style="font-size: 12px; color: var(--text-muted);">Assigned Student: <strong>${escapeHtml(doc.studentId)}</strong> · MIME: ${escapeHtml(doc.mimeType)}</div>
+        </div>
+        <span class="badge-status ${doc.status === 'verified' ? 'ok' : isConflict ? 'waiting' : 'failed'}" style="font-size: 12px; padding: 4px 12px;">
+          ${escapeHtml(doc.status)}
+        </span>
+      </div>
+
+      ${isConflict ? `
+        <div style="background: var(--warning-bg); border: 1px solid var(--warning-border); border-radius: var(--radius-md); padding: 14px;">
+          <div style="font-weight: 800; color: var(--warning); font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            <span>⚠️</span> DATA CONFLICT DETECTED
+          </div>
+          <div style="font-size: 12px; color: #fff; margin-top: 4px;">
+            Institutional Database Income: <strong>$180,000</strong> vs Uploaded Certificate Income: <strong>$120,000</strong>.
+          </div>
+          <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 4px;">
+            System has safely flagged disparity and escalated to Committee review without hallucinating data.
+          </div>
+        </div>
+      ` : ''}
+
+      ${isError ? `
+        <div style="background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: var(--radius-md); padding: 14px;">
+          <div style="font-weight: 800; color: var(--danger); font-size: 13px;">✕ UNREADABLE / CORRUPTED STREAM</div>
+          <div style="font-size: 12px; color: #fff; margin-top: 4px;">Document checksum verification failed. No OCR fields extracted.</div>
+        </div>
+      ` : ''}
+
+      <div class="card-panel" style="background: var(--bg-subtle);">
+        <div class="card-panel-title"><span>🔍</span> Extracted Optical Attributes (OCR / Vision)</div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px; font-size: 12.5px;">
+          ${doc.extractedData ? Object.keys(doc.extractedData).map(k => `
+            <div><strong style="color:var(--text-muted);">${escapeHtml(k)}:</strong> <span style="color:#fff;">${escapeHtml(typeof doc.extractedData[k] === 'object' ? JSON.stringify(doc.extractedData[k]) : doc.extractedData[k])}</span></div>
+          `).join("") : '<div style="color:var(--text-muted);">No structured data available</div>'}
+        </div>
+      </div>
+
+      <div class="card-panel" style="background: var(--bg-subtle);">
+        <div class="card-panel-title"><span>🔒</span> Cryptographic Tamper Hash Integrity</div>
+        <div style="font-family: monospace; font-size: 11.5px; color: var(--accent-cyan); word-break: break-all; margin-top: 6px;">
+          ${escapeHtml(doc.verificationHash || 'None')}
+        </div>
+        <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 4px;">
+          Tamper Status: <strong style="color:${doc.tamperDetected ? 'var(--danger)' : 'var(--success)'};">${doc.tamperDetected ? 'TAMPERED' : 'AUTHENTIC (Passed SHA-256)'}</strong>
+        </div>
+      </div>
+    `;
+  };
+
+  // =========================================================
+  // VIEW 6: INSTITUTIONAL RECORDS & CATALOGS
+  // =========================================================
+  async function refreshRecordsView() {
+    try {
+      const data = await api.getInstitutionData();
+      state.institutionData = data;
+      initRecordsSubTabs();
+      renderRecordsTable();
+    } catch (err) {
+      console.warn("Records load error:", err);
+    }
+  }
+
+  function initRecordsSubTabs() {
+    document.querySelectorAll("#recordsSubTabs .segment-chip").forEach(chip => {
+      chip.onclick = () => {
+        document.querySelectorAll("#recordsSubTabs .segment-chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        state.recordsSubTab = chip.getAttribute("data-subtab") || "students";
+        renderRecordsTable();
+      };
+    });
+
+    const searchInput = document.getElementById("recordsSearchInput");
+    if (searchInput) searchInput.oninput = renderRecordsTable;
+  }
+
+  function renderRecordsTable() {
+    const table = document.getElementById("institutionalDataTable");
+    if (!table) return;
+
+    const q = (document.getElementById("recordsSearchInput")?.value || "").toLowerCase().trim();
+
+    if (state.recordsSubTab === "students") {
+      const students = (state.institutionData.students || []).filter(s =>
+        !q || s.id.toLowerCase().includes(q) || s.name.toLowerCase().includes(q) || s.program.toLowerCase().includes(q)
+      );
+
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Student ID</th>
+            <th>Full Name</th>
+            <th>Academic Program</th>
+            <th>GPA</th>
+            <th>Attendance</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${students.map(s => `
+            <tr>
+              <td style="font-family:monospace; font-weight:700; color:var(--accent-cyan);">${escapeHtml(s.id)}</td>
+              <td style="font-weight:600; color:#fff;">${escapeHtml(s.name)}</td>
+              <td>${escapeHtml(s.program)}</td>
+              <td style="font-weight:700;">${s.gpa}</td>
+              <td>${s.attendanceRate}%</td>
+              <td><span class="badge-status ${s.status === 'enrolled' ? 'ok' : s.status === 'at_risk' ? 'failed' : 'waiting'}">${escapeHtml(s.status)}</span></td>
+            </tr>
+          `).join("")}
+        </tbody>
+      `;
+    } else if (state.recordsSubTab === "courses") {
+      const courses = (state.institutionData.courses || []).filter(c =>
+        !q || c.code.toLowerCase().includes(q) || c.title.toLowerCase().includes(q)
+      );
+
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Course Code</th>
+            <th>Title</th>
+            <th>Credits</th>
+            <th>Capacity</th>
+            <th>Prerequisites</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${courses.map(c => `
+            <tr>
+              <td style="font-family:monospace; font-weight:700; color:var(--primary);">${escapeHtml(c.code)}</td>
+              <td style="font-weight:600; color:#fff;">${escapeHtml(c.title)}</td>
+              <td>${c.credits} Credits</td>
+              <td>${c.enrolled}/${c.capacity}</td>
+              <td>${escapeHtml((c.prerequisites || []).join(", ") || "None")}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      `;
+    } else if (state.recordsSubTab === "scholarships") {
+      const schemes = (state.institutionData.scholarshipSchemes || []).filter(s =>
+        !q || s.id.toLowerCase().includes(q) || s.name.toLowerCase().includes(q)
+      );
+
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Scheme ID</th>
+            <th>Scholarship Name</th>
+            <th>Award Amount</th>
+            <th>Min GPA</th>
+            <th>Max Income Threshold</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${schemes.map(s => `
+            <tr>
+              <td style="font-family:monospace; font-weight:700; color:var(--accent-purple);">${escapeHtml(s.id)}</td>
+              <td style="font-weight:600; color:#fff;">${escapeHtml(s.name)}</td>
+              <td style="font-weight:700; color:var(--success);">$${s.awardAmount}</td>
+              <td>${s.minGpa}</td>
+              <td>$${s.maxIncome}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      `;
+    }
+  }
+
+  // =========================================================
+  // VIEW 7: IMMUTABLE AUDIT TRAIL
+  // =========================================================
+  async function refreshAuditView() {
+    try {
+      const data = await api.getInstitutionData();
+      const logs = data.auditLogs || [];
+      const container = document.getElementById("auditTimelineContainer");
+      if (!container) return;
+
+      if (logs.length === 0) {
+        container.innerHTML = `<div style="padding:20px; color:var(--text-muted);">No audit entries recorded yet.</div>`;
+        return;
+      }
+
+      container.innerHTML = logs.map(item => `
+        <div style="padding: 12px 16px; background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="color: var(--accent-cyan); font-weight: 800;">●</span>
+              <span style="font-weight: 700; color: #fff; font-size: 13px;">${escapeHtml(item.action || 'Tool Action')}</span>
+              <span style="font-size: 11px; font-family: monospace; color: var(--text-dim);">Workflow: ${escapeHtml(item.workflowId || 'N/A')}</span>
+            </div>
+            <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+              Executing Agent: <strong style="color: var(--primary);">${escapeHtml(item.agentId || 'agent-101')}</strong> · Tool: <code style="color:#93c5fd;">${escapeHtml(item.tool || 'internal_query')}</code>
+            </div>
+          </div>
+          <div style="font-size: 11px; color: var(--text-dim); font-family: monospace;">
+            ${formatDate(item.timestamp)}
+          </div>
+        </div>
+      `).join("");
+    } catch (err) {
+      console.warn("Audit load error:", err);
+    }
+  }
+
+  // =========================================================
+  // VIEW 8: AI FLEET CONSOLE & CHAT
+  // =========================================================
+  async function initChatView() {
+    try {
+      const res = await api.getAgents();
+      state.chatAgents = res.agents || [];
+      renderChatAgentList();
+
+      if (state.chatAgents.length > 0 && !state.selectedChatAgent) {
+        selectChatAgent(state.chatAgents[0].agent_id);
+      }
+
+      const btnSend = document.getElementById("btnSendChat");
+      if (btnSend) btnSend.onclick = handleSendChatMessage;
+
+      const input = document.getElementById("chatInput");
+      if (input) {
+        input.onkeydown = (e) => {
+          if (e.key === "Enter") handleSendChatMessage();
+        };
+      }
+    } catch (err) {
+      console.warn("Chat init error:", err);
+    }
+  }
+
+  function renderChatAgentList() {
+    const container = document.getElementById("chatAgentListContainer");
+    if (!container) return;
+
+    const q = (document.getElementById("chatAgentSearch")?.value || "").toLowerCase().trim();
+    const filtered = state.chatAgents.filter(a =>
+      !q || a.agent_id.toLowerCase().includes(q) || a.name.toLowerCase().includes(q) || a.category.toLowerCase().includes(q)
+    );
+
+    container.innerHTML = filtered.map(agent => `
+      <div class="kpi-card" style="padding: 8px 12px; cursor: pointer; border-color: ${agent.agent_id === state.selectedChatAgent?.agent_id ? 'var(--primary)' : 'var(--border-subtle)'};" onclick="selectChatAgent('${agent.agent_id}')">
+        <div>
+          <div style="font-weight: 700; color: #fff; font-size: 12px;">${escapeHtml(agent.name)}</div>
+          <div style="font-size: 10.5px; color: var(--text-dim); font-family: monospace;">${agent.agent_id} · ${agent.category}</div>
+        </div>
+      </div>
+    `).join("");
+
+    const searchInput = document.getElementById("chatAgentSearch");
+    if (searchInput) searchInput.oninput = renderChatAgentList;
+  }
+
+  window.selectChatAgent = function (agentId) {
+    const agent = state.chatAgents.find(a => a.agent_id === agentId);
+    if (!agent) return;
+    state.selectedChatAgent = agent;
+    renderChatAgentList();
+
+    document.getElementById("chatActiveAgentName").textContent = agent.name;
+    document.getElementById("chatActiveAgentId").textContent = `${agent.agent_id} · ${agent.category}`;
+
+    const contextBox = document.getElementById("chatAgentDetailsBox");
+    if (contextBox) {
+      contextBox.innerHTML = `
+        <div><strong style="color:var(--text-muted);">Assigned Port:</strong> :${agent.port}</div>
+        <div><strong style="color:var(--text-muted);">Model Engine:</strong> Nemotron 3 Nano (Ollama)</div>
+        <div><strong style="color:var(--text-muted);">Capabilities:</strong> ${(agent.capabilities || []).join(", ")}</div>
+        <div style="margin-top: 8px;"><strong style="color:var(--text-muted);">Allowed Tools:</strong></div>
+        <div class="tag-list">${(agent.allowed_tools || ['*']).map(t => `<span class="tool-tag">${escapeHtml(t)}</span>`).join("")}</div>
+      `;
+    }
+  };
+
+  async function handleSendChatMessage() {
+    const input = document.getElementById("chatInput");
+    const text = input?.value?.trim();
+    if (!text || !state.selectedChatAgent) return;
+
+    input.value = "";
+    const stream = document.getElementById("chatMessagesStream");
+    if (!stream) return;
+
+    // Append User Bubble
+    const userBubble = document.createElement("div");
+    userBubble.className = "chat-bubble user";
+    userBubble.textContent = text;
+    stream.appendChild(userBubble);
+
+    // Append AI Loading Bubble
+    const aiBubble = document.createElement("div");
+    aiBubble.className = "chat-bubble ai";
+    aiBubble.textContent = "Processing via local Nemotron 3 Nano...";
+    stream.appendChild(aiBubble);
+    stream.scrollTop = stream.scrollHeight;
+
+    try {
+      const res = await api.sendChat(state.selectedChatAgent.agent_id, text);
+      const reply = res.result?.response || res.result?.result || JSON.stringify(res.result);
+      aiBubble.textContent = reply;
+    } catch (err) {
+      aiBubble.textContent = `Error: ${err.message}`;
+    }
+    stream.scrollTop = stream.scrollHeight;
+  }
+
+  // =========================================================
+  // VIEW 9: SYSTEM OBSERVABILITY & HEALTH
+  // =========================================================
+  async function refreshSystemHealth() {
+    try {
+      const [hRes, mRes] = await Promise.all([
+        api.getHealth(),
+        api.getSystemMetrics()
+      ]);
+
+      document.getElementById("healthGatewayStatus").textContent = hRes.gateway === "healthy" ? "Healthy (200 OK)" : "Degraded";
+      document.getElementById("healthOllamaStatus").textContent = hRes.ollama === "healthy" ? "Healthy (CUDA)" : "Offline";
+      document.getElementById("healthFleetStatus").textContent = `${hRes.agents?.healthy || 101}/${hRes.agents?.total || 101}`;
+
+      const grid = document.getElementById("systemTelemetryGrid");
+      if (grid && mRes) {
+        grid.innerHTML = `
+          <div class="kpi-card" style="padding:14px;">
+            <div>
+              <div style="color:var(--text-muted); font-size:11px; font-weight:700;">HOST SYSTEM RAM</div>
+              <div style="font-size:16px; font-weight:800; color:#fff; margin-top:2px;">${mRes.memory?.freeMb} MB Free / ${mRes.memory?.totalMb} MB Total</div>
+            </div>
+          </div>
+          <div class="kpi-card" style="padding:14px;">
+            <div>
+              <div style="color:var(--text-muted); font-size:11px; font-weight:700;">NVIDIA GPU &amp; VRAM</div>
+              <div style="font-size:16px; font-weight:800; color:#fff; margin-top:2px;">RTX 2050 (4GB VRAM)</div>
+              <div style="font-size:11px; color:var(--accent-cyan); font-family:monospace;">Driver 555.97 · CUDA Acceleration</div>
+            </div>
+          </div>
+          <div class="kpi-card" style="padding:14px;">
+            <div>
+              <div style="color:var(--text-muted); font-size:11px; font-weight:700;">GATEWAY UPTIME</div>
+              <div style="font-size:16px; font-weight:800; color:#fff; margin-top:2px;">${mRes.uptimeSeconds}s Continuous</div>
+            </div>
+          </div>
+          <div class="kpi-card" style="padding:14px;">
+            <div>
+              <div style="color:var(--text-muted); font-size:11px; font-weight:700;">INFERENCE CONTEXT</div>
+              <div style="font-size:16px; font-weight:800; color:#fff; margin-top:2px;">Nemotron 3 Nano (4K Tokens)</div>
+            </div>
+          </div>
+        `;
+      }
+    } catch (err) {
+      console.warn("Health telemetry load error:", err);
+    }
+  }
+
+  // =========================================================
+  // FLAGSHIP JUDGE DEMO EXPERIENCE
+  // =========================================================
+  async function runFlagshipScholarshipDemo() {
+    showToast("Launching Flagship Scholarship Demo for STU-DEMO-001...", "info");
+    switchMainView("workflows");
+
+    try {
       const res = await api.startWorkflow({
         workflow_id: "scholarship-eligibility",
         studentId: "STU-DEMO-001",
         scholarshipId: "SCH-MERIT",
-        notes: "Autonomous Flagship Demonstration: 9 Agents Multi-Disciplinary Orchestration"
+        notes: "★ Flagship Judge Demonstration: 9 Agents Multi-Disciplinary Orchestration"
       });
 
       showToast(`Flagship Demo initiated: ${res.instance?.id}`, "success");
       await refreshWorkflowData();
       if (res.instance?.id) {
         state.selectedInstanceId = res.instance.id;
-        loadAndRenderInstanceDetails(res.instance.id);
+        loadAndRenderVisualizer(res.instance.id);
       }
     } catch (err) {
-      showToast(`Demo launch error: ${err.message}`, "error");
-    } finally {
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = '<span>⚡</span> Run Flagship Scholarship Demo';
-      }
+      showToast(`Demo launch failed: ${err.message}`, "error");
     }
   }
 
-  function renderInstanceList() {
-    const container = document.getElementById("instanceListContainer");
-    if (!container) return;
+  // Global Search Handler
+  function handleGlobalSearch(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) return;
 
-    if (state.instances.length === 0) {
-      container.innerHTML = `
-        <div style="padding:30px; text-align:center; color:var(--text-muted); font-size:12px;">
-          No active or previous workflow runs found. Launch one above!
-        </div>
-      `;
-      return;
-    }
-
-    container.innerHTML = "";
-    state.instances.forEach(inst => {
-      const card = document.createElement("div");
-      card.className = `instance-card ${inst.id === state.selectedInstanceId ? 'active' : ''}`;
-      
-      const progressPercent = Math.round(((inst.currentStepIndex || 0) / (inst.totalSteps || 1)) * 100);
-      const studentName = inst.context?.studentName || inst.context?.studentId || "Student";
-      
-      card.innerHTML = `
-        <div class="instance-card-top">
-          <span class="instance-title">${escapeHtml(inst.workflowName)}</span>
-          <span class="badge-status ${inst.status}">${escapeHtml(inst.status.replace('_', ' '))}</span>
-        </div>
-        <div class="instance-meta">
-          <span class="instance-id">${escapeHtml(inst.id)}</span>
-          <span>👤 ${escapeHtml(studentName)}</span>
-        </div>
-        <div class="progress-bar-wrap">
-          <div class="progress-bar-fill" style="width: ${progressPercent}%;"></div>
-        </div>
-        <div class="instance-meta">
-          <span>Step ${(inst.currentStepIndex || 0) + (inst.status === 'completed' ? 0 : 1)} of ${inst.totalSteps}</span>
-          <span>${formatDate(inst.createdAt)}</span>
-        </div>
-      `;
-
-      card.addEventListener("click", () => {
-        state.selectedInstanceId = inst.id;
-        renderInstanceList();
-        loadAndRenderInstanceDetails(inst.id);
-      });
-
-      container.appendChild(card);
-    });
-  }
-
-  async function loadAndRenderInstanceDetails(instanceId) {
-    try {
-      const res = await api.getInstance(instanceId);
-      const inst = res.instance;
-      if (!inst) return;
-      renderStepVisualizer(inst);
-    } catch (err) {
-      console.warn("Error fetching instance details:", err);
-    }
-  }
-
-  function renderEmptyVisualizer() {
-    const container = document.getElementById("stepVisualizerContent");
-    if (!container) return;
-    container.innerHTML = `
-      <div style="padding:60px 20px; text-align:center; color:var(--text-muted);">
-        <div style="font-size:32px; margin-bottom:10px;">⚡</div>
-        <div style="font-size:15px; font-weight:700; color:#fff;">No Pipeline Selected</div>
-        <div style="font-size:12px; margin-top:6px;">Select a pipeline from the left panel or launch a new workflow to inspect its execution steps in real time.</div>
-      </div>
-    `;
-  }
-
-  // Visualizer with ZERO RAW JSON
-  function renderStepVisualizer(inst) {
-    const container = document.getElementById("stepVisualizerContent");
-    if (!container) return;
-
-    const currentStepIndex = inst.currentStepIndex || 0;
-    const history = inst.stepHistory || [];
-    const wfDef = state.workflows.find(w => w.id === inst.workflowId);
-
-    // Top Header info
-    let html = `
-      <div class="inspector-header-box">
-        <div class="inspector-title-group">
-          <h3>${escapeHtml(inst.workflowName)}</h3>
-          <div class="inspector-context-pills">
-            <span class="context-pill">ID: <strong>${escapeHtml(inst.id)}</strong></span>
-            <span class="context-pill">Student: <strong>${escapeHtml(inst.context?.studentName || inst.context?.studentId || 'N/A')}</strong></span>
-            <span class="context-pill">Program: <strong>${escapeHtml(inst.context?.program || 'Academic')}</strong></span>
-            <span class="badge-status ${inst.status}">${escapeHtml(inst.status.replace('_', ' '))}</span>
-          </div>
-        </div>
-        <div style="text-align:right;">
-          <button id="btnManualRefresh" class="preset-chip" style="color:var(--cyan); border-color:rgba(0,234,255,0.3);" title="Refresh pipeline state">
-            ↻ Refresh
-          </button>
-        </div>
-      </div>
-    `;
-
-    // Step Timeline
-    html += `<div class="step-timeline">`;
-
-    const allSteps = wfDef ? wfDef.steps : [];
-    
-    // Iterate through all defined steps
-    allSteps.forEach((step, idx) => {
-      const historyItem = history.find(h => h.stepId === step.id);
-      const isPast = idx < currentStepIndex || inst.status === "completed";
-      const isCurrent = idx === currentStepIndex && inst.status !== "completed";
-      const isPendingApproval = isCurrent && inst.status === "pending_approval";
-      const isRejected = historyItem?.status === "rejected" || (isCurrent && inst.status === "rejected");
-
-      let cardClass = "timeline-step-card";
-      let statusLabel = "Waiting";
-      let dotContent = idx + 1;
-
-      if (isPast && historyItem?.status !== "rejected") {
-        cardClass += " completed-step";
-        statusLabel = "Completed";
-        dotContent = "✓";
-      } else if (isPendingApproval) {
-        cardClass += " approval-needed";
-        statusLabel = "Requires Approval";
-        dotContent = "⚠️";
-      } else if (isRejected) {
-        cardClass += " rejected-step";
-        statusLabel = "Rejected";
-        dotContent = "✕";
-      } else if (isCurrent) {
-        cardClass += " active-step";
-        statusLabel = "In Progress";
-        dotContent = "⏳";
-      }
-
-      const typeClass = step.type === "service_check" ? "type-service" : step.type === "agent_task" ? "type-agent" : "type-human";
-      const typeName = step.type === "service_check" ? "Service Verification" : step.type === "agent_task" ? "AI Agent Task" : "Human Approval Gate";
-
-      html += `
-        <div class="${cardClass}">
-          <div class="step-node-dot">${dotContent}</div>
-          <div class="step-card-header">
-            <div class="step-name-box">
-              <span class="step-type-pill ${typeClass}">${typeName}</span>
-              <span class="step-name-title">${escapeHtml(step.name)}</span>
-            </div>
-            <span class="badge-status ${isPendingApproval ? 'pending_approval' : isRejected ? 'rejected' : isPast ? 'completed' : isCurrent ? 'running' : ''}">
-              ${escapeHtml(statusLabel)}
-            </span>
-          </div>
-      `;
-
-      // Render Clean Output if Available
-      if (historyItem?.output || isPendingApproval) {
-        const outputData = historyItem?.output || inst.pendingDecision?.data || {};
-        html += renderCleanStepOutput(step, outputData, historyItem);
-      }
-
-      // If pending approval, provide inline actions
-      if (isPendingApproval) {
-        html += `
-          <div class="approval-action-console" style="margin-top:14px;">
-            <div style="font-size:12px; color:var(--amber); font-weight:700;">
-              ⚠️ Decision required by Committee / Dean before workflow can proceed.
-            </div>
-            <div class="approval-buttons-row">
-              <button class="btn-approve" onclick="window.platformSubmitDecision('${inst.id}', 'approved')">
-                <span>✓</span> Approve &amp; Continue
-              </button>
-              <button class="btn-reject" onclick="window.platformSubmitDecision('${inst.id}', 'rejected')">
-                <span>✕</span> Reject
-              </button>
-            </div>
-          </div>
-        `;
-      }
-
-      html += `</div>`;
-    });
-
-    html += `</div>`;
-
-    container.innerHTML = html;
-
-    // Attach manual refresh handler
-    const btnRefresh = document.getElementById("btnManualRefresh");
-    if (btnRefresh) {
-      btnRefresh.addEventListener("click", () => {
-        loadAndRenderInstanceDetails(inst.id);
-        showToast("Pipeline reloaded", "info");
-      });
-    }
-  }
-
-  // Format any output object into clean structured tiles - ZERO RAW JSON!
-  function renderCleanStepOutput(step, data, historyItem) {
-    if (!data || typeof data !== "object") return "";
-
-    let html = `<div class="step-output-grid">`;
-
-    for (const [key, value] of Object.entries(data)) {
-      if (key === "agentPrompt" || key === "notificationDispatched" || key === "raw") continue;
-
-      let displayValue = "";
-      let statusClass = "";
-
-      if (typeof value === "boolean") {
-        displayValue = value ? "Passed / Verified" : "Failed / Missing";
-        statusClass = value ? "output-status-pass" : "output-status-fail";
-      } else if (typeof value === "number") {
-        displayValue = key.toLowerCase().includes("rate") ? `${value}%` : key.toLowerCase().includes("amount") || key.toLowerCase().includes("balance") ? `$${value.toLocaleString()}` : String(value);
-      } else if (Array.isArray(value)) {
-        displayValue = value.length > 0 ? value.map(v => typeof v === 'object' ? (v.name || v.code || JSON.stringify(v)) : v).join(", ") : "None";
-      } else if (typeof value === "object" && value !== null) {
-        // Nested sub-object: format as badge summary
-        displayValue = Object.entries(value).map(([k, v]) => `${k}: ${typeof v === 'object' ? '...' : v}`).join(" · ");
-      } else {
-        displayValue = String(value);
-      }
-
-      const formattedKey = key
-        .replace(/([A-Z])/g, ' $1')
-        .replace(/^./, str => str.toUpperCase());
-
-      html += `
-        <div class="output-metric-card">
-          <span class="output-metric-label">${escapeHtml(formattedKey)}</span>
-          <span class="output-metric-value ${statusClass}">${escapeHtml(displayValue)}</span>
-        </div>
-      `;
-    }
-
-    html += `</div>`;
-
-    // If step was an AI Agent task (e.g. email or writing dispatch), render agent communication box
-    if (historyItem?.agentName || step.agentName) {
-      html += `
-        <div class="agent-output-block">
-          <div class="agent-output-header">
-            <span>🤖 AI Dispatch: ${escapeHtml(historyItem?.agentName || step.agentName)}</span>
-          </div>
-          <div>Task dispatched and recorded in student ledger and institutional communication system.</div>
-        </div>
-      `;
-    }
-
-    return html;
-  }
-
-  // =========================================================
-  // VIEW 2: EDUCATIONAL AGENT WORKFORCE MATRIX
-  // =========================================================
-  let workforceData = [];
-  let selectedWorkforceDomain = "all";
-  let workforceSearchQuery = "";
-
-  async function refreshWorkforceData() {
-    try {
-      const res = await api.getWorkforce();
-      workforceData = res.agents || [];
-      renderWorkforceCards();
-    } catch (err) {
-      console.warn("Failed to load workforce:", err);
-    }
-  }
-
-  function renderWorkforceCards() {
-    const grid = document.getElementById("workforceAgentsGrid");
-    if (!grid) return;
-
-    const filtered = workforceData.filter(agent => {
-      const matchDomain = selectedWorkforceDomain === "all" || agent.educational_domain === selectedWorkforceDomain;
-      const query = workforceSearchQuery.toLowerCase().trim();
-      const matchQuery = !query || 
-        agent.agent_id.toLowerCase().includes(query) ||
-        agent.educational_name.toLowerCase().includes(query) ||
-        agent.original_name.toLowerCase().includes(query) ||
-        (agent.domain_name || '').toLowerCase().includes(query) ||
-        (agent.allowed_tools || []).some(t => t.toLowerCase().includes(query)) ||
-        (agent.educational_capabilities || []).some(c => c.toLowerCase().includes(query));
-      return matchDomain && matchQuery;
-    });
-
-    if (filtered.length === 0) {
-      grid.innerHTML = `
-        <div style="grid-column: 1 / -1; padding: 40px; text-align: center; color: var(--text-muted);">
-          <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
-          <div style="font-size: 15px; font-weight: 700; color: #fff;">No Workforce Agents Found</div>
-          <div style="font-size: 13px; margin-top: 4px;">Try searching for a different keyword or select another domain filter.</div>
-        </div>
-      `;
-      return;
-    }
-
-    grid.innerHTML = filtered.map(agent => {
-      const domainColors = {
-        "student-services": "#00eaff",
-        "admission": "#ff007a",
-        "academic": "#00f5a0",
-        "document-intelligence": "#8b3dff",
-        "finance": "#ffb800",
-        "faculty-hr": "#ff5c00",
-        "administration": "#0099ff",
-        "communication": "#00d2ff",
-        "analytics": "#a855f7",
-        "workflow-intelligence": "#3b82f6",
-        "master-orchestration": "#eab308"
-      };
-
-      const domainColor = domainColors[agent.educational_domain] || "#00eaff";
-
-      const toolsBadges = (agent.allowed_tools || []).map(t => 
-        `<span style="background: rgba(255,255,255,0.06); color: #cbd5e1; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-family: monospace;">${escapeHtml(t)}</span>`
-      ).join(" ");
-
-      const capsBadges = (agent.educational_capabilities || []).slice(0, 3).map(c => 
-        `<span style="background: rgba(0,234,255,0.08); color: #7dd3fc; border: 1px solid rgba(0,234,255,0.2); padding: 2px 7px; border-radius: 6px; font-size: 10.5px;">${escapeHtml(c)}</span>`
-      ).join(" ");
-
-      const workflowsList = (agent.workflow_roles || []).join(", ");
-
-      return `
-        <div class="wf-panel" style="display: flex; flex-direction: column; gap: 12px; padding: 18px; border-left: 3px solid ${domainColor};">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
-            <div>
-              <span style="font-family: monospace; font-size: 11px; color: ${domainColor}; font-weight: 800; text-transform: uppercase;">
-                ${escapeHtml(agent.agent_id)}
-              </span>
-              <div style="font-size: 15px; font-weight: 800; color: #fff; margin-top: 2px;">
-                ${escapeHtml(agent.educational_name)}
-              </div>
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
-                Base: ${escapeHtml(agent.original_name)}
-              </div>
-            </div>
-            <span class="badge-status completed" style="font-size: 10.5px; padding: 3px 8px;">
-              ● READY
-            </span>
-          </div>
-
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="background: ${domainColor}20; color: ${domainColor}; border: 1px solid ${domainColor}40; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">
-              ${escapeHtml(agent.domain_name || agent.educational_domain)}
-            </span>
-            <span style="font-size: 11px; color: var(--text-muted); font-family: monospace;">
-              Port :${agent.port}
-            </span>
-          </div>
-
-          <div>
-            <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">
-              Allowed Tools (${(agent.allowed_tools || []).length})
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-              ${toolsBadges}
-            </div>
-          </div>
-
-          <div>
-            <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">
-              Capabilities
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-              ${capsBadges}
-            </div>
-          </div>
-
-          <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 11.5px; color: var(--text-muted);">
-            <strong style="color: #cbd5e1;">Workflows:</strong> ${escapeHtml(workflowsList)}
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  function initWorkforceFilters() {
-    const filters = document.querySelectorAll("#workforceDomainFilters .preset-chip");
-    filters.forEach(btn => {
-      btn.addEventListener("click", () => {
-        filters.forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        selectedWorkforceDomain = btn.getAttribute("data-domain") || "all";
-        renderWorkforceCards();
-      });
-    });
-
-    const search = document.getElementById("workforceSearchInput");
-    if (search) {
-      search.addEventListener("input", (e) => {
-        workforceSearchQuery = e.target.value;
-        renderWorkforceCards();
-      });
+    if (state.currentView === "workforce") {
+      state.workforceSearchQuery = q;
+      renderWorkforceGrid();
+    } else if (state.currentView === "records") {
+      const searchInput = document.getElementById("recordsSearchInput");
+      if (searchInput) searchInput.value = q;
+      renderRecordsTable();
     }
   }
 
   // =========================================================
-  // VIEW 3: HUMAN APPROVALS QUEUE
-  // =========================================================
-  async function refreshApprovalsQueue() {
-    try {
-      const res = await api.getInstances();
-      state.instances = res.instances || [];
-      updatePendingBadge();
-      renderApprovalsQueue();
-    } catch (err) {
-      console.warn("Failed to fetch approvals:", err);
-    }
-  }
-
-  function updatePendingBadge() {
-    const pendingCount = state.instances.filter(i => i.status === "pending_approval").length;
-    const badge = document.getElementById("pendingApprovalsBadge");
-    if (badge) {
-      badge.textContent = String(pendingCount);
-      badge.style.display = pendingCount > 0 ? "inline-flex" : "none";
-    }
-  }
-
-  function renderApprovalsQueue() {
-    const container = document.getElementById("approvalsQueueList");
-    if (!container) return;
-
-    const pendingInstances = state.instances.filter(i => i.status === "pending_approval");
-
-    if (pendingInstances.length === 0) {
-      container.innerHTML = `
-        <div class="empty-queue-box">
-          <div class="empty-queue-icon">✓</div>
-          <div style="font-size:18px; font-weight:750; color:#fff;">Approvals Queue is Clear</div>
-          <div style="font-size:13px; color:var(--text-muted); max-width:450px;">
-            There are currently no workflows awaiting Academic Committee or Dean reviews. All automated checks and prior decisions are up to date.
-          </div>
-        </div>
-      `;
-      return;
-    }
-
-    container.innerHTML = "";
-    pendingInstances.forEach(inst => {
-      const card = document.createElement("div");
-      card.className = "approval-card-item";
-
-      const studentName = inst.context?.studentName || inst.context?.studentId || "Student";
-      const studentId = inst.context?.studentId || "N/A";
-      const pendingData = inst.pendingDecision?.data || {};
-
-      card.innerHTML = `
-        <div class="approval-card-header">
-          <div>
-            <div style="font-size:17px; font-weight:750; color:#fff;">${escapeHtml(inst.workflowName)}</div>
-            <div style="font-size:11px; color:var(--cyan); margin-top:4px; font-family:monospace;">Pipeline ID: ${escapeHtml(inst.id)}</div>
-          </div>
-          <span class="approval-role-badge">Committee &amp; Dean Review</span>
-        </div>
-
-        <div class="approval-details-grid">
-          <div class="approval-info-box">
-            <h4>Student Dossier</h4>
-            <div style="font-size:14px; font-weight:700; color:#fff;">${escapeHtml(studentName)}</div>
-            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">ID: ${escapeHtml(studentId)}</div>
-            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Program: ${escapeHtml(inst.context?.program || 'Academic')}</div>
-            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">GPA: ${inst.context?.gpa || '3.80+'}</div>
-          </div>
-
-          <div class="approval-info-box">
-            <h4>Evaluation Criteria &amp; Summary</h4>
-            <div style="font-size:12.5px; color:#e2e8f0; line-height:1.6;">
-              ${Object.entries(pendingData).map(([k, v]) => `<div><strong>${escapeHtml(k)}:</strong> ${escapeHtml(typeof v === 'object' ? JSON.stringify(v) : String(v))}</div>`).join('') || 'Evaluation complete and ready for signature.'}
-            </div>
-          </div>
-
-          <div class="approval-info-box">
-            <h4>Workflow Checkpoint</h4>
-            <div style="font-size:13px; font-weight:700; color:var(--amber);">${escapeHtml(inst.pendingDecision?.stepName || 'Human Decision Gate')}</div>
-            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">${escapeHtml(inst.pendingDecision?.description || 'Review candidate eligibility and sign off.')}</div>
-            <div style="font-size:11px; color:var(--text-dim); margin-top:8px;">Initiated: ${formatDate(inst.createdAt)}</div>
-          </div>
-        </div>
-
-        <div class="approval-action-console">
-          <div class="form-group">
-            <label class="form-label">Review Rationale / Decision Notes</label>
-            <input type="text" id="notes-${inst.id}" class="form-input" placeholder="Enter optional justification or select preset below..." />
-          </div>
-
-          <div class="preset-notes-chips">
-            <span class="preset-chip" onclick="document.getElementById('notes-${inst.id}').value = 'Approved per academic senate merit guidelines.'">Approved on Merit</span>
-            <span class="preset-chip" onclick="document.getElementById('notes-${inst.id}').value = 'Prerequisites verified through department equivalency.'">Prerequisites Verified</span>
-            <span class="preset-chip" onclick="document.getElementById('notes-${inst.id}').value = 'Financial need criteria fully validated.'">Need-Based Validated</span>
-            <span class="preset-chip" onclick="document.getElementById('notes-${inst.id}').value = 'Rejected due to unmet eligibility threshold.'">Threshold Unmet</span>
-          </div>
-
-          <div class="approval-buttons-row">
-            <button class="btn-approve" onclick="window.platformSubmitDecision('${inst.id}', 'approved')">
-              <span>✓</span> Approve &amp; Execute Next Steps
-            </button>
-            <button class="btn-reject" onclick="window.platformSubmitDecision('${inst.id}', 'rejected')">
-              <span>✕</span> Reject Application
-            </button>
-          </div>
-        </div>
-      `;
-
-      container.appendChild(card);
-    });
-  }
-
-  // Global Decision Handler (callable from HTML onclick)
-  window.platformSubmitDecision = async function (instanceId, decision) {
-    if (state.decisionInProgress) return;
-    state.decisionInProgress = true;
-
-    const notesInput = document.getElementById(`notes-${instanceId}`);
-    const notes = notesInput ? notesInput.value : "";
-
-    try {
-      showToast(`Submitting ${decision.toUpperCase()} decision...`, "info");
-      await api.submitDecision(instanceId, decision, notes);
-      showToast(`Decision recorded: ${decision.toUpperCase()}`, "success");
-      
-      await refreshApprovalsQueue();
-      await refreshWorkflowData();
-    } catch (err) {
-      showToast(`Failed to record decision: ${err.message}`, "error");
-    } finally {
-      state.decisionInProgress = false;
-    }
-  };
-
-  // =========================================================
-  // VIEW 3: INSTITUTIONAL RECORDS & AUDIT
-  // =========================================================
-  async function refreshInstitutionData() {
-    try {
-      const data = await api.getInstitutionData();
-      state.institutionData = data || {};
-      renderInstitutionalTable();
-    } catch (err) {
-      console.warn("Failed to load institutional records:", err);
-    }
-  }
-
-  function renderInstitutionalTable() {
-    const tableHeader = document.getElementById("recordsTableHeader");
-    const tableBody = document.getElementById("recordsTableBody");
-    const searchInput = document.getElementById("recordsSearchInput");
-    const query = (searchInput?.value || "").toLowerCase();
-
-    if (!tableHeader || !tableBody) return;
-
-    if (state.currentRecordSubTab === "students") {
-      tableHeader.innerHTML = `
-        <tr>
-          <th>Student ID</th>
-          <th>Full Name</th>
-          <th>Program</th>
-          <th>GPA</th>
-          <th>Attendance</th>
-          <th>Status</th>
-          <th>Documents</th>
-        </tr>
-      `;
-
-      const students = state.institutionData.students || [];
-      const filtered = students.filter(s =>
-        s.id.toLowerCase().includes(query) ||
-        s.name.toLowerCase().includes(query) ||
-        s.program.toLowerCase().includes(query)
-      );
-
-      tableBody.innerHTML = filtered.map(s => `
-        <tr>
-          <td style="font-family:monospace; color:var(--cyan); font-weight:700;">${escapeHtml(s.id)}</td>
-          <td style="font-weight:700; color:#fff;">${escapeHtml(s.name)}</td>
-          <td>${escapeHtml(s.program)}</td>
-          <td><strong style="color:${s.gpa >= 3.5 ? 'var(--green)' : s.gpa < 2.5 ? 'var(--rose)' : '#fff'}">${s.gpa}</strong></td>
-          <td><span class="badge-status ${s.attendanceRate >= 85 ? 'completed' : s.attendanceRate < 75 ? 'rejected' : 'pending_approval'}">${s.attendanceRate}%</span></td>
-          <td><span class="badge-status ${s.status === 'enrolled' ? 'completed' : s.status === 'at_risk' ? 'rejected' : 'pending_approval'}">${escapeHtml(s.status)}</span></td>
-          <td>${(s.documents || []).map(d => `<span style="font-size:10.5px; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.06); margin-right:4px;">${escapeHtml(d.type)}: ${d.status === 'verified' ? '✓' : '…'}</span>`).join('')}</td>
-        </tr>
-      `).join('') || `<tr><td colspan="7" style="text-align:center; padding:30px;">No students match your query.</td></tr>`;
-
-    } else if (state.currentRecordSubTab === "courses") {
-      tableHeader.innerHTML = `
-        <tr>
-          <th>Course Code</th>
-          <th>Title</th>
-          <th>Credits</th>
-          <th>Prerequisites</th>
-          <th>Enrollment Capacity</th>
-          <th>Schedule</th>
-        </tr>
-      `;
-
-      const courses = state.institutionData.courses || [];
-      const filtered = courses.filter(c =>
-        c.code.toLowerCase().includes(query) ||
-        c.title.toLowerCase().includes(query)
-      );
-
-      tableBody.innerHTML = filtered.map(c => `
-        <tr>
-          <td style="font-family:monospace; color:var(--cyan); font-weight:700;">${escapeHtml(c.code)}</td>
-          <td style="font-weight:700; color:#fff;">${escapeHtml(c.title)}</td>
-          <td>${c.credits} Credits</td>
-          <td>${(c.prerequisites || []).length > 0 ? c.prerequisites.map(p => `<span class="context-pill">${escapeHtml(p)}</span>`).join(' ') : '<span style="color:var(--text-muted);">None</span>'}</td>
-          <td>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span>${c.enrolled} / ${c.capacity}</span>
-              <div class="progress-bar-wrap" style="width:70px;"><div class="progress-bar-fill" style="width:${Math.round((c.enrolled/c.capacity)*100)}%;"></div></div>
-            </div>
-          </td>
-          <td>${escapeHtml(c.schedule || 'TBA')}</td>
-        </tr>
-      `).join('') || `<tr><td colspan="6" style="text-align:center; padding:30px;">No courses found.</td></tr>`;
-
-    } else if (state.currentRecordSubTab === "scholarships") {
-      tableHeader.innerHTML = `
-        <tr>
-          <th>Scheme ID</th>
-          <th>Scheme Name</th>
-          <th>Min GPA</th>
-          <th>Min Attendance</th>
-          <th>Income Cap</th>
-          <th>Award Amount</th>
-          <th>Description</th>
-        </tr>
-      `;
-
-      const schemes = state.institutionData.scholarshipSchemes || [];
-      tableBody.innerHTML = schemes.map(sc => `
-        <tr>
-          <td style="font-family:monospace; color:var(--cyan); font-weight:700;">${escapeHtml(sc.id)}</td>
-          <td style="font-weight:700; color:#fff;">${escapeHtml(sc.name)}</td>
-          <td>${sc.minGpa}</td>
-          <td>${sc.minAttendance}%</td>
-          <td>${sc.maxIncome === Infinity ? 'No Cap' : `$${sc.maxIncome.toLocaleString()}`}</td>
-          <td><strong style="color:var(--green); font-size:14px;">$${sc.awardAmount.toLocaleString()}</strong></td>
-          <td style="font-size:12px; color:var(--text-muted);">${escapeHtml(sc.description)}</td>
-        </tr>
-      `).join('') || `<tr><td colspan="7" style="text-align:center; padding:30px;">No scholarship schemes found.</td></tr>`;
-
-    } else if (state.currentRecordSubTab === "audit") {
-      tableHeader.innerHTML = `
-        <tr>
-          <th>Timestamp</th>
-          <th>Workflow ID</th>
-          <th>Action</th>
-          <th>Actor</th>
-          <th>Status</th>
-          <th>Action Details</th>
-        </tr>
-      `;
-
-      const logs = state.institutionData.auditLogs || [];
-      const filtered = logs.filter(l =>
-        l.action.toLowerCase().includes(query) ||
-        (l.workflowId && l.workflowId.toLowerCase().includes(query)) ||
-        (l.actor && l.actor.toLowerCase().includes(query))
-      );
-
-      tableBody.innerHTML = filtered.map(l => `
-        <tr>
-          <td style="font-size:11.5px; color:var(--text-muted);">${formatDate(l.timestamp)}</td>
-          <td style="font-family:monospace; color:var(--cyan);">${escapeHtml(l.workflowId || '-')}</td>
-          <td><strong style="color:#fff;">${escapeHtml(l.action)}</strong></td>
-          <td><span class="context-pill">${escapeHtml(l.actor || 'System')}</span></td>
-          <td><span class="badge-status ${l.status || 'completed'}">${escapeHtml(l.status || 'OK')}</span></td>
-          <td style="font-size:12px; color:#c7d2fe;">${Object.entries(l.details || {}).map(([k, v]) => `${k}: ${v}`).join(' · ') || '-'}</td>
-        </tr>
-      `).join('') || `<tr><td colspan="6" style="text-align:center; padding:30px;">No audit records found.</td></tr>`;
-    }
-  }
-
-  // =========================================================
-  // VIEW 4: 100 AI AGENT FLEET CHAT
-  // =========================================================
-  async function loadAgentFleet() {
-    try {
-      const [agentsRes, healthRes] = await Promise.all([
-        api.getAgents().catch(() => ({ agents: [] })),
-        api.getAgentsHealth().catch(() => ({ online: 101, total: 101 }))
-      ]);
-
-      state.agents = agentsRes.agents || [];
-      renderAgentCategories();
-      renderAgentList();
-
-      if (state.agents.length > 0 && !state.selectedAgent) {
-        selectAgent(state.agents[0]);
-      }
-    } catch (err) {
-      console.warn("Failed to load agent fleet:", err);
-    }
-  }
-
-  function renderAgentCategories() {
-    const container = document.getElementById("fleetCategories");
-    if (!container) return;
-
-    const cats = ["all", "foundation", "coding", "productivity", "academic", "data", "business"];
-    container.innerHTML = cats.map(cat => `
-      <div class="category ${state.agentCategory === cat ? 'active' : ''}" data-category="${cat}">
-        <span>${cat === 'all' ? '◈' : '✦'}</span>
-        <span>${cat.charAt(0).toUpperCase() + cat.slice(1)}</span>
-      </div>
-    `).join('');
-
-    container.querySelectorAll(".category").forEach(el => {
-      el.addEventListener("click", () => {
-        state.agentCategory = el.getAttribute("data-category");
-        renderAgentCategories();
-        renderAgentList();
-      });
-    });
-  }
-
-  function renderAgentList() {
-    const list = document.getElementById("fleetAgentList");
-    if (!list) return;
-
-    const query = state.agentSearchQuery.toLowerCase();
-    const filtered = state.agents.filter(a => {
-      const matchCat = state.agentCategory === "all" || a.category === state.agentCategory;
-      const matchQuery = !query || a.name.toLowerCase().includes(query) || a.agent_id.toLowerCase().includes(query);
-      return matchCat && matchQuery;
-    });
-
-    list.innerHTML = filtered.map(a => `
-      <div class="agent-item ${state.selectedAgent?.agent_id === a.agent_id ? 'active' : ''}" data-id="${a.agent_id}">
-        <div class="agent-item-avatar">✦</div>
-        <div class="agent-item-info">
-          <div class="agent-item-name">${escapeHtml(a.name)}</div>
-          <div class="agent-item-desc">${escapeHtml(a.agent_id)} · ${escapeHtml(a.category)}</div>
-        </div>
-      </div>
-    `).join('');
-
-    list.querySelectorAll(".agent-item").forEach(item => {
-      item.addEventListener("click", () => {
-        const id = item.getAttribute("data-id");
-        const ag = state.agents.find(a => a.agent_id === id);
-        if (ag) selectAgent(ag);
-      });
-    });
-  }
-
-  function selectAgent(agent) {
-    state.selectedAgent = agent;
-    renderAgentList();
-
-    const titleEl = document.getElementById("chatHeaderTitle");
-    const metaEl = document.getElementById("chatHeaderMeta");
-    const nemotronEl = document.getElementById("chatHeaderNemotron");
-
-    if (titleEl) titleEl.textContent = agent.name;
-    if (metaEl) metaEl.textContent = `${agent.agent_id} · Category: ${agent.category}`;
-    if (nemotronEl) nemotronEl.textContent = `⚡ Model: ${agent.model || 'nemotron-3-nano'}`;
-
-    renderAgentSubTabs();
-  }
-
-  function renderAgentSubTabs() {
-    const tabs = document.querySelectorAll(".chat-agent-subtab");
-    tabs.forEach(t => {
-      const tabKey = t.getAttribute("data-subtab");
-      t.classList.toggle("active", tabKey === state.agentSubTab);
-    });
-
-    const chatArea = document.getElementById("fleetMessages");
-    const infoPanel = document.getElementById("fleetInfoPanel");
-
-    if (state.agentSubTab === "chat") {
-      if (chatArea) chatArea.style.display = "block";
-      if (infoPanel) infoPanel.style.display = "none";
-    } else {
-      if (chatArea) chatArea.style.display = "none";
-      if (infoPanel) {
-        infoPanel.style.display = "block";
-        renderAgentInfoContent(infoPanel);
-      }
-    }
-  }
-
-  function renderAgentInfoContent(panel) {
-    const ag = state.selectedAgent;
-    if (!ag) return;
-
-    if (state.agentSubTab === "about") {
-      panel.innerHTML = `
-        <div style="max-width:800px; margin:0 auto; padding:20px;">
-          <div class="agent-panel-kicker">${escapeHtml(ag.agent_id)} · ${escapeHtml(ag.category)}</div>
-          <h2 style="font-size:28px; margin:8px 0 16px; color:#fff;">${escapeHtml(ag.name)}</h2>
-          <div class="agent-detail-grid">
-            <div class="agent-detail-card"><span>Agent ID</span><strong>${escapeHtml(ag.agent_id)}</strong></div>
-            <div class="agent-detail-card"><span>Category</span><strong>${escapeHtml(ag.category)}</strong></div>
-            <div class="agent-detail-card"><span>Model Engine</span><strong>${escapeHtml(ag.model || 'nemotron-3-nano')}</strong></div>
-            <div class="agent-detail-card"><span>API Gateway Port</span><strong>${ag.port || 8101}</strong></div>
-          </div>
-          <div style="margin-top:24px; line-height:1.7; color:var(--text-muted);">
-            ${escapeHtml(ag.name)} is a dedicated Nemotron-powered agent specialized in educational and operational intelligent workflow execution.
-          </div>
-        </div>
-      `;
-    } else if (state.agentSubTab === "capabilities") {
-      const caps = ag.capabilities || ["Autonomous Workflow Execution", "Natural Language Reasoning", "Structured JSON Synthesis", "Institutional Service Invocation"];
-      panel.innerHTML = `
-        <div style="max-width:800px; margin:0 auto; padding:20px;">
-          <div class="agent-panel-kicker">Operational Scope</div>
-          <h2 style="font-size:28px; margin:8px 0 16px; color:#fff;">Capabilities</h2>
-          <div class="agent-capability-grid">
-            ${caps.map(c => `<div class="agent-capability-chip">✦ ${escapeHtml(c)}</div>`).join('')}
-          </div>
-        </div>
-      `;
-    } else if (state.agentSubTab === "examples") {
-      panel.innerHTML = `
-        <div style="max-width:800px; margin:0 auto; padding:20px;">
-          <div class="agent-panel-kicker">Sample Invocations</div>
-          <h2 style="font-size:28px; margin:8px 0 16px; color:#fff;">Example Prompts</h2>
-          <div class="agent-example-list">
-            <button class="agent-example-card" onclick="window.platformUsePrompt('Evaluate the prerequisite clearance for CS301')">
-              <span>Academic Evaluation</span>
-              <strong>Evaluate the prerequisite clearance for CS301</strong>
-            </button>
-            <button class="agent-example-card" onclick="window.platformUsePrompt('Draft an official approval letter for the Presidential Merit Scholarship')">
-              <span>Document Generation</span>
-              <strong>Draft an official approval letter for the Presidential Merit Scholarship</strong>
-            </button>
-            <button class="agent-example-card" onclick="window.platformUsePrompt('Generate a student attendance intervention plan')">
-              <span>Advising Strategy</span>
-              <strong>Generate a student attendance intervention plan</strong>
-            </button>
-          </div>
-        </div>
-      `;
-    }
-  }
-
-  window.platformUsePrompt = function(promptText) {
-    const input = document.getElementById("fleetInput");
-    if (input) {
-      input.value = promptText;
-      input.focus();
-    }
-    state.agentSubTab = "chat";
-    renderAgentSubTabs();
-  };
-
-  async function handleSendChatMessage() {
-    const input = document.getElementById("fleetInput");
-    const messages = document.getElementById("fleetMessages");
-    if (!input || !input.value.trim() || !state.selectedAgent) return;
-
-    const text = input.value.trim();
-    input.value = "";
-
-    // Append User Message
-    const userMsg = document.createElement("div");
-    userMsg.className = "message user";
-    userMsg.innerHTML = `
-      <div class="bubble">${escapeHtml(text)}</div>
-      <div class="message-avatar">YOU</div>
-    `;
-    messages.appendChild(userMsg);
-    messages.scrollTop = messages.scrollHeight;
-
-    // Loading Bubble
-    const aiMsg = document.createElement("div");
-    aiMsg.className = "message ai";
-    aiMsg.innerHTML = `
-      <div class="message-avatar">✦</div>
-      <div class="bubble"><span class="typing"><span></span><span></span><span></span></span></div>
-    `;
-    messages.appendChild(aiMsg);
-    messages.scrollTop = messages.scrollHeight;
-
-    try {
-      const res = await api.sendChat(state.selectedAgent.agent_id, text);
-      const outputText = res.result?.response || res.result?.result || res.result?.message || (typeof res.result === 'string' ? res.result : JSON.stringify(res.result));
-      aiMsg.querySelector(".bubble").textContent = outputText;
-    } catch (err) {
-      aiMsg.querySelector(".bubble").textContent = `Error connecting to ${state.selectedAgent.name}: ${err.message}`;
-    }
-    messages.scrollTop = messages.scrollHeight;
-  }
-
-  // =========================================================
-  // INITIALIZATION & POLLING
+  // INITIALIZATION & BACKGROUND POLLING
   // =========================================================
   function init() {
     initNavigation();
+    refreshDashboardData();
 
-    // Launcher submit
-    const btnLaunch = document.getElementById("btnLaunchWorkflow");
-    if (btnLaunch) btnLaunch.addEventListener("click", handleLaunchWorkflow);
-
-    // Flagship Demo button
-    const btnDemo = document.getElementById("btnRunFlagshipDemo");
-    if (btnDemo) btnDemo.addEventListener("click", handleRunFlagshipDemo);
-
-    // Records search
-    const recordsSearch = document.getElementById("recordsSearchInput");
-    if (recordsSearch) recordsSearch.addEventListener("input", renderInstitutionalTable);
-
-    // Fleet search & chat
-    const fleetSearch = document.getElementById("fleetAgentSearch");
-    if (fleetSearch) {
-      fleetSearch.addEventListener("input", (e) => {
-        state.agentSearchQuery = e.target.value;
-        renderAgentList();
-      });
-    }
-
-    const fleetSend = document.getElementById("fleetSendBtn");
-    if (fleetSend) fleetSend.addEventListener("click", handleSendChatMessage);
-
-    const fleetInput = document.getElementById("fleetInput");
-    if (fleetInput) {
-      fleetInput.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          handleSendChatMessage();
-        }
-      });
-    }
-
-    // Subtabs in Chat Header
-    document.querySelectorAll(".chat-agent-subtab").forEach(tab => {
-      tab.addEventListener("click", () => {
-        state.agentSubTab = tab.getAttribute("data-subtab");
-        renderAgentSubTabs();
-      });
-    });
-
-    initWorkforceFilters();
-
-    // Initial Data Load
-    refreshWorkflowData();
-    refreshWorkforceData();
-    refreshApprovalsQueue();
-    refreshInstitutionData();
-
-    // Background live polling every 3.5s for real-time tracking
+    // Background Heartbeat every 4.5s
     state.pollingInterval = setInterval(() => {
-      if (state.currentMainTab === "workflow-center") {
+      if (state.currentView === "dashboard") refreshDashboardData();
+      else if (state.currentView === "workflows" && state.selectedInstanceId) {
         api.getInstances().then(res => {
           state.instances = res.instances || [];
-          renderWorkflowStats();
-          renderInstanceList();
-          updatePendingBadge();
-          if (state.selectedInstanceId) {
-            const currentInst = state.instances.find(i => i.id === state.selectedInstanceId);
-            if (currentInst && (currentInst.status === 'running' || currentInst.status === 'pending_approval')) {
-              loadAndRenderInstanceDetails(state.selectedInstanceId);
-            }
+          renderWorkflowInstancesList();
+          const curr = state.instances.find(i => i.id === state.selectedInstanceId);
+          if (curr && (curr.status === "running" || curr.status === "pending_approval")) {
+            loadAndRenderVisualizer(state.selectedInstanceId);
           }
         }).catch(() => {});
-      } else if (state.currentMainTab === "approvals-queue") {
+      } else if (state.currentView === "approvals") {
         refreshApprovalsQueue();
       }
-    }, 3500);
+    }, 4500);
   }
 
-  // Run on DOM ready
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
   } else {

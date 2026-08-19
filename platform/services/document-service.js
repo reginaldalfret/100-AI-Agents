@@ -133,6 +133,10 @@ const documentStore = [
   }
 ];
 
+export function getAllDocuments() {
+  return JSON.parse(JSON.stringify(documentStore));
+}
+
 export async function getDocument(documentId) {
   const doc = documentStore.find(d => d.documentId === documentId);
   if (!doc) throw new Error(`Document ${documentId} not found`);
