@@ -167,6 +167,7 @@ function generate(agent) {
   const files = [
     "backend/src/server.js",
     "backend/src/agent.js",
+    "backend/src/capability-gate.js",
     "backend/src/config.js",
     "backend/src/model.js",
     "frontend/index.html",

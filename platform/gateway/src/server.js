@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const ROOT = "/home/ai/100-to-1/100-to-1-automation";
+const ROOT = process.env.PROJECT_ROOT || path.resolve(__dirname, "../../..");
 const REGISTRY = path.join(ROOT, "registry", "agents.json");
 
 const HOST = process.env.HOST || "0.0.0.0";

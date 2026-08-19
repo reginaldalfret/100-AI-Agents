@@ -53,7 +53,7 @@ export const AGENT_CONFIG = Object.freeze({
   model:
     process.env.OLLAMA_MODEL ||
     fileConfig.model ||
-    "qwen3.5:9b",
+    "nemotron-3-nano",
 
   systemPrompt:
     process.env.AGENT_SYSTEM_PROMPT ||
