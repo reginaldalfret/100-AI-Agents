@@ -3,6 +3,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { WorkflowEngine } from "../../workflow-engine/index.js";
+import { StudentService, AcademicService, FinanceService, AuditService } from "../../services/index.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -290,27 +293,129 @@ const server = http.createServer(async (req, res) => {
 
     if (
       req.method === "GET" &&
-      (url.pathname === "/" ||
-       url.pathname === "/index.html")
+      url.pathname === "/api/workflows"
     ) {
+      const workflows = WorkflowEngine.getAvailableWorkflows();
+      json(res, 200, {
+        total: workflows.length,
+        workflows
+      });
+      return;
+    }
+
+    if (
+      req.method === "POST" &&
+      url.pathname === "/api/workflows/start"
+    ) {
+      const payload = await readBody(req);
+      const workflowId = payload.workflow_id || payload.workflowId;
+      if (!workflowId) {
+        json(res, 400, { status: "error", error: "workflow_id is required" });
+        return;
+      }
+
+      const instance = await WorkflowEngine.startWorkflow(workflowId, payload);
+      json(res, 200, { status: "success", instance });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
+      url.pathname === "/api/workflows/instances"
+    ) {
+      const instances = WorkflowEngine.getAllInstances();
+      json(res, 200, {
+        total: instances.length,
+        instances
+      });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
+      url.pathname.startsWith("/api/workflows/instances/")
+    ) {
+      const id = url.pathname.replace(/^\/api\/workflows\/instances\//, "");
+      const inst = WorkflowEngine.getInstance(id);
+      if (!inst) {
+        json(res, 404, { status: "error", error: `Instance not found: ${id}` });
+        return;
+      }
+      json(res, 200, { status: "success", instance: inst });
+      return;
+    }
+
+    if (
+      req.method === "POST" &&
+      url.pathname.startsWith("/api/workflows/instances/") &&
+      url.pathname.endsWith("/decision")
+    ) {
+      const id = url.pathname.replace(/^\/api\/workflows\/instances\//, "").replace(/\/decision$/, "");
+      const payload = await readBody(req);
+      if (!payload.decision || !["approved", "rejected"].includes(payload.decision)) {
+        json(res, 400, { status: "error", error: "decision must be 'approved' or 'rejected'" });
+        return;
+      }
+
+      const updated = await WorkflowEngine.submitDecision(id, payload.decision, payload.notes || "");
+      json(res, 200, { status: "success", instance: updated });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
+      url.pathname === "/api/institution/data"
+    ) {
+      json(res, 200, {
+        students: StudentService.getAllStudents(),
+        courses: AcademicService.getAllCourses(),
+        scholarshipSchemes: FinanceService.getAllScholarshipSchemes(),
+        auditLogs: AuditService.getAuditLogs().slice(0, 50)
+      });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
+      url.pathname === "/api/institution/audit"
+    ) {
+      json(res, 200, {
+        auditLogs: AuditService.getAuditLogs()
+      });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
+      (url.pathname === "/" ||
+       url.pathname === "/index.html" ||
+       url.pathname === "/ui-polish.css" ||
+       url.pathname === "/ui-polish.js")
+    ) {
+      const filename = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
       const file = path.join(
         ROOT,
         "platform",
         "web",
-        "index.html"
+        filename
       );
 
       if (!fs.existsSync(file)) {
         json(res, 404, {
-          error: "Web UI not installed"
+          error: `${filename} not found`
         });
         return;
       }
 
       const content = fs.readFileSync(file);
+      const contentType = filename.endsWith(".css")
+        ? "text/css; charset=utf-8"
+        : filename.endsWith(".js")
+          ? "application/javascript; charset=utf-8"
+          : "text/html; charset=utf-8";
 
       res.writeHead(200, {
-        "Content-Type": "text/html; charset=utf-8",
+        "Content-Type": contentType,
         "Cache-Control": "no-store"
       });
 
