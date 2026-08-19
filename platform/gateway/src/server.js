@@ -364,6 +364,20 @@ const server = http.createServer(async (req, res) => {
 
     if (
       req.method === "GET" &&
+      url.pathname === "/api/workforce"
+    ) {
+      const mappingPath = path.join(ROOT, "registry", "sa-s03-agent-mapping.json");
+      if (fs.existsSync(mappingPath)) {
+        const mapping = JSON.parse(fs.readFileSync(mappingPath, "utf8"));
+        json(res, 200, mapping);
+      } else {
+        json(res, 200, { agents: loadRegistry().agents });
+      }
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
       url.pathname === "/api/institution/data"
     ) {
       json(res, 200, {

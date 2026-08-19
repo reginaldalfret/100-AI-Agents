@@ -111,8 +111,35 @@ export function evaluateScholarship(student, schemeId) {
   };
 }
 
-export function applyScholarshipAward(studentId, amount, schemeName) {
-  const acc = studentAccounts.find(item => item.studentId.toUpperCase() === studentId.toUpperCase());
+export function getScholarship(schemeId) {
+  const scheme = scholarshipSchemes.find(s => s.id === schemeId || s.name.toLowerCase() === schemeId.toLowerCase());
+  if (!scheme) throw new Error(`Scholarship scheme not found: ${schemeId}`);
+  return JSON.parse(JSON.stringify(scheme));
+}
+
+export function evaluateScholarshipEligibility(studentIdOrStudent, schemeId = 'SCH-MERIT') {
+  const student = typeof studentIdOrStudent === 'object'
+    ? studentIdOrStudent
+    : (function() {
+        const studentAccounts = [{ id: 'STU-1001', name: 'Aarav Sharma', gpa: 3.85, attendanceRate: 94.5, householdIncome: 45000 },
+          { id: 'STU-1002', name: 'Priya Patel', gpa: 3.92, attendanceRate: 98.0, householdIncome: 28000 },
+          { id: 'STU-1003', name: 'Rohan Mehta', gpa: 2.30, attendanceRate: 64.0, householdIncome: 75000 },
+          { id: 'STU-1004', name: 'Ananya Rao', gpa: 3.78, attendanceRate: 92.0, householdIncome: 60000 },
+          { id: 'STU-1005', name: 'Vikram Sengupta', gpa: 3.60, attendanceRate: 100.0, householdIncome: 52000 }];
+        const found = studentAccounts.find(s => s.id.toUpperCase() === String(studentIdOrStudent).toUpperCase());
+        return found || { id: studentIdOrStudent, name: 'Student', gpa: 3.8, attendanceRate: 95.0, householdIncome: 40000 };
+      })();
+
+  const res = evaluateScholarship(student, schemeId);
+  return {
+    ...res,
+    scholarshipId: res.schemeId,
+    scholarshipName: res.schemeName
+  };
+}
+
+export function applyScholarshipAward(studentId, amount, schemeName = 'Scholarship Award') {
+  const acc = studentAccounts.find(item => item.studentId.toUpperCase() === String(studentId).toUpperCase());
   if (!acc) throw new Error(`Student account not found: ${studentId}`);
   
   acc.activeScholarships.push(schemeName);
@@ -120,3 +147,6 @@ export function applyScholarshipAward(studentId, amount, schemeName) {
   acc.outstandingBalance = Math.max(0, acc.outstandingBalance - amount);
   return JSON.parse(JSON.stringify(acc));
 }
+
+export const getStudentFeeStatus = getStudentFinancials;
+

@@ -1,8 +1,8 @@
 {
-  "project": "100-to-1",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "updated_at": "2026-08-19T07:16:41.893Z",
+  "platform": "SA-S03 Educational Intelligent Workflow Management",
   "total_agents": 101,
-  "completed_agents": 0,
   "agents": [
     {
       "day": 1,
@@ -18,7 +18,19 @@
       "health_url": "http://127.0.0.1:8101/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8101
+      "port": 8101,
+      "educational_name": "Institutional Formal Document & Letter Drafting Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_notification",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 2,
@@ -34,7 +46,24 @@
       "health_url": "http://127.0.0.1:8102/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8102
+      "port": 8102,
+      "educational_name": "Official Institutional Notice & Email Communication Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_email",
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 3,
@@ -50,7 +79,21 @@
       "health_url": "http://127.0.0.1:8103/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8103
+      "port": 8103,
+      "educational_name": "Curriculum & Academic Study Plan Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_courses",
+        "get_marks",
+        "get_prerequisites",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "course-override"
+      ]
     },
     {
       "day": 4,
@@ -66,7 +109,19 @@
       "health_url": "http://127.0.0.1:8104/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8104
+      "port": 8104,
+      "educational_name": "Academic Examination & Assessment Validation Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "graduation-clearance"
+      ]
     },
     {
       "day": 5,
@@ -82,7 +137,19 @@
       "health_url": "http://127.0.0.1:8105/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8105
+      "port": 8105,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 6,
@@ -98,7 +165,21 @@
       "health_url": "http://127.0.0.1:8106/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8106
+      "port": 8106,
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 7,
@@ -114,7 +195,19 @@
       "health_url": "http://127.0.0.1:8107/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8107
+      "port": 8107,
+      "educational_name": "Multilingual Student Translation & Accessibility Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_notification",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "student-service"
+      ]
     },
     {
       "day": 8,
@@ -130,7 +223,20 @@
       "health_url": "http://127.0.0.1:8108/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8108
+      "port": 8108,
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ]
     },
     {
       "day": 9,
@@ -146,7 +252,20 @@
       "health_url": "http://127.0.0.1:8109/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8109
+      "port": 8109,
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ]
     },
     {
       "day": 10,
@@ -162,7 +281,21 @@
       "health_url": "http://127.0.0.1:8110/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8110
+      "port": 8110,
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 11,
@@ -178,7 +311,21 @@
       "health_url": "http://127.0.0.1:8111/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8111
+      "port": 8111,
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 12,
@@ -194,7 +341,19 @@
       "health_url": "http://127.0.0.1:8112/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8112
+      "port": 8112,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 13,
@@ -210,7 +369,19 @@
       "health_url": "http://127.0.0.1:8113/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8113
+      "port": 8113,
+      "educational_name": "Student Support & Inquiries Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_student_profile",
+        "get_student_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "student-service"
+      ]
     },
     {
       "day": 14,
@@ -226,7 +397,19 @@
       "health_url": "http://127.0.0.1:8114/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8114
+      "port": 8114,
+      "educational_name": "Student Support & Inquiries Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_student_profile",
+        "get_student_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "student-service"
+      ]
     },
     {
       "day": 15,
@@ -242,7 +425,19 @@
       "health_url": "http://127.0.0.1:8115/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8115
+      "port": 8115,
+      "educational_name": "Applicant Interview & Screening Assessment Agent",
+      "educational_domain": "admission",
+      "domain_name": "Admissions & Enrollment",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_admission_application",
+        "check_admission_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification"
+      ]
     },
     {
       "day": 16,
@@ -258,7 +453,20 @@
       "health_url": "http://127.0.0.1:8116/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8116
+      "port": 8116,
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ]
     },
     {
       "day": 17,
@@ -274,7 +482,20 @@
       "health_url": "http://127.0.0.1:8117/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8117
+      "port": 8117,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 18,
@@ -290,7 +511,21 @@
       "health_url": "http://127.0.0.1:8118/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8118
+      "port": 8118,
+      "educational_name": "Student Academic & Career Advisory Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_student_profile",
+        "get_grades",
+        "get_courses",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "course-override",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 19,
@@ -306,7 +541,20 @@
       "health_url": "http://127.0.0.1:8119/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8119
+      "port": 8119,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 20,
@@ -322,7 +570,20 @@
       "health_url": "http://127.0.0.1:8120/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8120
+      "port": 8120,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 21,
@@ -338,7 +599,19 @@
       "health_url": "http://127.0.0.1:8121/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8121
+      "port": 8121,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 22,
@@ -354,7 +627,19 @@
       "health_url": "http://127.0.0.1:8122/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8122
+      "port": 8122,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 23,
@@ -370,7 +655,19 @@
       "health_url": "http://127.0.0.1:8123/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8123
+      "port": 8123,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 24,
@@ -386,7 +683,19 @@
       "health_url": "http://127.0.0.1:8124/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8124
+      "port": 8124,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 25,
@@ -402,7 +711,19 @@
       "health_url": "http://127.0.0.1:8125/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8125
+      "port": 8125,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 26,
@@ -418,7 +739,20 @@
       "health_url": "http://127.0.0.1:8126/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8126
+      "port": 8126,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 27,
@@ -434,7 +768,20 @@
       "health_url": "http://127.0.0.1:8127/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8127
+      "port": 8127,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 28,
@@ -450,7 +797,20 @@
       "health_url": "http://127.0.0.1:8128/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8128
+      "port": 8128,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 29,
@@ -466,7 +826,20 @@
       "health_url": "http://127.0.0.1:8129/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8129
+      "port": 8129,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 30,
@@ -482,7 +855,20 @@
       "health_url": "http://127.0.0.1:8130/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8130
+      "port": 8130,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 31,
@@ -498,7 +884,20 @@
       "health_url": "http://127.0.0.1:8131/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8131
+      "port": 8131,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 32,
@@ -514,7 +913,19 @@
       "health_url": "http://127.0.0.1:8132/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8132
+      "port": 8132,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 33,
@@ -530,7 +941,19 @@
       "health_url": "http://127.0.0.1:8133/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8133
+      "port": 8133,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 34,
@@ -546,7 +969,21 @@
       "health_url": "http://127.0.0.1:8134/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8134
+      "port": 8134,
+      "educational_name": "Course Catalog & Prerequisite Validation Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_courses",
+        "get_prerequisites",
+        "check_academic_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "course-override",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 35,
@@ -562,7 +999,21 @@
       "health_url": "http://127.0.0.1:8135/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8135
+      "port": 8135,
+      "educational_name": "Course Catalog & Prerequisite Validation Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_courses",
+        "get_prerequisites",
+        "check_academic_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "course-override",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 36,
@@ -578,7 +1029,19 @@
       "health_url": "http://127.0.0.1:8136/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8136
+      "port": 8136,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 37,
@@ -594,7 +1057,20 @@
       "health_url": "http://127.0.0.1:8137/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8137
+      "port": 8137,
+      "educational_name": "Institutional Document Research & Policy Lookup Agent",
+      "educational_domain": "document-intelligence",
+      "domain_name": "Document Intelligence",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_document",
+        "classify_document",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 38,
@@ -610,7 +1086,21 @@
       "health_url": "http://127.0.0.1:8138/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8138
+      "port": 8138,
+      "educational_name": "Institutional Data Verification & Fact-Checking Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_student_profile",
+        "get_marks",
+        "verify_document",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility"
+      ]
     },
     {
       "day": 39,
@@ -626,7 +1116,21 @@
       "health_url": "http://127.0.0.1:8139/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8139
+      "port": 8139,
+      "educational_name": "Institutional Data Verification & Fact-Checking Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_student_profile",
+        "get_marks",
+        "verify_document",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility"
+      ]
     },
     {
       "day": 40,
@@ -642,7 +1146,24 @@
       "health_url": "http://127.0.0.1:8140/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8140
+      "port": 8140,
+      "educational_name": "Student Verification & Profile Intake Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_student_profile",
+        "get_student_status",
+        "verify_student_identity",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 41,
@@ -658,7 +1179,24 @@
       "health_url": "http://127.0.0.1:8141/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8141
+      "port": 8141,
+      "educational_name": "Official Institutional Notice & Email Communication Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_email",
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 42,
@@ -674,7 +1212,20 @@
       "health_url": "http://127.0.0.1:8142/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8142
+      "port": 8142,
+      "educational_name": "Academic Scheduling & Committee Meeting Assistant Agent",
+      "educational_domain": "faculty-hr",
+      "domain_name": "Faculty & Staff HR",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_faculty_profile",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "course-override"
+      ]
     },
     {
       "day": 43,
@@ -690,7 +1241,19 @@
       "health_url": "http://127.0.0.1:8143/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8143
+      "port": 8143,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 44,
@@ -706,7 +1269,19 @@
       "health_url": "http://127.0.0.1:8144/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8144
+      "port": 8144,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 45,
@@ -722,7 +1297,22 @@
       "health_url": "http://127.0.0.1:8145/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8145
+      "port": 8145,
+      "educational_name": "Institutional PDF & Transcript Processing Agent",
+      "educational_domain": "document-intelligence",
+      "domain_name": "Document Intelligence",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_document",
+        "extract_document_data",
+        "classify_document",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 46,
@@ -738,7 +1328,20 @@
       "health_url": "http://127.0.0.1:8146/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8146
+      "port": 8146,
+      "educational_name": "Institutional Fee Invoice & Receipt Verification Agent",
+      "educational_domain": "finance",
+      "domain_name": "Finance & Financial Aid",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_fee_status",
+        "get_payment_history",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 47,
@@ -754,7 +1357,20 @@
       "health_url": "http://127.0.0.1:8147/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8147
+      "port": 8147,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 48,
@@ -770,7 +1386,21 @@
       "health_url": "http://127.0.0.1:8148/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8148
+      "port": 8148,
+      "educational_name": "Institutional Academic & Attendance Analytics Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 49,
@@ -786,7 +1416,21 @@
       "health_url": "http://127.0.0.1:8149/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8149
+      "port": 8149,
+      "educational_name": "Institutional Performance & Accreditation Reporting Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "graduation-clearance",
+        "attendance-intervention"
+      ]
     },
     {
       "day": 50,
@@ -802,7 +1446,20 @@
       "health_url": "http://127.0.0.1:8150/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8150
+      "port": 8150,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 51,
@@ -818,7 +1475,21 @@
       "health_url": "http://127.0.0.1:8151/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8151
+      "port": 8151,
+      "educational_name": "Institutional Certificate & ID Image Verification Agent",
+      "educational_domain": "document-intelligence",
+      "domain_name": "Document Intelligence",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_document",
+        "verify_document",
+        "compare_documents",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility"
+      ]
     },
     {
       "day": 52,
@@ -834,7 +1505,20 @@
       "health_url": "http://127.0.0.1:8152/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8152
+      "port": 8152,
+      "educational_name": "Document Intelligence & Knowledge Extraction Agent",
+      "educational_domain": "document-intelligence",
+      "domain_name": "Document Intelligence",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_document",
+        "extract_document_data",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility"
+      ]
     },
     {
       "day": 53,
@@ -850,7 +1534,20 @@
       "health_url": "http://127.0.0.1:8153/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8153
+      "port": 8153,
+      "educational_name": "Academic Scheduling & Committee Meeting Assistant Agent",
+      "educational_domain": "faculty-hr",
+      "domain_name": "Faculty & Staff HR",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_faculty_profile",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "course-override"
+      ]
     },
     {
       "day": 54,
@@ -866,7 +1563,20 @@
       "health_url": "http://127.0.0.1:8154/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8154
+      "port": 8154,
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ]
     },
     {
       "day": 55,
@@ -882,7 +1592,21 @@
       "health_url": "http://127.0.0.1:8155/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8155
+      "port": 8155,
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 56,
@@ -898,7 +1622,21 @@
       "health_url": "http://127.0.0.1:8156/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8156
+      "port": 8156,
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 57,
@@ -914,7 +1652,21 @@
       "health_url": "http://127.0.0.1:8157/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8157
+      "port": 8157,
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 58,
@@ -930,7 +1682,20 @@
       "health_url": "http://127.0.0.1:8158/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8158
+      "port": 8158,
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ]
     },
     {
       "day": 59,
@@ -946,7 +1711,19 @@
       "health_url": "http://127.0.0.1:8159/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8159
+      "port": 8159,
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 60,
@@ -962,7 +1739,24 @@
       "health_url": "http://127.0.0.1:8160/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8160
+      "port": 8160,
+      "educational_name": "Student Verification & Profile Intake Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_student_profile",
+        "get_student_status",
+        "verify_student_identity",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 61,
@@ -978,7 +1772,19 @@
       "health_url": "http://127.0.0.1:8161/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8161
+      "port": 8161,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 62,
@@ -994,7 +1800,19 @@
       "health_url": "http://127.0.0.1:8162/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8162
+      "port": 8162,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 63,
@@ -1010,7 +1828,19 @@
       "health_url": "http://127.0.0.1:8163/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8163
+      "port": 8163,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 64,
@@ -1026,7 +1856,19 @@
       "health_url": "http://127.0.0.1:8164/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8164
+      "port": 8164,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 65,
@@ -1042,7 +1884,19 @@
       "health_url": "http://127.0.0.1:8165/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8165
+      "port": 8165,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 66,
@@ -1058,7 +1912,19 @@
       "health_url": "http://127.0.0.1:8166/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8166
+      "port": 8166,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 67,
@@ -1074,7 +1940,21 @@
       "health_url": "http://127.0.0.1:8167/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8167
+      "port": 8167,
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 68,
@@ -1090,7 +1970,19 @@
       "health_url": "http://127.0.0.1:8168/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8168
+      "port": 8168,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 69,
@@ -1106,7 +1998,19 @@
       "health_url": "http://127.0.0.1:8169/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8169
+      "port": 8169,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 70,
@@ -1122,7 +2026,19 @@
       "health_url": "http://127.0.0.1:8170/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8170
+      "port": 8170,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 71,
@@ -1138,7 +2054,23 @@
       "health_url": "http://127.0.0.1:8171/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8171
+      "port": 8171,
+      "educational_name": "Institutional Data Gateway & Persistence Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "get_student_profile",
+        "get_courses",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "course-override",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 72,
@@ -1154,7 +2086,19 @@
       "health_url": "http://127.0.0.1:8172/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8172
+      "port": 8172,
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 73,
@@ -1170,7 +2114,19 @@
       "health_url": "http://127.0.0.1:8173/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8173
+      "port": 8173,
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 74,
@@ -1186,7 +2142,19 @@
       "health_url": "http://127.0.0.1:8174/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8174
+      "port": 8174,
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 75,
@@ -1202,7 +2170,19 @@
       "health_url": "http://127.0.0.1:8175/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8175
+      "port": 8175,
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 76,
@@ -1218,7 +2198,20 @@
       "health_url": "http://127.0.0.1:8176/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8176
+      "port": 8176,
+      "educational_name": "Admission Application Intake & Merit Evaluation Agent",
+      "educational_domain": "admission",
+      "domain_name": "Admissions & Enrollment",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_admission_application",
+        "calculate_merit",
+        "check_admission_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification"
+      ]
     },
     {
       "day": 77,
@@ -1234,7 +2227,20 @@
       "health_url": "http://127.0.0.1:8177/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8177
+      "port": 8177,
+      "educational_name": "Admission Application Intake & Merit Evaluation Agent",
+      "educational_domain": "admission",
+      "domain_name": "Admissions & Enrollment",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_admission_application",
+        "calculate_merit",
+        "check_admission_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification"
+      ]
     },
     {
       "day": 78,
@@ -1250,7 +2256,19 @@
       "health_url": "http://127.0.0.1:8178/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8178
+      "port": 8178,
+      "educational_name": "Student Support & Inquiries Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_student_profile",
+        "get_student_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "student-service"
+      ]
     },
     {
       "day": 79,
@@ -1266,7 +2284,19 @@
       "health_url": "http://127.0.0.1:8179/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8179
+      "port": 8179,
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 80,
@@ -1282,7 +2312,20 @@
       "health_url": "http://127.0.0.1:8180/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8180
+      "port": 8180,
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ]
     },
     {
       "day": 81,
@@ -1298,7 +2341,20 @@
       "health_url": "http://127.0.0.1:8181/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8181
+      "port": 8181,
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ]
     },
     {
       "day": 82,
@@ -1314,7 +2370,20 @@
       "health_url": "http://127.0.0.1:8182/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8182
+      "port": 8182,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 83,
@@ -1330,7 +2399,20 @@
       "health_url": "http://127.0.0.1:8183/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8183
+      "port": 8183,
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ]
     },
     {
       "day": 84,
@@ -1346,7 +2428,20 @@
       "health_url": "http://127.0.0.1:8184/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8184
+      "port": 8184,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 85,
@@ -1362,7 +2457,20 @@
       "health_url": "http://127.0.0.1:8185/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8185
+      "port": 8185,
+      "educational_name": "Scholarship & Financial Aid Eligibility Evaluator Agent",
+      "educational_domain": "finance",
+      "domain_name": "Finance & Financial Aid",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_fee_status",
+        "get_scholarship_rules",
+        "check_financial_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility"
+      ]
     },
     {
       "day": 86,
@@ -1378,7 +2486,20 @@
       "health_url": "http://127.0.0.1:8186/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8186
+      "port": 8186,
+      "educational_name": "Institutional Accounting & Ledger Balance Agent",
+      "educational_domain": "finance",
+      "domain_name": "Finance & Financial Aid",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_fee_status",
+        "get_payment_history",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 87,
@@ -1394,7 +2515,20 @@
       "health_url": "http://127.0.0.1:8187/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8187
+      "port": 8187,
+      "educational_name": "Institutional Accounting & Ledger Balance Agent",
+      "educational_domain": "finance",
+      "domain_name": "Finance & Financial Aid",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_fee_status",
+        "get_payment_history",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 88,
@@ -1410,7 +2544,20 @@
       "health_url": "http://127.0.0.1:8188/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8188
+      "port": 8188,
+      "educational_name": "Institutional Accounting & Ledger Balance Agent",
+      "educational_domain": "finance",
+      "domain_name": "Finance & Financial Aid",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_fee_status",
+        "get_payment_history",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 89,
@@ -1426,7 +2573,21 @@
       "health_url": "http://127.0.0.1:8189/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8189
+      "port": 8189,
+      "educational_name": "Faculty Affairs & Departmental Committee HR Agent",
+      "educational_domain": "faculty-hr",
+      "domain_name": "Faculty & Staff HR",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_faculty_profile",
+        "get_workload",
+        "create_approval",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "course-override",
+        "scholarship-eligibility"
+      ]
     },
     {
       "day": 90,
@@ -1442,7 +2603,19 @@
       "health_url": "http://127.0.0.1:8190/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8190
+      "port": 8190,
+      "educational_name": "Institutional Operations & Faculty Process Agent",
+      "educational_domain": "faculty-hr",
+      "domain_name": "Faculty & Staff HR",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_faculty_profile",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention"
+      ]
     },
     {
       "day": 91,
@@ -1458,7 +2631,19 @@
       "health_url": "http://127.0.0.1:8191/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8191
+      "port": 8191,
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 92,
@@ -1474,7 +2659,19 @@
       "health_url": "http://127.0.0.1:8192/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8192
+      "port": 8192,
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 93,
@@ -1490,7 +2687,20 @@
       "health_url": "http://127.0.0.1:8193/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8193
+      "port": 8193,
+      "educational_name": "Document Intelligence & Knowledge Extraction Agent",
+      "educational_domain": "document-intelligence",
+      "domain_name": "Document Intelligence",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_document",
+        "extract_document_data",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility"
+      ]
     },
     {
       "day": 94,
@@ -1506,7 +2716,19 @@
       "health_url": "http://127.0.0.1:8194/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8194
+      "port": 8194,
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 95,
@@ -1522,7 +2744,19 @@
       "health_url": "http://127.0.0.1:8195/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8195
+      "port": 8195,
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 96,
@@ -1538,7 +2772,19 @@
       "health_url": "http://127.0.0.1:8196/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8196
+      "port": 8196,
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ]
     },
     {
       "day": 97,
@@ -1554,7 +2800,20 @@
       "health_url": "http://127.0.0.1:8197/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8197
+      "port": 8197,
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ]
     },
     {
       "day": 98,
@@ -1570,7 +2829,18 @@
       "health_url": "http://127.0.0.1:8198/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8198
+      "port": 8198,
+      "educational_name": "Admission Program Onboarding Agent",
+      "educational_domain": "admission",
+      "domain_name": "Admissions & Enrollment",
+      "classification": "REPURPOSE",
+      "allowed_tools": [
+        "get_admission_application",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification"
+      ]
     },
     {
       "day": 99,
@@ -1586,7 +2856,20 @@
       "health_url": "http://127.0.0.1:8199/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8199
+      "port": 8199,
+      "educational_name": "Multi-Agent Consensus & Evidence Aggregator Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "record_decision",
+        "record_agent_action",
+        "create_approval"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 100,
@@ -1602,7 +2885,24 @@
       "health_url": "http://127.0.0.1:8200/api/health",
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
-      "port": 8200
+      "port": 8200,
+      "educational_name": "Sub-Workflow Orchestration & Task Execution Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "get_workflow_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ]
     },
     {
       "day": 101,
@@ -1631,7 +2931,21 @@
       ],
       "ui_type": "master",
       "system_prompt": "You are the AI Master Agent, the top-level intelligence of the 100-to-1 multi-agent system. Analyze the user's objective, decompose complex requests into appropriate subtasks, select and coordinate the best available agents, evaluate their outputs, resolve conflicts, synthesize the results, and produce the final response. Prefer delegation to specialized agents when they are better suited to a task. Maintain accuracy, consistency, and traceability throughout the workflow.",
-      "port": 8201
+      "port": 8201,
+      "educational_name": "Educational Master Workflow Orchestrator",
+      "educational_domain": "master-orchestration",
+      "domain_name": "Master Workflow Orchestration",
+      "classification": "ORCHESTRATION",
+      "allowed_tools": [
+        "*"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ]
     }
   ]
 }

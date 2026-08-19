@@ -147,6 +147,12 @@
       return await res.json();
     },
 
+    async getWorkforce() {
+      const res = await fetch(`${API_BASE}/api/workforce`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    },
+
     async getInstitutionData() {
       const res = await fetch(`${API_BASE}/api/institution/data`, { cache: "no-store" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -227,6 +233,8 @@
     // Action on tab switch
     if (tabId === "workflow-center") {
       refreshWorkflowData();
+    } else if (tabId === "agent-workforce") {
+      refreshWorkforceData();
     } else if (tabId === "approvals-queue") {
       refreshApprovalsQueue();
     } else if (tabId === "institutional-records") {
@@ -683,7 +691,153 @@
   }
 
   // =========================================================
-  // VIEW 2: HUMAN APPROVALS QUEUE
+  // VIEW 2: EDUCATIONAL AGENT WORKFORCE MATRIX
+  // =========================================================
+  let workforceData = [];
+  let selectedWorkforceDomain = "all";
+  let workforceSearchQuery = "";
+
+  async function refreshWorkforceData() {
+    try {
+      const res = await api.getWorkforce();
+      workforceData = res.agents || [];
+      renderWorkforceCards();
+    } catch (err) {
+      console.warn("Failed to load workforce:", err);
+    }
+  }
+
+  function renderWorkforceCards() {
+    const grid = document.getElementById("workforceAgentsGrid");
+    if (!grid) return;
+
+    const filtered = workforceData.filter(agent => {
+      const matchDomain = selectedWorkforceDomain === "all" || agent.educational_domain === selectedWorkforceDomain;
+      const query = workforceSearchQuery.toLowerCase().trim();
+      const matchQuery = !query || 
+        agent.agent_id.toLowerCase().includes(query) ||
+        agent.educational_name.toLowerCase().includes(query) ||
+        agent.original_name.toLowerCase().includes(query) ||
+        (agent.domain_name || '').toLowerCase().includes(query) ||
+        (agent.allowed_tools || []).some(t => t.toLowerCase().includes(query)) ||
+        (agent.educational_capabilities || []).some(c => c.toLowerCase().includes(query));
+      return matchDomain && matchQuery;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; padding: 40px; text-align: center; color: var(--text-muted);">
+          <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
+          <div style="font-size: 15px; font-weight: 700; color: #fff;">No Workforce Agents Found</div>
+          <div style="font-size: 13px; margin-top: 4px;">Try searching for a different keyword or select another domain filter.</div>
+        </div>
+      `;
+      return;
+    }
+
+    grid.innerHTML = filtered.map(agent => {
+      const domainColors = {
+        "student-services": "#00eaff",
+        "admission": "#ff007a",
+        "academic": "#00f5a0",
+        "document-intelligence": "#8b3dff",
+        "finance": "#ffb800",
+        "faculty-hr": "#ff5c00",
+        "administration": "#0099ff",
+        "communication": "#00d2ff",
+        "analytics": "#a855f7",
+        "workflow-intelligence": "#3b82f6",
+        "master-orchestration": "#eab308"
+      };
+
+      const domainColor = domainColors[agent.educational_domain] || "#00eaff";
+
+      const toolsBadges = (agent.allowed_tools || []).map(t => 
+        `<span style="background: rgba(255,255,255,0.06); color: #cbd5e1; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-family: monospace;">${escapeHtml(t)}</span>`
+      ).join(" ");
+
+      const capsBadges = (agent.educational_capabilities || []).slice(0, 3).map(c => 
+        `<span style="background: rgba(0,234,255,0.08); color: #7dd3fc; border: 1px solid rgba(0,234,255,0.2); padding: 2px 7px; border-radius: 6px; font-size: 10.5px;">${escapeHtml(c)}</span>`
+      ).join(" ");
+
+      const workflowsList = (agent.workflow_roles || []).join(", ");
+
+      return `
+        <div class="wf-panel" style="display: flex; flex-direction: column; gap: 12px; padding: 18px; border-left: 3px solid ${domainColor};">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+            <div>
+              <span style="font-family: monospace; font-size: 11px; color: ${domainColor}; font-weight: 800; text-transform: uppercase;">
+                ${escapeHtml(agent.agent_id)}
+              </span>
+              <div style="font-size: 15px; font-weight: 800; color: #fff; margin-top: 2px;">
+                ${escapeHtml(agent.educational_name)}
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                Base: ${escapeHtml(agent.original_name)}
+              </div>
+            </div>
+            <span class="badge-status completed" style="font-size: 10.5px; padding: 3px 8px;">
+              ● READY
+            </span>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="background: ${domainColor}20; color: ${domainColor}; border: 1px solid ${domainColor}40; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">
+              ${escapeHtml(agent.domain_name || agent.educational_domain)}
+            </span>
+            <span style="font-size: 11px; color: var(--text-muted); font-family: monospace;">
+              Port :${agent.port}
+            </span>
+          </div>
+
+          <div>
+            <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">
+              Allowed Tools (${(agent.allowed_tools || []).length})
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+              ${toolsBadges}
+            </div>
+          </div>
+
+          <div>
+            <div style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-bottom: 6px;">
+              Capabilities
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+              ${capsBadges}
+            </div>
+          </div>
+
+          <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06); font-size: 11.5px; color: var(--text-muted);">
+            <strong style="color: #cbd5e1;">Workflows:</strong> ${escapeHtml(workflowsList)}
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function initWorkforceFilters() {
+    const filters = document.querySelectorAll("#workforceDomainFilters .preset-chip");
+    filters.forEach(btn => {
+      btn.addEventListener("click", () => {
+        filters.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedWorkforceDomain = btn.getAttribute("data-domain") || "all";
+        renderWorkforceCards();
+      });
+    });
+
+    const search = document.getElementById("workforceSearchInput");
+    if (search) {
+      search.addEventListener("input", (e) => {
+        workforceSearchQuery = e.target.value;
+        renderWorkforceCards();
+      });
+    }
+  }
+
+  // =========================================================
+  // VIEW 3: HUMAN APPROVALS QUEUE
   // =========================================================
   async function refreshApprovalsQueue() {
     try {
@@ -1218,8 +1372,11 @@
       });
     });
 
+    initWorkforceFilters();
+
     // Initial Data Load
     refreshWorkflowData();
+    refreshWorkforceData();
     refreshApprovalsQueue();
     refreshInstitutionData();
 

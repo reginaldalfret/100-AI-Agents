@@ -95,6 +95,8 @@ export function getStudentById(id) {
   return s ? JSON.parse(JSON.stringify(s)) : null;
 }
 
+export const getStudent = getStudentById;
+
 export function updateStudent(id, fields) {
   const index = students.findIndex(item => item.id.toLowerCase() === id.toLowerCase());
   if (index === -1) throw new Error(`Student not found: ${id}`);

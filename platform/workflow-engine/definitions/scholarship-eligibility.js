@@ -1,88 +1,104 @@
-import { StudentService, AcademicService, FinanceService, AuditService } from '../../services/index.js';
+import { executeTool } from '../../tools/tool-registry.js';
+import { StudentService, FinanceService, AuditService } from '../../services/index.js';
 
 export const ScholarshipEligibilityWorkflow = {
   id: 'scholarship-eligibility',
-  name: 'Scholarship & Financial Aid Evaluation',
-  description: 'Automates multi-factor merit and need-based evaluation, committee sign-off, ledger credit adjustment, and award letter generation.',
+  name: 'Merit & Need-Based Scholarship Evaluation',
+  description: 'Validates GPA, household income bracket, tuition balance, Dean financial aid committee review, and award disbursement ledgering.',
   category: 'Financial Aid',
+  participatingAgents: [
+    { agentId: 'agent-040', role: 'Student Verification & Profile Intake Agent' },
+    { agentId: 'agent-045', role: 'Institutional PDF & Transcript Processing Agent' },
+    { agentId: 'agent-085', role: 'Scholarship & Financial Aid Eligibility Evaluator Agent' },
+    { agentId: 'agent-046', role: 'Institutional Fee Invoice & Receipt Verification Agent' },
+    { agentId: 'agent-089', role: 'Faculty Affairs & Departmental Committee HR Agent' },
+    { agentId: 'agent-002', role: 'Official Institutional Notice & Email Communication Agent' },
+    { agentId: 'agent-099', role: 'Multi-Agent Consensus & Evidence Aggregator Agent' },
+    { agentId: 'agent-100', role: 'Sub-Workflow Orchestration & Task Execution Agent' },
+    { agentId: 'agent-101', role: 'Educational Master Workflow Orchestrator' }
+  ],
   steps: [
     {
-      id: 'academic-attendance-audit',
-      name: 'Academic Merit & Attendance Audit',
-      type: 'service_check',
+      id: 'student-profile-check',
+      name: 'Enrollment Status & Identity Verification',
+      agentId: 'agent-040',
+      agentName: 'Student Verification & Profile Intake Agent',
+      type: 'agent_task',
       execute: async (context) => {
-        const student = StudentService.getStudentById(context.studentId);
-        const attendance = AcademicService.getStudentAttendance(context.studentId);
-
+        const student = await executeTool('agent-040', 'get_student_profile', { student_id: context.studentId }, context.instanceId);
         return {
-          gpa: student.gpa,
-          attendanceRate: attendance.overallRate,
-          studentName: student.name,
-          academicStanding: student.gpa >= 3.5 ? 'Distinction' : 'Good'
+          studentId: student.data.id,
+          name: student.data.name,
+          program: student.data.program,
+          gpa: student.data.gpa,
+          householdIncome: student.data.householdIncome,
+          evidence: [
+            { source: 'student_database', studentId: student.data.id, status: student.data.status }
+          ]
         };
       }
     },
     {
-      id: 'scheme-evaluation',
-      name: 'Scholarship Scheme Eligibility Computation',
-      type: 'service_check',
-      execute: async (context, previousOutputs) => {
-        const student = StudentService.getStudentById(context.studentId);
-        const schemeId = context.schemeId || 'SCH-MERIT';
-        const evaluation = FinanceService.evaluateScholarship(student, schemeId);
+      id: 'eligibility-assessment',
+      name: 'Academic Criteria & Financial Threshold Evaluation',
+      agentId: 'agent-085',
+      agentName: 'Scholarship & Financial Aid Eligibility Evaluator Agent',
+      type: 'agent_task',
+      execute: async (context) => {
+        const scholarshipId = context.scholarshipId || context.schemeId || 'SCH-MERIT';
+        const evaluation = await executeTool('agent-085', 'check_financial_eligibility', {
+          student_id: context.studentId,
+          scholarship_id: scholarshipId
+        }, context.instanceId);
 
-        return evaluation;
+        return {
+          evaluation: evaluation.data,
+          eligible: evaluation.data.eligible,
+          scholarshipName: evaluation.data.scholarshipName,
+          awardAmount: evaluation.data.awardAmount,
+          evidence: [
+            { source: 'finance_service', rule: 'GPA >= 3.5 & Income <= $50,000', met: evaluation.data.eligible }
+          ]
+        };
       }
     },
     {
       id: 'committee-approval',
-      name: 'Financial Aid Committee Review & Approval',
+      name: 'Financial Aid Review Board & Dean Sign-Off',
       type: 'human_approval',
-      description: 'Review calculated award and approve financial aid disbursement.',
+      description: 'Approve disbursement of scholarship grant based on verified eligibility metrics.',
       requiresDecision: true,
       execute: async (context, stepOutput) => {
-        const schemeEval = context.stepOutputs['scheme-evaluation'];
         return {
-          schemeName: schemeEval.schemeName,
-          awardAmount: schemeEval.awardAmount,
-          recommendation: schemeEval.eligible ? 'Approved for full scholarship disbursement.' : 'Conditional review needed.'
+          reviewStatus: 'Ready for committee approval'
         };
       }
     },
     {
       id: 'disbursement-and-notification',
-      name: 'Ledger Credit & Award Notification',
-      agentId: 'agent-002',
-      agentName: 'AI Email Agent',
+      name: 'Fee Ledger Credit & Student Award Notification',
+      agentId: 'agent-046',
+      agentName: 'Institutional Fee Invoice & Receipt Verification Agent',
       type: 'agent_task',
-      taskPrompt: (context) => {
-        const schemeEval = context.stepOutputs['scheme-evaluation'];
-        return `Write an official Scholarship Award Notification email to student ${context.studentName} for the ${schemeEval.schemeName} in the amount of $${schemeEval.awardAmount}.`;
-      },
       execute: async (context) => {
-        const schemeEval = context.stepOutputs['scheme-evaluation'];
-        const updatedFinancials = FinanceService.applyScholarshipAward(
-          context.studentId,
-          schemeEval.awardAmount,
-          schemeEval.schemeName
-        );
+        const scholarshipId = context.scholarshipId || context.schemeId || 'SCH-MERIT';
+        const scholarship = FinanceService.getScholarship(scholarshipId);
+        const feeStatus = FinanceService.applyScholarshipAward(context.studentId, scholarship.awardAmount);
+        const student = StudentService.getStudentById(context.studentId);
 
-        AuditService.logAudit({
-          workflowId: context.workflowInstanceId,
-          action: 'SCHOLARSHIP_DISBURSED',
-          details: {
-            studentId: context.studentId,
-            scheme: schemeEval.schemeName,
-            amount: schemeEval.awardAmount,
-            newBalance: updatedFinancials.outstandingBalance
-          }
-        });
+        await executeTool('agent-002', 'send_email', {
+          recipient: student.email,
+          subject: `Scholarship Award Credited — ${scholarship.name}`,
+          body: `Dear ${student.name},\n\nYour scholarship award of $${scholarship.awardAmount.toLocaleString()} has been applied to your tuition ledger.`
+        }, context.instanceId);
 
         return {
-          awardAmount: schemeEval.awardAmount,
-          schemeName: schemeEval.schemeName,
-          remainingTuitionBalance: updatedFinancials.outstandingBalance,
-          notificationDispatched: true
+          awardAmount: scholarship.awardAmount,
+          credited: true,
+          updatedFeeStatus: feeStatus,
+          evidence: [
+            { source: 'ledger_service', creditedAmount: scholarship.awardAmount, newBalance: feeStatus.outstandingBalance }
+          ]
         };
       }
     }

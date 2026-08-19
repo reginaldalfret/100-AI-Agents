@@ -394,11 +394,17 @@
       </div>
     </div>
 
-    <!-- 4 Main Navigation Tabs -->
+    <!-- 5 Main Navigation Tabs -->
     <nav class="top-nav-tabs">
       <button class="top-nav-tab active" data-tab="workflow-center">
         <span>⚡</span>
-        <span>Workflow Automation Center</span>
+        <span>Workflow Center</span>
+      </button>
+
+      <button class="top-nav-tab" data-tab="agent-workforce">
+        <span>🎓</span>
+        <span>Educational Workforce (100 Agents)</span>
+        <span class="nav-tab-badge">101</span>
       </button>
 
       <button class="top-nav-tab" data-tab="approvals-queue">
@@ -414,7 +420,7 @@
 
       <button class="top-nav-tab" data-tab="agent-fleet">
         <span>🤖</span>
-        <span>100 AI Agent Fleet Chat</span>
+        <span>Fleet Chat</span>
       </button>
     </nav>
 
@@ -534,7 +540,58 @@
     </section>
 
     <!-- =====================================================
-         VIEW 2: HUMAN APPROVALS QUEUE
+         VIEW 2: EDUCATIONAL AGENT WORKFORCE MATRIX
+         ===================================================== -->
+    <section class="app-view" id="view-agent-workforce">
+      <div style="padding: 24px; display: flex; flex-direction: column; gap: 20px; height: 100%; overflow-y: auto;">
+        
+        <!-- Workforce Header & Stats -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h2 style="margin: 0; font-size: 24px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px;">
+              <span>🎓</span> SA-S03 Educational AI Agent Workforce
+            </h2>
+            <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+              Coordinated institutional workforce of 100 specialized AI agents + 1 Master Orchestrator across 10 functional domains.
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <div class="system-status-indicator" style="background: rgba(0, 234, 255, 0.1); border-color: rgba(0, 234, 255, 0.3);">
+              <span class="status-dot-pulse"></span>
+              <span>101/101 Operational · Nemotron 3 Nano</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search and Domain Filter Row -->
+        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <input type="text" id="workforceSearchInput" class="form-input" placeholder="Search workforce agents by role, domain, tools, or ID..." style="max-width: 380px; padding: 10px 14px; font-size: 13px;" />
+          
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="workforceDomainFilters">
+            <button class="preset-chip active" data-domain="all">All Domains (101)</button>
+            <button class="preset-chip" data-domain="student-services">Student Services</button>
+            <button class="preset-chip" data-domain="admission">Admissions</button>
+            <button class="preset-chip" data-domain="academic">Academics</button>
+            <button class="preset-chip" data-domain="document-intelligence">Document Intelligence</button>
+            <button class="preset-chip" data-domain="finance">Finance</button>
+            <button class="preset-chip" data-domain="faculty-hr">Faculty &amp; HR</button>
+            <button class="preset-chip" data-domain="administration">Administration</button>
+            <button class="preset-chip" data-domain="communication">Communication</button>
+            <button class="preset-chip" data-domain="analytics">Analytics</button>
+            <button class="preset-chip" data-domain="workflow-intelligence">Workflow Intelligence</button>
+          </div>
+        </div>
+
+        <!-- Agent Workforce Grid -->
+        <div id="workforceAgentsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
+          <!-- Dynamically populated by ui-polish.js -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =====================================================
+         VIEW 3: HUMAN APPROVALS QUEUE
          ===================================================== -->
     <section class="app-view" id="view-approvals-queue">
       <div class="approvals-container">

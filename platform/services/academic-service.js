@@ -90,8 +90,13 @@ export function getStudentAttendance(studentId) {
     : 100.0;
   return {
     studentId,
+    percentage: overallRate,
     logs,
     overallRate,
     isAtRisk: overallRate < 75.0
   };
 }
+
+export const getAttendance = getStudentAttendance;
+export const listCourses = getAllCourses;
+
