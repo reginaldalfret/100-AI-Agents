@@ -440,6 +440,38 @@
     }
   }
 
+  async function handleRunFlagshipDemo() {
+    const btn = document.getElementById("btnRunFlagshipDemo");
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = '<span>⏳</span> Orchestrating 9 Agents...';
+    }
+
+    try {
+      showToast("Initiating Flagship Scholarship Demo for STU-DEMO-001...", "info");
+      const res = await api.startWorkflow({
+        workflow_id: "scholarship-eligibility",
+        studentId: "STU-DEMO-001",
+        scholarshipId: "SCH-MERIT",
+        notes: "Autonomous Flagship Demonstration: 9 Agents Multi-Disciplinary Orchestration"
+      });
+
+      showToast(`Flagship Demo initiated: ${res.instance?.id}`, "success");
+      await refreshWorkflowData();
+      if (res.instance?.id) {
+        state.selectedInstanceId = res.instance.id;
+        loadAndRenderInstanceDetails(res.instance.id);
+      }
+    } catch (err) {
+      showToast(`Demo launch error: ${err.message}`, "error");
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>⚡</span> Run Flagship Scholarship Demo';
+      }
+    }
+  }
+
   function renderInstanceList() {
     const container = document.getElementById("instanceListContainer");
     if (!container) return;
@@ -1337,6 +1369,10 @@
     // Launcher submit
     const btnLaunch = document.getElementById("btnLaunchWorkflow");
     if (btnLaunch) btnLaunch.addEventListener("click", handleLaunchWorkflow);
+
+    // Flagship Demo button
+    const btnDemo = document.getElementById("btnRunFlagshipDemo");
+    if (btnDemo) btnDemo.addEventListener("click", handleRunFlagshipDemo);
 
     // Records search
     const recordsSearch = document.getElementById("recordsSearchInput");

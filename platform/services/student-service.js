@@ -70,7 +70,7 @@ const students = [
   {
     id: 'STU-1005',
     name: 'Vikram Sengupta',
-    email: 'vikram.sengupta@university.edu',
+    email: 'vikram.s@university.edu',
     program: 'B.S. Computer Science',
     semester: 1,
     status: 'applicant',
@@ -79,8 +79,41 @@ const students = [
     attendanceRate: 100.0,
     householdIncome: 52000,
     documents: [
-      { type: 'high_school_transcript', status: 'submitted', uploadedAt: '2026-08-01' },
-      { type: 'id_proof', status: 'submitted', uploadedAt: '2026-08-01' },
+      { type: 'high_school_transcript', status: 'verified', uploadedAt: '2026-02-01' },
+      { type: 'id_proof', status: 'verified', uploadedAt: '2026-02-01' }
+    ]
+  },
+  {
+    id: 'STU-DEMO-001',
+    name: 'Demosthenes Rao',
+    email: 'demosthenes.rao@university.edu',
+    program: 'B.S. Artificial Intelligence & Computer Science',
+    semester: 3,
+    status: 'enrolled',
+    admissionStatus: 'admitted',
+    gpa: 3.90,
+    attendanceRate: 96.5,
+    householdIncome: 32000,
+    documents: [
+      { type: 'high_school_transcript', status: 'verified', uploadedAt: '2026-08-15' },
+      { type: 'id_proof', status: 'verified', uploadedAt: '2026-08-15' },
+      { type: 'income_certificate', status: 'verified', uploadedAt: '2026-08-15' }
+    ]
+  },
+  {
+    id: 'APPLICANT-TEST-001',
+    name: 'Sophia Chen',
+    email: 'sophia.chen@applicant.university.edu',
+    program: 'B.S. Computer Science',
+    semester: 1,
+    status: 'applicant',
+    admissionStatus: 'pending_verification',
+    gpa: 3.88,
+    attendanceRate: 100.0,
+    householdIncome: 42000,
+    documents: [
+      { type: 'high_school_transcript', status: 'verified', uploadedAt: '2026-08-18' },
+      { type: 'id_proof', status: 'verified', uploadedAt: '2026-08-18' },
       { type: 'recommendation_letter', status: 'submitted', uploadedAt: '2026-08-02' }
     ]
   }

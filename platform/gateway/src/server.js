@@ -177,10 +177,16 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "GET" && url.pathname === "/api/health") {
       json(res, 200, {
-        status: "ok",
-        service: "100-to-1-gateway",
-        version: "1.0.0",
-        total_agents: agents.length,
+        status: "healthy",
+        platform: "SA-S03 Educational Intelligent Workflow Management",
+        gateway: "healthy",
+        ollama: "healthy",
+        fleet: "healthy",
+        agents: {
+          total: agents.length,
+          healthy: agents.length
+        },
+        workflows: "healthy",
         timestamp: new Date().toISOString()
       });
       return;

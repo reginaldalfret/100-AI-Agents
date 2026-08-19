@@ -39,6 +39,14 @@ const studentAccounts = [
     outstandingBalance: 12000,
     activeScholarships: [],
     financialAidEligible: true
+  },
+  {
+    studentId: 'STU-DEMO-001',
+    tuitionFee: 14000,
+    paidAmount: 2000,
+    outstandingBalance: 12000,
+    activeScholarships: [],
+    financialAidEligible: true
   }
 ];
 

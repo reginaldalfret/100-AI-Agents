@@ -491,8 +491,26 @@
             </div>
 
             <div class="launcher-form">
-              <div class="form-group">
-                <label class="form-label">Select Workflow Pipeline</label>
+              <!-- Flagship Judge Demo Banner -->
+              <div style="background: linear-gradient(135deg, rgba(0, 234, 255, 0.12), rgba(139, 61, 255, 0.12)); border: 1px solid rgba(0, 234, 255, 0.35); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 11.5px; font-weight: 800; color: #00eaff; text-transform: uppercase; letter-spacing: 0.05em;">
+                    ★ Flagship Judge Demonstration
+                  </span>
+                  <span style="font-size: 10px; background: rgba(0, 234, 255, 0.2); color: #fff; padding: 2px 6px; border-radius: 4px; font-weight: 700;">
+                    9 Agents Coordinated
+                  </span>
+                </div>
+                <div style="font-size: 11.5px; color: #e2e8f0; line-height: 1.4;">
+                  One-click end-to-end Scholarship &amp; Financial Aid verification for synthetic student <strong>STU-DEMO-001</strong> with document processing, multi-agent evaluation, and Dean approval.
+                </div>
+                <button id="btnRunFlagshipDemo" type="button" class="btn-launch" style="background: linear-gradient(135deg, #00eaff, #8b3dff); margin-top: 4px; padding: 10px 16px; font-size: 12.5px;">
+                  <span>⚡</span> Run Flagship Scholarship Demo
+                </button>
+              </div>
+
+              <div class="form-group" style="margin-top: 8px;">
+                <label class="form-label">Or Select Custom Workflow Pipeline</label>
                 <select id="workflowSelect" class="form-select">
                   <option value="" disabled selected>Loading workflows...</option>
                 </select>
