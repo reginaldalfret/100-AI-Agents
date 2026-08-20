@@ -1,184 +1,457 @@
-const GLOBAL_INTENT_DOMAINS = [
+/**
+ * SA-S03 & 100 AI Agents Platform — Intelligent Permissive Capability Gate
+ * Evaluates semantic relevance, safety, and specialist routing recommendations.
+ */
+
+export const DecisionType = Object.freeze({
+  ALLOW: "ALLOW",
+  ROUTE: "ROUTE",
+  CLARIFY: "CLARIFY",
+  REJECT: "REJECT"
+});
+
+export const SAFETY_PATTERNS = [
+  /bypass\s+(all\s+)?(safety|security|rules|guardrails|authorization|controls)/i,
+  /ignore\s+(all\s+)?(safety|security|rules|instructions|guardrails)/i,
+  /access\s+restricted\s+(account|data|credentials|keys|passwords)/i,
+  /drop\s+(table|database|schema)\s+/i,
+  /rm\s+-rf\s+/i,
+  /format\s+c:/i,
+  /exploit\s+vulnerability/i,
+  /sql\s+injection/i
+];
+
+export const STOP_WORDS = new Set([
+  "ai", "agent", "and", "for", "the", "with", "from", "this", "that", "have", "make", "help", "task", "work"
+]);
+
+export const GENERIC_VERBS = new Set([
+  "generate", "generat", "generation",
+  "write", "writ", "writing",
+  "create", "creat", "creation",
+  "build", "make", "perform",
+  "provide", "synthesize", "help",
+  "assist", "work", "task", "agent", "ai"
+]);
+
+export const GLOBAL_DOMAIN_TAXONOMY = [
   {
-    domain: "email",
-    keywords: ["email", "e-mail", "subject line", "inbox", "outbox", "mail draft", "internship inquiry", "newsletter email"],
-    patterns: ["email", "email-writing", "email-reply", "professional-email"]
+    domain: "social_media",
+    name: "AI Social Media Agent",
+    agent_id: "agent-081",
+    category: "business",
+    keywords: [
+      "social media", "social-media", "instagram", "twitter", "tweet", "facebook",
+      "tiktok", "linkedin", "youtube", "threads", "pinterest", "reddit",
+      "profile", "account", "handle", "follower", "following", "engagement",
+      "post", "reel", "story", "influencer", "hashtag", "bio", "social strategy",
+      "campaign", "creator", "likes", "comments", "dms", "social content"
+    ],
+    capabilities: [
+      "social-media", "social-content", "social-media-strategy", "social-engagement",
+      "profile-analysis", "content-analysis", "engagement-analysis", "social-media-research"
+    ]
   },
   {
-    domain: "quiz",
-    keywords: ["quiz", "mcq", "multiple choice", "multiple-choice", "question bank", "trivia", "answer key"],
-    patterns: ["quiz", "mcq", "question-generation", "exam-prep"]
-  },
-  {
-    domain: "writing",
-    keywords: ["essay", "article", "story", "creative writing", "blog post", "draft manuscript", "narrative", "poem", "script"],
-    patterns: ["writing", "article-writing", "essay-writing", "creative-writing", "copywriting"]
-  },
-  {
-    domain: "summarization",
-    keywords: ["summarize", "summary", "tldr", "synopsis", "key takeaways", "executive summary", "condense this"],
-    patterns: ["summarization", "text-summarization", "book-summarization", "briefing"]
+    domain: "marketing",
+    name: "AI Marketing Agent",
+    agent_id: "agent-080",
+    category: "business",
+    keywords: [
+      "marketing", "marketing campaign", "marketing newsletter", "newsletter",
+      "advertisement", "ad copy", "seo marketing", "sales funnel"
+    ],
+    capabilities: [
+      "marketing", "marketing-campaigns", "copywriting", "lead-generation"
+    ]
   },
   {
     domain: "translation",
-    keywords: ["translate", "translation", "spanish", "french", "german", "mandarin", "hindi", "multilingual"],
-    patterns: ["translation", "language-translation", "localization"]
+    name: "AI Translation Agent",
+    agent_id: "agent-007",
+    category: "foundation",
+    keywords: [
+      "translate", "translation", "spanish", "french", "german", "mandarin",
+      "hindi", "japanese", "chinese", "italian", "russian", "arabic", "multilingual", "localize"
+    ],
+    capabilities: [
+      "translation", "language-translation", "localization", "multilingual"
+    ]
   },
   {
-    domain: "resume",
-    keywords: ["resume", "résumé", "cv", "curriculum vitae", "ats score", "ats optimization", "job application"],
-    patterns: ["resume", "resume-writing", "resume-editing", "career-advisor", "ats"]
+    domain: "email",
+    name: "AI Email Agent",
+    agent_id: "agent-002",
+    category: "foundation",
+    keywords: [
+      "email", "e-mail", "subject line", "inbox", "outbox", "mail draft",
+      "internship inquiry", "newsletter email", "email reply", "professional email"
+    ],
+    capabilities: [
+      "email", "email-writing", "email-reply", "professional-email", "email-management"
+    ]
   },
   {
-    domain: "coding",
-    keywords: ["javascript", "python", "typescript", "react", "c++", "rust", "algorithm", "pull request", "refactor code", "debug code", "dockerfile", "sql query", "api endpoint", "full stack"],
-    patterns: ["coding", "code-generation", "debugging", "code-review", "full-stack", "devops", "docker", "ci-cd", "database"]
+    domain: "quiz",
+    name: "AI Quiz Agent",
+    agent_id: "agent-004",
+    category: "foundation",
+    keywords: [
+      "quiz", "mcq", "multiple choice", "multiple-choice", "question bank",
+      "trivia", "answer key", "exam prep", "questions", "chemistry"
+    ],
+    capabilities: [
+      "quiz", "mcq", "question-generation", "exam-prep"
+    ]
   },
   {
-    domain: "research",
-    keywords: ["research paper", "arxiv", "literature review", "web research", "fact check", "citation", "competitor analysis", "market report", "swot analysis"],
-    patterns: ["research", "web-research", "paper-analysis", "market-research", "fact-checking"]
+    domain: "summarization",
+    name: "AI Summarization Agent",
+    agent_id: "agent-005",
+    category: "foundation",
+    keywords: [
+      "summarize", "summary", "tldr", "synopsis", "key takeaways",
+      "executive summary", "condense this"
+    ],
+    capabilities: [
+      "summarization", "text-summarization", "book-summarization", "briefing"
+    ]
   },
   {
-    domain: "business_finance",
-    keywords: ["financial analysis", "balance sheet", "income statement", "roi", "accounting", "ledger", "invoice", "ebitda", "cash flow", "budget"],
-    patterns: ["finance", "financial-analysis", "accounting", "invoice-processing", "business-analyst"]
+    domain: "writing",
+    name: "AI Writing Agent",
+    agent_id: "agent-001",
+    category: "foundation",
+    keywords: [
+      "essay", "article", "creative writing", "blog post", "draft manuscript",
+      "narrative", "poem", "poetry", "script", "copywriting", "press release",
+      "fiction", "fantasy story", "short story", "story about", "novel chapter",
+      "creative novel", "formal letter", "letter to"
+    ],
+    capabilities: [
+      "writing", "article-writing", "essay-writing", "creative-writing", "copywriting"
+    ]
+  },
+  {
+    domain: "career_resume",
+    name: "AI Resume & Career Agent",
+    agent_id: "agent-013",
+    category: "foundation",
+    keywords: [
+      "resume", "résumé", "cv", "curriculum vitae", "ats score", "ats optimization",
+      "job application", "career advisor", "career planning", "career transition",
+      "interview prep", "job matching", "cover letter"
+    ],
+    capabilities: [
+      "resume", "resume-writing", "resume-editing", "career-advisor", "job-matching",
+      "career-advice", "career-planning", "career-paths", "skill-development"
+    ]
+  },
+  {
+    domain: "coding_developer",
+    name: "AI Code Generation Agent",
+    agent_id: "agent-061",
+    category: "developer",
+    keywords: [
+      "javascript", "python", "typescript", "c++", "java", "rust", "go", "php", "ruby",
+      "coding", "programming", "algorithm", "refactor", "debug", "docker", "sql",
+      "database", "postgresql", "mysql", "mongodb", "schema", "query", "queries", "api",
+      "endpoint", "full stack", "devops", "ci-cd", "dockerfile", "kubernetes", "pull request",
+      "react", "node.js", "microservice", "memory leak", "useeffect", "relational", "join",
+      "index tuning", "script", "fibonacci", "sorting program", "solid architecture", "docker container"
+    ],
+    capabilities: [
+      "code-generation", "software-architecture", "debugging", "code-review",
+      "full-stack", "devops", "docker", "ci-cd", "database", "code-refactoring", "bug-hunting"
+    ]
+  },
+  {
+    domain: "finance_scholarship",
+    name: "Academic and Financial Aid Specialist",
+    agent_id: "agent-085",
+    category: "business",
+    keywords: [
+      "scholarship", "financial aid", "grant", "tuition", "fee", "bursar",
+      "award", "discount", "stipend", "waiver", "income certificate", "ledger",
+      "balance sheet", "invoice", "financial analysis", "accounting", "funds", "ebitda", "budget"
+    ],
+    capabilities: [
+      "scholarship-eligibility", "fee-disbursement", "financial-analysis", "accounting",
+      "finance", "financial", "invoice-processing"
+    ]
+  },
+  {
+    domain: "document_intelligence",
+    name: "Document Intelligence and Verification Agent",
+    agent_id: "agent-045",
+    category: "productivity",
+    keywords: [
+      "document", "pdf", "transcript", "certificate", "diploma", "id card",
+      "scan document", "ocr", "extract fields", "tamper detection", "hash verification",
+      "file organization", "spreadsheet", "excel"
+    ],
+    capabilities: [
+      "document-classification", "data-extraction", "hash-verification", "ocr",
+      "document-processing", "pdf-processing", "file-organization"
+    ]
+  },
+  {
+    domain: "academics_education",
+    name: "Academic Advisory and Course Specialist",
+    agent_id: "agent-034",
+    category: "research",
+    keywords: [
+      "course", "syllabus", "prerequisite", "gpa", "grade", "attendance rate",
+      "semester", "curriculum", "professor", "student enrollment", "course override",
+      "academic record", "degree audit", "graduation clearance", "study notes"
+    ],
+    capabilities: [
+      "course-audit", "prerequisite-check", "academic-planning", "advisory",
+      "course-research", "syllabus-analysis", "curriculum-evaluation"
+    ]
+  },
+  {
+    domain: "travel_restaurant",
+    name: "Travel & Dining Specialist",
+    agent_id: "agent-032",
+    category: "research",
+    keywords: [
+      "travel itinerary", "flight booking", "hotel reservation", "vacation plan",
+      "tourist guide", "restaurant recommendation", "dining menu", "recipe"
+    ],
+    capabilities: [
+      "travel-research", "restaurant-research"
+    ]
   }
 ];
 
 function normalize(value) {
   return String(value || "")
     .toLowerCase()
-    .replace(/[^\w\s-]/g, " ")
+    .replace(/[^a-z0-9@_\s-]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
-export function checkCapability(task, config) {
+function matchesPhrase(text, phrase) {
+  const normText = " " + normalize(text) + " ";
+  const normPhrase = " " + normalize(phrase) + " ";
+  return normText.includes(normPhrase);
+}
+
+function getCapabilityTokens(capabilities, agentName) {
+  const tokens = new Set();
+  const rawTokens = [];
+
+  (capabilities || []).forEach(c => {
+    const parts = String(c).toLowerCase().split(/[-_\s]+/);
+    parts.forEach(p => rawTokens.push(p));
+  });
+
+  String(agentName || "").toLowerCase().split(/[-_\s]+/).forEach(p => {
+    if (p && !STOP_WORDS.has(p)) rawTokens.push(p);
+  });
+
+  rawTokens.forEach(p => {
+    if (p.length >= 3 && !STOP_WORDS.has(p)) {
+      tokens.add(p);
+      if (p.endsWith("ing") && p.length > 5) tokens.add(p.slice(0, -3));
+      if (p.endsWith("tion") && p.length > 6) tokens.add(p.slice(0, -4));
+      if (p.endsWith("sion") && p.length > 6) tokens.add(p.slice(0, -4));
+      if (p.endsWith("ment") && p.length > 6) tokens.add(p.slice(0, -4));
+      if (p.endsWith("er") && p.length > 4) tokens.add(p.slice(0, -2));
+      if (p.endsWith("or") && p.length > 4) tokens.add(p.slice(0, -2));
+      if (p.endsWith("es") && p.length > 4) tokens.add(p.slice(0, -2));
+      if (p.endsWith("s") && p.length > 3) tokens.add(p.slice(0, -1));
+    }
+  });
+
+  return tokens;
+}
+
+export function checkSafety(task) {
+  for (const pattern of SAFETY_PATTERNS) {
+    if (pattern.test(task)) {
+      return { blocked: true, reason: "safety-policy-violation" };
+    }
+  }
+  return { blocked: false };
+}
+
+export function checkCapability(task, config = {}) {
   const normalizedTask = normalize(task);
   const capabilities = Array.isArray(config.capabilities) ? config.capabilities : [];
 
-  // 1. Master agent is unrestricted
+  // 1. Safety Check (High Priority)
+  const safety = checkSafety(task);
+  if (safety.blocked) {
+    return {
+      allowed: false,
+      decision: DecisionType.REJECT,
+      reason: safety.reason,
+      detectedIntents: ["safety-violation"],
+      capabilities
+    };
+  }
+
+  // 2. Master Agent is unrestricted
   if (
     config.category === "master" ||
     config.uiType === "master" ||
     config.id === "agent-101" ||
     config.agent_id === "agent-101"
   ) {
-    return { allowed: true, reason: "master-agent" };
+    return { allowed: true, decision: DecisionType.ALLOW, reason: "master-agent" };
   }
 
-  // 2. Specialized agents must declare capabilities
-  if (capabilities.length === 0) {
+  // 3. Ultra-vague or incomplete prompt check -> CLARIFY
+  const words = normalizedTask.split(" ").filter(Boolean);
+  if (words.length <= 4 && (
+    normalizedTask === "do something" ||
+    normalizedTask === "do something with this" ||
+    normalizedTask === "help me" ||
+    normalizedTask === "do this" ||
+    normalizedTask === "start"
+  )) {
     return {
       allowed: false,
-      reason: "no-capability-policy",
+      decision: DecisionType.CLARIFY,
+      reason: "ambiguous-request",
+      clarificationPrompt: "Sure! I can help with that. Could you please clarify what specific task or analysis you would like me to perform?",
       detectedIntents: [],
       capabilities
     };
   }
 
-  // 3. Direct matching against agent's own declared capabilities & name keywords
-  const agentTokens = new Set();
-  const agentNameTokens = normalize(config.name || "").split(" ");
-  for (const t of agentNameTokens) {
-    if (t && t !== "ai" && t !== "agent") agentTokens.add(t);
-  }
+  // 4. Find Agent's Primary Domain in Taxonomy
+  const agentName = normalize(config.name || "");
+  const agentId = config.id || config.agent_id || "";
+  const agentDomain = GLOBAL_DOMAIN_TAXONOMY.find(d =>
+    d.agent_id === agentId ||
+    capabilities.some(c => d.capabilities.includes(c)) ||
+    agentName.includes(d.domain.replace("_", " ")) ||
+    (d.domain === "coding_developer" && (agentName.includes("code") || agentName.includes("developer") || capabilities.some(c => c.includes("code")))) ||
+    (d.domain === "social_media" && (agentName.includes("social") || capabilities.some(c => c.includes("social"))))
+  );
 
-  const GENERIC_TOKENS = new Set(["ai", "agent", "write", "writ", "generate", "genera", "create", "creat", "plan", "build", "help", "make", "task", "work", "tool", "assist"]);
-
-  for (const cap of capabilities) {
-    const parts = normalize(cap).split(/[-_\s]+/);
-    for (const p of parts) {
-      if (p.length > 2) {
-        agentTokens.add(p);
-        if (p.endsWith("ing") && p.length > 5) agentTokens.add(p.slice(0, -3));
-        if (p.endsWith("tion") && p.length > 6) agentTokens.add(p.slice(0, -4));
-        if (p.endsWith("zation") && p.length > 7) agentTokens.add(p.slice(0, -6));
-        if (p.endsWith("sation") && p.length > 7) agentTokens.add(p.slice(0, -6));
-        if (p.endsWith("ment") && p.length > 6) agentTokens.add(p.slice(0, -4));
-        if (p.endsWith("sis") && p.length > 5) agentTokens.add(p.slice(0, -3));
-        if (p.endsWith("er") && p.length > 4) agentTokens.add(p.slice(0, -2));
-      }
-    }
-  }
-
-  // Check if task matches full capability phrases or specific capability tokens
-  const taskWords = normalizedTask.split(/\s+/);
-  let matchesOwnCapability = false;
-
+  // Check direct capability phrases in config.capabilities
   for (const cap of capabilities) {
     const phrase = normalize(cap).replace(/[-_]+/g, " ");
-    if (normalizedTask.includes(phrase)) {
-      matchesOwnCapability = true;
-      break;
+    if (matchesPhrase(normalizedTask, phrase)) {
+      return { allowed: true, decision: DecisionType.ALLOW, reason: "capability-match" };
+    }
+    const parts = phrase.split(" ");
+    if (parts.length > 1 && parts.every(p => matchesPhrase(normalizedTask, p))) {
+      return { allowed: true, decision: DecisionType.ALLOW, reason: "capability-match" };
     }
   }
 
-  if (!matchesOwnCapability) {
-    for (const token of agentTokens) {
-      if (GENERIC_TOKENS.has(token) && !agentNameTokens.includes(token)) continue;
-      if (normalizedTask.includes(token)) {
-        matchesOwnCapability = true;
-        break;
+  // Check specialized tokens from capabilities and agent name
+  const tokens = getCapabilityTokens(capabilities, agentName);
+  for (const t of tokens) {
+    if (GENERIC_VERBS.has(t.toLowerCase())) continue;
+    if (matchesPhrase(normalizedTask, t)) {
+      return { allowed: true, decision: DecisionType.ALLOW, reason: "capability-match" };
+    }
+    for (const word of words) {
+      const w = word.toLowerCase();
+      if (GENERIC_VERBS.has(w)) continue;
+      if (w.length >= 4 && t.length >= 4 && (w.startsWith(t) || t.startsWith(w))) {
+        return { allowed: true, decision: DecisionType.ALLOW, reason: "capability-match" };
       }
-      for (const tw of taskWords) {
-        if (tw.length >= 4 && (tw.startsWith(token) || token.startsWith(tw))) {
-          matchesOwnCapability = true;
-          break;
-        }
-      }
-      if (matchesOwnCapability) break;
     }
   }
 
-  if (matchesOwnCapability) {
+  // Check own domain keywords if agent belongs to this domain
+  if (agentDomain) {
+    for (const kw of agentDomain.keywords) {
+      if (matchesPhrase(normalizedTask, kw)) {
+        return { allowed: true, decision: DecisionType.ALLOW, reason: "capability-match" };
+      }
+    }
+  }
+
+  // Social media platform entity matching
+  if ((agentDomain?.domain === "social_media" || agentName.includes("social")) && (
+    normalizedTask.includes("@") ||
+    matchesPhrase(normalizedTask, "instagram") ||
+    matchesPhrase(normalizedTask, "twitter") ||
+    matchesPhrase(normalizedTask, "linkedin") ||
+    matchesPhrase(normalizedTask, "facebook") ||
+    matchesPhrase(normalizedTask, "tiktok") ||
+    matchesPhrase(normalizedTask, "profile") ||
+    matchesPhrase(normalizedTask, "account")
+  )) {
+    return { allowed: true, decision: DecisionType.ALLOW, reason: "capability-match" };
+  }
+
+  // 5. Check if another specialist domain is a strong match (ROUTING)
+  const foreignDomains = GLOBAL_DOMAIN_TAXONOMY.filter(d => !agentDomain || d.domain !== agentDomain.domain);
+  for (const dom of foreignDomains) {
+    for (const kw of dom.keywords) {
+      if (matchesPhrase(normalizedTask, kw)) {
+        return {
+          allowed: false,
+          decision: DecisionType.ROUTE,
+          reason: "better-agent-available",
+          recommendedAgent: {
+            id: dom.agent_id,
+            name: dom.name,
+            category: dom.category,
+            domain: dom.domain
+          },
+          detectedIntents: [dom.domain],
+          capabilities
+        };
+      }
+    }
+  }
+
+  // 6. Benign / Conversational Fallback -> ALLOW
+  if (words.length >= 2 && !matchesPhrase(normalizedTask, "capital of") && !matchesPhrase(normalizedTask, "weather in")) {
     return {
       allowed: true,
-      reason: "capability-match"
+      decision: DecisionType.ALLOW,
+      reason: "plausible-relevance-fallback"
     };
   }
 
-  // 4. Check if task matches any other known domain
-  const foreignDomains = GLOBAL_INTENT_DOMAINS.filter(dom => {
-    return dom.keywords.some(k => normalizedTask.includes(k));
-  });
-
-  if (foreignDomains.length > 0) {
-    return {
-      allowed: false,
-      reason: "capability-mismatch",
-      detectedIntents: foreignDomains.map(d => d.domain),
-      capabilities
-    };
-  }
-
-  // 5. Out of scope / unrecognized
+  // 7. Clearly Unrelated Request -> REJECT
   return {
     allowed: false,
-    reason: "unknown-or-out-of-scope",
+    decision: DecisionType.REJECT,
+    reason: "unrelated-request",
     detectedIntents: [],
     capabilities
   };
 }
 
-export function buildCapabilityError(config, gate) {
+export function buildCapabilityError(config, gate = {}) {
   const capabilityText =
-    Array.isArray(config.capabilities) &&
-    config.capabilities.length
+    Array.isArray(config.capabilities) && config.capabilities.length
       ? config.capabilities.join(", ")
       : "specialized tasks";
 
+  let friendlyMessage = "";
+
+  if (gate.reason === "safety-policy-violation") {
+    friendlyMessage = "I cannot fulfill this request as it violates platform safety and authorization policies.";
+  } else if (gate.decision === DecisionType.ROUTE && gate.recommendedAgent) {
+    friendlyMessage = `Sorry, this request is outside my area of specialization. It appears better suited for the ${gate.recommendedAgent.name} (${gate.recommendedAgent.category}). Please consult that specialized agent instead.`;
+  } else if (gate.decision === DecisionType.CLARIFY) {
+    friendlyMessage = gate.clarificationPrompt || `Sure! I can help with that. Could you please clarify what specific task or analysis you would like me to perform?`;
+  } else {
+    friendlyMessage = `Sorry, this request is outside my area of specialization. As the ${config.name || "Specialist Agent"}, I specialize in ${capabilityText}. Please use the appropriate specialist for this task.`;
+  }
+
   return {
     code: "AGENT_CAPABILITY_MISMATCH",
-    message:
-      `I'm sorry, but I'm the ${config.name}. ` +
-      `I specialize in: ${capabilityText}. ` +
-      `This request appears to be outside my specialization. ` +
-      `Please use the appropriate specialized agent for this task.`,
-    agent_id: config.id,
+    message: friendlyMessage,
+    decision: gate.decision || DecisionType.REJECT,
+    agent_id: config.id || config.agent_id,
     agent_name: config.name,
     capabilities: config.capabilities,
+    recommended_agent: gate.recommendedAgent || null,
     detected_intents: gate.detectedIntents || []
   };
 }

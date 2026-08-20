@@ -1200,6 +1200,8 @@
         reply = res.result.response;
       } else if (res.result?.result) {
         reply = typeof res.result.result === "string" ? res.result.result : JSON.stringify(res.result.result, null, 2);
+      } else if (res.result?.error?.message) {
+        reply = res.result.error.message;
       } else if (res.response) {
         reply = res.response;
       } else {
