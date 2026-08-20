@@ -541,38 +541,46 @@
              ===================================================== -->
         <section class="app-view" id="view-chat">
           <div class="chat-console-grid">
-            <!-- Left: Agent Directory -->
-            <div class="card-panel" style="padding: 14px;">
-              <input type="text" id="chatAgentSearch" class="topbar-search-input" placeholder="Filter 101 agents..." style="padding-left: 12px; margin-bottom: 10px;" />
-              <div id="chatAgentListContainer" style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px;">
+            <!-- Left: Agent Directory (Independently Scrollable) -->
+            <div class="card-panel chat-col-agents">
+              <div class="chat-search-wrap">
+                <input type="text" id="chatAgentSearch" class="topbar-search-input" placeholder="🔍 Search 101 agents..." style="padding-left: 12px;" />
+              </div>
+              <div id="chatAgentListContainer">
                 <!-- Populated dynamically -->
               </div>
             </div>
 
-            <!-- Center: Dialogue Stream -->
-            <div class="card-panel" style="padding: 0; display: flex; flex-direction: column;">
-              <div style="padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+            <!-- Center: Dialogue Stream & Fixed Composer -->
+            <div class="card-panel chat-col-main">
+              <!-- Pinned Top Header -->
+              <div class="chat-header-bar">
                 <div>
-                  <div style="font-size: 14px; font-weight: 700; color: #fff;" id="chatActiveAgentName">AI Writing Agent</div>
-                  <div style="font-size: 11px; color: var(--text-muted);" id="chatActiveAgentId">agent-001 · Foundation</div>
+                  <div style="font-size: 14px; font-weight: 700; color: #fff;" id="chatActiveAgentName">AI Master Agent</div>
+                  <div style="font-size: 11px; color: var(--text-muted);" id="chatActiveAgentId">agent-101 · master</div>
                 </div>
                 <span class="meta-pill" style="color: var(--accent-cyan);">⚡ Nemotron 3 Nano 4B</span>
               </div>
 
+              <!-- Scrollable Messages Stream -->
               <div class="chat-messages-stream" id="chatMessagesStream">
                 <div class="chat-bubble ai">
-                  Welcome to the Educational AI Fleet Operations Console. Select any specialist agent or instruct them on institutional tasks.
+                  Welcome to the Educational AI Fleet Operations Console. Select any specialist agent on the left or instruct them on institutional tasks below.
                 </div>
               </div>
 
-              <div style="padding: 14px; border-top: 1px solid var(--border); display: flex; gap: 10px;">
-                <input type="text" id="chatInput" class="topbar-search-input" placeholder="Type instruction for selected agent..." style="padding-left: 14px;" />
-                <button id="btnSendChat" class="btn-flagship-top" style="padding: 0 16px;">Send</button>
+              <!-- Pinned Bottom Composer (ALWAYS VISIBLE) -->
+              <div class="chat-composer-bar">
+                <input type="text" id="chatInput" class="topbar-search-input" placeholder="Type instruction for selected agent (e.g. 'do a research on the company microsoft')..." style="padding-left: 14px; flex: 1;" autocomplete="off" />
+                <button id="btnSendChat" class="btn-flagship-top" style="padding: 0 18px; height: 38px;">
+                  <span>Send</span>
+                  <span>➤</span>
+                </button>
               </div>
             </div>
 
             <!-- Right: Agent Capability Inspector -->
-            <div class="card-panel" id="chatAgentContextPanel" style="padding: 16px;">
+            <div class="card-panel chat-col-context" id="chatAgentContextPanel">
               <div class="card-panel-title" style="margin-bottom: 12px;">Agent Specifications</div>
               <div id="chatAgentDetailsBox" style="font-size: 12px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 10px;">
                 <!-- Populated dynamically -->

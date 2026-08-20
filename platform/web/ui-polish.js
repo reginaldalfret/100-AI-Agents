@@ -1108,7 +1108,8 @@
       renderChatAgentList();
 
       if (state.chatAgents.length > 0 && !state.selectedChatAgent) {
-        selectChatAgent(state.chatAgents[0].agent_id);
+        const defaultAgent = state.chatAgents.find(a => a.agent_id === "agent-101") || state.chatAgents[0];
+        selectChatAgent(defaultAgent.agent_id);
       }
 
       const btnSend = document.getElementById("btnSendChat");

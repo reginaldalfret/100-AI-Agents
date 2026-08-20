@@ -26,6 +26,7 @@ const state = {
   ollama: { process: null, running: false, failures: 0, lastCheck: null },
   fleet: { process: null, running: false, failures: 0, lastCheck: null },
   gateway: { process: null, running: false, failures: 0, lastCheck: null },
+  cloudflared: { process: null, running: false, failures: 0, lastCheck: null, lastRestartAttempt: 0, backoffDelayMs: 5000 },
   isShuttingDown: false
 };
 
@@ -156,26 +157,112 @@ function startGateway() {
   }
 }
 
-// 4. Cloudflared Controller
+// 4. Cloudflared Controller with Bounded Retries & Exponential Backoff
 async function checkCloudflared() {
+  let isRunning = false;
+
+  // 1. Check process list using tasklist (fast and unprivileged)
   try {
-    const { execSync } = await import("node:child_process");
-    const out = execSync('powershell.exe -NoProfile -Command "(Get-Process cloudflared -ErrorAction SilentlyContinue).Count"', { encoding: "utf8" }).trim();
-    const count = parseInt(out, 10) || 0;
-    return count > 0;
+    const tasklistOut = execSync('tasklist /FI "IMAGENAME eq cloudflared.exe" /FO CSV /NH', {
+      encoding: "utf8",
+      stdio: ["pipe", "pipe", "ignore"],
+      timeout: 3000
+    });
+    if (tasklistOut.toLowerCase().includes("cloudflared.exe")) {
+      isRunning = true;
+    }
   } catch {
-    return false;
+    // tasklist query fallback
   }
+
+  // 2. Check Windows Service if process was not found
+  if (!isRunning) {
+    try {
+      const scOut = execSync('sc query "Cloudflared"', {
+        encoding: "utf8",
+        stdio: ["pipe", "pipe", "ignore"],
+        timeout: 3000
+      });
+      if (scOut.includes("RUNNING") || scOut.includes("STATE              : 4  RUNNING")) {
+        isRunning = true;
+      }
+    } catch {
+      // Service query fallback
+    }
+  }
+
+  state.cloudflared.running = isRunning;
+  state.cloudflared.lastCheck = new Date().toISOString();
+
+  if (isRunning) {
+    // Reset failure counter and backoff interval when healthy
+    state.cloudflared.failures = 0;
+    state.cloudflared.backoffDelayMs = 5000;
+  }
+
+  return isRunning;
 }
 
 function startCloudflared() {
   if (state.isShuttingDown) return;
-  log("info", "Attempting Cloudflared service recovery...");
+
+  const now = Date.now();
+  const timeSinceLastAttempt = now - state.cloudflared.lastRestartAttempt;
+
+  // Enforce bounded backoff to prevent restart loops
+  if (state.cloudflared.lastRestartAttempt > 0 && timeSinceLastAttempt < state.cloudflared.backoffDelayMs) {
+    const remainingSec = Math.ceil((state.cloudflared.backoffDelayMs - timeSinceLastAttempt) / 1000);
+    log("info", `Cloudflared restart backoff active (next attempt in ${remainingSec}s, failures: ${state.cloudflared.failures})`);
+    return;
+  }
+
+  state.cloudflared.lastRestartAttempt = now;
+  state.cloudflared.failures++;
+  // Exponential backoff capped at 60 seconds (5s, 10s, 20s, 40s, 60s)
+  state.cloudflared.backoffDelayMs = Math.min(60000, 5000 * Math.pow(2, Math.min(state.cloudflared.failures, 4)));
+
+  log("warn", `Initiating Cloudflared restart (attempt ${state.cloudflared.failures}, backoff: ${state.cloudflared.backoffDelayMs / 1000}s)...`);
+
+  // Attempt 1: Start Windows Service
   try {
-    execSync('powershell.exe -NoProfile -Command "Start-Service -Name Cloudflared -ErrorAction SilentlyContinue"');
-    log("info", "Cloudflared service start triggered");
-  } catch (err) {
-    log("warn", `Cloudflared service start error: ${err.message}`);
+    execSync('net start Cloudflared', {
+      encoding: "utf8",
+      stdio: ["pipe", "pipe", "ignore"],
+      timeout: 5000
+    });
+    log("info", "Cloudflared Windows Service start command issued successfully");
+    return;
+  } catch (svcErr) {
+    // Service start failed or not configured as service, fallback to binary execution
+  }
+
+  // Attempt 2: Spawn cloudflared executable directly if available
+  try {
+    const searchPaths = [
+      "cloudflared",
+      path.join(process.env.ProgramFiles || "C:\\Program Files", "cloudflared", "cloudflared.exe"),
+      path.join(process.env["ProgramFiles(x86)"] || "C:\\Program Files (x86)", "cloudflared", "cloudflared.exe"),
+      path.join(process.env.LOCALAPPDATA || "", "Programs", "cloudflared", "cloudflared.exe"),
+      "C:\\cloudflared\\cloudflared.exe"
+    ];
+
+    let targetExe = "cloudflared";
+    for (const p of searchPaths) {
+      if (p !== "cloudflared" && fs.existsSync(p)) {
+        targetExe = p;
+        break;
+      }
+    }
+
+    const child = spawn(targetExe, ["tunnel", "run"], {
+      detached: true,
+      stdio: "ignore"
+    });
+    child.unref();
+    state.cloudflared.process = child;
+    log("info", `Cloudflared tunnel process spawned (${targetExe}, PID ${child.pid})`);
+  } catch (procErr) {
+    log("error", `Failed to spawn Cloudflared executable: ${procErr.message}`);
   }
 }
 
@@ -208,7 +295,7 @@ async function monitorLoop() {
     // 4. Cloudflare Tunnel Health
     const cloudflaredOk = await checkCloudflared();
     if (!cloudflaredOk) {
-      log("warn", "Cloudflared process not found, recovering...");
+      log("warn", "Cloudflared process/service not active, initiating recovery...");
       startCloudflared();
     }
   } catch (err) {
@@ -228,6 +315,9 @@ function shutdown(signal) {
   if (state.fleet.process) {
     try { state.fleet.process.kill(); } catch {}
   }
+  if (state.cloudflared.process) {
+    try { state.cloudflared.process.kill(); } catch {}
+  }
 
   log("info", "All supervised child processes halted. Exiting cleanly.");
   process.exit(0);
@@ -242,7 +332,7 @@ async function main() {
   log("info", "SA-S03 Educational Platform Supervisor Starting...");
   log("info", "==================================================");
 
-  // Check/Start Ollama
+  // 1. Check/Start Ollama
   const ollamaReady = await checkOllama();
   if (!ollamaReady) {
     startOllama();
@@ -252,15 +342,24 @@ async function main() {
       if (await checkOllama()) break;
     }
   }
-  log("info", "Ollama verified active");
+  log("info", "Ollama status verified");
 
-  // Start Gateway
+  // 2. Start Gateway
   startGateway();
   await new Promise(r => setTimeout(r, 1000));
 
-  // Start Fleet
+  // 3. Start Fleet
   startFleet();
   await new Promise(r => setTimeout(r, 2000));
+
+  // 4. Check/Start Cloudflared Tunnel
+  const cfReady = await checkCloudflared();
+  if (!cfReady) {
+    log("info", "Cloudflared not running on startup, initiating start...");
+    startCloudflared();
+  } else {
+    log("info", "Cloudflared verified active");
+  }
 
   // Run Heartbeat every 5 seconds
   setInterval(monitorLoop, 5000);
