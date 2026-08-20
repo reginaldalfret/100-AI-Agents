@@ -156,6 +156,29 @@ function startGateway() {
   }
 }
 
+// 4. Cloudflared Controller
+async function checkCloudflared() {
+  try {
+    const { execSync } = await import("node:child_process");
+    const out = execSync('powershell.exe -NoProfile -Command "(Get-Process cloudflared -ErrorAction SilentlyContinue).Count"', { encoding: "utf8" }).trim();
+    const count = parseInt(out, 10) || 0;
+    return count > 0;
+  } catch {
+    return false;
+  }
+}
+
+function startCloudflared() {
+  if (state.isShuttingDown) return;
+  log("info", "Attempting Cloudflared service recovery...");
+  try {
+    execSync('powershell.exe -NoProfile -Command "Start-Service -Name Cloudflared -ErrorAction SilentlyContinue"');
+    log("info", "Cloudflared service start triggered");
+  } catch (err) {
+    log("warn", `Cloudflared service start error: ${err.message}`);
+  }
+}
+
 // Supervisor Heartbeat Monitor
 async function monitorLoop() {
   if (state.isShuttingDown) return;
@@ -180,6 +203,13 @@ async function monitorLoop() {
     if (!fleetOk && (!state.fleet.process || state.fleet.process.killed)) {
       log("warn", "Agent fleet unreachable, attempting restart...");
       startFleet();
+    }
+
+    // 4. Cloudflare Tunnel Health
+    const cloudflaredOk = await checkCloudflared();
+    if (!cloudflaredOk) {
+      log("warn", "Cloudflared process not found, recovering...");
+      startCloudflared();
     }
   } catch (err) {
     log("error", `Monitor loop encountered exception: ${err.message}`);

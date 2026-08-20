@@ -61,6 +61,26 @@ function readBody(req) {
   });
 }
 
+async function executeAgentInProcess(agentId, payload) {
+  const agentsDir = path.join(ROOT, "agents");
+  if (!fs.existsSync(agentsDir)) return null;
+
+  const dirs = fs.readdirSync(agentsDir);
+  const found = dirs.find(d => d.startsWith(agentId) || d.startsWith(agentId.replace("agent-", "agent-0")));
+  if (!found) return null;
+
+  const modPath = path.join(agentsDir, found, "backend", "src", "agent.js");
+  if (!fs.existsSync(modPath)) return null;
+
+  process.env.OLLAMA_MODEL = process.env.OLLAMA_MODEL || "nemotron-3-nano";
+  const { pathToFileURL } = await import("node:url");
+  const mod = await import(pathToFileURL(modPath).href);
+  if (typeof mod.runAgent === "function") {
+    return await mod.runAgent(payload);
+  }
+  return null;
+}
+
 function requestAgent(agent, payload) {
   return new Promise((resolve, reject) => {
     const body = JSON.stringify(payload);
@@ -98,7 +118,18 @@ function requestAgent(agent, payload) {
       req.destroy(new Error("Agent request timeout"));
     });
 
-    req.on("error", reject);
+    req.on("error", async (err) => {
+      try {
+        const fallback = await executeAgentInProcess(agent.agent_id, payload);
+        if (fallback) {
+          resolve(fallback);
+          return;
+        }
+      } catch (fallbackErr) {
+        console.warn(`Fallback execution failed for ${agent.agent_id}:`, fallbackErr.message);
+      }
+      reject(err);
+    });
 
     req.write(body);
     req.end();

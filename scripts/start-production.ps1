@@ -32,7 +32,13 @@ if (-not $ollamaRunning) {
     }
 }
 
-# 2. Launch Supervisor
-Write-Host "[2/3] Starting SA-S03 Supervisor..." -ForegroundColor Green
+# 2. Verify Cloudflared
+Write-Host "[2/3] Ensuring Cloudflared tunnel service is active..." -ForegroundColor Cyan
+try {
+    Start-Service -Name "Cloudflared" -ErrorAction SilentlyContinue
+} catch {}
+
+# 3. Launch Supervisor
+Write-Host "[3/3] Starting SA-S03 Supervisor..." -ForegroundColor Green
 $nodeExe = (Get-Command node).Source
 & $nodeExe "scripts/supervisor.js"

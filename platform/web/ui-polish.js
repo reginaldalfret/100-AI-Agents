@@ -1192,7 +1192,18 @@
 
     try {
       const res = await api.sendChat(state.selectedChatAgent.agent_id, text);
-      const reply = res.result?.response || res.result?.result || JSON.stringify(res.result);
+      let reply = "";
+      if (typeof res.result === "string") {
+        reply = res.result;
+      } else if (res.result?.response) {
+        reply = res.result.response;
+      } else if (res.result?.result) {
+        reply = typeof res.result.result === "string" ? res.result.result : JSON.stringify(res.result.result, null, 2);
+      } else if (res.response) {
+        reply = res.response;
+      } else {
+        reply = typeof res === "string" ? res : JSON.stringify(res.result || res, null, 2);
+      }
       aiBubble.textContent = reply;
     } catch (err) {
       aiBubble.textContent = `Error: ${err.message}`;
