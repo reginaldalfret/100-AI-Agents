@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const state = {
         agents: [],
         selectedAgent: null,
+        selectedModelMode: 'auto',
         chatHistories: {},
         currentAttachments: [],
         isGenerating: false,
@@ -45,6 +46,18 @@ document.addEventListener('DOMContentLoaded', () => {
         attachmentArea: getEl('attachmentArea'),
         sendBtn: getEl('sendBtn'),
         attachBtn: getEl('attachBtn'),
+        
+        // Model Selector
+        modelSelectorWrapper: getEl('modelSelectorWrapper'),
+        modelSelectorBtn: getEl('modelSelectorBtn'),
+        modelSelectorLabel: getEl('modelSelectorLabel'),
+        modelDropdown: getEl('modelDropdown'),
+        modelDetailsSubpanel: getEl('modelDetailsSubpanel'),
+        subpanelModelName: getEl('subpanelModelName'),
+        subpanelRuntime: getEl('subpanelRuntime'),
+        subpanelStatus: getEl('subpanelStatus'),
+        subpanelHardware: getEl('subpanelHardware'),
+        btnCloseSubpanel: getEl('btnCloseSubpanel'),
         
         // File input (create if missing)
         fileInput: document.getElementById('hiddenFileInput') || (function() {
@@ -693,7 +706,211 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
     }
 
-    // 5. COMPOSER MANAGER
+    // 5. LOCAL MODEL SELECTOR MANAGER
+    const LOCAL_MODEL_DEFS = {
+        'auto': {
+            id: 'auto',
+            name: 'Auto',
+            displayName: 'Auto',
+            buttonLabel: 'Auto',
+            internalId: 'auto',
+            role: 'Intelligent Router',
+            desc: 'Dynamic routing based on task context',
+            badge: 'Intelligent',
+            badgeClass: 'badge-auto',
+            iconClass: 'icon-auto'
+        },
+        'gemma': {
+            id: 'gemma',
+            name: 'Google Gemma 3',
+            displayName: 'Google Gemma 3',
+            buttonLabel: 'Gemma 3',
+            internalId: 'gemma3:4b',
+            role: 'Vision / Multimodal',
+            desc: 'Vision · Multimodal · Drawings',
+            badge: 'Vision',
+            badgeClass: 'badge-vision',
+            iconClass: 'icon-vision',
+            status: 'Active',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (4GB VRAM)'
+        },
+        'nemotron': {
+            id: 'nemotron',
+            name: 'NVIDIA Nemotron 3',
+            displayName: 'NVIDIA Nemotron 3',
+            buttonLabel: 'Nemotron 3',
+            internalId: 'nemotron-3-nano',
+            role: 'Reasoning / Planning',
+            desc: 'Reasoning · Planning · Synthesis',
+            badge: 'Reasoning',
+            badgeClass: 'badge-reasoning',
+            iconClass: 'icon-reasoning',
+            status: 'Active',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (4GB VRAM)'
+        },
+        'qwen': {
+            id: 'qwen',
+            name: 'Qwen 2.5 Coder',
+            displayName: 'Qwen 2.5 Coder',
+            buttonLabel: 'Qwen Coder',
+            internalId: 'qwen2.5-coder:1.5b',
+            role: 'Coding / Sandbox',
+            desc: 'Coding · Calculations · Sandbox',
+            badge: 'Code',
+            badgeClass: 'badge-code',
+            iconClass: 'icon-code',
+            status: 'Active',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (4GB VRAM)'
+        }
+    };
+
+    function initModelSelector() {
+        if (!elements.modelSelectorBtn || !elements.modelDropdown) return;
+
+        // Toggle dropdown
+        elements.modelSelectorBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleModelDropdown();
+        });
+
+        // Close on click outside
+        document.addEventListener('click', (e) => {
+            if (!elements.modelSelectorWrapper?.contains(e.target)) {
+                closeModelDropdown();
+            }
+        });
+
+        // Close on Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModelDropdown();
+            }
+        });
+
+        // Option items click & keyboard navigation
+        const items = elements.modelDropdown.querySelectorAll('.model-option-item');
+        items.forEach(item => {
+            item.addEventListener('click', (e) => {
+                // If clicked the info button, show details instead of selecting immediately
+                if (e.target.closest('.btn-model-info')) {
+                    e.stopPropagation();
+                    const modelId = item.dataset.modelId;
+                    showModelDetails(modelId);
+                    return;
+                }
+                const modelId = item.dataset.modelId;
+                selectModelMode(modelId);
+            });
+
+            // Keyboard selection
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    selectModelMode(item.dataset.modelId);
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const next = item.nextElementSibling || items[0];
+                    next?.focus();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const prev = item.previousElementSibling || items[items.length - 1];
+                    prev?.focus();
+                }
+            });
+        });
+
+        // Subpanel close button
+        if (elements.btnCloseSubpanel) {
+            elements.btnCloseSubpanel.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (elements.modelDetailsSubpanel) {
+                    elements.modelDetailsSubpanel.style.display = 'none';
+                }
+            });
+        }
+    }
+
+    function toggleModelDropdown() {
+        if (!elements.modelDropdown) return;
+        const isOpen = elements.modelDropdown.style.display !== 'none';
+        if (isOpen) {
+            closeModelDropdown();
+        } else {
+            openModelDropdown();
+        }
+    }
+
+    function openModelDropdown() {
+        if (!elements.modelDropdown || !elements.modelSelectorBtn) return;
+        elements.modelDropdown.style.display = 'block';
+        elements.modelSelectorBtn.setAttribute('aria-expanded', 'true');
+        const activeItem = elements.modelDropdown.querySelector('.model-option-item.active') || elements.modelDropdown.querySelector('.model-option-item');
+        activeItem?.focus();
+    }
+
+    function closeModelDropdown() {
+        if (!elements.modelDropdown || !elements.modelSelectorBtn) return;
+        elements.modelDropdown.style.display = 'none';
+        elements.modelSelectorBtn.setAttribute('aria-expanded', 'false');
+        if (elements.modelDetailsSubpanel) {
+            elements.modelDetailsSubpanel.style.display = 'none';
+        }
+    }
+
+    function selectModelMode(modelId, isInit = false) {
+        const def = LOCAL_MODEL_DEFS[modelId] || LOCAL_MODEL_DEFS['auto'];
+        const prevMode = state.selectedModelMode;
+        state.selectedModelMode = def.id;
+
+        // Update button label
+        if (elements.modelSelectorLabel) {
+            elements.modelSelectorLabel.textContent = def.buttonLabel;
+        }
+
+        // Update active class on items
+        if (elements.modelDropdown) {
+            elements.modelDropdown.querySelectorAll('.model-option-item').forEach(item => {
+                const isActive = item.dataset.modelId === def.id;
+                item.classList.toggle('active', isActive);
+            });
+        }
+
+        // Mid-conversation notice
+        if (!isInit && prevMode !== def.id && state.selectedAgent) {
+            const history = state.chatHistories[state.selectedAgent.id];
+            if (history && history.length > 0) {
+                appendSystemEvent(`Model changed to ${def.displayName}`);
+            }
+        }
+
+        closeModelDropdown();
+    }
+
+    function showModelDetails(modelId) {
+        const def = LOCAL_MODEL_DEFS[modelId];
+        if (!def || !elements.modelDetailsSubpanel) return;
+
+        if (elements.subpanelModelName) elements.subpanelModelName.textContent = `${def.displayName} Specifications`;
+        if (elements.subpanelRuntime) elements.subpanelRuntime.textContent = def.runtime || 'Local Ollama (127.0.0.1:11434)';
+        if (elements.subpanelStatus) elements.subpanelStatus.textContent = '● Active';
+        if (elements.subpanelHardware) elements.subpanelHardware.textContent = def.hardware || 'RTX 2050 (4GB VRAM)';
+
+        elements.modelDetailsSubpanel.style.display = 'block';
+    }
+
+    function appendSystemEvent(text) {
+        const div = document.createElement('div');
+        div.className = 'system-event-row';
+        div.style.cssText = 'text-align:center;margin:12px 0;font-size:11.5px;color:var(--text-tertiary);display:flex;align-items:center;justify-content:center;gap:6px;';
+        div.innerHTML = `<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--neon-cyan);"></span> ${escapeHtml(text)}`;
+        elements.chatMessages.appendChild(div);
+        scrollToBottom();
+    }
+
+    // 6. COMPOSER MANAGER
     function handleSend() {
         const text = elements.chatInput.value.trim();
         if (!text && state.currentAttachments.length === 0) return;
@@ -724,6 +941,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                  
         const hasGoldenFiles = attachments.some(a => a.name.toLowerCase().includes('inspection') || a.name.toLowerCase().includes('hx-204'));
         
+        const currentModelMode = state.selectedModelMode || 'auto';
+        const modelOverride = currentModelMode !== 'auto' ? LOCAL_MODEL_DEFS[currentModelMode]?.internalId : null;
+
         try {
             if (hasGoldenKeywords || hasGoldenFiles) {
                 // Execute Golden Demo Workflow
@@ -732,13 +952,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
                         workflowId: 'inspection-report-analysis',
-                        inputPayload: { query: text }
+                        inputPayload: { query: text, modelMode: currentModelMode, model_override: modelOverride }
                     })
                 }).catch(() => null);
                 
                 // Simulate processing time
-                await new Promise(r => setTimeout(r, 2000));
+                await new Promise(r => setTimeout(r, 1600));
                 
+                const modelAttribution = currentModelMode === 'auto' ? 'Super AI (Nemotron / Gemma / Qwen)' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName;
+
                 appendAIMessage({
                     text: "**HX-204 Inspection Analysis Complete**\n\nI have analyzed the provided inspection reports for Heat Exchanger HX-204. \n\nKey Findings:\n- Tube bundle degradation detected in section B.\n- Estimated remaining life: 14 months.\n- Recommended action: Schedule maintenance during next Q3 turnaround.\n\nI have generated a detailed summary report and drafted a maintenance work order.",
                     evidence: [
@@ -750,7 +972,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         { name: 'HX-204_Analysis_Report.md' },
                         { name: 'Draft_Work_Order_10992.json' }
                     ],
-                    model: 'Llama-3-70B-Instruct (Local)',
+                    model: modelAttribution,
                     plan: [
                         { step: 'Extract data from PDF', agent: 'Extraction AI' },
                         { step: 'Compare with historical data', agent: 'Engineering AI' },
@@ -763,7 +985,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ agent_id: agentId, task: text })
+                    body: JSON.stringify({ 
+                        agent_id: agentId, 
+                        task: text,
+                        modelMode: currentModelMode,
+                        model_override: modelOverride
+                    })
                 }).catch(() => null);
                 
                 let data = null;
@@ -772,13 +999,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 if (data && data.result) {
-                    appendAIMessage(data.result);
+                    appendAIMessage({
+                        ...data.result,
+                        model: data.model || (currentModelMode === 'auto' ? 'Super AI' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName)
+                    });
                 } else {
                     // Fallback
-                    await new Promise(r => setTimeout(r, 1000));
+                    await new Promise(r => setTimeout(r, 800));
+                    const fallbackModel = currentModelMode === 'auto' ? 'Super AI' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName;
                     appendAIMessage({
                         text: `I received your message: "${text}". How else can I help you with ${state.selectedAgent.domain} tasks?`,
-                        model: 'Default Model (Local)'
+                        model: fallbackModel
                     });
                 }
             }
@@ -1153,12 +1384,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (elements.newChatBtn) {
         elements.newChatBtn.addEventListener('click', () => {
             selectAgent(state.selectedAgent?.id || 'auto');
+            selectModelMode('auto', true);
             switchMainView('chatView');
             if (window.innerWidth <= 768) closeSidebar();
         });
     }
 
     // Run Init
+    initModelSelector();
+    selectModelMode('auto', true);
     fetchAgents();
     
     // Health check polling
@@ -1166,15 +1400,21 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const res = await fetch('/api/health');
             if (res.ok) {
-                elements.modelPill.classList.remove('offline');
-                elements.modelPill.classList.add('active');
+                if (elements.modelPill) {
+                    elements.modelPill.classList.remove('offline');
+                    elements.modelPill.classList.add('active');
+                }
             } else {
+                if (elements.modelPill) {
+                    elements.modelPill.classList.remove('active');
+                    elements.modelPill.classList.add('offline');
+                }
+            }
+        } catch (e) {
+            if (elements.modelPill) {
                 elements.modelPill.classList.remove('active');
                 elements.modelPill.classList.add('offline');
             }
-        } catch (e) {
-            elements.modelPill.classList.remove('active');
-            elements.modelPill.classList.add('offline');
         }
     }, 30000);
 

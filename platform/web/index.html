@@ -376,7 +376,126 @@
             </button>
           </div>
           <div class="composer-toolbar">
-            <div id="modelPill" class="model-indicator"><span class="model-dot"></span> Auto (Nemotron / Gemma 3 / Qwen)</div>
+            <!-- Model Selector Trigger & Floating Liquid Glass Dropdown -->
+            <div class="model-selector-wrapper" id="modelSelectorWrapper">
+              <button id="modelSelectorBtn" class="btn-model-selector" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Select AI Model">
+                <span class="model-active-dot"></span>
+                <span id="modelSelectorLabel" class="model-btn-label">Auto</span>
+                <svg class="chevron-down" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+
+              <!-- Floating Liquid Glass Model Dropdown -->
+              <div id="modelDropdown" class="model-dropdown-menu" style="display:none;" role="menu" aria-label="Local AI Models">
+                <div class="model-dropdown-header">
+                  <span class="dropdown-header-title">Model</span>
+                  <span class="dropdown-header-badge">3 Local Models</span>
+                </div>
+                
+                <div class="model-options-list">
+                  <!-- Option: Auto (Default Router) -->
+                  <div class="model-option-item active" data-model-id="auto" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-auto">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">Auto</span>
+                          <span class="model-badge badge-auto">Intelligent</span>
+                        </div>
+                        <span class="model-desc">Dynamic routing based on task context</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                    </div>
+                  </div>
+
+                  <!-- Option 1: Google Gemma 3 -->
+                  <div class="model-option-item" data-model-id="gemma" data-internal-id="gemma3:4b" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-vision">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">Google Gemma 3</span>
+                          <span class="model-badge badge-vision">Vision</span>
+                        </div>
+                        <span class="model-desc">Vision · Multimodal · Drawings</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View Gemma 3 Specifications" aria-label="Gemma 3 Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- Option 2: NVIDIA Nemotron 3 -->
+                  <div class="model-option-item" data-model-id="nemotron" data-internal-id="nemotron-3-nano" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-reasoning">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">NVIDIA Nemotron 3</span>
+                          <span class="model-badge badge-reasoning">Reasoning</span>
+                        </div>
+                        <span class="model-desc">Reasoning · Planning · Synthesis</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View Nemotron 3 Specifications" aria-label="Nemotron 3 Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- Option 3: Qwen 2.5 Coder -->
+                  <div class="model-option-item" data-model-id="qwen" data-internal-id="qwen2.5-coder:1.5b" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-code">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">Qwen 2.5 Coder</span>
+                          <span class="model-badge badge-code">Code</span>
+                        </div>
+                        <span class="model-desc">Coding · Calculations · Sandbox</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View Qwen 2.5 Coder Specifications" aria-label="Qwen 2.5 Coder Info">›</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Compact Details Subpanel (Inline) -->
+                <div id="modelDetailsSubpanel" class="model-details-subpanel" style="display:none;">
+                  <div class="subpanel-header">
+                    <span id="subpanelModelName" class="subpanel-title">Model Specifications</span>
+                    <button id="btnCloseSubpanel" class="btn-subpanel-close" title="Close Specs" aria-label="Close Specifications">×</button>
+                  </div>
+                  <div class="subpanel-body">
+                    <div class="spec-row">
+                      <span class="spec-label">Runtime</span>
+                      <span id="subpanelRuntime" class="spec-value">Local Ollama (127.0.0.1:11434)</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Status</span>
+                      <span id="subpanelStatus" class="spec-value status-val">● Active</span>
+                    </div>
+                    <div class="spec-row">
+                      <span class="spec-label">Hardware Footprint</span>
+                      <span id="subpanelHardware" class="spec-value">RTX 2050 (4GB VRAM)</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="composer-hints"><span>Enter to send · Shift+Enter for newline</span></div>
           </div>
         </div>

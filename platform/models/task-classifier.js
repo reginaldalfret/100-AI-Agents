@@ -12,7 +12,7 @@ export const TaskType = {
 };
 
 export function classifyTask(input = {}, maybeAttachments = []) {
-  const prompt = (typeof input === "string" ? input : input.prompt || "").toLowerCase();
+  const prompt = (typeof input === "string" ? input : input.task || input.prompt || input.query || "").toLowerCase();
   const attachments = Array.isArray(maybeAttachments) && maybeAttachments.length ? maybeAttachments : (Array.isArray(input.attachments) ? input.attachments : []);
 
   const hasImage = attachments.some(a => /\.(png|jpg|jpeg|webp|bmp|dwg|dxf)$/i.test(a.name || ""));

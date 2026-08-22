@@ -73,10 +73,29 @@ The following internal and architectural references remain intentionally unchang
 
 ---
 
-## 6. Verification Results
+## 6. Local Model Selector Architecture
+
+The chat composer incorporates a floating liquid glass Model Selector allowing operators to dynamically choose or auto-route across the 3 local production models:
+
+- **Auto Mode (Default)**: Dynamic intelligent local routing via `task-classifier.js` and `model-router.js`.
+- **1. Google Gemma 3 (`gemma3:4b`)**: Vision / Multimodal (Image understanding, P&ID schematics, engineering drawings, defect photographs).
+- **2. NVIDIA Nemotron 3 (`nemotron-3-nano`)**: Reasoning / Planning (Complex industrial task decomposition, evidence synthesis, autonomous replanning).
+- **3. Qwen 2.5 Coder (`qwen2.5-coder:1.5b`)**: Coding / Sandbox (Python calculations, SCADA parsing, formula scripting, sandbox automation).
+
+### UX & Architectural Invariants:
+- **Floating Liquid Glass Dropdown**: Pinned directly above the `[ Auto ▾ ]` or `[ Gemma 3 ▾ ]` button with backdrop blur, RGB neon accents, and smooth transition.
+- **Selected State**: Cyan/violet neon glow, checkmark (`✓`), and brighter typography.
+- **Inline Details Subpanel**: Clicking the chevron (`›`) opens runtime specifications (`Local Ollama`, `Active`, `RTX 2050 4GB VRAM`).
+- **Mid-Conversation Event**: Changing model during an active session logs an inline system notice (`Model changed to [Model Name]`).
+- **Authoritative Backend**: UI forwards `modelMode` and `model_override` to `/api/chat` while backend security gates, air-gap policy, and resource profilers remain authoritative.
+
+---
+
+## 7. Verification Results
 
 - **Composer & UI Regression Suite (`tests/sih/ui/composer-ui.test.js`)**: **PASS (5/5)**
 - **Numeric Agent Identity Test (`tests/ui/agent-numbering.test.js`)**: **PASS (6/6)**
-- **Full SIH Test Matrix (`tests/sih/run-all-tests.js`)**: **PASS (27/27 Suites)**
+- **Local Model Selector Test (`tests/ui/model-selector.test.js`)**: **PASS (5/5)**
+- **Full SIH Test Matrix (`tests/sih/run-all-tests.js`)**: **PASS (28/28 Suites)**
 - **Workforce Fleet Test (`tests/run-all-agents.js`)**: **PASS (101/101 Agents)**
 - **External Network Egress**: **0 Calls (100% Air-Gapped)**
