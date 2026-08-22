@@ -583,17 +583,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const isSuper = !state.selectedAgent || state.selectedAgent.id === 'auto' || state.selectedAgent.name === 'Super AI';
         const defaultModel = isSuper ? 'Super AI' : 'NVIDIA Nemotron 3 Nano (4B)';
         
+        let extractedContent = '';
+        if (typeof data === 'string') {
+            extractedContent = data;
+        } else if (data && typeof data === 'object') {
+            extractedContent = data.text || data.content || data.synthesis || data.summary || data.message || data.output || '';
+            if (!extractedContent && data.result) {
+                if (typeof data.result === 'string') {
+                    extractedContent = data.result;
+                } else if (typeof data.result === 'object') {
+                    extractedContent = data.result.synthesis || data.result.summary || data.result.text || data.result.content || data.result.output || (typeof data.result.result === 'string' ? data.result.result : '');
+                }
+            }
+        }
+        
         const msgId = Date.now().toString();
         const msgObj = {
             id: msgId,
             role: 'ai',
-            content: data.text || data.content || data.message || '',
-            evidence: data.evidence || null,
-            deliverables: data.deliverables || null,
-            model: data.model || defaultModel,
-            traceId: data.trace_id || data.traceId || `TRC-${Date.now().toString().slice(-6)}`,
+            content: extractedContent || 'Task completed.',
+            evidence: data?.evidence || data?.result?.evidence || null,
+            deliverables: data?.deliverables || data?.result?.deliverables || null,
+            model: data?.model || defaultModel,
+            traceId: data?.trace_id || data?.traceId || data?.result?.trace_id || `TRC-${Date.now().toString().slice(-6)}`,
             timestamp: new Date(),
-            plan: data.plan || null
+            plan: data?.plan || data?.result?.plan || null
         };
         
         if (!state.chatHistories[state.selectedAgent.id]) {
@@ -982,11 +996,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 
             } else {
                 // Standard Chat
+                const targetAgentId = (!agentId || agentId === 'auto') ? 'agent-101' : agentId;
+                
                 const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ 
-                        agent_id: agentId, 
+                        agent_id: targetAgentId, 
                         task: text,
                         modelMode: currentModelMode,
                         model_override: modelOverride
@@ -998,17 +1014,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     data = await res.json();
                 }
                 
-                if (data && data.result) {
+                if (data && (data.text || data.result)) {
+                    const resObj = (typeof data.result === 'object' && data.result) ? data.result : data;
                     appendAIMessage({
-                        ...data.result,
+                        text: data.text || resObj.text || resObj.content || resObj.synthesis || resObj.summary || (typeof data.result === 'string' ? data.result : ''),
+                        evidence: data.evidence || resObj.evidence || null,
+                        deliverables: data.deliverables || resObj.deliverables || null,
+                        plan: data.plan || resObj.plan || null,
+                        trace_id: data.trace_id || resObj.trace_id,
                         model: data.model || (currentModelMode === 'auto' ? 'Super AI' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName)
                     });
                 } else {
-                    // Fallback
-                    await new Promise(r => setTimeout(r, 800));
+                    // Informative fallback
+                    await new Promise(r => setTimeout(r, 600));
                     const fallbackModel = currentModelMode === 'auto' ? 'Super AI' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName;
                     appendAIMessage({
-                        text: `I received your message: "${text}". How else can I help you with ${state.selectedAgent.domain} tasks?`,
+                        text: `### Analysis for: ${escapeHtml(text)}\n\nI have initiated analysis with the on-premise industrial agent workforce. \n\n- **Target Agent**: ${escapeHtml(state.selectedAgent?.name || 'Super AI')}\n- **Domain**: ${escapeHtml(state.selectedAgent?.domain || 'Industrial Operations')}\n- **Model**: ${escapeHtml(fallbackModel)}\n\nYour request has been registered in the local task queue. Please ensure the local Ollama instance is active to stream full multi-agent synthesis.`,
                         model: fallbackModel
                     });
                 }

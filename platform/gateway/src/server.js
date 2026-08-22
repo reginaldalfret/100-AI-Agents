@@ -258,23 +258,20 @@ const server = http.createServer(async (req, res) => {
     ) {
       const payload = await readBody(req);
 
-      const agentId =
+      const rawAgentId =
         typeof payload.agent_id === "string"
           ? payload.agent_id
           : "";
+
+      const normalizedAgentId =
+        (!rawAgentId || rawAgentId === "auto" || rawAgentId === "super-ai" || rawAgentId === "101")
+          ? "agent-101"
+          : (rawAgentId.startsWith("agent-") ? rawAgentId : `agent-${rawAgentId.padStart(3, "0")}`);
 
       const task =
         typeof payload.task === "string"
           ? payload.task.trim()
           : "";
-
-      if (!agentId) {
-        json(res, 400, {
-          status: "error",
-          error: "agent_id is required"
-        });
-        return;
-      }
 
       if (!task) {
         json(res, 400, {
@@ -285,13 +282,13 @@ const server = http.createServer(async (req, res) => {
       }
 
       const agent = agents.find(
-        a => a.agent_id === agentId
-      );
+        a => a.agent_id === normalizedAgentId || a.agent_id === rawAgentId
+      ) || agents.find(a => a.agent_id === "agent-101");
 
       if (!agent) {
         json(res, 404, {
           status: "error",
-          error: `Unknown agent: ${agentId}`
+          error: `Unknown agent: ${rawAgentId}`
         });
         return;
       }
@@ -342,6 +339,80 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
+      // If specialist agent rejected the task or recommended another agent, automatically route to recommended specialist or Super AI
+      if (result && (result.status === "rejected" || result.error)) {
+        const recommendedId = result.error?.recommended_agent?.id;
+        const targetAgent = (recommendedId && agents.find(a => a.agent_id === recommendedId)) || agents.find(a => a.agent_id === "agent-101");
+        if (targetAgent && targetAgent.agent_id !== agent.agent_id) {
+          try {
+            const routedResult = await executeAgentInProcess(targetAgent.agent_id, {
+              task,
+              context: payload.context || {},
+              parameters: payload.parameters || {},
+              model_override: payload.model_override || null,
+              modelMode,
+              output_format: payload.output_format || "text"
+            });
+            if (routedResult && routedResult.status !== "rejected") {
+              result = routedResult;
+            }
+          } catch (routeErr) {
+            console.warn("Auto routing fallback failed:", routeErr.message);
+          }
+        }
+      }
+
+      // Extract and format response text cleanly for frontend consumers
+      let answerText = "";
+      let evidence = [];
+      let deliverables = [];
+      let plan = [];
+
+      if (typeof result === "string") {
+        answerText = result;
+      } else if (result && typeof result === "object") {
+        if (typeof result.result === "string") {
+          answerText = result.result;
+        } else if (result.result && typeof result.result === "object") {
+          answerText = result.result.synthesis || result.result.summary || result.result.output || result.result.text || "";
+          if (Array.isArray(result.result.delegation_results)) {
+            evidence = result.result.delegation_results.map(dr => ({
+              title: dr.agent_name || dr.agent_id,
+              citation: dr.status === "completed" ? "Completed successfully" : "Processed",
+              details: typeof dr.result?.result === "string" ? dr.result.result.slice(0, 140) + "..." : "Grounded"
+            }));
+          }
+          if (Array.isArray(result.result.used_agents)) {
+            plan = result.result.used_agents.map((agId, i) => ({
+              step: `Step ${i + 1}`,
+              agent: agId
+            }));
+          }
+        } else if (typeof result.text === "string") {
+          answerText = result.text;
+        } else if (typeof result.output === "string") {
+          answerText = result.output;
+        } else if (typeof result.message === "string") {
+          answerText = result.message;
+        } else if (result.error && typeof result.error === "object" && result.error.message) {
+          answerText = result.error.message;
+        } else if (typeof result.error === "string") {
+          answerText = result.error;
+        }
+
+        if (Array.isArray(result.evidence)) evidence = result.evidence;
+        if (Array.isArray(result.deliverables)) deliverables = result.deliverables;
+        if (Array.isArray(result.plan)) plan = result.plan;
+      }
+
+      if (!answerText) {
+        if (result && result.status === "rejected" && result.error?.message) {
+          answerText = result.error.message;
+        } else {
+          answerText = typeof result === "object" ? JSON.stringify(result, null, 2) : String(result || "");
+        }
+      }
+
       json(res, 200, {
         gateway: "100-to-1",
         trace_id: payload.trace_id || `INT-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`,
@@ -352,7 +423,19 @@ const server = http.createServer(async (req, res) => {
         },
         model: modelUsed,
         modelMode,
-        result
+        text: answerText,
+        evidence,
+        deliverables,
+        plan,
+        result: {
+          text: answerText,
+          content: answerText,
+          synthesis: answerText,
+          evidence,
+          deliverables,
+          plan,
+          raw: result
+        }
       });
 
       return;
