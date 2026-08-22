@@ -139,7 +139,7 @@ const registry = {
       vercel_url: "",
       api_url: "",
       health_url: "",
-      model: "qwen3.5:9b",
+      model: "nemotron-3-nano",
       backend: "http://127.0.0.1:11434"
     };
   })

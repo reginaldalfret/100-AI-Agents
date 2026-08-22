@@ -1,7 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const PROJECT_ROOT = "/home/ai/100-to-1/100-to-1-automation";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const PROJECT_ROOT = process.env.PROJECT_ROOT || path.resolve(__dirname, "../..");
 const STATE_FILE = path.join(PROJECT_ROOT, "state", "release-state.json");
 
 export function loadState() {

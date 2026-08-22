@@ -1,0 +1,39 @@
+{
+  "case_id": "DEMO-MULTIMODEL-001",
+  "title": "Autonomous Multi-Model NDT Inspection & Code Analysis",
+  "organization": "Mangalore Refinery and Petrochemicals Limited (MRPL)",
+  "equipment_id": "HX-204",
+  "models_involved": [
+    {
+      "role": "Vision & Multimodal Document Understanding",
+      "model_id": "local-vision-ocr",
+      "model_name": "Gemma 3 4B / Local Vision Engine",
+      "task": "Extract NDT thickness table from scanned PDF and analyze CUI corrosion photo",
+      "external_calls": 0
+    },
+    {
+      "role": "Epistemic Reasoning & Statutory Standards Synthesis",
+      "model_id": "nemotron-3-nano",
+      "model_name": "NVIDIA Nemotron 3 Nano (4B Q4_K_M)",
+      "task": "Synthesize OISD-STD-129 / API-653 retirement limits and draft approval note",
+      "external_calls": 0
+    },
+    {
+      "role": "Code Generation & Sandbox Scripting",
+      "model_id": "local-code-specialist",
+      "model_name": "Qwen2.5-Coder (1.5B/3B Q4_K_M)",
+      "task": "Generate Python corrosion rate calculation formula and verify remaining life in isolated sandbox",
+      "external_calls": 0
+    }
+  ],
+  "expected_deliverables": [
+    "Approval_Note_HX204.docx",
+    "Inspection_Analysis_HX204.xlsx",
+    "Management_Briefing_HX204.pptx"
+  ],
+  "sovereignty_proof": {
+    "total_external_calls": 0,
+    "cloud_api_calls": 0,
+    "air_gapped_local_loopback": true
+  }
+}

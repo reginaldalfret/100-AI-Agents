@@ -1,0 +1,36 @@
+{
+  "demo_scenario": "Confidential Static Equipment Inspection (HX-204) -> Management Approval Package",
+  "total_rehearsals": 3,
+  "successful_rehearsals": 3,
+  "average_duration_ms": 3.3333333333333335,
+  "average_duration_sec": 0,
+  "external_calls": 0,
+  "cloud_apis": 0,
+  "zero_data_exfiltration_verified": true,
+  "rehearsals": [
+    {
+      "rehearsal_id": 1,
+      "status": "PASS",
+      "duration_ms": 6,
+      "workflow_id": "WF-1787375566764-428",
+      "deliverables_count": 3,
+      "external_calls": 0
+    },
+    {
+      "rehearsal_id": 2,
+      "status": "PASS",
+      "duration_ms": 2,
+      "workflow_id": "WF-1787375566770-443",
+      "deliverables_count": 3,
+      "external_calls": 0
+    },
+    {
+      "rehearsal_id": 3,
+      "status": "PASS",
+      "duration_ms": 2,
+      "workflow_id": "WF-1787375566772-483",
+      "deliverables_count": 3,
+      "external_calls": 0
+    }
+  ]
+}

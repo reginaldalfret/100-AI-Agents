@@ -6,15 +6,19 @@ function extractJson(text) {
     throw new Error("Planner returned a non-text response");
   }
 
-  const cleaned = text
-    .replace(/^```json\s*/i, "")
-    .replace(/^```\s*/i, "")
-    .replace(/\s*```$/i, "")
-    .trim();
+  const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  const candidate = jsonMatch ? jsonMatch[1].trim() : text.trim();
 
   try {
-    return JSON.parse(cleaned);
+    return JSON.parse(candidate);
   } catch {
+    const firstBrace = candidate.indexOf("{");
+    const lastBrace = candidate.lastIndexOf("}");
+    if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+      try {
+        return JSON.parse(candidate.slice(firstBrace, lastBrace + 1));
+      } catch {}
+    }
     throw new Error("Planner returned invalid JSON");
   }
 }
@@ -69,15 +73,17 @@ Rules:
 7. Do not delegate work that the Master Agent can perform directly.
 `;
 
-  const prompt = `
-USER TASK:
+  const agentList = agents
+    .map(agent => `- ${agent.agent_id}: ${agent.name} [${agent.category}] (capabilities: ${(agent.capabilities || []).slice(0, 4).join(", ")})`)
+    .join("\n");
 
-${task}
+  const prompt = `SPECIALIST CATALOG:
+${agentList}
 
-AVAILABLE SPECIALIST AGENTS:
+USER TASK TO ORCHESTRATE:
+"${task}"
 
-${JSON.stringify(catalog, null, 2)}
-`;
+Respond with ONLY the JSON plan object (no markdown, no conversation).`;
 
   const response = await generateWithOllama({
     system,

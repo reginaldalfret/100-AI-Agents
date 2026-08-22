@@ -1,0 +1,37 @@
+{
+  "system": "Sovereign AI Workbench",
+  "client": "Mangalore Refinery and Petrochemicals Limited (MRPL)",
+  "problem_statement": "Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work",
+  "theme": "Smart Automation / Software",
+  "evaluated_at": "2026-08-22T10:39:00Z",
+  "sovereignty_verdict": {
+    "status": "GO",
+    "air_gapped": true,
+    "external_calls": 0,
+    "cloud_apis": 0,
+    "data_exfiltration_risk": "ZERO_PROVEN"
+  },
+  "workforce": {
+    "total_agents": 101,
+    "orchestrator": "Agent 101 (Sovereign Orchestrator)",
+    "domains": 16,
+    "agent_contract_compliance": "100%"
+  },
+  "models": {
+    "primary_text": "NVIDIA Nemotron 3 Nano (4B Q4_K_M)",
+    "multimodal_vision": "Local Multimodal & OCR Engine (FP16/Int8)",
+    "code_specialist": "Local Code Specialist (Dense 4B)",
+    "hardware_allocation": "RTX 2050 (4GB VRAM) / 8GB RAM"
+  },
+  "test_metrics": {
+    "total_tests_run": 37,
+    "tests_passed": 37,
+    "tests_failed": 0,
+    "pass_rate": "100%"
+  },
+  "deliverables_generated": [
+    "Approval_Note_TK101.docx",
+    "Inspection_Analysis_TK101.xlsx",
+    "Management_Briefing_TK101.pptx"
+  ]
+}

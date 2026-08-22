@@ -1,0 +1,53 @@
+{
+  "case_id": "DEMO-INSPECTION-001",
+  "title": "Confidential Static Equipment NDT Thickness & Integrity Evaluation",
+  "organization": "Mangalore Refinery and Petrochemicals Limited (MRPL)",
+  "asset_id": "HX-204",
+  "asset_name": "Crude Pre-Heat Exchanger Shell HX-204",
+  "unit": "Crude Distillation Unit (CDU-1)",
+  "inspection_date": "2026-08-15",
+  "inspector": "K. R. Sharma (Level-II API-653 Inspector #4492)",
+  "primary_defect": {
+    "component": "Shell Course 3 (180°-270° Azimuth)",
+    "nominal_thickness_mm": 10.00,
+    "statutory_min_thickness_mm": 6.80,
+    "measured_min_thickness_mm": 5.90,
+    "metal_loss_pct": 41.0,
+    "calculated_corrosion_rate_mm_year": 0.421,
+    "remaining_life_years": 0.0,
+    "status": "CRITICAL_DEFECT_BREACHED_MINIMUM"
+  },
+  "secondary_defect": {
+    "component": "Nozzle N3 Neck Flange Joint",
+    "defect_type": "Severe Corrosion Under Insulation (CUI) & Stud Weeping",
+    "severity": "HIGH",
+    "visual_indicators": "Reddish-brown iron oxide blistering, insulation water ingress"
+  },
+  "grounded_sop_citations": [
+    {
+      "doc_id": "SOP-MRPL-INSP-042",
+      "title": "Crude Storage & Pressure Equipment In-Service Inspection Procedure",
+      "standard": "OISD-STD-129 / API-653",
+      "section": "SEC-3.1",
+      "page": 14,
+      "rule": "If measured thickness is less than statutory t_min (6.80 mm), asset must be immediately de-rated or isolated for permanent insert repair."
+    }
+  ],
+  "expected_agent_dag": [
+    { "step": 1, "agent_id": "agent-045", "role": "Scanned PDF & Drawing OCR Specialist", "tool": "ocr_document", "model": "local-vision-ocr" },
+    { "step": 2, "agent_id": "agent-058", "role": "NDT & Ultrasonic Thickness Inspection Agent", "tool": "calculate_step_by_step", "model": "nemotron-3-nano" },
+    { "step": 3, "agent_id": "agent-040", "role": "SOP Retrieval & Search Agent", "tool": "search_knowledge", "model": "local-rag" },
+    { "step": 4, "agent_id": "agent-049", "role": "Technical Report & Deliverable Generator", "tool": "generate_docx,generate_xlsx,generate_pptx", "model": "nemotron-3-nano" },
+    { "step": 5, "agent_id": "agent-101", "role": "Sovereign Orchestrator", "action": "Human-In-The-Loop Sign-off", "is_hitl": true }
+  ],
+  "expected_deliverables": [
+    "Approval_Note_HX204.docx",
+    "Inspection_Analysis_HX204.xlsx",
+    "Management_Briefing_HX204.pptx"
+  ],
+  "sovereignty_guarantee": {
+    "air_gapped": true,
+    "external_calls": 0,
+    "cloud_inference": 0
+  }
+}

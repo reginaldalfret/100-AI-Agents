@@ -1,0 +1,2792 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-08-19T07:11:16.254Z",
+  "total_workforce_agents": 101,
+  "domains": [
+    {
+      "id": "student-services",
+      "name": "Student Services",
+      "description": "Student identity verification, enrollment status, profile management, and student service inquiries"
+    },
+    {
+      "id": "admission",
+      "name": "Admissions & Enrollment",
+      "description": "Application intake, admission eligibility, merit ranking calculation, seat allocation, and enrollment onboarding"
+    },
+    {
+      "id": "academic",
+      "name": "Academics & Examination",
+      "description": "Attendance records, marks, grading, course catalogs, prerequisite checks, academic warnings, and graduation audits"
+    },
+    {
+      "id": "document-intelligence",
+      "name": "Document Intelligence",
+      "description": "Document intake, PDF parsing, OCR/Vision extraction, certificate verification, and completeness checking"
+    },
+    {
+      "id": "finance",
+      "name": "Finance & Financial Aid",
+      "description": "Tuition billing, fee balance checks, scholarship eligibility evaluation, financial documents, and fee clearance"
+    },
+    {
+      "id": "faculty-hr",
+      "name": "Faculty & Staff HR",
+      "description": "Faculty workloads, department advisors, committee approvals, leave verification, and institutional HR operations"
+    },
+    {
+      "id": "administration",
+      "name": "Administration & Operations",
+      "description": "Administrative task orchestration, scheduling, compliance verification, and institutional records management"
+    },
+    {
+      "id": "communication",
+      "name": "Institutional Communication",
+      "description": "Official notifications, automated email drafts, SMS alerts, multilingual translations, and reminder scheduling"
+    },
+    {
+      "id": "analytics",
+      "name": "Institutional Analytics & Reporting",
+      "description": "Academic trend analysis, attendance risk detection, financial reporting, SWOT assessments, and executive dashboards"
+    },
+    {
+      "id": "workflow-intelligence",
+      "name": "Workflow & Multi-Agent Intelligence",
+      "description": "Multi-agent coordination, task decomposition, dependency tracking, failure recovery, and workflow execution"
+    },
+    {
+      "id": "master-orchestration",
+      "name": "Master Workflow Orchestration",
+      "description": "Central dynamic planner and institutional workflow governor"
+    }
+  ],
+  "agents": [
+    {
+      "agent_id": "agent-001",
+      "day": 1,
+      "original_name": "AI Writing Agent",
+      "educational_name": "Institutional Formal Document & Letter Drafting Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "official-letter-drafting",
+        "formal-communication",
+        "clearance-memo",
+        "admissions-offer"
+      ],
+      "allowed_tools": [
+        "send_notification",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "graduation-clearance"
+      ],
+      "port": 8101,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-002",
+      "day": 2,
+      "original_name": "AI Email Agent",
+      "educational_name": "Official Institutional Notice & Email Communication Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "email-writing",
+        "official-notice",
+        "student-notification",
+        "faculty-dispatch"
+      ],
+      "allowed_tools": [
+        "send_email",
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ],
+      "port": 8102,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-003",
+      "day": 3,
+      "original_name": "AI Study Agent",
+      "educational_name": "Curriculum & Academic Study Plan Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "study-planning",
+        "curriculum-evaluation",
+        "academic-coaching",
+        "learning-path"
+      ],
+      "allowed_tools": [
+        "get_courses",
+        "get_marks",
+        "get_prerequisites",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "course-override"
+      ],
+      "port": 8103,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-004",
+      "day": 4,
+      "original_name": "AI Quiz Agent",
+      "educational_name": "Academic Examination & Assessment Validation Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "exam-evaluation",
+        "assessment-grading",
+        "quiz-validation",
+        "rubric-scoring"
+      ],
+      "allowed_tools": [
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "graduation-clearance"
+      ],
+      "port": 8104,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-005",
+      "day": 5,
+      "original_name": "AI Summarization Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "summarization",
+        "text-summarization",
+        "document-summarization",
+        "key-point-extraction"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8105,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-006",
+      "day": 6,
+      "original_name": "AI Grammar Agent",
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "grammar-checking",
+        "grammar-correction",
+        "language-editing",
+        "proofreading"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ],
+      "port": 8106,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-007",
+      "day": 7,
+      "original_name": "AI Translation Agent",
+      "educational_name": "Multilingual Student Translation & Accessibility Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "translation",
+        "multilingual-notices",
+        "localization",
+        "language-support"
+      ],
+      "allowed_tools": [
+        "send_notification",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "student-service"
+      ],
+      "port": 8107,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-008",
+      "day": 8,
+      "original_name": "AI Idea Generation Agent",
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "idea-generation",
+        "brainstorming",
+        "creative-ideation"
+      ],
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ],
+      "port": 8108,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-009",
+      "day": 9,
+      "original_name": "AI Storytelling Agent",
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "storytelling",
+        "fiction-writing",
+        "narrative-development",
+        "story-structure"
+      ],
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ],
+      "port": 8109,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-010",
+      "day": 10,
+      "original_name": "AI Goal Planning Agent",
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "goal-planning",
+        "goal-setting",
+        "action-planning",
+        "roadmap-planning"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ],
+      "port": 8110,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-011",
+      "day": 11,
+      "original_name": "AI Note-Taking Agent",
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "note-taking",
+        "note-organization",
+        "note-summarization",
+        "knowledge-capture"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ],
+      "port": 8111,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-012",
+      "day": 12,
+      "original_name": "AI Task Management Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "task-management",
+        "task-planning",
+        "prioritization",
+        "task-tracking"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8112,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-013",
+      "day": 13,
+      "original_name": "AI Resume Agent",
+      "educational_name": "Student Support & Inquiries Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "resume-writing",
+        "resume-editing",
+        "ats-optimization",
+        "resume-analysis"
+      ],
+      "allowed_tools": [
+        "get_student_profile",
+        "get_student_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "student-service"
+      ],
+      "port": 8113,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-014",
+      "day": 14,
+      "original_name": "AI Job Matching Agent",
+      "educational_name": "Student Support & Inquiries Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "job-matching",
+        "job-analysis",
+        "skill-matching",
+        "career-opportunities"
+      ],
+      "allowed_tools": [
+        "get_student_profile",
+        "get_student_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "student-service"
+      ],
+      "port": 8114,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-015",
+      "day": 15,
+      "original_name": "AI Interview Agent",
+      "educational_name": "Applicant Interview & Screening Assessment Agent",
+      "educational_domain": "admission",
+      "domain_name": "Admissions & Enrollment",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "applicant-screening",
+        "interview-evaluation",
+        "admission-assessment"
+      ],
+      "allowed_tools": [
+        "get_admission_application",
+        "check_admission_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification"
+      ],
+      "port": 8115,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-016",
+      "day": 16,
+      "original_name": "AI Communication Agent",
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "communication",
+        "professional-communication",
+        "message-writing",
+        "communication-improvement"
+      ],
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ],
+      "port": 8116,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-017",
+      "day": 17,
+      "original_name": "AI SWOT Analysis Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "swot-analysis",
+        "strength-analysis",
+        "weakness-analysis",
+        "opportunity-analysis",
+        "threat-analysis"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8117,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-018",
+      "day": 18,
+      "original_name": "AI Career Advisor Agent",
+      "educational_name": "Student Academic & Career Advisory Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "student-advisory",
+        "career-counseling",
+        "academic-pathway",
+        "internship-guidance"
+      ],
+      "allowed_tools": [
+        "get_student_profile",
+        "get_grades",
+        "get_courses",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "course-override",
+        "graduation-clearance"
+      ],
+      "port": 8118,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-019",
+      "day": 19,
+      "original_name": "AI Decision-Making Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "decision-analysis",
+        "option-comparison",
+        "risk-analysis",
+        "decision-support"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8119,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-020",
+      "day": 20,
+      "original_name": "AI Brainstorming Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "brainstorming",
+        "ideation",
+        "creative-problem-solving",
+        "alternative-generation"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8120,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-021",
+      "day": 21,
+      "original_name": "AI Web Research Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "web-research",
+        "online-research",
+        "source-discovery",
+        "information-gathering"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8121,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-022",
+      "day": 22,
+      "original_name": "AI News Research Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "news-research",
+        "news-analysis",
+        "current-events",
+        "news-summarization"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8122,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-023",
+      "day": 23,
+      "original_name": "AI Research Paper Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "research-paper-analysis",
+        "paper-analysis",
+        "academic-research",
+        "research-extraction"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8123,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-024",
+      "day": 24,
+      "original_name": "AI Literature Review Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "literature-review",
+        "research-synthesis",
+        "academic-literature",
+        "theme-analysis"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8124,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-025",
+      "day": 25,
+      "original_name": "AI Book Research Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "book-research",
+        "book-analysis",
+        "chapter-analysis",
+        "book-summarization"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8125,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-026",
+      "day": 26,
+      "original_name": "AI Company Research Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "company-research",
+        "company-analysis",
+        "business-research",
+        "company-profiling"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8126,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-027",
+      "day": 27,
+      "original_name": "AI Competitor Research Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "competitor-analysis",
+        "competitive-research",
+        "competitive-landscape",
+        "competitor-comparison"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8127,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-028",
+      "day": 28,
+      "original_name": "AI Market Research Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "market-research",
+        "market-analysis",
+        "market-trends",
+        "market-segmentation"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8128,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-029",
+      "day": 29,
+      "original_name": "AI Startup Research Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "startup-research",
+        "startup-analysis",
+        "startup-landscape",
+        "startup-evaluation"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8129,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-030",
+      "day": 30,
+      "original_name": "AI Investment Research Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "investment-research",
+        "investment-analysis",
+        "financial-research",
+        "investment-comparison"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8130,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-031",
+      "day": 31,
+      "original_name": "AI Product Research Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "product-research",
+        "product-analysis",
+        "product-comparison",
+        "product-evaluation"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8131,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-032",
+      "day": 32,
+      "original_name": "AI Travel Research Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "travel-research",
+        "destination-research",
+        "trip-planning",
+        "itinerary-research"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8132,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-033",
+      "day": 33,
+      "original_name": "AI Restaurant Research Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "restaurant-research",
+        "restaurant-comparison",
+        "restaurant-discovery",
+        "dining-research"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8133,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-034",
+      "day": 34,
+      "original_name": "AI Course Research Agent",
+      "educational_name": "Course Catalog & Prerequisite Validation Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "course-validation",
+        "prerequisite-checking",
+        "credit-audit",
+        "degree-requirements"
+      ],
+      "allowed_tools": [
+        "get_courses",
+        "get_prerequisites",
+        "check_academic_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "course-override",
+        "graduation-clearance"
+      ],
+      "port": 8134,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-035",
+      "day": 35,
+      "original_name": "AI College Research Agent",
+      "educational_name": "Course Catalog & Prerequisite Validation Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "course-validation",
+        "prerequisite-checking",
+        "credit-audit",
+        "degree-requirements"
+      ],
+      "allowed_tools": [
+        "get_courses",
+        "get_prerequisites",
+        "check_academic_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "course-override",
+        "graduation-clearance"
+      ],
+      "port": 8135,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-036",
+      "day": 36,
+      "original_name": "AI GitHub Research Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "github-research",
+        "repository-analysis",
+        "github-analysis",
+        "open-source-research"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8136,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-037",
+      "day": 37,
+      "original_name": "AI Document Research Agent",
+      "educational_name": "Institutional Document Research & Policy Lookup Agent",
+      "educational_domain": "document-intelligence",
+      "domain_name": "Document Intelligence",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "document-research",
+        "document-analysis",
+        "document-information-extraction",
+        "document-comparison"
+      ],
+      "allowed_tools": [
+        "get_document",
+        "classify_document",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "graduation-clearance"
+      ],
+      "port": 8137,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-038",
+      "day": 38,
+      "original_name": "AI Fact-Checking Agent",
+      "educational_name": "Institutional Data Verification & Fact-Checking Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "fact-checking",
+        "claim-verification",
+        "factual-analysis",
+        "evidence-evaluation"
+      ],
+      "allowed_tools": [
+        "get_student_profile",
+        "get_marks",
+        "verify_document",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility"
+      ],
+      "port": 8138,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-039",
+      "day": 39,
+      "original_name": "AI Source Verification Agent",
+      "educational_name": "Institutional Data Verification & Fact-Checking Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "source-verification",
+        "source-validation",
+        "citation-analysis",
+        "evidence-verification"
+      ],
+      "allowed_tools": [
+        "get_student_profile",
+        "get_marks",
+        "verify_document",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility"
+      ],
+      "port": 8139,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-040",
+      "day": 40,
+      "original_name": "AI Research Assistant Agent",
+      "educational_name": "Student Verification & Profile Intake Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "student-verification",
+        "identity-validation",
+        "profile-lookup",
+        "enrollment-check"
+      ],
+      "allowed_tools": [
+        "get_student_profile",
+        "get_student_status",
+        "verify_student_identity",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ],
+      "port": 8140,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-041",
+      "day": 41,
+      "original_name": "AI Email Management Agent",
+      "educational_name": "Official Institutional Notice & Email Communication Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "email-writing",
+        "official-notice",
+        "student-notification",
+        "faculty-dispatch"
+      ],
+      "allowed_tools": [
+        "send_email",
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ],
+      "port": 8141,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-042",
+      "day": 42,
+      "original_name": "AI Calendar Management Agent",
+      "educational_name": "Academic Scheduling & Committee Meeting Assistant Agent",
+      "educational_domain": "faculty-hr",
+      "domain_name": "Faculty & Staff HR",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "calendar-management",
+        "schedule-management",
+        "event-planning",
+        "calendar-organization"
+      ],
+      "allowed_tools": [
+        "get_faculty_profile",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "course-override"
+      ],
+      "port": 8142,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-043",
+      "day": 43,
+      "original_name": "AI Task Automation Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "task-automation",
+        "workflow-automation",
+        "process-automation",
+        "task-execution"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8143,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-044",
+      "day": 44,
+      "original_name": "AI File Organization Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "file-organization",
+        "file-management",
+        "folder-organization",
+        "file-classification"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8144,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-045",
+      "day": 45,
+      "original_name": "AI PDF Processing Agent",
+      "educational_name": "Institutional PDF & Transcript Processing Agent",
+      "educational_domain": "document-intelligence",
+      "domain_name": "Document Intelligence",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "pdf-processing",
+        "transcript-extraction",
+        "document-parsing",
+        "data-extraction"
+      ],
+      "allowed_tools": [
+        "get_document",
+        "extract_document_data",
+        "classify_document",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ],
+      "port": 8145,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-046",
+      "day": 46,
+      "original_name": "AI Invoice Processing Agent",
+      "educational_name": "Institutional Fee Invoice & Receipt Verification Agent",
+      "educational_domain": "finance",
+      "domain_name": "Finance & Financial Aid",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "invoice-processing",
+        "receipt-verification",
+        "fee-ledgering",
+        "payment-audit"
+      ],
+      "allowed_tools": [
+        "get_fee_status",
+        "get_payment_history",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ],
+      "port": 8146,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-047",
+      "day": 47,
+      "original_name": "AI Spreadsheet Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "spreadsheet-analysis",
+        "spreadsheet-formulas",
+        "spreadsheet-processing",
+        "tabular-data"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8147,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-048",
+      "day": 48,
+      "original_name": "AI Data Analysis Agent",
+      "educational_name": "Institutional Academic & Attendance Analytics Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "data-analysis",
+        "attendance-analytics",
+        "dropout-risk-scoring",
+        "grade-distribution"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ],
+      "port": 8148,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-049",
+      "day": 49,
+      "original_name": "AI Report Generation Agent",
+      "educational_name": "Institutional Performance & Accreditation Reporting Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "report-generation",
+        "compliance-reporting",
+        "executive-briefing",
+        "accreditation-metrics"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "graduation-clearance",
+        "attendance-intervention"
+      ],
+      "port": 8149,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-050",
+      "day": 50,
+      "original_name": "AI Presentation Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "presentation-generation",
+        "slide-planning",
+        "presentation-content",
+        "presentation-structure"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8150,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-051",
+      "day": 51,
+      "original_name": "AI Image Analysis Agent",
+      "educational_name": "Institutional Certificate & ID Image Verification Agent",
+      "educational_domain": "document-intelligence",
+      "domain_name": "Document Intelligence",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "image-analysis",
+        "id-verification",
+        "certificate-verification",
+        "tamper-detection"
+      ],
+      "allowed_tools": [
+        "get_document",
+        "verify_document",
+        "compare_documents",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility"
+      ],
+      "port": 8151,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-052",
+      "day": 52,
+      "original_name": "AI Video Analysis Agent",
+      "educational_name": "Document Intelligence & Knowledge Extraction Agent",
+      "educational_domain": "document-intelligence",
+      "domain_name": "Document Intelligence",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "video-analysis",
+        "video-understanding",
+        "scene-analysis",
+        "temporal-analysis"
+      ],
+      "allowed_tools": [
+        "get_document",
+        "extract_document_data",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility"
+      ],
+      "port": 8152,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-053",
+      "day": 53,
+      "original_name": "AI Meeting Assistant Agent",
+      "educational_name": "Academic Scheduling & Committee Meeting Assistant Agent",
+      "educational_domain": "faculty-hr",
+      "domain_name": "Faculty & Staff HR",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "meeting-assistance",
+        "meeting-summarization",
+        "action-item-extraction",
+        "meeting-notes"
+      ],
+      "allowed_tools": [
+        "get_faculty_profile",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "course-override"
+      ],
+      "port": 8153,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-054",
+      "day": 54,
+      "original_name": "AI Voice Assistant Agent",
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "voice-assistance",
+        "voice-interaction",
+        "spoken-command-processing",
+        "voice-workflows"
+      ],
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ],
+      "port": 8154,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-055",
+      "day": 55,
+      "original_name": "AI Code Review Agent",
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "code-review",
+        "code-quality-analysis",
+        "code-smell-detection",
+        "software-review"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ],
+      "port": 8155,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-056",
+      "day": 56,
+      "original_name": "AI Debugging Agent",
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "debugging",
+        "error-analysis",
+        "bug-diagnosis",
+        "runtime-troubleshooting"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ],
+      "port": 8156,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-057",
+      "day": 57,
+      "original_name": "AI Test Generation Agent",
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "test-generation",
+        "unit-test-generation",
+        "test-case-design",
+        "software-testing"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ],
+      "port": 8157,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-058",
+      "day": 58,
+      "original_name": "AI Documentation Agent",
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "technical-documentation",
+        "documentation-writing",
+        "api-documentation",
+        "developer-documentation"
+      ],
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ],
+      "port": 8158,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-059",
+      "day": 59,
+      "original_name": "AI Workflow Automation Agent",
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "workflow-automation",
+        "process-design",
+        "workflow-optimization",
+        "automation-planning"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8159,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-060",
+      "day": 60,
+      "original_name": "AI Personal Assistant Agent",
+      "educational_name": "Student Verification & Profile Intake Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "student-verification",
+        "identity-validation",
+        "profile-lookup",
+        "enrollment-check"
+      ],
+      "allowed_tools": [
+        "get_student_profile",
+        "get_student_status",
+        "verify_student_identity",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ],
+      "port": 8160,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-061",
+      "day": 61,
+      "original_name": "AI Code Generation Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "code-generation",
+        "programming",
+        "software-implementation",
+        "code-writing"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8161,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-062",
+      "day": 62,
+      "original_name": "AI Software Architecture Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "software-architecture",
+        "architecture-design",
+        "system-design",
+        "technical-design"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8162,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-063",
+      "day": 63,
+      "original_name": "AI Codebase Analysis Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "codebase-analysis",
+        "repository-analysis",
+        "dependency-mapping",
+        "architecture-analysis"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8163,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-064",
+      "day": 64,
+      "original_name": "AI Bug Hunting Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "bug-hunting",
+        "vulnerability-discovery",
+        "defect-detection",
+        "code-analysis"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8164,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-065",
+      "day": 65,
+      "original_name": "AI Performance Optimization Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "performance-optimization",
+        "profiling",
+        "performance-analysis",
+        "optimization"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8165,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-066",
+      "day": 66,
+      "original_name": "AI Security Audit Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "security-auditing",
+        "security-analysis",
+        "vulnerability-assessment",
+        "security-review"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8166,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-067",
+      "day": 67,
+      "original_name": "AI Test Engineer Agent",
+      "educational_name": "Academic Performance & Course Records Agent",
+      "educational_domain": "academic",
+      "domain_name": "Academics & Examination",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "software-testing",
+        "test-engineering",
+        "test-strategy",
+        "test-planning"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_marks",
+        "get_grades",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "graduation-clearance"
+      ],
+      "port": 8167,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-068",
+      "day": 68,
+      "original_name": "AI Dependency Analysis Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "dependency-analysis",
+        "dependency-management",
+        "package-analysis",
+        "dependency-risk"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8168,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-069",
+      "day": 69,
+      "original_name": "AI API Documentation Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "api-documentation",
+        "api-analysis",
+        "endpoint-documentation",
+        "api-reference"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8169,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-070",
+      "day": 70,
+      "original_name": "AI Code Refactoring Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "code-refactoring",
+        "code-improvement",
+        "maintainability",
+        "technical-debt"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8170,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-071",
+      "day": 71,
+      "original_name": "AI Database Agent",
+      "educational_name": "Institutional Data Gateway & Persistence Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "database-querying",
+        "data-persistence",
+        "record-lookup",
+        "schema-validation"
+      ],
+      "allowed_tools": [
+        "get_student_profile",
+        "get_courses",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "course-override",
+        "graduation-clearance"
+      ],
+      "port": 8171,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-072",
+      "day": 72,
+      "original_name": "AI DevOps Agent",
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "devops",
+        "deployment",
+        "infrastructure",
+        "operations"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8172,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-073",
+      "day": 73,
+      "original_name": "AI Docker Agent",
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "docker",
+        "containerization",
+        "docker-compose",
+        "container-management"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8173,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-074",
+      "day": 74,
+      "original_name": "AI CI/CD Agent",
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "ci-cd",
+        "continuous-integration",
+        "continuous-delivery",
+        "pipeline-automation"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8174,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-075",
+      "day": 75,
+      "original_name": "AI Full-Stack Developer Agent",
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "full-stack-development",
+        "frontend-development",
+        "backend-development",
+        "web-application-development"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8175,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-076",
+      "day": 76,
+      "original_name": "AI Sales Agent",
+      "educational_name": "Admission Application Intake & Merit Evaluation Agent",
+      "educational_domain": "admission",
+      "domain_name": "Admissions & Enrollment",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "application-intake",
+        "merit-calculation",
+        "admission-eligibility",
+        "seat-allocation"
+      ],
+      "allowed_tools": [
+        "get_admission_application",
+        "calculate_merit",
+        "check_admission_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification"
+      ],
+      "port": 8176,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-077",
+      "day": 77,
+      "original_name": "AI Lead Generation Agent",
+      "educational_name": "Admission Application Intake & Merit Evaluation Agent",
+      "educational_domain": "admission",
+      "domain_name": "Admissions & Enrollment",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "application-intake",
+        "merit-calculation",
+        "admission-eligibility",
+        "seat-allocation"
+      ],
+      "allowed_tools": [
+        "get_admission_application",
+        "calculate_merit",
+        "check_admission_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification"
+      ],
+      "port": 8177,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-078",
+      "day": 78,
+      "original_name": "AI Lead Qualification Agent",
+      "educational_name": "Student Support & Inquiries Agent",
+      "educational_domain": "student-services",
+      "domain_name": "Student Services",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "lead-qualification",
+        "lead-scoring",
+        "prospect-analysis",
+        "sales-qualification"
+      ],
+      "allowed_tools": [
+        "get_student_profile",
+        "get_student_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "student-service"
+      ],
+      "port": 8178,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-079",
+      "day": 79,
+      "original_name": "AI Customer Support Agent",
+      "educational_name": "Institutional Administrative Operations Agent",
+      "educational_domain": "administration",
+      "domain_name": "Administration & Operations",
+      "classification": "SUPPORT",
+      "educational_capabilities": [
+        "customer-support",
+        "support-responses",
+        "issue-resolution",
+        "customer-communication"
+      ],
+      "allowed_tools": [
+        "get_student_status",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8179,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-080",
+      "day": 80,
+      "original_name": "AI Marketing Agent",
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "marketing",
+        "marketing-strategy",
+        "campaign-planning",
+        "market-positioning"
+      ],
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ],
+      "port": 8180,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-081",
+      "day": 81,
+      "original_name": "AI Social Media Agent",
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "social-media",
+        "social-content",
+        "social-media-strategy",
+        "social-engagement"
+      ],
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ],
+      "port": 8181,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-082",
+      "day": 82,
+      "original_name": "AI SEO Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "seo",
+        "keyword-research",
+        "on-page-seo",
+        "search-optimization"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8182,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-083",
+      "day": 83,
+      "original_name": "AI Content Marketing Agent",
+      "educational_name": "Campus Announcement & Student Engagement Agent",
+      "educational_domain": "communication",
+      "domain_name": "Institutional Communication",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "content-marketing",
+        "content-strategy",
+        "content-planning",
+        "content-distribution"
+      ],
+      "allowed_tools": [
+        "send_notification",
+        "create_reminder",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "student-service"
+      ],
+      "port": 8183,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-084",
+      "day": 84,
+      "original_name": "AI Business Analyst Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "business-analysis",
+        "requirements-analysis",
+        "process-analysis",
+        "business-insights"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8184,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-085",
+      "day": 85,
+      "original_name": "AI Financial Analysis Agent",
+      "educational_name": "Scholarship & Financial Aid Eligibility Evaluator Agent",
+      "educational_domain": "finance",
+      "domain_name": "Finance & Financial Aid",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "financial-analysis",
+        "scholarship-evaluation",
+        "income-threshold-check",
+        "award-calculation"
+      ],
+      "allowed_tools": [
+        "get_fee_status",
+        "get_scholarship_rules",
+        "check_financial_eligibility",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility"
+      ],
+      "port": 8185,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-086",
+      "day": 86,
+      "original_name": "AI Accounting Assistant Agent",
+      "educational_name": "Institutional Accounting & Ledger Balance Agent",
+      "educational_domain": "finance",
+      "domain_name": "Finance & Financial Aid",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "accounting",
+        "bookkeeping-support",
+        "financial-records",
+        "accounting-analysis"
+      ],
+      "allowed_tools": [
+        "get_fee_status",
+        "get_payment_history",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ],
+      "port": 8186,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-087",
+      "day": 87,
+      "original_name": "AI E-Commerce Agent",
+      "educational_name": "Institutional Accounting & Ledger Balance Agent",
+      "educational_domain": "finance",
+      "domain_name": "Finance & Financial Aid",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "e-commerce",
+        "product-catalog-analysis",
+        "e-commerce-strategy",
+        "online-commerce"
+      ],
+      "allowed_tools": [
+        "get_fee_status",
+        "get_payment_history",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ],
+      "port": 8187,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-088",
+      "day": 88,
+      "original_name": "AI Supply Chain Agent",
+      "educational_name": "Institutional Accounting & Ledger Balance Agent",
+      "educational_domain": "finance",
+      "domain_name": "Finance & Financial Aid",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "supply-chain",
+        "inventory-analysis",
+        "logistics",
+        "procurement"
+      ],
+      "allowed_tools": [
+        "get_fee_status",
+        "get_payment_history",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ],
+      "port": 8188,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-089",
+      "day": 89,
+      "original_name": "AI HR & Recruitment Agent",
+      "educational_name": "Faculty Affairs & Departmental Committee HR Agent",
+      "educational_domain": "faculty-hr",
+      "domain_name": "Faculty & Staff HR",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "faculty-records",
+        "committee-coordination",
+        "leave-verification",
+        "workload-allocation"
+      ],
+      "allowed_tools": [
+        "get_faculty_profile",
+        "get_workload",
+        "create_approval",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "course-override",
+        "scholarship-eligibility"
+      ],
+      "port": 8189,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-090",
+      "day": 90,
+      "original_name": "AI Project Manager Agent",
+      "educational_name": "Institutional Operations & Faculty Process Agent",
+      "educational_domain": "faculty-hr",
+      "domain_name": "Faculty & Staff HR",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "project-management",
+        "project-planning",
+        "milestone-planning",
+        "project-tracking"
+      ],
+      "allowed_tools": [
+        "get_faculty_profile",
+        "create_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention"
+      ],
+      "port": 8190,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-091",
+      "day": 91,
+      "original_name": "AI Autonomous Research Agent",
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "autonomous-research",
+        "research-planning",
+        "research-execution",
+        "research-synthesis"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8191,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-092",
+      "day": 92,
+      "original_name": "AI Browser Automation Agent",
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "browser-automation",
+        "web-automation",
+        "browser-workflows",
+        "automated-navigation"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8192,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-093",
+      "day": 93,
+      "original_name": "AI RAG Knowledge Agent",
+      "educational_name": "Document Intelligence & Knowledge Extraction Agent",
+      "educational_domain": "document-intelligence",
+      "domain_name": "Document Intelligence",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "rag",
+        "knowledge-retrieval",
+        "document-retrieval",
+        "knowledge-grounding"
+      ],
+      "allowed_tools": [
+        "get_document",
+        "extract_document_data",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility"
+      ],
+      "port": 8193,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-094",
+      "day": 94,
+      "original_name": "AI Multi-Agent Debate Agent",
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "multi-agent-debate",
+        "argument-analysis",
+        "perspective-analysis",
+        "conflict-analysis"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8194,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-095",
+      "day": 95,
+      "original_name": "AI Business Operations Agent",
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "business-operations",
+        "operations-management",
+        "process-optimization",
+        "business-workflows"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8195,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-096",
+      "day": 96,
+      "original_name": "AI Autonomous Coding Agent",
+      "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "autonomous-coding",
+        "software-engineering",
+        "code-generation",
+        "codebase-modification"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "administrative-request"
+      ],
+      "port": 8196,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-097",
+      "day": 97,
+      "original_name": "AI AI-Research Scientist Agent",
+      "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+      "educational_domain": "analytics",
+      "domain_name": "Institutional Analytics & Reporting",
+      "classification": "DIRECT_REUSE",
+      "educational_capabilities": [
+        "ai-research",
+        "machine-learning-research",
+        "experimental-analysis",
+        "scientific-reasoning"
+      ],
+      "allowed_tools": [
+        "get_attendance",
+        "get_fee_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "attendance-intervention",
+        "administrative-request"
+      ],
+      "port": 8197,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-098",
+      "day": 98,
+      "original_name": "AI Startup Builder Agent",
+      "educational_name": "Admission Program Onboarding Agent",
+      "educational_domain": "admission",
+      "domain_name": "Admissions & Enrollment",
+      "classification": "REPURPOSE",
+      "educational_capabilities": [
+        "startup-planning",
+        "startup-strategy",
+        "business-modeling",
+        "venture-planning"
+      ],
+      "allowed_tools": [
+        "get_admission_application",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification"
+      ],
+      "port": 8198,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-099",
+      "day": 99,
+      "original_name": "AI Multi-Agent Coordinator Agent",
+      "educational_name": "Multi-Agent Consensus & Evidence Aggregator Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "agent-coordination",
+        "consensus-verification",
+        "evidence-aggregation",
+        "conflict-resolution"
+      ],
+      "allowed_tools": [
+        "record_decision",
+        "record_agent_action",
+        "create_approval"
+      ],
+      "workflow_roles": [
+        "scholarship-eligibility",
+        "graduation-clearance"
+      ],
+      "port": 8199,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-100",
+      "day": 100,
+      "original_name": "AI Agent Orchestrator Agent",
+      "educational_name": "Sub-Workflow Orchestration & Task Execution Agent",
+      "educational_domain": "workflow-intelligence",
+      "domain_name": "Workflow & Multi-Agent Intelligence",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "workflow-orchestration",
+        "subtask-dispatch",
+        "pipeline-monitoring",
+        "agent-delegation"
+      ],
+      "allowed_tools": [
+        "create_task",
+        "update_task",
+        "get_workflow_status",
+        "record_agent_action"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ],
+      "port": 8200,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    },
+    {
+      "agent_id": "agent-101",
+      "day": 101,
+      "original_name": "AI Master Agent",
+      "educational_name": "Educational Master Workflow Orchestrator",
+      "educational_domain": "master-orchestration",
+      "domain_name": "Master Workflow Orchestration",
+      "classification": "ORCHESTRATION",
+      "educational_capabilities": [
+        "workflow-planning",
+        "agent-selection",
+        "task-decomposition",
+        "result-synthesis",
+        "multi-agent-orchestration"
+      ],
+      "allowed_tools": [
+        "*"
+      ],
+      "workflow_roles": [
+        "admission-verification",
+        "scholarship-eligibility",
+        "attendance-intervention",
+        "course-override",
+        "graduation-clearance"
+      ],
+      "port": 8201,
+      "model": "qwen3.5:9b",
+      "status": "active"
+    }
+  ]
+}

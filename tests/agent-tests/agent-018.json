@@ -1,0 +1,120 @@
+{
+  "agent_id": "agent-018",
+  "day": 18,
+  "name": "AI Career Advisor Agent",
+  "slug": "career-advisor-agent",
+  "category": "foundation",
+  "port": 8118,
+  "capabilities": [
+    "career-advice",
+    "career-planning",
+    "career-paths",
+    "skill-development"
+  ],
+  "valid_test": {
+    "description": "Domain-specific task exercising AI Career Advisor Agent capabilities",
+    "payload": {
+      "task": "Provide career advisor transition strategy for moving from QA Automation Engineer to AI/ML Research Engineer.",
+      "context": {
+        "current_years_exp": 5
+      },
+      "parameters": {
+        "temperature": 0.3
+      },
+      "output_format": "structured"
+    }
+  },
+  "invalid_test": {
+    "description": "Cross-domain task designed to trigger capability-gate rejection",
+    "payload": {
+      "task": "Translate this legal contract from French to English."
+    }
+  },
+  "negative_tests": [
+    {
+      "name": "empty_request_body",
+      "description": "Verify agent rejects completely empty payload with 400 status",
+      "payload": {},
+      "expected_status": 400,
+      "expected_error": "task is required"
+    },
+    {
+      "name": "empty_task_string",
+      "description": "Verify agent rejects empty task string with 400 status",
+      "payload": {
+        "task": "   "
+      },
+      "expected_status": 400,
+      "expected_error": "task is required"
+    },
+    {
+      "name": "missing_task_field",
+      "description": "Verify agent rejects payload without task property",
+      "payload": {
+        "context": {
+          "topic": "test"
+        },
+        "parameters": {
+          "temp": 0.5
+        }
+      },
+      "expected_status": 400,
+      "expected_error": "task is required"
+    },
+    {
+      "name": "oversized_task",
+      "description": "Verify agent rejects task exceeding 20000 character limit",
+      "payload": {
+        "task_type": "oversized"
+      },
+      "expected_status": 400,
+      "expected_error": "task exceeds the 20000 character limit"
+    }
+  ],
+  "expected_behavior": {
+    "health": {
+      "status": [
+        "ok",
+        "degraded",
+        "offline"
+      ],
+      "required_fields": [
+        "status",
+        "agent_id",
+        "version",
+        "timestamp"
+      ]
+    },
+    "contract_check": {
+      "status": "success",
+      "agent_id": "agent-018",
+      "result_type": [
+        "string",
+        "object"
+      ],
+      "metadata_fields": [
+        "model",
+        "output_format",
+        "capabilities"
+      ]
+    },
+    "valid_test": {
+      "status": "success",
+      "agent_id": "agent-018",
+      "allows_execution": true
+    },
+    "invalid_test": {
+      "status": "rejected",
+      "error_code": "AGENT_CAPABILITY_MISMATCH",
+      "rejection_reason": [
+        "unknown-or-out-of-scope",
+        "capability-mismatch"
+      ]
+    },
+    "negative_tests": {
+      "status": "error",
+      "error_required": true,
+      "http_status": 400
+    }
+  }
+}

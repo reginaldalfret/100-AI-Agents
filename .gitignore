@@ -6,6 +6,28 @@ node_modules/
 .env
 .env.*
 !.env.example
+*.key
+*.pem
+*.pfx
+secrets/
+credentials/
+
+# Model Blobs and Large Weights
+*.bin
+*.gguf
+*.safetensors
+blobs/
+AI/Models/
+data/models/
+
+# Local Runtime Data and Caches
+data/context/*.json
+!data/context/.gitkeep
+archive/
+artifacts/
+temp/
+cache/
+scratch/
 
 # Build output
 .next/

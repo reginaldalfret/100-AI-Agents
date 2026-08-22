@@ -1,7 +1,33 @@
 import http from "node:http";
 import https from "node:https";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { getAgent } from "./registry.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const ROOT = process.env.PROJECT_ROOT || path.resolve(__dirname, "../../../..");
+
+async function executeAgentInProcess(agentId, payload) {
+  const agentsDir = path.join(ROOT, "agents");
+  if (!fs.existsSync(agentsDir)) return null;
+
+  const dirs = fs.readdirSync(agentsDir);
+  const found = dirs.find(d => d.startsWith(agentId) || d.startsWith(agentId.replace("agent-", "agent-0")));
+  if (!found) return null;
+
+  const modPath = path.join(agentsDir, found, "backend", "src", "agent.js");
+  if (!fs.existsSync(modPath)) return null;
+
+  process.env.OLLAMA_MODEL = process.env.OLLAMA_MODEL || "nemotron-3-nano";
+  const mod = await import(pathToFileURL(modPath).href);
+  if (typeof mod.runAgent === "function") {
+    return await mod.runAgent(payload);
+  }
+  return null;
+}
 
 function postJson(url, payload, timeoutMs = 120000) {
   return new Promise((resolve, reject) => {
@@ -137,6 +163,27 @@ export async function delegate(
       result
     };
   } catch (error) {
+    try {
+      const fallbackResult = await executeAgentInProcess(agentId, {
+        task,
+        context,
+        parameters: { source: "agent-101-master" },
+        output_format: "structured"
+      });
+
+      if (fallbackResult) {
+        return {
+          agent_id: agent.agent_id,
+          agent_name: agent.name,
+          status: "completed",
+          duration_ms: Date.now() - started,
+          result: fallbackResult
+        };
+      }
+    } catch (fallbackError) {
+      console.warn(`Fallback execution failed for ${agentId}:`, fallbackError.message);
+    }
+
     return {
       agent_id: agent.agent_id,
       agent_name: agent.name,

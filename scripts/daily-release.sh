@@ -2,7 +2,7 @@
 
 set -Eeuo pipefail
 
-PROJECT_ROOT="/home/ai/100-to-1/100-to-1-automation"
+PROJECT_ROOT="${PROJECT_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 CONTROLLER="$PROJECT_ROOT/release-controller"
 
 cd "$PROJECT_ROOT"
