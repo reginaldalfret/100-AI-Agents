@@ -144,6 +144,15 @@ export async function runAgent(request) {
       )
     : 0.4;
 
+  const targetModel =
+    request.model_override ||
+    parameters.model ||
+    request.requested_model ||
+    AGENT_CONFIG.model ||
+    DEFAULT_MODEL;
+
+  parameters.model = targetModel;
+
   /*
    * ============================================================
    * MASTER AGENT ORCHESTRATION
@@ -175,17 +184,17 @@ export async function runAgent(request) {
         ? modelResponse.response
         : modelResponse;
 
+    const actualModel = modelResponse.model || targetModel;
+
     return {
       agent_id: AGENT_CONFIG.id,
       agent_name: AGENT_CONFIG.name,
       status: "success",
       result,
       metadata: {
-        model:
-          modelResponse.model ||
-          parameters.model ||
-          AGENT_CONFIG.model ||
-          DEFAULT_MODEL,
+        model: actualModel,
+        actual_model: actualModel,
+        requested_model: targetModel,
 
         output_format:
           request.output_format || "structured",
@@ -226,7 +235,8 @@ export async function runAgent(request) {
     requester: AGENT_CONFIG.id,
     requester_name: AGENT_CONFIG.name,
     original_task: task,
-    original_context: context
+    original_context: context,
+    model_override: targetModel
   };
 
   const results = await delegateMany(
@@ -237,7 +247,8 @@ export async function runAgent(request) {
   const synthesis = await synthesize({
     originalTask: task,
     plan,
-    results
+    results,
+    model: targetModel
   });
 
   const completedAgents = results
@@ -252,6 +263,8 @@ export async function runAgent(request) {
     )
     .map(result => result.agent_id);
 
+  const finalActualModel = synthesis.actual_model || targetModel;
+
   return {
     agent_id: AGENT_CONFIG.id,
     agent_name: AGENT_CONFIG.name,
@@ -259,50 +272,26 @@ export async function runAgent(request) {
     result: synthesis.answer,
 
     metadata: {
-      model:
-        parameters.model ||
-        AGENT_CONFIG.model ||
-        DEFAULT_MODEL,
-
+      model: finalActualModel,
+      actual_model: finalActualModel,
+      requested_model: targetModel,
       output_format:
         request.output_format || "structured",
-
       capabilities:
         AGENT_CONFIG.capabilities,
-
       orchestration: true,
-      execution_mode: "multi-agent",
-
+      execution_mode: "delegated",
       complexity:
-        plan.complexity || "moderate",
-
-      reasoning:
-        plan.reasoning || null,
-
-      planned_agents:
-        subtasks.map(
-          subtask => subtask.agent_id
-        ),
-
-      completed_agents:
-        completedAgents,
-
-      failed_agents:
-        failedAgents,
-
-      specialist_results:
-        results,
-
-      synthesis_confidence:
-        synthesis.confidence || "medium",
-
-      used_agents:
-        synthesis.used_agents || completedAgents,
-
-      duration_ms:
-        Date.now() - started
+        plan.complexity || "complex",
+      planned_agents: subtasks.map(
+        task => task.agent_id
+      ),
+      completed_agents: completedAgents,
+      failed_agents: failedAgents,
+      delegation_results: results,
+      used_agents: synthesis.used_agents || completedAgents,
+      duration_ms: Date.now() - started
     },
-
     error: null
   };
 }

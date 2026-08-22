@@ -971,17 +971,23 @@ document.addEventListener('DOMContentLoaded', () => {
         hideEmptyState();
         
         const currentModelMode = state.selectedModelMode || 'auto';
-        const modelDisplay = data.model || (currentModelMode === 'auto' ? 'Super AI Orchestrator' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName || 'Local Engine');
+        const modelDisplay = data.model || (currentModelMode === 'auto' ? 'Super AI' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName || 'Local Engine');
+        const actualModelTag = data.actual_model || (currentModelMode !== 'auto' ? LOCAL_MODEL_DEFS[currentModelMode]?.internalId : 'local-runtime');
         
         const msg = {
             id: `msg-${Date.now()}`,
             role: 'assistant',
-            content: data.text || data.content || data.synthesis || data.result || 'Response generated.',
+            content: data.text || data.content || data.synthesis || (typeof data.result === 'string' ? data.result : '') || 'Response generated.',
             evidence: data.evidence || null,
             deliverables: data.deliverables || null,
             plan: data.plan || null,
             model: modelDisplay,
-            traceId: data.trace_id || `TRC-${Date.now().toString().slice(-6)}`,
+            actualModel: actualModelTag,
+            modelMode: data.model_mode || (currentModelMode === 'auto' ? 'auto' : 'manual'),
+            durationMs: data.duration_ms || null,
+            tokensPerSec: data.tokens_per_sec || null,
+            isUnavailable: data.status === 'model_unavailable',
+            traceId: data.trace_id || `INT-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`,
             timestamp: new Date()
         };
         
@@ -1009,6 +1015,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'msg-row ai';
         
+        if (msg.isUnavailable) {
+            div.innerHTML = `
+                <div class="msg-bubble" style="border-left: 3px solid var(--neon-red); background: rgba(239, 68, 68, 0.08);">
+                    <div class="ai-header" style="color:var(--neon-red);">
+                        <span>⚠ Model Unavailable</span>
+                        <span class="zero-egress-tag">0 External Calls</span>
+                    </div>
+                    <div class="msg-text" style="color:var(--text-primary);line-height:1.65;">
+                        ${formatResponse(msg.content)}
+                    </div>
+                </div>
+            `;
+            elements.chatMessages.appendChild(div);
+            return;
+        }
+
         let evidenceHtml = '';
         if (msg.evidence && msg.evidence.length > 0) {
             evidenceHtml = `
@@ -1029,8 +1051,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const agentName = state.selectedAgent?.name || 'Super AI';
-        const modelLabel = msg.model || 'NVIDIA Nemotron 3 Nano (4B)';
-        const traceId = msg.traceId || `TRC-${Date.now().toString().slice(-6)}`;
+        const modelLabel = msg.model || 'NVIDIA Nemotron 3';
+        const actualRuntime = msg.actualModel || 'nemotron-3-nano:latest';
+        const traceId = msg.traceId || `INT-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
+        const statsStr = [
+            msg.durationMs ? `${msg.durationMs}ms` : null,
+            msg.tokensPerSec ? `${msg.tokensPerSec} t/s` : null
+        ].filter(Boolean).join(' · ');
         
         const backendFlowHtml = `
             <div class="backend-flow-card">
@@ -1045,11 +1072,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="backend-flow-item">
                         <span class="backend-flow-check">✓</span>
-                        <span><strong>2. Model Engine:</strong> Executed via <code>${escapeHtml(modelLabel)}</code> on local GPU</span>
+                        <span><strong>2. Model Engine:</strong> Executed via <code>${escapeHtml(modelLabel)}</code> (Actual Runtime: <code>${escapeHtml(actualRuntime)}</code>${statsStr ? ` · ${statsStr}` : ''})</span>
                     </div>
                     <div class="backend-flow-item">
                         <span class="backend-flow-check">✓</span>
-                        <span><strong>3. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero egress)</span>
+                        <span><strong>3. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
                     </div>
                     <div class="backend-flow-item">
                         <span class="backend-flow-check">✓</span>
@@ -1063,7 +1090,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="msg-bubble">
                 <div class="ai-header">
                     <span>● ${escapeHtml(msg.model)}</span>
-                    <span class="zero-egress-tag">0 External Calls</span>
+                    <span class="zero-egress-tag" title="Runtime: ${escapeHtml(actualRuntime)}">⚡ ${escapeHtml(actualRuntime)} · 0 External Calls</span>
                 </div>
                 <div class="msg-text" style="color:var(--text-primary);line-height:1.65;">
                     ${formatResponse(msg.content)}

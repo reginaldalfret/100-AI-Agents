@@ -23,7 +23,8 @@ function extractJson(text) {
 export async function synthesize({
   originalTask,
   plan,
-  results
+  results,
+  model = "nemotron-3-nano:latest"
 }) {
   if (
     typeof originalTask !== "string" ||
@@ -89,7 +90,8 @@ ${JSON.stringify(failedResults, null, 2)}
   const response = await generateWithOllama({
     system,
     task: prompt,
-    temperature: 0.2
+    temperature: 0.2,
+    model
   });
 
   const parsed = extractJson(response.response);
@@ -98,9 +100,11 @@ ${JSON.stringify(failedResults, null, 2)}
     answer:
       typeof parsed.answer === "string"
         ? parsed.answer
-        : JSON.stringify(parsed),
+        : (response.response || JSON.stringify(parsed)),
     confidence:
       parsed.confidence || "medium",
+    actual_model: response.model || model,
+    duration_ms: response.total_duration ? Math.round(response.total_duration / 1e6) : null,
     used_agents: Array.isArray(parsed.used_agents)
       ? parsed.used_agents
       : successfulResults.map(

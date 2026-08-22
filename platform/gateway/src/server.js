@@ -293,45 +293,102 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const modelMode = payload.modelMode || payload.model_override || "auto";
-      let modelUsed = "NVIDIA Nemotron 3";
-      if (modelMode === "nemotron" || modelMode === "nemotron-3-nano") {
-        modelUsed = "NVIDIA Nemotron 3";
-      } else if (modelMode === "qwen" || modelMode === "local-code-specialist" || modelMode === "qwen2.5-coder:1.5b") {
-        modelUsed = "Qwen 2.5 Coder";
-      } else if (modelMode === "gemma" || modelMode === "gemma3-4b" || modelMode === "gemma3:4b") {
-        modelUsed = "Google Gemma 3";
+      // Check live local Ollama model tags for availability
+      let availableModels = [];
+      try {
+        const tagsRes = await fetch("http://127.0.0.1:11434/api/tags").catch(() => null);
+        if (tagsRes && tagsRes.ok) {
+          const tagsData = await tagsRes.json();
+          availableModels = (tagsData.models || []).map(m => m.name || m.model);
+        }
+      } catch (e) {
+        // Local check
+      }
+
+      const CANONICAL_MODEL_MAP = {
+        "gemma": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
+        "gemma3:4b": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
+        "gemma3-4b": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
+        "nemotron": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
+        "nemotron-3-nano": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
+        "nemotron-3-nano:latest": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
+        "qwen": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" },
+        "qwen2.5-coder:1.5b": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" },
+        "local-code-specialist": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" }
+      };
+
+      const requestedMode = payload.modelMode || "auto";
+      const requestedOverride = payload.model_override || payload.requested_model || (requestedMode !== "auto" ? requestedMode : null);
+      const isManual = Boolean(requestedOverride && requestedOverride !== "auto");
+
+      let targetOllamaModel = "nemotron-3-nano:latest";
+      let modelDisplayName = "NVIDIA Nemotron 3";
+
+      if (isManual) {
+        const mapped = CANONICAL_MODEL_MAP[requestedOverride];
+        if (mapped) {
+          targetOllamaModel = mapped.tag;
+          modelDisplayName = mapped.displayName;
+        } else {
+          targetOllamaModel = requestedOverride;
+          modelDisplayName = requestedOverride;
+        }
+
+        // Strict No-Silent-Fallback Verification
+        const isAvailable = availableModels.length === 0 || availableModels.some(m => m === targetOllamaModel || m.startsWith(targetOllamaModel.split(":")[0]));
+        if (!isAvailable) {
+          json(res, 503, {
+            status: "model_unavailable",
+            requested_model: targetOllamaModel,
+            actual_model: null,
+            model_mode: "manual",
+            model_source: "ollama-local",
+            external_calls: 0,
+            error: {
+              code: "MODEL_NOT_FOUND",
+              message: `${modelDisplayName} (${targetOllamaModel}) is currently unavailable in local Ollama runtime.`
+            }
+          });
+          return;
+        }
       } else {
         // Auto routing based on task
         const taskLower = task.toLowerCase();
-        if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc")) {
-          modelUsed = "Qwen 2.5 Coder";
+        if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc") || taskLower.includes("debug") || taskLower.includes("function")) {
+          targetOllamaModel = "qwen2.5-coder:1.5b";
+          modelDisplayName = "Qwen 2.5 Coder";
         } else if (taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr")) {
-          modelUsed = "Google Gemma 3";
+          targetOllamaModel = "gemma3:4b";
+          modelDisplayName = "Google Gemma 3";
         } else {
-          modelUsed = "NVIDIA Nemotron 3";
+          targetOllamaModel = "nemotron-3-nano:latest";
+          modelDisplayName = "NVIDIA Nemotron 3";
         }
       }
 
+      process.env.OLLAMA_MODEL = targetOllamaModel;
+      const agentParameters = {
+        ...(payload.parameters || {}),
+        model: targetOllamaModel
+      };
+
+      const agentPayload = {
+        task,
+        context: payload.context || {},
+        parameters: agentParameters,
+        model: targetOllamaModel,
+        model_override: targetOllamaModel,
+        modelMode: isManual ? "manual" : "auto",
+        requested_model: targetOllamaModel,
+        output_format: payload.output_format || "text"
+      };
+
       let result;
+      const inferenceStart = performance.now();
       try {
-        result = await requestAgent(agent, {
-          task,
-          context: payload.context || {},
-          parameters: payload.parameters || {},
-          model_override: payload.model_override || null,
-          modelMode,
-          output_format: payload.output_format || "text"
-        });
+        result = await requestAgent(agent, agentPayload);
       } catch (err) {
-        const inProc = await executeAgentInProcess(agent.agent_id, {
-          task,
-          context: payload.context || {},
-          parameters: payload.parameters || {},
-          model_override: payload.model_override || null,
-          modelMode,
-          output_format: payload.output_format || "text"
-        });
+        const inProc = await executeAgentInProcess(agent.agent_id, agentPayload);
         if (inProc) {
           result = inProc;
         } else {
@@ -345,14 +402,7 @@ const server = http.createServer(async (req, res) => {
         const targetAgent = (recommendedId && agents.find(a => a.agent_id === recommendedId)) || agents.find(a => a.agent_id === "agent-101");
         if (targetAgent && targetAgent.agent_id !== agent.agent_id) {
           try {
-            const routedResult = await executeAgentInProcess(targetAgent.agent_id, {
-              task,
-              context: payload.context || {},
-              parameters: payload.parameters || {},
-              model_override: payload.model_override || null,
-              modelMode,
-              output_format: payload.output_format || "text"
-            });
+            const routedResult = await executeAgentInProcess(targetAgent.agent_id, agentPayload);
             if (routedResult && routedResult.status !== "rejected") {
               result = routedResult;
             }
@@ -361,6 +411,9 @@ const server = http.createServer(async (req, res) => {
           }
         }
       }
+
+      const totalDurationMs = Math.round(performance.now() - inferenceStart);
+      const actualModel = result?.metadata?.actual_model || result?.metadata?.model || targetOllamaModel;
 
       // Extract and format response text cleanly for frontend consumers
       let answerText = "";
@@ -413,7 +466,12 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
+      const wordsCount = answerText.split(/\s+/).filter(Boolean).length;
+      const tokensEstimate = Math.round(wordsCount * 1.33);
+      const tokensPerSec = totalDurationMs > 0 ? Number(((tokensEstimate / (totalDurationMs / 1000))).toFixed(1)) : 0;
+
       json(res, 200, {
+        status: "success",
         gateway: "100-to-1",
         trace_id: payload.trace_id || `INT-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`,
         agent: {
@@ -421,16 +479,25 @@ const server = http.createServer(async (req, res) => {
           name: agent.name,
           category: agent.category
         },
-        model: modelUsed,
-        modelMode,
+        requested_model: isManual ? targetOllamaModel : "auto",
+        actual_model: actualModel,
+        model_mode: isManual ? "manual" : "auto",
+        model_source: "ollama-local",
+        model: modelDisplayName,
+        external_calls: 0,
         text: answerText,
         evidence,
         deliverables,
         plan,
+        duration_ms: totalDurationMs,
+        tokens_per_sec: tokensPerSec,
         result: {
           text: answerText,
           content: answerText,
           synthesis: answerText,
+          actual_model: actualModel,
+          requested_model: isManual ? targetOllamaModel : "auto",
+          model: modelDisplayName,
           evidence,
           deliverables,
           plan,

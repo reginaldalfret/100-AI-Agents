@@ -72,7 +72,8 @@ export async function generateWithOllama({
   system,
   task,
   temperature = 0.4,
-  model = DEFAULT_MODEL
+  model = DEFAULT_MODEL,
+  options = {}
 }) {
   return postJson(
     `${DEFAULT_OLLAMA_URL}/api/generate`,
@@ -82,7 +83,11 @@ export async function generateWithOllama({
       prompt: task,
       temperature,
       stream: false,
-      think: false
+      think: false,
+      options: {
+        num_predict: options.num_predict || 256,
+        ...options
+      }
     }
   );
 }
