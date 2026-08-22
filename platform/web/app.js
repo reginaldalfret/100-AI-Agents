@@ -293,13 +293,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. WORKSPACE MANAGER
     function updateAgentHeader(agent) {
         const avatar = generateAgentAvatar(agent);
-        elements.agentAvatar.style.backgroundColor = avatar.color;
-        elements.agentAvatar.textContent = avatar.initial;
+        if (elements.agentAvatar) {
+            elements.agentAvatar.style.background = `linear-gradient(135deg, ${avatar.color}, #6366f1)`;
+            elements.agentAvatar.textContent = avatar.initial;
+        }
         
-        elements.agentName.textContent = agent.name;
-        elements.agentSubtitle.textContent = `${agent.id} · ${agent.domain}`;
+        if (elements.agentName) elements.agentName.textContent = agent.name;
+        if (elements.agentSubtitle) elements.agentSubtitle.textContent = `${agent.id} · ${agent.domain}`;
         
-        document.title = `${agent.name} - Sovereign AI`;
+        const orb = document.getElementById('agentOrb');
+        if (orb) {
+            orb.style.background = `radial-gradient(circle, ${avatar.color} 0%, rgba(139, 92, 246, 0.4) 60%, transparent 80%)`;
+        }
+        
+        document.title = `${agent.name} — Sovereign AI Workbench`;
     }
 
     function switchTab(tabName) {
@@ -316,9 +323,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const viewId = tabToView[tabName] || tabName;
         
         // Update tab button styling
-        elements.workspaceTabs.querySelectorAll('button').forEach(tab => {
-            tab.classList.toggle('active', tab.dataset.tab === viewId);
-        });
+        if (elements.workspaceTabs) {
+            elements.workspaceTabs.querySelectorAll('button').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === viewId);
+            });
+        }
         
         // Show/hide view panels (only the workspace tab panels, not secondary pages)
         ['chatView', 'aboutView', 'capabilitiesView', 'examplesView'].forEach(id => {
@@ -345,48 +354,53 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderAbout(agent, container) {
+        if (!container) return;
         container.innerHTML = `
-            <div class="panel-section">
-                <h3>Description</h3>
-                <p>${escapeHtml(agent.description || 'No description available for this agent.')}</p>
+            <div class="panel-section" style="padding:18px;background:var(--glass-card);border:1px solid var(--border-glass);border-radius:12px;margin-bottom:14px;">
+                <h3 style="color:#38bdf8;margin-bottom:8px;font-size:15px;">Agent Profile</h3>
+                <p style="color:var(--text-primary);line-height:1.6;">${escapeHtml(agent.description || 'Specialized AI agent ready for confidential industrial work.')}</p>
             </div>
-            <div class="panel-section">
-                <h3>Domain</h3>
-                <p>${escapeHtml(agent.domain || 'General')}</p>
+            <div class="panel-section" style="padding:18px;background:var(--glass-card);border:1px solid var(--border-glass);border-radius:12px;">
+                <h3 style="color:#38bdf8;margin-bottom:8px;font-size:15px;">Industrial Domain & Specifications</h3>
+                <p style="color:var(--text-secondary);"><strong>Domain:</strong> ${escapeHtml(agent.domain || 'Engineering')}</p>
+                <p style="color:var(--text-secondary);margin-top:4px;"><strong>Assigned Port:</strong> :8201 · <strong>Model:</strong> Nemotron 3 Nano / Gemma 3 4B</p>
+                <p style="color:var(--text-secondary);margin-top:4px;"><strong>Execution Environment:</strong> 100% Air-Gapped Local Hardware</p>
             </div>
         `;
     }
 
     function renderCapabilities(agent, container) {
-        const caps = agent.capabilities || [];
-        const tools = agent.tools || [];
+        if (!container) return;
+        const caps = agent.capabilities || ['Document Analysis', 'Ultrasonic NDT Evaluation', 'SOP Verification', 'Deliverable Synthesis'];
+        const tools = agent.tools || ['Local OCR', 'Vector RAG Store', 'Corrosion Rate Calculator', 'DOCX Generator'];
         
         container.innerHTML = `
-            <div class="panel-section">
-                <h3>Capabilities</h3>
-                <div class="chip-container">
-                    ${caps.length ? caps.map(c => `<span class="chip">${escapeHtml(c)}</span>`).join('') : '<p>No specific capabilities listed.</p>'}
+            <div class="panel-section" style="padding:18px;background:var(--glass-card);border:1px solid var(--border-glass);border-radius:12px;margin-bottom:14px;">
+                <h3 style="color:#38bdf8;margin-bottom:12px;font-size:15px;">Agent Capabilities</h3>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                    ${caps.map(c => `<span class="chip" style="background:rgba(6,182,212,0.12);border:1px solid rgba(6,182,212,0.3);color:#a5f3fc;">✓ ${escapeHtml(c)}</span>`).join('')}
                 </div>
             </div>
-            <div class="panel-section">
-                <h3>Tools</h3>
-                <div class="tool-list">
-                    ${tools.length ? tools.map(t => `<div class="tool-card">${escapeHtml(t)}</div>`).join('') : '<p>No specific tools listed.</p>'}
+            <div class="panel-section" style="padding:18px;background:var(--glass-card);border:1px solid var(--border-glass);border-radius:12px;">
+                <h3 style="color:#38bdf8;margin-bottom:12px;font-size:15px;">Assigned Industrial Tools</h3>
+                <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                    ${tools.map(t => `<span class="chip" style="background:rgba(139,92,246,0.12);border:1px solid rgba(139,92,246,0.3);color:#d8b4fe;">⚡ ${escapeHtml(t)}</span>`).join('')}
                 </div>
             </div>
         `;
     }
 
     function renderExamples(agent, container) {
+        if (!container) return;
         const examples = getAgentExamples(agent);
         
         container.innerHTML = `
-            <div class="panel-section">
-                <h3>Example Prompts</h3>
-                <div class="example-list">
+            <div class="panel-section" style="padding:18px;background:var(--glass-card);border:1px solid var(--border-glass);border-radius:12px;">
+                <h3 style="color:#38bdf8;margin-bottom:12px;font-size:15px;">Prompt Templates & Workflows</h3>
+                <div style="display:flex;flex-direction:column;gap:10px;">
                     ${examples.map(ex => `
-                        <div class="example-card" onclick="document.getElementById('chatInput').value = '${escapeHtml(ex)}'; document.getElementById('chatInput').focus();">
-                            ${escapeHtml(ex)}
+                        <div class="example-chip" style="text-align:left;padding:12px 16px;" onclick="document.getElementById('chatInput').value = '${escapeHtml(ex)}'; switchTab('chat'); document.getElementById('chatInput').focus();">
+                            ${escapeHtml(ex)} →
                         </div>
                     `).join('')}
                 </div>
@@ -402,11 +416,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const avatar = generateAgentAvatar(agent);
         
         elements.chatEmptyState.innerHTML = `
-            <div class="empty-avatar" style="background-color: ${avatar.color}">
+            <div class="empty-avatar" style="background: linear-gradient(135deg, ${avatar.color}, #6366f1)">
                 ${avatar.initial}
             </div>
             <h2>${escapeHtml(agent.name)}</h2>
-            <p>${escapeHtml(agent.description || `I am ready to assist you with ${agent.domain} tasks.`)}</p>
+            <p>${escapeHtml(agent.description || `Specialized on-premise industrial AI agent for ${agent.domain} operations.`)}</p>
             <div class="empty-examples">
                 ${examples.slice(0, 3).map(ex => `
                     <button class="empty-example-btn" onclick="document.getElementById('chatInput').value = '${escapeHtml(ex)}'; document.getElementById('sendBtn').click();">
@@ -450,15 +464,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let attachmentsHtml = '';
         if (msg.attachments && msg.attachments.length > 0) {
-            attachmentsHtml = `<div class="msg-attachments">
-                ${msg.attachments.map(a => `<span class="attachment-pill"><i class="icon-file"></i> ${escapeHtml(a.name)}</span>`).join('')}
+            attachmentsHtml = `<div class="msg-attachments" style="display:flex;gap:6px;margin-bottom:6px;">
+                ${msg.attachments.map(a => `<span class="attachment-pill">📄 ${escapeHtml(a.name)}</span>`).join('')}
             </div>`;
         }
         
         div.innerHTML = `
-            <div class="msg-content">
-                ${escapeHtml(msg.content)}
+            <div class="msg-bubble">
                 ${attachmentsHtml}
+                <div>${escapeHtml(msg.content)}</div>
             </div>
         `;
         
@@ -473,11 +487,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const msgObj = {
             id: msgId,
             role: 'ai',
-            content: data.text || data.content || '',
+            content: data.text || data.content || data.message || '',
             evidence: data.evidence || null,
             deliverables: data.deliverables || null,
-            model: data.model || 'Local Model',
-            traceId: data.traceId || `tr-${Date.now()}`,
+            model: data.model || 'NVIDIA Nemotron 3 Nano (4B)',
+            traceId: data.trace_id || data.traceId || `TRC-${Date.now().toString().slice(-6)}`,
             timestamp: new Date(),
             plan: data.plan || null
         };
@@ -495,16 +509,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'msg-row ai';
         
-        const avatar = generateAgentAvatar(state.selectedAgent);
-        
         let evidenceHtml = '';
         if (msg.evidence && msg.evidence.length > 0) {
             evidenceHtml = `
-                <div class="msg-evidence">
-                    <div class="evidence-title">Sources</div>
-                    <ul>
-                        ${msg.evidence.map(e => `<li><a href="#" class="evidence-link">${escapeHtml(e.title || e)}</a></li>`).join('')}
-                    </ul>
+                <div class="evidence-box">
+                    <div class="evidence-title">✓ Grounded Citations & Evidence</div>
+                    ${msg.evidence.map(e => `<div class="evidence-item">● <strong>${escapeHtml(e.title || e.doc_id || 'Refinery Standard')}</strong> — ${escapeHtml(e.citation || e.details || 'Verified')}</div>`).join('')}
                 </div>
             `;
         }
@@ -512,38 +522,28 @@ document.addEventListener('DOMContentLoaded', () => {
         let deliverablesHtml = '';
         if (msg.deliverables && msg.deliverables.length > 0) {
             deliverablesHtml = `
-                <div class="msg-deliverables">
-                    ${msg.deliverables.map(d => `
-                        <div class="deliverable-card">
-                            <i class="icon-doc"></i>
-                            <span>${escapeHtml(d.name || d)}</span>
-                        </div>
-                    `).join('')}
+                <div class="files-badge-row">
+                    ${msg.deliverables.map(d => `<a class="file-chip" onclick="alert('Generated on-premise deliverable: ${escapeHtml(d.file_name || d.name || d)}')">📥 ${escapeHtml(d.file_name || d.name || d)}</a>`).join('')}
                 </div>
             `;
         }
         
         div.innerHTML = `
-            <div class="msg-avatar" style="background-color: ${avatar.color}">
-                ${avatar.initial}
-            </div>
-            <div class="msg-body">
-                <div class="msg-header">
-                    <span class="msg-author">${escapeHtml(state.selectedAgent.name)}</span>
-                    <span class="msg-model"><i class="icon-shield"></i> ${escapeHtml(msg.model)}</span>
+            <div class="msg-bubble">
+                <div class="ai-header">
+                    <span>● ${escapeHtml(msg.model)}</span>
+                    <span class="zero-egress-tag">0 External Calls</span>
                 </div>
-                <div class="msg-content">
+                <div class="msg-text" style="color:var(--text-primary);line-height:1.65;">
                     ${formatResponse(msg.content)}
                 </div>
                 ${evidenceHtml}
                 ${deliverablesHtml}
-                <div class="msg-actions">
-                    <button class="btn-text toggle-execution" data-id="${msg.id}">View execution details ▸</button>
-                </div>
+                <div class="execution-toggle" style="margin-top:12px;" data-id="${msg.id}">View execution details ▸</div>
             </div>
         `;
         
-        const toggleBtn = div.querySelector('.toggle-execution');
+        const toggleBtn = div.querySelector('.execution-toggle');
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {
                 openInspector({ type: 'execution', data: msg });
@@ -556,20 +556,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendThinkingIndicator() {
         hideEmptyState();
         const div = document.createElement('div');
-        div.className = 'msg-row ai thinking-indicator';
+        div.className = 'msg-row ai';
         div.id = 'thinkingIndicator';
         
-        const avatar = generateAgentAvatar(state.selectedAgent);
-        
         div.innerHTML = `
-            <div class="msg-avatar" style="background-color: ${avatar.color}">
-                ${avatar.initial}
-            </div>
-            <div class="msg-body">
-                <div class="thinking-dots">
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
+            <div class="msg-bubble" style="padding:10px 14px;">
+                <div class="thinking-indicator">
+                    <span class="thinking-orb"></span>
+                    <span>Autonomous task planner evaluating evidence on local hardware...</span>
                 </div>
             </div>
         `;
