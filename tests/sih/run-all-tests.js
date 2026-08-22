@@ -19,9 +19,13 @@ try {
   await import("./workflow.test.js");
   await import("./flagship-demo.test.js");
   await import("./fleet.test.js");
+  await import("./autonomous/task-planner.test.js");
+  await import("./autonomous/replanner.test.js");
+  await import("./autonomous/execution-engine.test.js");
+  await import("./autonomous/golden-benchmark.test.js");
 
   console.log(`\n============================================================`);
-  console.log(`ALL 12 TEST SUITES PASSED (100% PASS RATE)`);
+  console.log(`ALL 16 TEST SUITES PASSED (100% PASS RATE)`);
   console.log(`EXTERNAL EGRESS: 0 CALLS (AIR-GAP VERIFIED)`);
   console.log(`============================================================\n`);
 } catch (err) {

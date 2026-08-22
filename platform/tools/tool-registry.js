@@ -632,3 +632,8 @@ export async function executeTool(agentId, toolName, params = {}, workflowId = n
     throw err;
   }
 }
+
+export function listTools() {
+  return Object.values(TOOL_DEFINITIONS);
+}
+
