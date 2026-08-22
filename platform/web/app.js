@@ -1223,6 +1223,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const LOCAL_MODEL_DEFS = {
         'auto': {
             id: 'auto',
+            internalId: 'auto',
             displayName: 'Auto (Best Fit)',
             badge: 'Smart',
             speed: 'Fast',
@@ -1230,8 +1231,8 @@ document.addEventListener('DOMContentLoaded', () => {
             runtime: 'Local Orchestration Router',
             hardware: 'RTX 2050 (Optimized VRAM)'
         },
-        'nemotron-3-nano': {
-            id: 'nemotron-3-nano',
+        'nemotron': {
+            id: 'nemotron',
             internalId: 'nemotron-3-nano',
             displayName: 'NVIDIA Nemotron 3 Nano',
             badge: 'Reasoning',
@@ -1240,8 +1241,18 @@ document.addEventListener('DOMContentLoaded', () => {
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
         },
-        'gemma3:4b': {
-            id: 'gemma3:4b',
+        'nemotron-3-nano': {
+            id: 'nemotron',
+            internalId: 'nemotron-3-nano',
+            displayName: 'NVIDIA Nemotron 3 Nano',
+            badge: 'Reasoning',
+            speed: 'High Speed',
+            description: 'Orchestration, multi-agent planning & deep reasoning',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~2.8GB VRAM)'
+        },
+        'gemma': {
+            id: 'gemma',
             internalId: 'gemma3:4b',
             displayName: 'Google Gemma 3 (4B)',
             badge: 'Vision',
@@ -1250,8 +1261,28 @@ document.addEventListener('DOMContentLoaded', () => {
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~3.1GB VRAM)'
         },
+        'gemma3:4b': {
+            id: 'gemma',
+            internalId: 'gemma3:4b',
+            displayName: 'Google Gemma 3 (4B)',
+            badge: 'Vision',
+            speed: 'Multimodal',
+            description: 'Equipment diagram QA, document OCR & visual verification',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~3.1GB VRAM)'
+        },
+        'qwen': {
+            id: 'qwen',
+            internalId: 'qwen2.5-coder:1.5b',
+            displayName: 'Qwen 2.5 Coder (1.5B)',
+            badge: 'Coding',
+            speed: 'Ultra Fast',
+            description: 'Code synthesis, analytics scripting & SQL modeling',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~986MB VRAM)'
+        },
         'qwen2.5-coder:1.5b': {
-            id: 'qwen2.5-coder:1.5b',
+            id: 'qwen',
             internalId: 'qwen2.5-coder:1.5b',
             displayName: 'Qwen 2.5 Coder (1.5B)',
             badge: 'Coding',
@@ -1271,24 +1302,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.addEventListener('click', (e) => {
-            if (!elements.modelSelectorWrapper.contains(e.target)) {
+            if (elements.modelSelectorWrapper && !elements.modelSelectorWrapper.contains(e.target)) {
                 closeModelDropdown();
             }
         });
 
         document.querySelectorAll('.model-option-item').forEach(item => {
             item.addEventListener('click', (e) => {
-                const modelId = e.currentTarget.dataset.modelId;
+                // If clicked on info chevron, show specs
+                if (e.target.closest('.btn-model-info') || e.target.closest('.btn-info-chevron')) {
+                    e.stopPropagation();
+                    const rawId = item.dataset.modelId || item.dataset.internalId;
+                    showModelDetails(rawId);
+                    return;
+                }
+                const modelId = item.dataset.modelId || item.dataset.internalId;
                 if (modelId && LOCAL_MODEL_DEFS[modelId]) {
                     selectModelMode(modelId);
                 }
             });
         });
 
-        document.querySelectorAll('.btn-info-chevron').forEach(btn => {
+        document.querySelectorAll('.btn-model-info, .btn-info-chevron').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const modelId = e.currentTarget.dataset.modelInfo;
+                const parent = btn.closest('.model-option-item');
+                const modelId = btn.dataset.modelInfo || parent?.dataset.modelId || parent?.dataset.internalId;
                 showModelDetails(modelId);
             });
         });
@@ -1323,11 +1362,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateModelSelectorUI() {
         const def = LOCAL_MODEL_DEFS[state.selectedModelMode] || LOCAL_MODEL_DEFS['auto'];
+        const activeKey = def.id;
         if (elements.modelSelectorLabel) {
             elements.modelSelectorLabel.textContent = def.displayName.replace('NVIDIA ', '').replace('Google ', '');
         }
         document.querySelectorAll('.model-option-item').forEach(opt => {
-            opt.classList.toggle('active', opt.dataset.modelId === state.selectedModelMode);
+            const optId = opt.dataset.modelId;
+            const optInternal = opt.dataset.internalId;
+            const isMatch = optId === activeKey || optInternal === state.selectedModelMode || optId === state.selectedModelMode;
+            opt.classList.toggle('active', isMatch);
         });
     }
 
@@ -1337,6 +1380,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         state.selectedModelMode = modelId;
         updateModelSelectorUI();
+
+        // Update active conversation modelMode if open
+        if (state.currentConversationId) {
+            fetch(`/api/chats/${state.currentConversationId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ modelMode: modelId })
+            }).catch(() => null);
+        }
 
         if (!silent) {
             const agentId = state.selectedAgent?.id || 'auto';
