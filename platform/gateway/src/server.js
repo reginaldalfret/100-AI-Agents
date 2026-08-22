@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import { WorkflowEngine } from "../../workflow-engine/index.js";
 import { StudentService, AcademicService, FinanceService, DocumentService, AdmissionService, FacultyService, AuditService } from "../../services/index.js";
+import { modelStreamer, ModelLifecycleState } from "../../models/model-streamer.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -354,7 +355,7 @@ const server = http.createServer(async (req, res) => {
       } else {
         // Auto routing based on task
         const taskLower = task.toLowerCase();
-        if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc") || taskLower.includes("debug") || taskLower.includes("function")) {
+        if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json")) {
           targetOllamaModel = "qwen2.5-coder:1.5b";
           modelDisplayName = "Qwen 2.5 Coder";
         } else if (taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr")) {
@@ -371,6 +372,100 @@ const server = http.createServer(async (req, res) => {
         ...(payload.parameters || {}),
         model: targetOllamaModel
       };
+
+      const wantsStream = Boolean(payload.stream === true || (req.headers["accept"] && req.headers["accept"].includes("text/event-stream")));
+
+      if (wantsStream) {
+        res.writeHead(200, {
+          "Content-Type": "text/event-stream; charset=utf-8",
+          "Cache-Control": "no-cache, no-transform",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "X-Accel-Buffering": "no"
+        });
+
+        const sendSSE = (event, data) => {
+          try {
+            res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+          } catch {
+            // Client closed
+          }
+        };
+
+        const requestId = payload.trace_id || `req_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+
+        sendSSE("status", {
+          state: ModelLifecycleState.PREPARING,
+          message: `Preparing ${modelDisplayName}...`,
+          model: modelDisplayName,
+          tag: targetOllamaModel
+        });
+
+        sendSSE("metadata", {
+          requestedModel: isManual ? targetOllamaModel : "auto",
+          actualModel: targetOllamaModel,
+          modelDisplayName,
+          modelMode: isManual ? "manual" : "auto",
+          agentId: agent.agent_id,
+          agentName: agent.name || agent.agent_id,
+          requestId
+        });
+
+        req.on("close", () => {
+          modelStreamer.cancelStream(requestId);
+        });
+
+        try {
+          const sysPrompt = agent.system_prompt || (agent.domain ? `You are ${agent.name}, an expert AI Agent specializing in ${agent.domain}. Provide accurate, clear, professional answers.` : "You are a helpful industrial AI specialist.");
+
+          await modelStreamer.streamFromOllama({
+            model: targetOllamaModel,
+            system: sysPrompt,
+            prompt: task,
+            images: payload.images || [],
+            temperature: 0.3,
+            options: {
+              num_predict: payload.parameters?.max_tokens || 512,
+              ...(payload.parameters || {})
+            },
+            requestId,
+            onStatus: (statusObj) => {
+              sendSSE("status", statusObj);
+            },
+            onToken: (tokenChunk, accumulatedText) => {
+              sendSSE("token", { text: tokenChunk, fullText: accumulatedText });
+            },
+            onComplete: (metrics) => {
+              sendSSE("complete", {
+                ...metrics,
+                agent_id: agent.agent_id,
+                requested_model: isManual ? targetOllamaModel : "auto",
+                actual_model: targetOllamaModel,
+                model_mode: isManual ? "manual" : "auto",
+                model_source: "ollama-local",
+                model: modelDisplayName,
+                external_calls: 0
+              });
+              res.end();
+            },
+            onError: (err) => {
+              sendSSE("error", {
+                message: err.message,
+                status: "error"
+              });
+              res.end();
+            }
+          });
+        } catch (streamErr) {
+          sendSSE("error", {
+            message: streamErr.message,
+            status: "error"
+          });
+          res.end();
+        }
+        return;
+      }
 
       const agentPayload = {
         task,

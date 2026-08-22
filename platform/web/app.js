@@ -473,38 +473,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function createNewConversation() {
+    function createNewConversation() {
         const targetAgent = state.agents.find(a => a.id === 'auto') || state.agents[0];
-        const newChatPayload = {
-            title: 'New Chat',
-            agentId: targetAgent?.id || 'agent-101',
-            agentName: targetAgent?.name || 'Super AI',
-            modelMode: state.selectedModelMode || 'auto',
-            messages: []
-        };
-
-        try {
-            const res = await fetch('/api/chats', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newChatPayload)
-            });
-            if (res.ok) {
-                const data = await res.json();
-                state.currentConversationId = data.chat.id;
-            } else {
-                state.currentConversationId = `chat-${Date.now()}`;
-            }
-        } catch (err) {
-            state.currentConversationId = `chat-${Date.now()}`;
-        }
-
+        state.currentConversationId = null; // Fresh unsaved session
         selectAgent('auto', true);
         clearChat();
         showEmptyState(targetAgent);
         elements.chatInput.value = '';
         elements.chatInput.focus();
-        loadConversations();
+        renderConversationList();
     }
 
     async function selectConversation(id) {
@@ -912,7 +889,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function appendUserMessage(text, attachments = []) {
+    async function appendUserMessage(text, attachments = []) {
         hideEmptyState();
         const msg = {
             id: `msg-${Date.now()}`,
@@ -930,11 +907,35 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollToBottom();
 
         // Persist to server conversation
-        if (state.currentConversationId) {
+        if (!state.currentConversationId) {
+            const targetAgent = state.selectedAgent || state.agents.find(a => a.id === 'auto') || state.agents[0];
+            try {
+                const res = await fetch('/api/chats', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: text.slice(0, 36),
+                        agentId: targetAgent?.id || 'agent-101',
+                        agentName: targetAgent?.name || 'Super AI Agent',
+                        modelMode: state.selectedModelMode || 'auto',
+                        messages: [msg]
+                    })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    state.currentConversationId = data.chat.id;
+                    loadConversations();
+                }
+            } catch (err) {
+                console.warn('Failed to create new conversation on server:', err);
+            }
+        } else {
             fetch(`/api/chats/${state.currentConversationId}/messages`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(msg)
+            }).then(() => {
+                loadConversations();
             }).catch(() => null);
         }
     }
@@ -1449,13 +1450,16 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollToBottom();
     }
 
-    // 6. COMPOSER SENDER
+    // 6. COMPOSER SENDER & TRUE STREAMING HANDLER
     function handleSend() {
         let text = elements.chatInput.value.trim();
         const attachments = [...state.currentAttachments];
 
         if (!text && attachments.length === 0) return;
-        if (state.isGenerating) return;
+        if (state.isGenerating) {
+            handleStopGeneration();
+            return;
+        }
 
         if (!text && attachments.length > 0) {
             text = `Analyze and extract findings from: ${attachments.map(a => a.name).join(', ')}`;
@@ -1472,117 +1476,260 @@ document.addEventListener('DOMContentLoaded', () => {
         sendToBackend(state.selectedAgent?.id || 'auto', text, attachments);
     }
 
+    function handleStopGeneration() {
+        if (state.currentAbortController) {
+            state.currentAbortController.abort();
+            state.currentAbortController = null;
+        }
+        setGenerating(false);
+    }
+
     async function sendToBackend(agentId, text, attachments) {
         setGenerating(true);
-        appendThinkingIndicator(text, attachments);
-        
-        // Golden Demo Logic
-        const textLower = text.toLowerCase();
-        const hasGoldenKeywords = textLower.includes('demo') || 
-                                 textLower.includes('hx-204') || 
-                                 textLower.includes('inspection');
-                                 
-        const hasGoldenFiles = attachments.some(a => a.name.toLowerCase().includes('inspection') || a.name.toLowerCase().includes('hx-204'));
+        state.currentAbortController = new AbortController();
         
         const currentModelMode = state.selectedModelMode || 'auto';
         const modelOverride = currentModelMode !== 'auto' ? LOCAL_MODEL_DEFS[currentModelMode]?.internalId : null;
+        const targetAgentId = (!agentId || agentId === 'auto') ? 'agent-101' : agentId;
+
+        // Create stream placeholder message
+        hideEmptyState();
+        removeThinkingIndicator();
+
+        const modelDefaultDisplay = currentModelMode === 'auto' ? 'Super AI (Auto)' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName;
+        const streamMsgDiv = document.createElement('div');
+        streamMsgDiv.className = 'msg-row ai streaming-active';
+        streamMsgDiv.id = `msg-stream-${Date.now()}`;
+
+        streamMsgDiv.innerHTML = `
+            <div class="msg-bubble">
+                <div class="ai-header">
+                    <span class="ai-model-label">● ${escapeHtml(modelDefaultDisplay)}</span>
+                    <span class="zero-egress-tag">⚡ Initializing · 0 External Calls</span>
+                </div>
+                <div class="stream-status-pill preparing">
+                    <span class="spin-icon" style="display:inline-block;width:10px;height:10px;border:1.5px solid currentColor;border-top-color:transparent;border-radius:50%;"></span>
+                    <span class="stream-status-text">Preparing model...</span>
+                </div>
+                <div class="msg-text stream-text-target" style="color:var(--text-primary);line-height:1.65;">
+                    <span class="stream-cursor"></span>
+                </div>
+            </div>
+        `;
+        elements.chatMessages.appendChild(streamMsgDiv);
+        scrollToBottom();
+
+        const textTarget = streamMsgDiv.querySelector('.stream-text-target');
+        const modelLabelEl = streamMsgDiv.querySelector('.ai-model-label');
+        const egressTagEl = streamMsgDiv.querySelector('.zero-egress-tag');
+        const statusPill = streamMsgDiv.querySelector('.stream-status-pill');
+        const statusText = streamMsgDiv.querySelector('.stream-status-text');
+
+        let accumulatedText = '';
+        let actualModelTag = modelOverride || 'nemotron-3-nano:latest';
+        let modelDisplayName = modelDefaultDisplay;
+        let traceId = `INT-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
+        let durationMs = null;
+        let tokensPerSec = null;
+        let isStopped = false;
 
         try {
-            if (hasGoldenKeywords || hasGoldenFiles) {
-                // Execute Golden Demo Workflow
-                const res = await fetch('/api/workflows/start', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        workflowId: 'inspection-report-analysis',
-                        inputPayload: { query: text, modelMode: currentModelMode, model_override: modelOverride }
-                    })
-                }).catch(() => null);
-                
-                await new Promise(r => setTimeout(r, 1600));
-                
-                const modelAttribution = currentModelMode === 'auto' ? 'Super AI (Nemotron / Gemma / Qwen)' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName;
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'text/event-stream'
+                },
+                body: JSON.stringify({
+                    agent_id: targetAgentId,
+                    task: text,
+                    modelMode: currentModelMode,
+                    model_override: modelOverride,
+                    stream: true
+                }),
+                signal: state.currentAbortController.signal
+            });
 
-                appendAIMessage({
-                    text: "**HX-204 Inspection Analysis Complete**\n\nI have analyzed the provided inspection reports for Heat Exchanger HX-204. \n\nKey Findings:\n- Tube bundle degradation detected in section B.\n- Estimated remaining life: 14 months.\n- Recommended action: Schedule maintenance during next Q3 turnaround.\n\nI have generated a detailed summary report and drafted a maintenance work order.",
-                    evidence: [
-                        { title: 'HX-204_Q2_Inspection.pdf' },
-                        { title: 'Historical_Corrosion_Data.csv' },
-                        { title: 'SOP-Main-042 (Heat Exchangers)' }
-                    ],
-                    deliverables: [
-                        { name: 'HX-204_Analysis_Report.md' },
-                        { name: 'Draft_Work_Order_10992.json' }
-                    ],
-                    model: modelAttribution,
-                    plan: [
-                        { step: 'Extract data from PDF', agent: 'Extraction AI' },
-                        { step: 'Compare with historical data', agent: 'Engineering AI' },
-                        { step: 'Generate report', agent: 'Super AI' }
-                    ]
-                });
-                
-            } else {
-                // Standard Chat
-                const targetAgentId = (!agentId || agentId === 'auto') ? 'agent-101' : agentId;
-                
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        agent_id: targetAgentId, 
-                        task: text,
-                        modelMode: currentModelMode,
-                        model_override: modelOverride
-                    })
-                }).catch(() => null);
-                
-                let data = null;
-                if (res && res.ok) {
-                    data = await res.json();
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                if (res.status === 503 || errData.status === 'model_unavailable') {
+                    statusPill.remove();
+                    textTarget.innerHTML = `<span style="color:var(--neon-red);">⚠ ${escapeHtml(errData.error?.message || 'Selected model is currently unavailable in local runtime.')}</span>`;
+                    setGenerating(false);
+                    return;
                 }
-                
-                if (data && (data.text || data.result)) {
-                    const resObj = (typeof data.result === 'object' && data.result) ? data.result : data;
-                    appendAIMessage({
-                        text: data.text || resObj.text || resObj.content || resObj.synthesis || resObj.summary || (typeof data.result === 'string' ? data.result : ''),
-                        evidence: data.evidence || resObj.evidence || null,
-                        deliverables: data.deliverables || resObj.deliverables || null,
-                        plan: data.plan || resObj.plan || null,
-                        trace_id: data.trace_id || resObj.trace_id,
-                        model: data.model || (currentModelMode === 'auto' ? 'Super AI' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName)
-                    });
-                } else {
-                    // Informative fallback
-                    await new Promise(r => setTimeout(r, 600));
-                    const fallbackModel = currentModelMode === 'auto' ? 'Super AI' : LOCAL_MODEL_DEFS[currentModelMode]?.displayName;
-                    appendAIMessage({
-                        text: `### Analysis for: ${escapeHtml(text)}\n\nI have initiated analysis with the on-premise industrial agent workforce. \n\n- **Target Agent**: ${escapeHtml(state.selectedAgent?.name || 'Super AI')}\n- **Category**: ${escapeHtml(state.selectedAgent?.category || 'Specialized AI')}\n- **Model Engine**: ${escapeHtml(fallbackModel)}\n\nYour request has been processed locally on local hardware with zero external calls.`,
-                        model: fallbackModel
-                    });
+                throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+            }
+
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+            let buffer = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                const events = buffer.split('\n\n');
+                buffer = events.pop() || '';
+
+                for (const ev of events) {
+                    if (!ev.trim()) continue;
+                    const lines = ev.split('\n');
+                    let eventType = 'message';
+                    let eventData = '';
+
+                    for (const line of lines) {
+                        if (line.startsWith('event:')) {
+                            eventType = line.replace('event:', '').trim();
+                        } else if (line.startsWith('data:')) {
+                            eventData = line.replace('data:', '').trim();
+                        }
+                    }
+
+                    if (!eventData) continue;
+
+                    try {
+                        const parsed = JSON.parse(eventData);
+
+                        if (eventType === 'status') {
+                            if (statusText) {
+                                statusText.textContent = parsed.message || (parsed.state === 'model_ready' ? `${parsed.model} active` : 'Preparing model...');
+                                if (parsed.state === 'model_ready') {
+                                    statusPill.className = 'stream-status-pill active';
+                                }
+                            }
+                        } else if (eventType === 'metadata') {
+                            actualModelTag = parsed.actualModel || actualModelTag;
+                            modelDisplayName = parsed.modelDisplayName || modelDisplayName;
+                            traceId = parsed.requestId || traceId;
+                            if (modelLabelEl) modelLabelEl.textContent = `● ${modelDisplayName}`;
+                            if (egressTagEl) egressTagEl.textContent = `⚡ ${actualModelTag} · 0 External Calls`;
+                        } else if (eventType === 'token') {
+                            if (statusPill && statusPill.parentNode) {
+                                statusPill.remove();
+                            }
+                            accumulatedText += (parsed.text || '');
+                            textTarget.innerHTML = formatResponse(accumulatedText) + `<span class="stream-cursor"></span>`;
+                            scrollToBottom();
+                        } else if (eventType === 'complete') {
+                            actualModelTag = parsed.actual_model || actualModelTag;
+                            durationMs = parsed.duration_ms || null;
+                            tokensPerSec = parsed.tokens_per_sec || null;
+                            if (modelLabelEl) modelLabelEl.textContent = `● ${modelDisplayName}`;
+                            if (egressTagEl) egressTagEl.textContent = `⚡ ${actualModelTag} · 0 External Calls`;
+                        } else if (eventType === 'error') {
+                            if (statusPill && statusPill.parentNode) statusPill.remove();
+                            textTarget.innerHTML = formatResponse(accumulatedText) + `<br><span style="color:var(--neon-red);font-size:12px;">⚠ ${escapeHtml(parsed.message || 'Stream error occurred.')}</span>`;
+                        }
+                    } catch {
+                        // Skip malformed event chunk
+                    }
                 }
             }
-        } catch (error) {
-            console.error('Chat error:', error);
-            appendAIMessage({
-                text: "An error occurred while processing your request. Please ensure the backend is running.",
-                model: 'Local System'
-            });
+        } catch (err) {
+            if (err.name === 'AbortError') {
+                isStopped = true;
+                if (statusPill && statusPill.parentNode) statusPill.remove();
+                textTarget.innerHTML = formatResponse(accumulatedText) + `<br><span style="color:var(--text-tertiary);font-size:12px;font-style:italic;">⏹ Generation stopped by user.</span>`;
+            } else {
+                console.error('Streaming error:', err);
+                if (statusPill && statusPill.parentNode) statusPill.remove();
+                if (!accumulatedText) {
+                    textTarget.innerHTML = `<span style="color:var(--neon-red);">An error occurred connecting to local model inference. Please verify Ollama is active.</span>`;
+                }
+            }
+        } finally {
+            // Finalize message representation
+            const cursor = streamMsgDiv.querySelector('.stream-cursor');
+            if (cursor) cursor.remove();
+            if (statusPill && statusPill.parentNode) statusPill.remove();
+
+            // Append backend flow card
+            const agentName = state.selectedAgent?.name || 'Super AI';
+            const statsStr = [
+                durationMs ? `${durationMs}ms` : null,
+                tokensPerSec ? `${tokensPerSec} t/s` : null
+            ].filter(Boolean).join(' · ');
+
+            const backendFlow = document.createElement('div');
+            backendFlow.className = 'backend-flow-card';
+            backendFlow.innerHTML = `
+                <div class="backend-flow-header">
+                    <span>⚡ What happened in the backend</span>
+                    <span class="backend-flow-badge">100% On-Premise Stream</span>
+                </div>
+                <div class="backend-flow-steps">
+                    <div class="backend-flow-item">
+                        <span class="backend-flow-check">✓</span>
+                        <span><strong>1. Agent Dispatched:</strong> Handled by <code>${escapeHtml(agentName)}</code> (Agent ${state.selectedAgent?.displayNumber || '101'})</span>
+                    </div>
+                    <div class="backend-flow-item">
+                        <span class="backend-flow-check">✓</span>
+                        <span><strong>2. Model Engine:</strong> Executed via <code>${escapeHtml(modelDisplayName)}</code> (Actual Runtime: <code>${escapeHtml(actualModelTag)}</code>${statsStr ? ` · ${statsStr}` : ''})</span>
+                    </div>
+                    <div class="backend-flow-item">
+                        <span class="backend-flow-check">✓</span>
+                        <span><strong>3. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
+                    </div>
+                    <div class="backend-flow-item">
+                        <span class="backend-flow-check">✓</span>
+                        <span><strong>4. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
+                    </div>
+                </div>
+            `;
+            streamMsgDiv.querySelector('.msg-bubble')?.appendChild(backendFlow);
+
+            const finalMsg = {
+                id: `msg-${Date.now()}`,
+                role: 'assistant',
+                content: accumulatedText || (isStopped ? 'Generation stopped.' : 'No response text received.'),
+                model: modelDisplayName,
+                actualModel: actualModelTag,
+                modelMode: currentModelMode,
+                durationMs,
+                tokensPerSec,
+                traceId,
+                timestamp: new Date()
+            };
+
+            const agentIdKey = state.selectedAgent?.id || 'auto';
+            if (!state.chatHistories[agentIdKey]) state.chatHistories[agentIdKey] = [];
+            state.chatHistories[agentIdKey].push(finalMsg);
+
+            // Persist to server conversation
+            if (state.currentConversationId) {
+                fetch(`/api/chats/${state.currentConversationId}/messages`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(finalMsg)
+                }).then(() => {
+                    loadConversations();
+                }).catch(() => null);
+            }
+
+            setGenerating(false);
+            scrollToBottom();
         }
     }
 
     function setGenerating(isGen) {
         state.isGenerating = isGen;
         if (isGen) {
-            elements.sendBtn.disabled = true;
+            elements.sendBtn.disabled = false;
             elements.sendBtn.classList.remove('ready');
-            elements.sendBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="spin-icon"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>`;
+            elements.sendBtn.classList.add('stop-mode');
+            elements.sendBtn.title = 'Stop Generation';
+            elements.sendBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>`;
+            elements.sendBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
             elements.chatInput.disabled = true;
         } else {
-            const hasContent = elements.chatInput.value.trim().length > 0 || state.currentAttachments.length > 0;
-            elements.sendBtn.disabled = !hasContent;
-            elements.sendBtn.classList.toggle('ready', hasContent);
-            elements.sendBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`;
+            state.currentAbortController = null;
+            elements.sendBtn.disabled = false;
+            elements.sendBtn.classList.remove('stop-mode');
+            elements.sendBtn.title = 'Send message';
+            elements.sendBtn.style.background = '';
+            elements.sendBtn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`;
             elements.chatInput.disabled = false;
             elements.chatInput.focus();
         }

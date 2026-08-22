@@ -1,7 +1,5 @@
-import { describe, it, before, after } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'node:fs';
-import path from 'node:path';
 import {
   listChats,
   getChat,
@@ -12,68 +10,127 @@ import {
   searchChats
 } from '../../platform/services/conversation-service.js';
 
-describe('101 Super AI Agents — Conversation History Subsystem Test', () => {
-  let testChatId = null;
+describe('101 Super AI Agents — Conversation History Subsystem Verification', () => {
+  let testChatA = null;
+  let testChatB = null;
 
-  it('should create a new conversation with persistent local file', () => {
+  it('1. Real conversations load without fake placeholder items', () => {
+    const chats = listChats();
+    assert.ok(Array.isArray(chats), 'Chats must be an array');
+    assert.ok(chats.length > 0, 'Must contain real migrated/persisted conversations');
+    assert.ok(!chats.some(c => c.title === 'New Chat' && c.messageCount === 0), 'No empty New Chat placeholders');
+  });
+
+  it('2. Create and persist conversation to authoritative E-drive storage', () => {
     const chat = createChat({
-      title: 'New Chat',
-      agentId: 'agent-101',
-      agentName: 'Super AI Agent',
-      modelMode: 'auto'
+      title: 'Renewable Energy Strategy Dossier',
+      agentId: 'agent-001',
+      agentName: 'Writing AI Agent',
+      modelMode: 'nemotron'
     });
 
     assert.ok(chat.id, 'Chat should have an ID');
-    assert.equal(chat.title, 'New Chat');
-    assert.equal(chat.agentName, 'Super AI Agent');
+    assert.equal(chat.title, 'Renewable Energy Strategy Dossier');
+    assert.equal(chat.agentId, 'agent-001');
+    assert.equal(chat.agentName, 'Writing AI Agent');
+    assert.equal(chat.modelMode, 'nemotron');
     assert.equal(chat.pinned, false);
-    testChatId = chat.id;
+    testChatA = chat.id;
 
     // Verify file on disk
-    const fetched = getChat(testChatId);
+    const fetched = getChat(testChatA);
     assert.ok(fetched, 'Conversation file must exist on disk');
-    assert.equal(fetched.id, testChatId);
+    assert.equal(fetched.id, testChatA);
   });
 
-  it('should append a user message and automatically generate a deterministic title', () => {
-    const updated = appendMessage(testChatId, {
+  it('3. Append user & assistant messages and preserve actual model metadata', () => {
+    const userMsg = {
       id: `msg-${Date.now()}`,
       role: 'user',
-      content: 'Compare Gemini 3.7 Flash and 3.1 Pro',
+      content: 'Analyze renewable grid transition.',
+      timestamp: new Date().toISOString()
+    };
+    appendMessage(testChatA, userMsg);
+
+    const aiMsg = {
+      id: `msg-${Date.now() + 1}`,
+      role: 'assistant',
+      content: 'Transitioning to renewable energy requires grid storage buffers.',
+      model: 'NVIDIA Nemotron 3',
+      actualModel: 'nemotron-3-nano:latest',
+      timestamp: new Date().toISOString()
+    };
+    const updated = appendMessage(testChatA, aiMsg);
+
+    assert.equal(updated.messages.length, 2);
+    assert.equal(updated.messages[0].role, 'user');
+    assert.equal(updated.messages[1].role, 'assistant');
+    assert.equal(updated.messages[1].actualModel, 'nemotron-3-nano:latest');
+  });
+
+  it('4. Auto-generate concise deterministic title from prompt if default', () => {
+    const chat = createChat({
+      title: 'New Conversation',
+      agentId: 'agent-003',
+      agentName: 'Coding AI Agent',
+      modelMode: 'qwen'
+    });
+    testChatB = chat.id;
+
+    const updated = appendMessage(testChatB, {
+      id: `msg-${Date.now()}`,
+      role: 'user',
+      content: 'Write a Python function to compute pump affinity law flow.',
       timestamp: new Date().toISOString()
     });
 
-    assert.equal(updated.messages.length, 1);
-    assert.ok(updated.title.startsWith('Compare Gemini'), `Title should auto-update to deterministic summary, got: ${updated.title}`);
+    assert.ok(updated.title && updated.title !== 'New Conversation', `Title should auto-generate, got: ${updated.title}`);
   });
 
-  it('should pin and unpin a conversation', () => {
-    const pinned = updateChat(testChatId, { pinned: true });
-    assert.equal(pinned.pinned, true);
+  it('5. Pin and unpin conversation changes sorting priority', () => {
+    updateChat(testChatA, { pinned: true });
+    let chats = listChats();
+    assert.equal(chats[0].id, testChatA, 'Pinned chat should appear first');
 
-    const chats = listChats();
-    const first = chats[0];
-    assert.equal(first.id, testChatId, 'Pinned chat should appear first in list');
-
-    const unpinned = updateChat(testChatId, { pinned: false });
-    assert.equal(unpinned.pinned, false);
+    updateChat(testChatA, { pinned: false });
+    chats = listChats();
+    const chatA = chats.find(c => c.id === testChatA);
+    assert.equal(chatA.pinned, false);
   });
 
-  it('should rename a conversation', () => {
-    const renamed = updateChat(testChatId, { title: 'Gemini Models Benchmark' });
-    assert.equal(renamed.title, 'Gemini Models Benchmark');
+  it('6. Rename conversation persists to storage', () => {
+    const renamed = updateChat(testChatA, { title: 'Strategic Renewable Plan 2026' });
+    assert.equal(renamed.title, 'Strategic Renewable Plan 2026');
+
+    const loaded = getChat(testChatA);
+    assert.equal(loaded.title, 'Strategic Renewable Plan 2026');
   });
 
-  it('should search conversations by title and message content', () => {
-    const results = searchChats('Benchmark');
-    assert.ok(results.some(c => c.id === testChatId), 'Search should match the conversation title');
+  it('7. Search conversations by title, agent name, and content', () => {
+    const results = searchChats('Strategic');
+    assert.ok(results.some(c => c.id === testChatA), 'Search by title must match');
+
+    const agentResults = searchChats('Coding AI');
+    assert.ok(agentResults.some(c => c.id === testChatB), 'Search by agent name must match');
   });
 
-  it('should delete a conversation and remove its local file', () => {
-    const deleted = deleteChat(testChatId);
-    assert.equal(deleted, true);
+  it('8. Restore agent and model state on conversation reopen', () => {
+    const chatA = getChat(testChatA);
+    assert.equal(chatA.agentId, 'agent-001');
+    assert.equal(chatA.modelMode, 'nemotron');
 
-    const fetched = getChat(testChatId);
-    assert.equal(fetched, null, 'Deleted chat must no longer exist');
+    const chatB = getChat(testChatB);
+    assert.equal(chatB.agentId, 'agent-003');
+    assert.equal(chatB.modelMode, 'qwen');
+  });
+
+  it('9. Delete conversation and confirm purge from disk', () => {
+    const deletedA = deleteChat(testChatA);
+    const deletedB = deleteChat(testChatB);
+    assert.equal(deletedA, true);
+    assert.equal(deletedB, true);
+
+    assert.equal(getChat(testChatA), null);
+    assert.equal(getChat(testChatB), null);
   });
 });

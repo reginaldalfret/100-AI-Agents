@@ -1,0 +1,20 @@
+{
+  "id": "chat-CONV-B",
+  "title": "Check Pump P-301",
+  "agentId": "agent-101",
+  "agentName": "Super AI Agent",
+  "modelMode": "auto",
+  "pinned": false,
+  "createdAt": "2026-08-22T14:15:04.728Z",
+  "updatedAt": "2026-08-22T14:15:04.728Z",
+  "messages": [
+    {
+      "id": "MSG-1787408104728",
+      "role": "user",
+      "content": "Check Pump P-301",
+      "model": "NVIDIA Nemotron 3",
+      "actualModel": "nemotron-3-nano:latest",
+      "timestamp": "2026-08-22T14:15:04.728Z"
+    }
+  ]
+}
