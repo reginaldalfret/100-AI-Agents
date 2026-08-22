@@ -68,14 +68,41 @@ export const LOCAL_MODELS = [
     status: "ready"
   },
   {
-    model_id: "local-code-specialist",
-    name: "Local Code & Automation Specialist (Dense 4B)",
+    model_id: "gemma2-2b",
+    ollama_name: "gemma2:2b",
+    name: "Google Gemma 2 (2B Q4_K_M)",
     provider: "ollama",
     runtime: "local-ollama",
     endpoint: "http://127.0.0.1:11434",
     quantization: "Q4_K_M",
-    vram_mb: 2840,
-    ram_mb: 4096,
+    vram_mb: 1640,
+    ram_mb: 2048,
+    context_length: 4096,
+    supported_modalities: [ModelModality.TEXT, ModelModality.VISION],
+    capabilities: [
+      "visual-defect-reasoning",
+      "instruction-following",
+      "plant-equipment-identification",
+      "technical-qa"
+    ],
+    recommended_tasks: [
+      "equipment-defect-assessment",
+      "valve-identification",
+      "plant-condition-evaluation"
+    ],
+    priority: 2,
+    status: "ready"
+  },
+  {
+    model_id: "local-code-specialist",
+    ollama_name: "qwen2.5-coder:1.5b",
+    name: "Qwen 2.5 Coder (1.5B Q4_K_M)",
+    provider: "ollama",
+    runtime: "local-ollama",
+    endpoint: "http://127.0.0.1:11434",
+    quantization: "Q4_K_M",
+    vram_mb: 1438,
+    ram_mb: 2048,
     context_length: 4096,
     supported_modalities: [ModelModality.CODE, ModelModality.TEXT],
     capabilities: [
@@ -89,7 +116,7 @@ export const LOCAL_MODELS = [
       "corrosion-calculation-script",
       "data-conversion-pipeline"
     ],
-    priority: 3,
+    priority: 4,
     status: "ready"
   }
 ];

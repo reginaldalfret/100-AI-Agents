@@ -4,10 +4,10 @@ import assert from "node:assert";
 
 await runTestSuite("Local Model Registry & Auto-Router Tests", [
   {
-    name: "Registers 3 Local Models with Zero Cloud Providers",
+    name: "Registers Local Models with Zero Cloud Providers",
     fn: async () => {
       const models = listAvailableModels();
-      assert.strictEqual(models.length, 3);
+      assert.ok(models.length >= 3);
       assert.ok(models.every(m => m.provider === "ollama" || m.provider === "local-multimodal"));
     }
   },
