@@ -6,6 +6,9 @@ import { fileURLToPath } from "node:url";
 import { WorkflowEngine } from "../../workflow-engine/index.js";
 import { StudentService, AcademicService, FinanceService, DocumentService, AdmissionService, FacultyService, AuditService } from "../../services/index.js";
 import { modelStreamer, ModelLifecycleState } from "../../models/model-streamer.js";
+import { conversationManager } from "../../context/index.js";
+import { agentScopeGuard } from "../../intelligence/index.js";
+import { documentExtractor } from "../../multimodal/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +21,26 @@ const PORT = Number(process.env.PORT || 8300);
 
 function loadRegistry() {
   return JSON.parse(fs.readFileSync(REGISTRY, "utf8"));
+}
+
+let cachedAvailableModels = [];
+let lastTagsFetchTime = 0;
+const TAGS_CACHE_TTL = 60000;
+
+async function getAvailableModelsCached() {
+  const now = Date.now();
+  if (cachedAvailableModels.length > 0 && (now - lastTagsFetchTime) < TAGS_CACHE_TTL) {
+    return cachedAvailableModels;
+  }
+  try {
+    const tagsRes = await fetch("http://127.0.0.1:11434/api/tags", { signal: AbortSignal.timeout(1200) }).catch(() => null);
+    if (tagsRes && tagsRes.ok) {
+      const tagsData = await tagsRes.json();
+      cachedAvailableModels = (tagsData.models || []).map(m => m.name || m.model);
+      lastTagsFetchTime = now;
+    }
+  } catch {}
+  return cachedAvailableModels;
 }
 
 function json(res, status, data) {
@@ -295,16 +318,7 @@ const server = http.createServer(async (req, res) => {
       }
 
       // Check live local Ollama model tags for availability
-      let availableModels = [];
-      try {
-        const tagsRes = await fetch("http://127.0.0.1:11434/api/tags").catch(() => null);
-        if (tagsRes && tagsRes.ok) {
-          const tagsData = await tagsRes.json();
-          availableModels = (tagsData.models || []).map(m => m.name || m.model);
-        }
-      } catch (e) {
-        // Local check
-      }
+      const availableModels = await getAvailableModelsCached();
 
       const CANONICAL_MODEL_MAP = {
         "gemma": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
@@ -352,18 +366,99 @@ const server = http.createServer(async (req, res) => {
           });
           return;
         }
-      } else {
-        // Auto routing based on task
-        const taskLower = task.toLowerCase();
-        if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json")) {
-          targetOllamaModel = "qwen2.5-coder:1.5b";
-          modelDisplayName = "Qwen 2.5 Coder";
-        } else if (taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr")) {
+      // Process Multimodal Attachments & Document Extraction
+      let extractedEvidenceText = "";
+      const imagesList = Array.isArray(payload.images) ? [...payload.images] : [];
+      if (Array.isArray(payload.attachments) && payload.attachments.length > 0) {
+        for (const att of payload.attachments) {
+          const doc = await documentExtractor.extractContent(att);
+          if (doc) {
+            if (doc.isMultimodalImage && doc.base64Image) {
+              imagesList.push(doc.base64Image);
+            }
+            if (doc.extractedText) {
+              extractedEvidenceText += `\n\n[ATTACHED EVIDENCE: ${doc.filename}]\n${doc.extractedText}`;
+            }
+          }
+        }
+      }
+
+      const effectiveTask = extractedEvidenceText ? `${task}\n${extractedEvidenceText}` : task;
+
+      if (!isManual) {
+        // Auto routing based on task & attachments
+        const taskLower = effectiveTask.toLowerCase();
+        if (imagesList.length > 0 || taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr") || taskLower.includes("diagram")) {
           targetOllamaModel = "gemma3:4b";
           modelDisplayName = "Google Gemma 3";
+        } else if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv") || taskLower.includes("table")) {
+          targetOllamaModel = "qwen2.5-coder:1.5b";
+          modelDisplayName = "Qwen 2.5 Coder";
         } else {
           targetOllamaModel = "nemotron-3-nano:latest";
           modelDisplayName = "NVIDIA Nemotron 3";
+        }
+      }
+
+      const conversationId = payload.conversation_id || payload.conversationId || payload.chat_id || payload.chatId || null;
+      const contextPayload = conversationManager.prepareContext({
+        conversationId,
+        agent,
+        task: effectiveTask,
+        model: targetOllamaModel,
+        images: imagesList,
+        replyTo: payload.replyTo || null
+      });
+
+      // Domain Boundary & Scope Enforcement
+      const scopeDecision = agentScopeGuard.checkScope(agent, effectiveTask, {
+        conversationId,
+        replyTo: payload.replyTo || null
+      });
+
+      const wantsStream = Boolean(payload.stream === true || (req.headers["accept"] && req.headers["accept"].includes("text/event-stream")));
+
+      if (!scopeDecision.inScope) {
+        if (wantsStream) {
+          res.writeHead(200, {
+            "Content-Type": "text/event-stream; charset=utf-8",
+            "Cache-Control": "no-cache, no-transform",
+            "Connection": "keep-alive",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "X-Accel-Buffering": "no"
+          });
+
+          const sendSSE = (event, data) => {
+            try {
+              res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+            } catch {}
+          };
+
+          sendSSE("scope_redirect", scopeDecision);
+          sendSSE("complete", {
+            status: "out_of_scope",
+            agent_id: agent.agent_id,
+            scopeDecision,
+            text: scopeDecision.politeMessage,
+            external_calls: 0
+          });
+          res.end();
+          return;
+        } else {
+          json(res, 200, {
+            status: "out_of_scope",
+            gateway: "100-to-1",
+            agent: {
+              agent_id: agent.agent_id,
+              name: agent.name,
+              category: agent.category
+            },
+            scopeDecision,
+            text: scopeDecision.politeMessage,
+            external_calls: 0
+          });
+          return;
         }
       }
 
@@ -372,8 +467,6 @@ const server = http.createServer(async (req, res) => {
         ...(payload.parameters || {}),
         model: targetOllamaModel
       };
-
-      const wantsStream = Boolean(payload.stream === true || (req.headers["accept"] && req.headers["accept"].includes("text/event-stream")));
 
       if (wantsStream) {
         res.writeHead(200, {
@@ -417,12 +510,10 @@ const server = http.createServer(async (req, res) => {
         });
 
         try {
-          const sysPrompt = agent.system_prompt || (agent.domain ? `You are ${agent.name}, an expert AI Agent specializing in ${agent.domain}. Provide accurate, clear, professional answers.` : "You are a helpful industrial AI specialist.");
-
           await modelStreamer.streamFromOllama({
             model: targetOllamaModel,
-            system: sysPrompt,
-            prompt: task,
+            system: contextPayload.systemPrompt,
+            prompt: contextPayload.prompt,
             images: payload.images || [],
             temperature: 0.3,
             options: {
@@ -437,6 +528,16 @@ const server = http.createServer(async (req, res) => {
               sendSSE("token", { text: tokenChunk, fullText: accumulatedText });
             },
             onComplete: (metrics) => {
+              if (conversationId && metrics.fullText) {
+                conversationManager.recordTurn({
+                  conversationId,
+                  userPrompt: task,
+                  assistantResponse: metrics.fullText,
+                  agent,
+                  model: modelDisplayName,
+                  replyTo: payload.replyTo || null
+                });
+              }
               sendSSE("complete", {
                 ...metrics,
                 agent_id: agent.agent_id,
@@ -468,7 +569,7 @@ const server = http.createServer(async (req, res) => {
       }
 
       const agentPayload = {
-        task,
+        task: contextPayload.prompt || task,
         context: payload.context || {},
         parameters: agentParameters,
         model: targetOllamaModel,
@@ -564,6 +665,17 @@ const server = http.createServer(async (req, res) => {
       const wordsCount = answerText.split(/\s+/).filter(Boolean).length;
       const tokensEstimate = Math.round(wordsCount * 1.33);
       const tokensPerSec = totalDurationMs > 0 ? Number(((tokensEstimate / (totalDurationMs / 1000))).toFixed(1)) : 0;
+
+      if (conversationId && answerText) {
+        conversationManager.recordTurn({
+          conversationId,
+          userPrompt: task,
+          assistantResponse: answerText,
+          agent,
+          model: modelDisplayName,
+          replyTo: payload.replyTo || null
+        });
+      }
 
       json(res, 200, {
         status: "success",

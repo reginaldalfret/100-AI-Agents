@@ -32,10 +32,10 @@
     "domain": "Writing & Communication",
     "system_prompt": "You are Industrial Document Analyst (agent-001), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "document-intelligence",
-      "extract-pdf",
-      "ocr-document",
-      "read-file",
+      "Article Writing",
+      "Content Polishing",
+      "Style Enhancement",
+      "Document Drafting",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -53,12 +53,17 @@
     },
     "displayName": "Writing AI Agent",
     "displayNumber": "001",
-    "description": "Creates clear articles, essays, letters, reports, and written content.",
+    "description": "Creates clear articles, formal essays, business proposals, and polished written content.",
     "examples": [
       "Write a professional article about renewable energy",
-      "Draft an announcement letter for our team",
-      "Improve and polish this draft for clarity",
-      "Write a persuasive proposal introduction"
+      "Draft an executive announcement letter for our team",
+      "Improve and polish this draft for clarity and tone",
+      "Write a persuasive proposal introduction for stakeholders"
+    ],
+    "tools": [
+      "Text Formatter",
+      "Style Linter",
+      "Document Exporter"
     ]
   },
   {
@@ -99,9 +104,10 @@
     "domain": "Writing & Communication",
     "system_prompt": "You are Technical Communication Specialist (agent-002), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-communication",
-      "generate-docx",
-      "send-notification",
+      "Email Composition",
+      "Polite Reply Generation",
+      "Tone Adaptation",
+      "Follow-up Structuring",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -117,12 +123,17 @@
     },
     "displayName": "Email AI Agent",
     "displayNumber": "002",
-    "description": "Drafts professional emails, announcements, replies, and newsletters.",
+    "description": "Drafts professional emails, executive notices, polite replies, and follow-ups.",
     "examples": [
-      "Research the current trends in cloud computing",
-      "Compare three leading web development frameworks",
-      "Find and summarize the key facts about quantum computing",
-      "Provide a comprehensive topic overview"
+      "Write a professional email to my manager requesting a project review",
+      "Draft a polite reply to this client addressing their concerns",
+      "Make this email draft more concise and professional",
+      "Write a follow-up email after an engineering sync"
+    ],
+    "tools": [
+      "Email Formatter",
+      "Subject Generator",
+      "Template Manager"
     ]
   },
   {
@@ -160,9 +171,10 @@
     "domain": "Education & Learning",
     "system_prompt": "You are SOP Training & Onboarding Agent (agent-003), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-communication",
-      "search-knowledge",
-      "read-file",
+      "Study Plan Generation",
+      "Concept Simplification",
+      "Flashcard Creation",
+      "Revision Coaching",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -178,12 +190,17 @@
     },
     "displayName": "Study AI Agent",
     "displayNumber": "003",
-    "description": "Generates flashcards, practice problems, and active recall study guides.",
+    "description": "Generates study plans, active recall guides, flashcards, and concept explanations.",
     "examples": [
-      "Write a REST API handler in Node.js",
-      "Create an algorithm to find duplicates in an array",
-      "Implement a binary search function with tests",
-      "Write a script to automate file conversions"
+      "Create a 7-day study plan for my upcoming exams",
+      "Explain this complex topic in simple terms with analogies",
+      "Make flashcards and summary notes from this textbook chapter",
+      "Help me revise this topic quickly before my test"
+    ],
+    "tools": [
+      "Study Planner",
+      "Flashcard Builder",
+      "Concept Explainer"
     ]
   },
   {
@@ -219,9 +236,10 @@
     "domain": "Education & Learning",
     "system_prompt": "You are Safety Assessment & Quiz Agent (agent-004), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "search-knowledge",
-      "calculate-step-by-step",
+      "Quiz Generation",
+      "Assessment Design",
+      "Answer Key Formulation",
+      "Knowledge Testing",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -237,12 +255,17 @@
     },
     "displayName": "Quiz AI Agent",
     "displayNumber": "004",
-    "description": "Creates interactive quizzes, tests, and knowledge check questionnaires.",
+    "description": "Creates interactive quizzes, multiple-choice tests, and knowledge assessments.",
     "examples": [
-      "Debug this null pointer exception in JavaScript",
-      "Find why this async loop is hanging",
-      "Fix the memory leak in this event handler",
-      "Analyze this error log and suggest a resolution"
+      "Create a 10-question multiple-choice quiz on industrial safety",
+      "Generate true/false questions with detailed explanations",
+      "Build a practice test for beginner Python students",
+      "Quiz my knowledge on heat exchanger operating principles"
+    ],
+    "tools": [
+      "Quiz Builder",
+      "Question Bank",
+      "Score Calculator"
     ]
   },
   {
@@ -278,9 +301,10 @@
     "domain": "Writing & Communication",
     "system_prompt": "You are Executive Technical Summarizer (agent-005), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "document-intelligence",
-      "read-file",
-      "generate-docx",
+      "Document Summarization",
+      "Key Takeaway Extraction",
+      "Executive Briefing",
+      "Bullet Synthesis",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -296,12 +320,17 @@
     },
     "displayName": "Summarization AI Agent",
     "displayNumber": "005",
-    "description": "Condenses long articles, reports, and transcripts into concise summaries.",
+    "description": "Condenses long documents, research reports, and transcripts into concise summaries.",
     "examples": [
-      "Analyze this sales dataset for seasonal trends",
-      "Calculate the average growth rate and standard deviation",
-      "Find outliers in this performance metrics table",
-      "Summarize statistical distributions from this data"
+      "Summarize this 10-page report into 5 key bullet points",
+      "Generate an executive summary of this technical document",
+      "Condense this meeting transcript into key decisions made",
+      "Extract the core takeaways from this research paper"
+    ],
+    "tools": [
+      "Text Condenser",
+      "Keypoint Extractor",
+      "Executive Formatter"
     ]
   },
   {
@@ -339,9 +368,10 @@
     "domain": "Writing & Communication",
     "system_prompt": "You are Equipment Records & Asset Historian (agent-006), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "get-asset-history",
-      "read-file",
+      "Grammar Correction",
+      "Punctuation Polishing",
+      "Sentence Restructuring",
+      "Readability Analysis",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -357,12 +387,17 @@
     },
     "displayName": "Grammar AI Agent",
     "displayNumber": "006",
-    "description": "Checks grammar, syntax, punctuation, style, and tone accuracy.",
+    "description": "Checks grammar, syntax, punctuation, style, and tone consistency.",
     "examples": [
-      "Review and format this project specification document",
-      "Extract key metadata and headings from this document",
-      "Convert this document outline into structured sections",
-      "Check document consistency and layout"
+      "Proofread this article and correct all grammatical errors",
+      "Improve the sentence structure and punctuation in this draft",
+      "Check this document for passive voice and style consistency",
+      "Highlight spelling mistakes and suggest better vocabulary"
+    ],
+    "tools": [
+      "Grammar Linter",
+      "Spell Checker",
+      "Style Analyzer"
     ]
   },
   {
@@ -398,9 +433,10 @@
     "domain": "Writing & Communication",
     "system_prompt": "You are Technical Translation & Standards Agent (agent-007), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-communication",
-      "read-file",
-      "search-knowledge",
+      "Multi-Language Translation",
+      "Technical Term Preservation",
+      "Contextual Localization",
+      "Cultural Adaptation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -416,12 +452,17 @@
     },
     "displayName": "Translation AI Agent",
     "displayNumber": "007",
-    "description": "Translates text across multiple languages with context preservation.",
+    "description": "Translates text across multiple languages with context and terminology preservation.",
     "examples": [
-      "Write an Excel formula for conditional commission calculation",
-      "Format this CSV table with proper data types",
-      "Generate a quarterly budget spreadsheet model",
-      "Create a VLOOKUP / XLOOKUP formula for product inventory"
+      "Translate this technical SOP into Spanish accurately",
+      "Translate this announcement into French, German, and Japanese",
+      "Preserve engineering terminology while translating this manual",
+      "Check this translated text for contextual and idiomatic accuracy"
+    ],
+    "tools": [
+      "Language Translator",
+      "Glossary Matcher",
+      "Localization Checker"
     ]
   },
   {
@@ -458,9 +499,10 @@
     "domain": "Design & Creative",
     "system_prompt": "You are Hazard Mitigation & Brainstorming Agent (agent-008), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "search-knowledge",
-      "assess-risk",
+      "Creative Ideation",
+      "Product Concepting",
+      "Lateral Thinking",
+      "Innovation Frameworks",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -476,12 +518,17 @@
     },
     "displayName": "Idea Generation AI Agent",
     "displayNumber": "008",
-    "description": "Brainstorms creative concepts, product angles, and innovative solutions.",
+    "description": "Brainstorms creative concepts, product angles, and innovative problem solutions.",
     "examples": [
-      "Create a 5-slide pitch deck outline for our product",
-      "Draft speaker notes for an executive briefing",
-      "Structure a technical architecture presentation",
-      "Organize key slide takeaways for stakeholders"
+      "Brainstorm 10 innovative product ideas for renewable energy",
+      "Generate creative marketing angles for our new platform",
+      "Suggest novel solutions to reduce industrial equipment downtime",
+      "Give me 5 unique angles for an industrial research project"
+    ],
+    "tools": [
+      "Idea Generator",
+      "Concept Mapper",
+      "Brainstorm Matrix"
     ]
   },
   {
@@ -518,9 +565,10 @@
     "domain": "Design & Creative",
     "system_prompt": "You are Incident Investigation Narrative Agent (agent-009), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "search-knowledge",
-      "read-file",
+      "Narrative Crafting",
+      "Case Study Writing",
+      "Character & Scene Building",
+      "Emotional Arc Structuring",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -538,10 +586,15 @@
     "displayNumber": "009",
     "description": "Crafts engaging narrative arcs, scenarios, case studies, and storytelling.",
     "examples": [
-      "Create a responsive navigation bar with CSS flexbox",
-      "Build an accessible modal dialog in vanilla JavaScript",
-      "Style a dark liquid glass dashboard card",
-      "Design an animated landing page hero section"
+      "Write an engaging customer case study about solving outage risks",
+      "Craft a compelling narrative around our team's engineering milestone",
+      "Turn these technical achievements into an inspiring story",
+      "Develop a scenario walkthrough for training new plant engineers"
+    ],
+    "tools": [
+      "Story Builder",
+      "Narrative Formatter",
+      "Scenario Generator"
     ]
   },
   {
@@ -579,9 +632,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Turnaround & Maintenance Goal Planner (agent-010), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "calculate-step-by-step",
-      "read-excel",
+      "SMART Goal Formulation",
+      "Milestone Tracking",
+      "OKR Structuring",
+      "Action Planning",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -597,12 +651,17 @@
     },
     "displayName": "Goal Planning AI Agent",
     "displayNumber": "010",
-    "description": "Breaks objectives into SMART goals, milestones, and daily tracking.",
+    "description": "Breaks objectives into SMART goals, milestones, and daily accountability tracking.",
     "examples": [
-      "Design an intuitive onboarding flow for a mobile app",
-      "Audit this form layout for accessibility and usability",
-      "Create a modern color palette with dark mode tokens",
-      "Draft wireframe specifications for a search interface"
+      "Break this annual target into quarterly SMART goals",
+      "Create a 30-60-90 day milestone plan for this project",
+      "Structure my weekly priorities using an OKR framework",
+      "Set up an accountability checklist for team deliverables"
+    ],
+    "tools": [
+      "Goal Tracker",
+      "Milestone Planner",
+      "OKR Builder"
     ]
   },
   {
@@ -640,9 +699,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Field Log & Shift Handover Agent (agent-011), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "inspection-maintenance",
-      "read-file",
-      "write-file",
+      "Cornell Note Structuring",
+      "Action Item Extraction",
+      "Outline Generation",
+      "Knowledge Tagging",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -658,12 +718,17 @@
     },
     "displayName": "Note Taking AI Agent",
     "displayNumber": "011",
-    "description": "Organizes unstructured notes into clean Cornell and outline structures.",
+    "description": "Organizes unstructured notes into clean Cornell, outline, and knowledge formats.",
     "examples": [
-      "Design a normalized schema for an e-commerce platform",
-      "Write an optimized indexing strategy for user lookups",
-      "Create a database migration script for PostgreSQL",
-      "Design a Redis caching schema for session data"
+      "Format these rough meeting notes using the Cornell method",
+      "Extract action items and key decisions from this discussion",
+      "Organize these scattered thoughts into a structured outline",
+      "Create a clean knowledge base entry from these bullet points"
+    ],
+    "tools": [
+      "Note Organizer",
+      "Outline Formatter",
+      "Tagging Engine"
     ]
   },
   {
@@ -699,9 +764,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Work Order Task Automation Agent (agent-012), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "get-work-orders",
-      "update-work-order",
+      "Eisenhower Matrix Prioritization",
+      "Backlog Grooming",
+      "Time Estimation",
+      "Sprint Planning",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -719,10 +785,15 @@
     "displayNumber": "012",
     "description": "Prioritizes daily to-do lists, backlog items, and urgency matrices.",
     "examples": [
-      "Design an OpenAPI 3.0 specification for authentication",
-      "Create a RESTful endpoint design for file uploads",
-      "Draft a WebSocket event schema for live notifications",
-      "Write an API contract for payment processing"
+      "Prioritize my daily tasks using the Eisenhower Matrix",
+      "Break down this complex deliverable into manageable sub-tasks",
+      "Estimate task durations and create an optimal daily schedule",
+      "Organize our sprint backlog by urgency and impact"
+    ],
+    "tools": [
+      "Task Prioritizer",
+      "Time Estimator",
+      "Backlog Organizer"
     ]
   },
   {
@@ -758,9 +829,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Contractor Compliance & Qualification Agent (agent-013), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "regulatory-compliance",
-      "search-knowledge",
-      "verify-document",
+      "ATS Optimization",
+      "Resume Bullet Rewriting",
+      "Cover Letter Drafting",
+      "Skill Highlighting",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -776,12 +848,17 @@
     },
     "displayName": "Resume AI Agent",
     "displayNumber": "013",
-    "description": "Tailors resumes, optimizes bullet points for ATS, and writes cover letters.",
+    "description": "Tailors resumes, optimizes bullet points for ATS screening, and writes cover letters.",
     "examples": [
-      "Write Jest unit tests for this authentication service",
-      "Create test edge cases for boundary value testing",
-      "Generate mock API data fixtures for frontend tests",
-      "Draft an end-to-end integration test plan"
+      "Optimize my resume bullet points for ATS screening",
+      "Tailor my resume for a Senior Software Engineer position",
+      "Rewrite my job experience using strong action verbs and metrics",
+      "Draft a compelling cover letter highlighting my leadership skills"
+    ],
+    "tools": [
+      "ATS Scanner",
+      "Resume Builder",
+      "Keyword Optimizer"
     ]
   },
   {
@@ -817,9 +894,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Maintenance Crew Dispatch & Matching Agent (agent-014), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "get-crew-schedule",
-      "read-file",
+      "Job Fit Analysis",
+      "Skill Gap Identification",
+      "Career Path Alignment",
+      "Role Comparison",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -835,12 +913,17 @@
     },
     "displayName": "Job Matching AI Agent",
     "displayNumber": "014",
-    "description": "Analyzes job requirements and aligns skillsets for career placement.",
+    "description": "Analyzes qualifications and aligns skillsets for career placement and job matching.",
     "examples": [
-      "Audit this authentication handler for security flaws",
-      "Check this SQL query builder for injection vulnerabilities",
-      "Review CORS and Content Security Policy headers",
-      "Provide recommendations for securing JWT tokens"
+      "Analyze my skill set and identify matching job titles",
+      "Compare my qualifications against this job description",
+      "Find skill gaps I need to address for a Systems Architect role",
+      "Recommend career paths based on my technical background"
+    ],
+    "tools": [
+      "Skill Matcher",
+      "Gap Analyzer",
+      "Career Navigator"
     ]
   },
   {
@@ -876,9 +959,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Safety Interview & Debriefing Agent (agent-015), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "read-file",
-      "generate-docx",
+      "Mock Interview Simulation",
+      "STAR Method Coaching",
+      "Technical Question Generation",
+      "Feedback Evaluation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -894,12 +978,17 @@
     },
     "displayName": "Interview AI Agent",
     "displayNumber": "015",
-    "description": "Conducts mock interviews, behavioral questions, and feedback coaching.",
+    "description": "Conducts mock interviews, behavioral coaching, and technical interview preparation.",
     "examples": [
-      "Write a multi-stage Dockerfile for a Node.js service",
-      "Create a GitHub Actions workflow for testing and build",
-      "Write a Docker Compose file with database and redis",
-      "Configure health checks and restart policies"
+      "Conduct a mock behavioral interview for an engineering lead role",
+      "Ask me 5 technical questions on distributed systems",
+      "Evaluate my answer to: 'Tell me about a time you resolved a conflict'",
+      "Give me feedback on how to structure my answers using STAR method"
+    ],
+    "tools": [
+      "Mock Interviewer",
+      "STAR Evaluator",
+      "Feedback Engine"
     ]
   },
   {
@@ -936,9 +1025,10 @@
     "domain": "Writing & Communication",
     "system_prompt": "You are Inter-Departmental Memo Dispatcher (agent-016), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-communication",
-      "generate-docx",
-      "read-file",
+      "Interpersonal Messaging",
+      "Constructive Feedback Polishing",
+      "Negotiation Dialogue",
+      "Memo Drafting",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -954,12 +1044,17 @@
     },
     "displayName": "Communication AI Agent",
     "displayNumber": "016",
-    "description": "Polishes interpersonal messages, negotiation dialogue, and memos.",
+    "description": "Polishes interpersonal messages, negotiation dialogue, and organizational memos.",
     "examples": [
-      "Design a scalable multi-zone cloud architecture",
-      "Configure object storage bucket lifecycle rules",
-      "Draft a cloud migration checklist for on-premise apps",
-      "Optimize serverless compute configurations"
+      "Draft a constructive message to resolve a team disagreement",
+      "Polish this feedback to be encouraging and actionable",
+      "Write a clear inter-departmental memo about system maintenance",
+      "Help me prepare talking points for an executive presentation"
+    ],
+    "tools": [
+      "Communication Polisher",
+      "Tone Checker",
+      "Memo Formatter"
     ]
   },
   {
@@ -996,9 +1091,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Plant Risk SWOT Analysis Agent (agent-017), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "search-knowledge",
-      "assess-risk",
+      "SWOT Matrix Generation",
+      "Internal Capability Audit",
+      "External Risk Assessment",
+      "Strategic Synthesis",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1014,12 +1110,17 @@
     },
     "displayName": "SWOT Analysis AI Agent",
     "displayNumber": "017",
-    "description": "Conducts Strengths, Weaknesses, Opportunities, and Threats evaluations.",
+    "description": "Conducts Strengths, Weaknesses, Opportunities, and Threats evaluations for business strategy.",
     "examples": [
-      "Write a script to automate daily report generation",
-      "Create a cron job schedule for log rotation",
-      "Automate batch file renaming and organization",
-      "Build an automated data validation pipeline"
+      "Perform a comprehensive SWOT analysis for our new software tool",
+      "Identify external threats and internal weaknesses in this strategy",
+      "Evaluate market opportunities for expanding our on-premise offering",
+      "Create a SWOT matrix for upgrading our legacy infrastructure"
+    ],
+    "tools": [
+      "SWOT Analyzer",
+      "Matrix Generator",
+      "Strategy Evaluator"
     ]
   },
   {
@@ -1057,9 +1158,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Technical Career & Competency Advisor (agent-018), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "search-knowledge",
-      "read-file",
+      "Career Roadmapping",
+      "Promotion Strategy",
+      "Skill Acquisition Planning",
+      "Industry Transition Guidance",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1075,12 +1177,17 @@
     },
     "displayName": "Career Advisor AI Agent",
     "displayNumber": "018",
-    "description": "Provides career roadmaps, promotion strategy, and skill gap plans.",
+    "description": "Provides career roadmaps, promotion strategies, and skill acquisition plans.",
     "examples": [
-      "Explain how to resolve this Git rebase conflict",
-      "Suggest a Git branching strategy for release management",
-      "Write a script to clean up stale local Git branches",
-      "Create a template for semantic pull request messages"
+      "Create a 3-year career development roadmap for transitioning to AI",
+      "Suggest high-impact certifications for industrial automation",
+      "How should I negotiate my promotion to Staff Engineer?",
+      "Identify growth opportunities in on-premise enterprise software"
+    ],
+    "tools": [
+      "Career Planner",
+      "Skill Matrix",
+      "Roadmap Builder"
     ]
   },
   {
@@ -1117,9 +1224,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Operational Decision Tree Evaluator (agent-019), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "calculate-step-by-step",
-      "assess-risk",
+      "Decision Matrix Formulation",
+      "Pros & Cons Weighting",
+      "Trade-Off Analysis",
+      "Risk-Reward Evaluation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1135,12 +1243,17 @@
     },
     "displayName": "Decision Making AI Agent",
     "displayNumber": "019",
-    "description": "Applies decision trees, pros/cons weighting, and trade-off matrices.",
+    "description": "Applies decision trees, pros/cons weighting, and trade-off matrices for complex choices.",
     "examples": [
-      "Write a Bash script to monitor disk space and alert",
-      "Create a systemd service unit file for a Node.js daemon",
-      "Explain the permissions for chmod 750 vs 755",
-      "Diagnose high CPU usage using top and htop"
+      "Build a decision matrix comparing on-premise vs hybrid architectures",
+      "Weigh the pros and cons of migrating to microservices",
+      "Apply a risk-reward framework to this proposed timeline change",
+      "Help me evaluate 3 competing vendor proposals objectively"
+    ],
+    "tools": [
+      "Decision Matrix",
+      "Trade-Off Calculator",
+      "Risk Model"
     ]
   },
   {
@@ -1177,9 +1290,10 @@
     "domain": "Design & Creative",
     "system_prompt": "You are Engineering Innovation & Design Agent (agent-020), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "search-knowledge",
-      "calculate-step-by-step",
+      "Divergent Thinking",
+      "Mind Mapping",
+      "Six Thinking Hats",
+      "Feature Brainstorming",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1195,12 +1309,17 @@
     },
     "displayName": "Brainstorming AI Agent",
     "displayNumber": "020",
-    "description": "Facilitates divergent thinking, mind maps, and lateral brainstorms.",
+    "description": "Facilitates divergent thinking, mind maps, and lateral brainstorms for teams.",
     "examples": [
-      "Write a PowerShell script to monitor TCP ports",
-      "Register a Windows scheduled task via PowerShell",
-      "Query active processes and memory usage in Windows",
-      "Configure environment variables persistently via script"
+      "Generate 20 divergent ideas to improve user retention",
+      "Run a 'six thinking hats' exercise on this product pivot",
+      "Brainstorm edge cases we might encounter in air-gapped deployments",
+      "Create a mind map of feature ideas for industrial AI workflows"
+    ],
+    "tools": [
+      "Mind Mapper",
+      "Brainstorm Engine",
+      "Creative Prompt Generator"
     ]
   },
   {
@@ -1236,9 +1355,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are Local Technical Patent & Literature Agent (agent-021), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-research",
-      "search-knowledge",
-      "read-file",
+      "Technical Web Synthesis",
+      "Topical Fact Finding",
+      "Knowledge Aggregation",
+      "Hardware & Spec Research",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1254,12 +1374,17 @@
     },
     "displayName": "Web Research AI Agent",
     "displayNumber": "021",
-    "description": "Searches on-premise knowledge bases and synthesizes topical findings.",
+    "description": "Searches on-premise knowledge bases and synthesizes topical research findings.",
     "examples": [
-      "Explain DNS propagation and TTL settings",
-      "Diagnose why a local port is unreachable",
-      "Design a subnet IP allocation plan",
-      "Configure reverse proxy routing rules"
+      "Synthesize research on state-of-the-art LLM quantization techniques",
+      "Gather technical specifications on RTX 2050 CUDA capabilities",
+      "Summarize best practices for local Ollama stream orchestration",
+      "Compile key industry benchmarks for 4B parameter open-weight models"
+    ],
+    "tools": [
+      "Knowledge Searcher",
+      "Fact Aggregator",
+      "Spec Analyzer"
     ]
   },
   {
@@ -1295,9 +1420,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are Industry News & Standards Monitor (agent-022), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-research",
-      "search-knowledge",
-      "read-file",
+      "Industry News Curation",
+      "Trend Spotting",
+      "Regulatory Tracking",
+      "Event Summarization",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1313,12 +1439,17 @@
     },
     "displayName": "News Research AI Agent",
     "displayNumber": "022",
-    "description": "Curates and summarizes industry developments and news feeds.",
+    "description": "Curates and summarizes industry developments, tech news, and regulatory updates.",
     "examples": [
-      "Draft a server maintenance and patching checklist",
-      "Analyze server resource bottleneck trends",
-      "Configure log archiving and retention policies",
-      "Create an incident response runbook for server outages"
+      "Summarize recent developments in open-source AI models",
+      "Track trends in on-premise sovereign cloud regulations",
+      "Compile news highlights on edge AI hardware advancements",
+      "Curate industry news on industrial IoT safety compliance"
+    ],
+    "tools": [
+      "News Aggregator",
+      "Trend Tracker",
+      "Briefing Generator"
     ]
   },
   {
@@ -1354,9 +1485,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are Petrochemical Research Paper Analyst (agent-023), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-research",
-      "extract-pdf",
-      "search-knowledge",
+      "Paper Breakdown",
+      "Methodology Analysis",
+      "Math & Formula Explanation",
+      "Citation Tracing",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1372,12 +1504,17 @@
     },
     "displayName": "Research Paper AI Agent",
     "displayNumber": "023",
-    "description": "Analyzes scientific papers, methodologies, citations, and abstracts.",
+    "description": "Analyzes scientific papers, methodologies, mathematical formulations, and citations.",
     "examples": [
-      "Solve this system of linear equations",
-      "Calculate the derivative and integral of this function",
-      "Explain matrix multiplication step-by-step",
-      "Compute modular arithmetic for cryptographic keys"
+      "Summarize the methodology and findings of this research paper",
+      "Explain the mathematical formulation of this attention mechanism",
+      "Extract benchmark results and comparison tables from this PDF",
+      "Analyze the limitations and future work section of this study"
+    ],
+    "tools": [
+      "Paper Parser",
+      "Methodology Inspector",
+      "Citation Extractor"
     ]
   },
   {
@@ -1413,9 +1550,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are Refinery Engineering Literature Reviewer (agent-024), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-research",
-      "search-knowledge",
-      "read-file",
+      "Thematic Synthesis",
+      "Literature Mapping",
+      "Consensus & Debate Tracking",
+      "Bibliography Building",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1431,12 +1569,17 @@
     },
     "displayName": "Literature Review AI Agent",
     "displayNumber": "024",
-    "description": "Synthesizes multi-source academic literature and thematic trends.",
+    "description": "Synthesizes multi-source academic literature, themes, and historical trends.",
     "examples": [
-      "Perform a t-test comparison between two cohorts",
-      "Explain confidence intervals and p-values",
-      "Calculate variance, standard deviation, and IQR",
-      "Analyze correlation coefficients between variables"
+      "Synthesize academic literature on multi-agent consensus protocols",
+      "Map the evolution of local token streaming architectures",
+      "Identify key authors and seminal papers in prompt distillation",
+      "Write a thematic literature review on industrial predictive maintenance"
+    ],
+    "tools": [
+      "Lit Mapper",
+      "Theme Extractor",
+      "Bibliography Builder"
     ]
   },
   {
@@ -1472,9 +1615,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are Technical Manuals & Codex Agent (agent-025), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-research",
-      "search-knowledge",
-      "read-file",
+      "Chapter Summarization",
+      "Mental Model Extraction",
+      "Actionable Takeaway Indexing",
+      "Book Outline Creation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1490,12 +1634,17 @@
     },
     "displayName": "Book Research AI Agent",
     "displayNumber": "025",
-    "description": "Extracts key chapter takeaways, book outlines, and bibliographies.",
+    "description": "Extracts key chapter takeaways, book mental models, and structured reading notes.",
     "examples": [
-      "Explain how to handle imbalanced training datasets",
-      "Select the best classification model for tabular data",
-      "Write code for feature scaling and normalization",
-      "Calculate Precision, Recall, and F1-Score"
+      "Summarize the core mental models from 'Thinking in Systems'",
+      "Extract key management principles from 'High Output Management'",
+      "Create chapter-by-chapter reading notes for 'Designing Data-Intensive Applications'",
+      "Highlight actionable takeaways from 'Clean Architecture'"
+    ],
+    "tools": [
+      "Book Summarizer",
+      "Mental Model Indexer",
+      "Note Formatter"
     ]
   },
   {
@@ -1532,9 +1681,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Vendor Profile & Intelligence Agent (agent-026), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "procurement-supply-chain",
-      "search-knowledge",
-      "read-file",
+      "Company Profiling",
+      "Operational Division Mapping",
+      "Corporate Governance Analysis",
+      "Technology Modernization Audit",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1550,12 +1700,17 @@
     },
     "displayName": "Company Research AI Agent",
     "displayNumber": "026",
-    "description": "Profiles organizations, leadership structures, and business offerings.",
+    "description": "Profiles enterprise organizations, operational divisions, and technology landscapes.",
     "examples": [
-      "Design a CNN architecture for image classification",
-      "Explain transformer attention mechanisms simply",
-      "Optimize learning rate schedules with Cosine Annealing",
-      "Prevent overfitting with dropout and weight decay"
+      "Profile the organizational structure and core business of MRPL",
+      "Analyze the key operational divisions in petroleum refining",
+      "Summarize corporate governance and safety mandates for industrial plants",
+      "Compile a company overview focusing on technology modernization"
+    ],
+    "tools": [
+      "Company Profiler",
+      "Org Chart Mapper",
+      "Division Analyzer"
     ]
   },
   {
@@ -1592,9 +1747,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Benchmark & Refinery Competitor Analyst (agent-027), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-research",
-      "search-knowledge",
-      "read-excel",
+      "Feature Parity Matrix",
+      "Competitor SWOT",
+      "Pricing & Privacy Model Comparison",
+      "Moat Evaluation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1610,12 +1766,17 @@
     },
     "displayName": "Competitor Research AI Agent",
     "displayNumber": "027",
-    "description": "Analyzes market competitors, positioning, and feature matrices.",
+    "description": "Analyzes competitor positioning, feature parity, and market differentiation.",
     "examples": [
-      "Explain edge detection using Sobel and Canny filters",
-      "Design an object detection pipeline with YOLO",
-      "Write an OpenCV script to crop and resize images",
-      "Analyze visual bounding boxes in technical drawings"
+      "Analyze feature parity between local AI workbenches",
+      "Create a competitive landscape matrix for on-premise LLM tools",
+      "Identify unique differentiators of our 101 AI Agent fleet",
+      "Compare privacy and air-gap guarantees across enterprise platforms"
+    ],
+    "tools": [
+      "Feature Matrix Builder",
+      "Competitor Tracker",
+      "Differentiation Analyzer"
     ]
   },
   {
@@ -1652,9 +1813,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Petrochemical Market Trends Analyst (agent-028), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "procurement-supply-chain",
-      "read-excel",
-      "calculate-step-by-step",
+      "TAM/SAM Sizing",
+      "Market Trend Forecasting",
+      "Adoption Barrier Analysis",
+      "Sector Demand Profiling",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1670,12 +1832,17 @@
     },
     "displayName": "Market Research AI Agent",
     "displayNumber": "028",
-    "description": "Evaluates target demographics, TAM/SAM sizing, and market forces.",
+    "description": "Evaluates target demographics, TAM/SAM sizing, and market adoption forces.",
     "examples": [
-      "Build a text classification pipeline for sentiment",
-      "Extract Named Entities (NER) from unstructured text",
-      "Explain vector embeddings and cosine similarity",
-      "Tokenize text and generate n-grams"
+      "Analyze market demand for air-gapped sovereign AI in manufacturing",
+      "Estimate TAM and SAM for local enterprise AI deployments",
+      "Identify key customer adoption hurdles for local LLM hardware",
+      "Compile demographic and sector demand trends for privacy-first AI"
+    ],
+    "tools": [
+      "Market Sizer",
+      "Trend Forecaster",
+      "Demand Analyzer"
     ]
   },
   {
@@ -1712,9 +1879,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are New Technology & Pilot Evaluator (agent-029), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "search-knowledge",
-      "assess-risk",
+      "Lean Canvas Audit",
+      "Unit Economics Modeling",
+      "GTM Strategy Assessment",
+      "Moat & Defensibility Analysis",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1730,12 +1898,17 @@
     },
     "displayName": "Startup Research AI Agent",
     "displayNumber": "029",
-    "description": "Assesses startup pitch viability, business models, and launch risks.",
+    "description": "Assesses startup pitch viability, unit economics, business models, and launch risks.",
     "examples": [
-      "Design a data warehouse schema with star schema",
-      "Optimize Parquet file partitioning strategies",
-      "Build a streaming data pipeline architecture",
-      "Handle schema evolution in data lakes"
+      "Evaluate the unit economics and viability of this SaaS idea",
+      "Analyze customer acquisition channels for developer tooling",
+      "Review this lean canvas for potential market risks",
+      "Assess the defensibility and moat of an on-premise AI platform"
+    ],
+    "tools": [
+      "Pitch Evaluator",
+      "Economics Modeler",
+      "Risk Assessment Tool"
     ]
   },
   {
@@ -1772,9 +1945,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are CAPEX Investment & ROI Analyst (agent-030), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "industrial-finance-cost",
-      "calculate-step-by-step",
-      "read-excel",
+      "ROI Modeling",
+      "CAPEX vs OPEX Comparison",
+      "Payback Period Calculation",
+      "Risk-Adjusted Return Analysis",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1790,12 +1964,17 @@
     },
     "displayName": "Investment Research AI Agent",
     "displayNumber": "030",
-    "description": "Evaluates investment criteria, valuation multiples, and ROI metrics.",
+    "description": "Evaluates investment criteria, capital expenditures, payback periods, and ROI metrics.",
     "examples": [
-      "Write a Python ETL script to parse JSON into SQL",
-      "Transform and clean dirty address records",
-      "Implement incremental data loading logic",
-      "Build a batch data validation and transformation step"
+      "Calculate the expected ROI for upgrading plant server hardware",
+      "Evaluate capital expenditure vs operational savings for local AI",
+      "Analyze risk-adjusted return metrics for automation projects",
+      "Build a payback period model for automated inspection reporting"
+    ],
+    "tools": [
+      "ROI Calculator",
+      "CAPEX Analyzer",
+      "Payback Modeler"
     ]
   },
   {
@@ -1832,9 +2011,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Refinery Product Specification Agent (agent-031), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "search-knowledge",
-      "read-file",
+      "User Story Formulation",
+      "Acceptance Criteria Definition",
+      "Feature Trade-Off Modeling",
+      "UX Specification",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1850,12 +2030,17 @@
     },
     "displayName": "Product Research AI Agent",
     "displayNumber": "031",
-    "description": "Analyzes product specifications, user reviews, and product tradeoffs.",
+    "description": "Analyzes product specifications, user stories, feature trade-offs, and acceptance criteria.",
     "examples": [
-      "Write a SQL query using window functions for ranking",
-      "Optimize a slow query with multiple table JOINs",
-      "Create a recursive CTE to traverse hierarchical data",
-      "Write a query to calculate month-over-month growth"
+      "Compare user experience specifications between chat interfaces",
+      "Analyze product telemetry to identify drop-off in agent selection",
+      "Define user stories and acceptance criteria for token streaming",
+      "Evaluate feature tradeoffs between latency and model accuracy"
+    ],
+    "tools": [
+      "Story Builder",
+      "Acceptance Linter",
+      "Spec Analyzer"
     ]
   },
   {
@@ -1891,9 +2076,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Logistics & Fleet Dispatch Optimizer (agent-032), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "calculate-step-by-step",
-      "read-excel",
+      "Itinerary Planning",
+      "Logistics Checklisting",
+      "Route Optimization",
+      "Expense Estimation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1909,12 +2095,17 @@
     },
     "displayName": "Travel Research AI Agent",
     "displayNumber": "032",
-    "description": "Plans travel itineraries, logistical schedules, and travel checklists.",
+    "description": "Plans travel itineraries, logistics checklists, schedules, and expense budgets.",
     "examples": [
-      "Write a Python script to parse and clean CSV files",
-      "Implement an async web scraper using aiohttp",
-      "Build a custom Python context manager and decorator",
-      "Optimize memory usage in large Python list processing"
+      "Plan a detailed 3-day itinerary for an engineering site visit",
+      "Create a logistics checklist for international conference travel",
+      "Recommend optimal transit routes and lodging near the plant",
+      "Draft a travel expense budget and per diem estimate"
+    ],
+    "tools": [
+      "Itinerary Builder",
+      "Logistics Planner",
+      "Expense Calculator"
     ]
   },
   {
@@ -1950,9 +2141,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Site Facility & Mess Management Agent (agent-033), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "read-file",
-      "write-file",
+      "Venue Recommendation",
+      "Catering Planning",
+      "Dietary Accommodation Check",
+      "Business Dining Selection",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -1968,12 +2160,17 @@
     },
     "displayName": "Restaurant Research AI Agent",
     "displayNumber": "033",
-    "description": "Recommends catering, menus, dietary options, and dining venues.",
+    "description": "Recommends catering, dining venues, business meals, and dietary accommodations.",
     "examples": [
-      "Implement a debounce function in JavaScript",
-      "Handle multiple async Promises with Promise.allSettled",
-      "Write an ES Module utility library",
-      "Manipulate DOM elements efficiently without reflows"
+      "Find top-rated dining venues for an executive team dinner",
+      "Suggest catering menus with dietary accommodations for 50 people",
+      "Recommend business lunch locations with quiet meeting spaces",
+      "Curate dining options near the industrial complex"
+    ],
+    "tools": [
+      "Venue Finder",
+      "Menu Planner",
+      "Dietary Checker"
     ]
   },
   {
@@ -2011,9 +2208,10 @@
     "domain": "Education & Learning",
     "system_prompt": "You are Technical Curriculum & Training Agent (agent-034), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-communication",
-      "search-knowledge",
-      "read-file",
+      "Curriculum Design",
+      "Certification Comparison",
+      "Syllabus Structuring",
+      "Learning Roadmap Building",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2029,12 +2227,17 @@
     },
     "displayName": "Course Research AI Agent",
     "displayNumber": "034",
-    "description": "Curates training courses, syllabi, learning roadmaps, and curricula.",
+    "description": "Curates training courses, technical roadmaps, learning syllabi, and certifications.",
     "examples": [
-      "Write generic utility types for deep partial updates",
-      "Type a complex API response with discriminated unions",
-      "Configure strict tsconfig.json for modern projects",
-      "Fix TypeScript type inference errors in generics"
+      "Create a structured curriculum for mastering Prompt Engineering",
+      "Recommend the best courses for learning PyTorch and CUDA programming",
+      "Build an 8-week syllabus for Industrial IoT and sensor analytics",
+      "Compare online certification programs for Systems Architecture"
+    ],
+    "tools": [
+      "Curriculum Builder",
+      "Course Finder",
+      "Syllabus Formatter"
     ]
   },
   {
@@ -2072,9 +2275,10 @@
     "domain": "Education & Learning",
     "system_prompt": "You are Engineering Campus & Talent Scout (agent-035), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "read-file",
-      "search-knowledge",
+      "University Program Comparison",
+      "Prerequisite Auditing",
+      "Tuition & Ranking Analysis",
+      "Admission Requirement Check",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2090,12 +2294,17 @@
     },
     "displayName": "College Research AI Agent",
     "displayNumber": "035",
-    "description": "Researches academic programs, admission requirements, and prerequisites.",
+    "description": "Researches academic programs, admission requirements, prerequisites, and university rankings.",
     "examples": [
-      "Write a Spring Boot REST controller with validation",
-      "Use Java Streams API to filter and group objects",
-      "Implement the Singleton and Factory design patterns in Java",
-      "Handle multithreading with ExecutorService"
+      "Research top graduate programs in AI and Autonomous Systems",
+      "Compare admission requirements and tuition for engineering colleges",
+      "Identify universities with strong research labs in edge computing",
+      "Compile prerequisite course lists for computer science degrees"
+    ],
+    "tools": [
+      "Program Finder",
+      "Prerequisite Checker",
+      "Ranking Analyzer"
     ]
   },
   {
@@ -2131,9 +2340,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Internal Code Repository & Version Agent (agent-036), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "software-automation-coding",
-      "search-files",
-      "read-file",
+      "Repo Architecture Analysis",
+      "License Compliance Audit",
+      "Dependency Graphing",
+      "Activity & Star Velocity Tracking",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2149,12 +2359,17 @@
     },
     "displayName": "GitHub Research AI Agent",
     "displayNumber": "036",
-    "description": "Analyzes open-source repositories, dependencies, stars, and code licenses.",
+    "description": "Analyzes open-source repositories, commit velocity, dependencies, and license compliance.",
     "examples": [
-      "Write a memory-safe C++ class using smart pointers",
-      "Implement an efficient custom vector container",
-      "Explain move semantics and rvalue references",
-      "Write a multi-threaded worker pool in modern C++"
+      "Analyze the repository architecture and license of this open-source project",
+      "Check star velocity, commit activity, and active maintainers",
+      "Compare dependency graphs between two competing npm libraries",
+      "Review open issues and PR turnaround times on this repository"
+    ],
+    "tools": [
+      "Repo Inspector",
+      "License Auditor",
+      "Dependency Grapher"
     ]
   },
   {
@@ -2191,9 +2406,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are Confidential Archive & Dossier Researcher (agent-037), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "document-intelligence",
-      "extract-pdf",
-      "ocr-document",
+      "Archive Search",
+      "Clause Extraction",
+      "Technical Section Lookup",
+      "SOP Cross-Referencing",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2210,12 +2426,17 @@
     },
     "displayName": "Document Research AI Agent",
     "displayNumber": "037",
-    "description": "Searches through PDF/Word archives for targeted clauses and sections.",
+    "description": "Searches through PDF/Word archives for targeted clauses, standards, and technical sections.",
     "examples": [
-      "Write an ASP.NET Core API controller with dependency injection",
-      "Use LINQ to group and aggregate complex objects",
-      "Implement asynchronous Task patterns with cancellation",
-      "Design an Entity Framework Core repository pattern"
+      "Search through these SOP documents for emergency shutdown protocols",
+      "Find all references to valve maintenance in the technical manual",
+      "Extract clauses relating to warranty and liability from this agreement",
+      "Locate ultrasonic thickness testing guidelines across archival PDFs"
+    ],
+    "tools": [
+      "Archive Searcher",
+      "Clause Finder",
+      "SOP Matcher"
     ]
   },
   {
@@ -2253,9 +2474,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are Technical Fact-Checking & Verification Agent (agent-038), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "knowledge-sop-management",
-      "search-knowledge",
-      "verify-document",
+      "Numerical Claim Verification",
+      "Standard Compliance Check",
+      "Evidence Grounding",
+      "Assertion Auditing",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2271,12 +2493,17 @@
     },
     "displayName": "Fact Checking AI Agent",
     "displayNumber": "038",
-    "description": "Cross-references claims against verified local documents and evidence.",
+    "description": "Cross-references claims against verified local datasets, engineering standards, and documents.",
     "examples": [
-      "Write a high-concurrency worker pool in Go",
-      "Build an HTTP server with custom middleware in Go",
-      "Handle JSON parsing with custom struct tags",
-      "Implement graceful shutdown for a Go microservice"
+      "Verify this numerical claim against the provided baseline dataset",
+      "Cross-reference these inspection figures with historical logs",
+      "Check whether this technical statement complies with ASME standards",
+      "Identify unverified assertions or conflicting numbers in this brief"
+    ],
+    "tools": [
+      "Fact Verifier",
+      "Standard Validator",
+      "Assertion Auditor"
     ]
   },
   {
@@ -2314,9 +2541,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are Source Citation & Provenance Verifier (agent-039), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "knowledge-sop-management",
-      "search-knowledge",
-      "read-file",
+      "Provenance Validation",
+      "Metadata Tampering Check",
+      "Author Authority Verification",
+      "Citation Grounding",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2332,12 +2560,17 @@
     },
     "displayName": "Source Verification AI Agent",
     "displayNumber": "039",
-    "description": "Validates provenance, author authority, and source reliability.",
+    "description": "Validates provenance, author authority, inspection timestamps, and source reliability.",
     "examples": [
-      "Write a Rust function demonstrating ownership and borrowing",
-      "Implement custom Traits and generics in Rust",
-      "Handle errors gracefully using Result and Option",
-      "Build a high-speed CLI tool using Clap in Rust"
+      "Validate the provenance and timestamp of this NDT inspection record",
+      "Verify the author authority and certification level on this document",
+      "Check if this citation maps to an official engineering handbook",
+      "Inspect document metadata for tampering or mismatched revisions"
+    ],
+    "tools": [
+      "Provenance Checker",
+      "Metadata Validator",
+      "Citation Inspector"
     ]
   },
   {
@@ -2378,9 +2611,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are SOP Retrieval & Search Agent (agent-040), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "knowledge-sop-management",
-      "search-knowledge",
-      "read-file",
+      "Dossier Compilation",
+      "Background Investigation",
+      "Multi-Thread Synthesis",
+      "Reference Collation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2396,12 +2630,17 @@
     },
     "displayName": "Research Assistant AI Agent",
     "displayNumber": "040",
-    "description": "Coordinates end-to-end background investigations and briefing packs.",
+    "description": "Coordinates end-to-end background investigations, literature collation, and briefing packs.",
     "examples": [
-      "Build a Jetpack Compose UI component with state",
-      "Configure ViewModel and LiveData in Kotlin",
-      "Implement background work using WorkManager",
-      "Handle Android permissions and device storage"
+      "Compile a comprehensive research dossier on industrial heat exchangers",
+      "Gather background data, historical context, and technical diagrams",
+      "Synthesize multiple research threads into an executive briefing",
+      "Organize reference links, citations, and summaries for a whitepaper"
+    ],
+    "tools": [
+      "Dossier Builder",
+      "Briefing Formatter",
+      "Reference Collation Engine"
     ]
   },
   {
@@ -2442,9 +2681,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Plant Dispatch Communication Agent (agent-041), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "technical-communication",
-      "generate-docx",
-      "read-file",
+      "Inbox Triage Rules",
+      "Canned Response Generation",
+      "Email Categorization",
+      "Priority Filtering",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2460,12 +2700,17 @@
     },
     "displayName": "Email Management AI Agent",
     "displayNumber": "041",
-    "description": "Organizes inbox rules, auto-triage filters, and canned responses.",
+    "description": "Organizes inbox rules, auto-triage filters, canned responses, and email workflows.",
     "examples": [
-      "Create a responsive SwiftUI list view with navigation",
-      "Implement async/await network calls in Swift",
-      "Configure CoreData persistence in an iOS app",
-      "Handle iOS dark mode and dynamic type sizing"
+      "Create automated email triage rules for urgent equipment alerts",
+      "Draft templated responses for common customer inquiries",
+      "Organize inbox folder structures for project communications",
+      "Summarize unread high-priority emails from this morning"
+    ],
+    "tools": [
+      "Triage Engine",
+      "Template Manager",
+      "Inbox Rule Builder"
     ]
   },
   {
@@ -2502,9 +2747,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Shutdown & Maintenance Calendar Agent (agent-042), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "project-management",
-      "get-schedule",
-      "read-excel",
+      "Conflict Resolution",
+      "Timezone Coordination",
+      "Agenda Timeboxing",
+      "Recurring Event Setup",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2520,12 +2766,17 @@
     },
     "displayName": "Calendar Management AI Agent",
     "displayNumber": "042",
-    "description": "Resolves scheduling conflicts and coordinates meeting agendas.",
+    "description": "Resolves scheduling conflicts, coordinates time blocks, and prepares meeting agendas.",
     "examples": [
-      "Build a cross-platform login screen in React Native",
-      "Configure push notifications across iOS and Android",
-      "Optimize mobile app startup time and bundle size",
-      "Handle offline data synchronization in mobile apps"
+      "Resolve schedule overlaps between team sprint reviews",
+      "Propose optimal meeting times across different time zones",
+      "Create structured meeting agendas with allotted time blocks",
+      "Set up recurring reminders for weekly status check-ins"
+    ],
+    "tools": [
+      "Calendar Scheduler",
+      "Timezone Converter",
+      "Agenda Planner"
     ]
   },
   {
@@ -2561,9 +2812,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Automation Scripting & Trigger Agent (agent-043), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "software-automation-coding",
-      "execute-python-sandbox",
-      "write-file",
+      "Cron Job Authoring",
+      "Pipeline Automation",
+      "Log Parsing & Alerting",
+      "Scratch File Cleanup",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2579,12 +2831,17 @@
     },
     "displayName": "Task Automation AI Agent",
     "displayNumber": "043",
-    "description": "Automates repetitive workflows, recurring cron jobs, and pipelines.",
+    "description": "Automates repetitive workflows, recurring cron jobs, data pipelines, and alert triggers.",
     "examples": [
-      "Write a custom useDebounce and useFetch hook",
-      "Build a state machine using useReducer and Context",
-      "Optimize unnecessary React re-renders with useMemo",
-      "Create an accessible tabs component in React"
+      "Write a script to automate recurring data exports every morning",
+      "Automate log parsing and alert triggers for system failures",
+      "Create a cron job schedule to clean temporary scratch files",
+      "Build an automated workflow to notify admins on threshold breaches"
+    ],
+    "tools": [
+      "Cron Scheduler",
+      "Pipeline Builder",
+      "Alert Trigger"
     ]
   },
   {
@@ -2620,9 +2877,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Secure Archive & File Organizer (agent-044), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "document-intelligence",
-      "list-files",
-      "search-files",
+      "Folder Hierarchy Design",
+      "Naming Convention Standardization",
+      "Duplicate Detection",
+      "Archive Organization",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2638,12 +2896,17 @@
     },
     "displayName": "File Organization AI Agent",
     "displayNumber": "044",
-    "description": "Organizes folder structures, naming conventions, and file archiving.",
+    "description": "Organizes folder structures, naming conventions, duplicate purging, and file archiving.",
     "examples": [
-      "Structure Server Components vs Client Components in Next.js",
-      "Implement Server Actions for form submissions",
-      "Configure dynamic routing and metadata for SEO",
-      "Optimize image and font loading in Next.js"
+      "Design a standardized file naming convention for inspection reports",
+      "Organize nested project folders by year, quarter, and equipment ID",
+      "Identify duplicate and outdated files in this archive directory",
+      "Create a clean folder hierarchy for multi-agent deliverables"
+    ],
+    "tools": [
+      "File Organizer",
+      "Duplicate Finder",
+      "Hierarchy Builder"
     ]
   },
   {
@@ -2682,10 +2945,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Scanned PDF & Drawing OCR Specialist (agent-045), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "document-intelligence",
-      "ocr-document",
-      "extract-pdf",
-      "analyze-image",
+      "Table Extraction to CSV",
+      "Form Field Parsing",
+      "PDF Merging & Splitting",
+      "Diagram Extraction",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2703,12 +2966,17 @@
     },
     "displayName": "PDF Processing AI Agent",
     "displayNumber": "045",
-    "description": "Parses PDF layouts, extracts form fields, tables, and text streams.",
+    "description": "Parses PDF layouts, extracts tables to CSV, merges documents, and handles forms.",
     "examples": [
-      "Write an Express router with request validation middleware",
-      "Handle large file uploads using Node.js streams",
-      "Implement JWT authentication and refresh token rotation",
-      "Manage child processes and cluster workers"
+      "Extract all tables from this PDF report into CSV format",
+      "Parse form fields and metadata from scanned inspection PDFs",
+      "Merge these three technical appendices into a single document",
+      "Extract high-resolution embedded diagrams from this PDF"
+    ],
+    "tools": [
+      "PDF Table Extractor",
+      "PDF Merger",
+      "Form Parser"
     ]
   },
   {
@@ -2745,10 +3013,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Industrial Invoice & Bill of Quantities Agent (agent-046), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "industrial-finance-cost",
-      "ocr-document",
-      "read-excel",
-      "calculate-step-by-step",
+      "Line Item Extraction",
+      "PO Matching",
+      "Tax & Total Validation",
+      "Ledger Export",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2766,12 +3034,17 @@
     },
     "displayName": "Invoice Processing AI Agent",
     "displayNumber": "046",
-    "description": "Extracts invoice line items, dates, vendor details, and totals.",
+    "description": "Extracts invoice line items, dates, vendor details, totals, and PO matching.",
     "examples": [
-      "Design a scalable microservices architecture",
-      "Implement rate limiting and request throttling",
-      "Structure a clean repository pattern for backend services",
-      "Handle distributed transactions with idempotency keys"
+      "Extract invoice number, line items, tax, and total due from this invoice",
+      "Match invoice line items against the purchase order record",
+      "Validate vendor tax ID and bank details on this billing document",
+      "Export structured invoice data into an accounting ledger format"
+    ],
+    "tools": [
+      "Invoice Parser",
+      "PO Matcher",
+      "Ledger Exporter"
     ]
   },
   {
@@ -2808,10 +3081,10 @@
     "domain": "Data & Analytics",
     "system_prompt": "You are Industrial Spreadsheet & Telemetry Analyst (agent-047), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "data-analytics-telemetry",
-      "read-excel",
-      "write-excel",
-      "calculate-step-by-step",
+      "Advanced Formula Writing",
+      "Pivot Table Setup",
+      "Financial Modeling",
+      "Data Deduplication",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2828,12 +3101,17 @@
     },
     "displayName": "Spreadsheet AI Agent",
     "displayNumber": "047",
-    "description": "Creates Excel/CSV formulas, models calculations, and cleans tables.",
+    "description": "Creates Excel/CSV formulas, financial models, pivot tables, and data cleaning routines.",
     "examples": [
-      "Build a responsive dashboard layout with CSS Grid",
-      "Implement client-side search filtering with instant results",
-      "Optimize Core Web Vitals and frontend asset loading",
-      "Create smooth micro-interactions and transitions"
+      "Write a dynamic XLOOKUP formula to merge customer and order tables",
+      "Create an Excel financial model with conditional formatting",
+      "Build a pivot table summary showing monthly expenditure by department",
+      "Clean messy column data and remove duplicate rows in this CSV"
+    ],
+    "tools": [
+      "Formula Generator",
+      "Pivot Builder",
+      "Data Cleaner"
     ]
   },
   {
@@ -2871,9 +3149,10 @@
     "domain": "Data & Analytics",
     "system_prompt": "You are Process Sensor & SCADA Data Analyst (agent-048), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "data-analytics-telemetry",
-      "read-excel",
-      "calculate-step-by-step",
+      "Statistical Analysis",
+      "Anomaly Detection",
+      "Trend & Pattern Discovery",
+      "Correlation Modeling",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2889,12 +3168,17 @@
     },
     "displayName": "Data Analysis AI Agent",
     "displayNumber": "048",
-    "description": "Analyzes datasets, identifies trends, correlations, and key insights.",
+    "description": "Analyzes datasets, identifies correlations, computes statistics, and surfaces actionable trends.",
     "examples": [
-      "Build an end-to-end user authentication feature",
-      "Connect a PostgreSQL database to a React frontend via REST API",
-      "Implement full-stack error handling and toast notifications",
-      "Design full-stack data validation with Zod"
+      "Analyze this CSV dataset for correlations, trends, and anomalies",
+      "Identify the top 5 drivers of equipment downtime from these logs",
+      "Calculate statistical distributions, percentiles, and standard deviation",
+      "Generate actionable insights and summary charts from this data"
+    ],
+    "tools": [
+      "Statistics Engine",
+      "Anomaly Detector",
+      "Trend Modeler"
     ]
   },
   {
@@ -2932,9 +3216,10 @@
     "domain": "Data & Analytics",
     "system_prompt": "You are Technical Report & Deliverable Generator (agent-049), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "document-intelligence",
-      "generate-docx",
-      "generate-pdf",
+      "DOCX Report Generation",
+      "Executive Summarization",
+      "Chart Integration",
+      "Deliverable Packaging",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -2950,12 +3235,17 @@
     },
     "displayName": "Report Generation AI Agent",
     "displayNumber": "049",
-    "description": "Generates formatted business, technical, and operational reports.",
+    "description": "Generates formatted business, engineering, and operational reports (.docx / PDF).",
     "examples": [
-      "Configure Vite for fast local development and production builds",
-      "Set up ESLint and Prettier for strict TypeScript rules",
-      "Create custom npm scripts for testing and linting",
-      "Debug a module resolution error in package.json"
+      "Generate an official inspection report with risk ratings and charts",
+      "Create a quarterly operational performance report for management",
+      "Format this analysis into a clean Word document (.docx)",
+      "Compile project milestones, budget tracking, and deliverables into a PDF"
+    ],
+    "tools": [
+      "DOCX Builder",
+      "Chart Formatter",
+      "Report Packager"
     ]
   },
   {
@@ -2992,9 +3282,10 @@
     "domain": "Design & Creative",
     "system_prompt": "You are Plant KPI & Dashboard Visualizer (agent-050), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "data-analytics-telemetry",
-      "read-excel",
-      "generate-pptx",
+      "PPTX Slide Deck Building",
+      "Speaker Note Drafting",
+      "Presentation Outlining",
+      "Visual Hierarchy Design",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3010,12 +3301,17 @@
     },
     "displayName": "Presentation AI Agent",
     "displayNumber": "050",
-    "description": "Structures presentation slide decks, visual outlines, and speaking notes.",
+    "description": "Structures presentation slide decks, visual outlines, speaker notes, and pitch decks.",
     "examples": [
-      "Review this code diff for edge cases and clean code standards",
-      "Identify potential performance regressions in this PR",
-      "Check code maintainability against SOLID principles",
-      "Suggest cleaner refactoring for this nested function"
+      "Create a 10-slide PowerPoint presentation outline for this project",
+      "Draft executive speaker notes for each slide in this deck",
+      "Turn this technical report into a visually engaging slide deck (.pptx)",
+      "Structure a pitch deck covering problem, solution, market, and team"
+    ],
+    "tools": [
+      "PPTX Builder",
+      "Speaker Note Generator",
+      "Outline Designer"
     ]
   },
   {
@@ -3053,9 +3349,10 @@
     "domain": "Specialized AI",
     "system_prompt": "You are Predictive Analytics & Maintenance Forecaster (agent-051), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "data-analytics-telemetry",
-      "read-excel",
-      "calculate-step-by-step",
+      "Surface Defect Detection",
+      "Component Identification",
+      "OCR from Photos",
+      "Before/After Comparison",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3071,12 +3368,17 @@
     },
     "displayName": "Image Analysis AI Agent",
     "displayNumber": "051",
-    "description": "Analyzes photos, technical drawings, defects, and visual features.",
+    "description": "Analyzes photos, technical drawings, surface defects, and visual features via Gemma 3 Vision.",
     "examples": [
-      "Write a 5-minute quickstart README for this library",
-      "Document code functions with clear JSDoc comments",
-      "Create an architecture guide for new contributors",
-      "Write a changelog for a major software release"
+      "Analyze this equipment photo for visible surface corrosion and cracks",
+      "Detect and label industrial components in this technical image",
+      "Extract text and serial numbers from this equipment nameplate photo",
+      "Compare before and after maintenance photos to verify repairs"
+    ],
+    "tools": [
+      "Vision Engine",
+      "OCR Tool",
+      "Image Inspector"
     ]
   },
   {
@@ -3113,10 +3415,10 @@
     "domain": "Specialized AI",
     "system_prompt": "You are P&ID & Piping Layout Specialist (agent-052), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "analyze-image",
-      "ocr-document",
-      "read-file",
+      "Scene Timestamping",
+      "Safety Compliance Verification",
+      "Anomaly Movement Detection",
+      "Video Action Logging",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3134,12 +3436,17 @@
     },
     "displayName": "Video Analysis AI Agent",
     "displayNumber": "052",
-    "description": "Analyzes video scenes, timestamps, and activity summaries.",
+    "description": "Analyzes video scenes, timestamps, safety compliance, and activity event logs.",
     "examples": [
-      "Write a clear user guide for this software dashboard",
-      "Author a technical whitepaper on air-gapped security",
-      "Draft an engineering design document for a new feature",
-      "Write step-by-step troubleshooting instructions"
+      "Summarize key events and timestamps in this surveillance video",
+      "Detect safety equipment compliance (helmets, vests) in this video",
+      "Identify machinery anomalies or erratic movements in this clip",
+      "Generate a text log of actions observed across video frames"
+    ],
+    "tools": [
+      "Video Analyzer",
+      "Timestamp Logger",
+      "Compliance Inspector"
     ]
   },
   {
@@ -3176,9 +3483,10 @@
     "domain": "Writing & Communication",
     "system_prompt": "You are Pressure Vessel & Piping Thickness Analyst (agent-053), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "calculate-step-by-step",
-      "read-file",
+      "Meeting Minutes Generation",
+      "Agenda Formulation",
+      "Decision Tracking",
+      "Action Item Assignment",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3194,12 +3502,17 @@
     },
     "displayName": "Meeting Assistant AI Agent",
     "displayNumber": "053",
-    "description": "Prepares meeting agendas, transcribes key points, and action items.",
+    "description": "Prepares meeting agendas, transcribes key discussion points, and tracks action item owners.",
     "examples": [
-      "Summarize this 10-page report into 5 key bullet points",
-      "Extract executive takeaways from this technical document",
-      "Provide a 1-paragraph summary of this article",
-      "Condense meeting notes into action items"
+      "Generate structured meeting minutes and action item assignments",
+      "Draft a clear meeting agenda with objectives and discussion topics",
+      "Summarize key decisions made during this engineering sync",
+      "Send automated follow-up messages to owners of assigned action items"
+    ],
+    "tools": [
+      "Minutes Builder",
+      "Agenda Formatter",
+      "Action Tracker"
     ]
   },
   {
@@ -3236,9 +3549,10 @@
     "domain": "Specialized AI",
     "system_prompt": "You are Pump & Compressor Vibration Specialist (agent-054), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "read-excel",
-      "calculate-step-by-step",
+      "SSML Audio Markup",
+      "Conversational Text Optimization",
+      "Hands-Free Command Trees",
+      "Audio Summarization",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3254,12 +3568,17 @@
     },
     "displayName": "Voice Assistant AI Agent",
     "displayNumber": "054",
-    "description": "Formats voice assistant responses for natural speech flow and SSML.",
+    "description": "Formats voice assistant responses, natural conversational pacing, and SSML audio markup.",
     "examples": [
-      "Translate this text into Spanish accurately",
-      "Localize these UI button labels for French users",
-      "Translate technical documentation into German",
-      "Check translated text for cultural nuances"
+      "Format text responses for natural, concise voice synthesizer readout",
+      "Convert complex tables into conversational audio summaries",
+      "Generate SSML markup with appropriate pacing and pauses",
+      "Design interactive voice command trees for hands-free plant use"
+    ],
+    "tools": [
+      "SSML Formatter",
+      "Audio Optimizer",
+      "Command Tree Builder"
     ]
   },
   {
@@ -3297,9 +3616,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Distillation Column & Thermal Analyst (agent-055), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "calculate-step-by-step",
-      "search-knowledge",
+      "PR Diff Review",
+      "Concurrency & Race Condition Detection",
+      "SOLID Principles Check",
+      "Style & Cleanliness Audit",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3315,12 +3635,17 @@
     },
     "displayName": "Code Review AI Agent",
     "displayNumber": "055",
-    "description": "Reviews pull requests, analyzes code quality, security, and cleanliness.",
+    "description": "Reviews pull requests, analyzes code quality, security, and SOLID design adherence.",
     "examples": [
-      "Draft a professional follow-up email after an interview",
-      "Write an announcement email for a product launch",
-      "Compose a polite request for project deadline extension",
-      "Draft a weekly team status update email"
+      "Review this pull request for bugs, security risks, and code smells",
+      "Check this code for concurrency issues and race conditions",
+      "Suggest performance and readability improvements for this module",
+      "Verify that this PR adheres to SOLID design principles"
+    ],
+    "tools": [
+      "PR Reviewer",
+      "Concurrency Analyzer",
+      "Style Linter"
     ]
   },
   {
@@ -3358,9 +3683,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Heat Exchanger Fouling & Thermal Agent (agent-056), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "calculate-step-by-step",
-      "read-file",
+      "Stack Trace Analysis",
+      "Memory Leak Diagnosis",
+      "Async Error Fixing",
+      "Root Cause Identification",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3376,12 +3702,17 @@
     },
     "displayName": "Debugging AI Agent",
     "displayNumber": "056",
-    "description": "Identifies bugs, analyzes error stack traces, and provides fixes.",
+    "description": "Identifies bugs, analyzes error stack traces, and provides minimal, safe fixes.",
     "examples": [
-      "Create a structured agenda for a 30-minute sprint planning meeting",
-      "Extract decision points and action items from these notes",
-      "Draft a meeting recap email for attendees",
-      "Prepare discussion questions for a product roadmap sync"
+      "Find the root cause of this stack trace and runtime crash",
+      "Debug why this async Promise is rejecting unexpectedly",
+      "Fix the off-by-one error in this array partitioning function",
+      "Explain why this memory leak occurs and provide a safe fix"
+    ],
+    "tools": [
+      "Stack Trace Debugger",
+      "Memory Inspector",
+      "Patch Generator"
     ]
   },
   {
@@ -3419,9 +3750,10 @@
     "domain": "Specialized AI",
     "system_prompt": "You are Catalyst Performance & Yield Analyst (agent-057), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "engineering",
-      "calculate-step-by-step",
-      "read-excel",
+      "Unit Test Generation",
+      "Integration Test Suite Design",
+      "Mock & Fixture Creation",
+      "Edge Case Assertion",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3437,12 +3769,17 @@
     },
     "displayName": "Test Generation AI Agent",
     "displayNumber": "057",
-    "description": "Generates unit tests, integration test suites, and mock fixtures.",
+    "description": "Generates unit tests, integration test suites, parameter fixtures, and assertions.",
     "examples": [
-      "Create a 4-week project roadmap for MVP launch",
-      "Break down a feature into daily milestone tasks",
-      "Plan resource allocation for a 3-engineer team",
-      "Identify critical path dependencies for project delivery"
+      "Generate comprehensive unit tests with edge cases in Node.js test runner",
+      "Write integration tests for this REST endpoint with mock data",
+      "Generate parameterized property-based tests for this algorithm",
+      "Create mock fixtures and assertions for error scenarios"
+    ],
+    "tools": [
+      "Test Generator",
+      "Fixture Builder",
+      "Mock Engine"
     ]
   },
   {
@@ -3479,9 +3816,10 @@
     "domain": "Writing & Communication",
     "system_prompt": "You are NDT & Ultrasonic Thickness Inspection Agent (agent-058), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "inspection-maintenance",
-      "ocr-document",
-      "calculate-step-by-step",
+      "README.md Authoring",
+      "API Documentation",
+      "Architecture Guides",
+      "JSDoc / Docstring Generation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3498,12 +3836,17 @@
     },
     "displayName": "Documentation AI Agent",
     "displayNumber": "058",
-    "description": "Writes comprehensive software documentation, READMEs, and wikis.",
+    "description": "Writes comprehensive software documentation, READMEs, architecture guides, and wikis.",
     "examples": [
-      "Create a weekly project status report template",
-      "Identify project risks and mitigation strategies",
-      "Track milestone progress against estimated deadlines",
-      "Organize a project retrospective summary"
+      "Write complete Markdown API documentation with code examples",
+      "Create a comprehensive README.md with setup and usage instructions",
+      "Document this architecture with module descriptions and data flow",
+      "Generate JSDoc / docstring comments for all exported functions"
+    ],
+    "tools": [
+      "Markdown Formatter",
+      "Docstring Generator",
+      "Architecture Documenter"
     ]
   },
   {
@@ -3539,9 +3882,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Corrosion Under Insulation (CUI) Specialist (agent-059), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "inspection-maintenance",
-      "analyze-image",
-      "assess-risk",
+      "Multi-Step Workflow Design",
+      "Approval Escalation Modeling",
+      "Event Trigger Setup",
+      "Pipeline Orchestration",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3558,12 +3902,17 @@
     },
     "displayName": "Workflow Automation AI Agent",
     "displayNumber": "059",
-    "description": "Builds multi-step automated workflows, approvals, and event triggers.",
+    "description": "Builds multi-step automated workflows, escalation approvals, and event-driven triggers.",
     "examples": [
-      "Prioritize this task list using the Eisenhower Matrix",
-      "Break down this complex user story into subtasks",
-      "Estimate story points and complexity for these backlog items",
-      "Organize today's priority action items"
+      "Design an automated approval workflow with escalation timeouts",
+      "Build an event-driven automation trigger for sensor threshold alerts",
+      "Connect document upload to automated OCR and database indexing",
+      "Map out a multi-stage data processing pipeline"
+    ],
+    "tools": [
+      "Workflow Designer",
+      "Escalation Modeler",
+      "Event Connector"
     ]
   },
   {
@@ -3604,9 +3953,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Flange Leak & Gasket Integrity Analyst (agent-060), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "inspection-maintenance",
-      "analyze-image",
-      "read-file",
+      "Daily Schedule Coordination",
+      "Priority Reminders",
+      "Quick Reply Drafting",
+      "Morning Briefing Compilation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3623,12 +3973,17 @@
     },
     "displayName": "Personal Assistant AI Agent",
     "displayNumber": "060",
-    "description": "Coordinates schedules, drafts reminders, and manages daily tasks.",
+    "description": "Coordinates daily tasks, drafts quick replies, tracks deadlines, and provides morning briefings.",
     "examples": [
-      "Find key academic papers on reinforcement learning",
-      "Summarize the methodology of this research study",
-      "Cross-reference facts across two different reports",
-      "Organize bibliography citations in APA format"
+      "Organize my schedule, tasks, and priorities for the day",
+      "Draft quick replies to pending messages and inquiries",
+      "Track my ongoing projects and remind me of upcoming deadlines",
+      "Prepare a daily morning briefing with key news and calendar items"
+    ],
+    "tools": [
+      "Assistant Coordinator",
+      "Reminder Engine",
+      "Briefing Generator"
     ]
   },
   {
@@ -3664,9 +4019,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Storage Tank & Containment Dyke Inspector (agent-061), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "inspection-maintenance",
-      "ocr-document",
-      "calculate-step-by-step",
+      "Algorithm Implementation",
+      "TypeScript Interface Generation",
+      "CRUD Service Authoring",
+      "Worker Queue Design",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3683,12 +4039,17 @@
     },
     "displayName": "Code Generation AI Agent",
     "displayNumber": "061",
-    "description": "Writes clean code, implements algorithms, and solves software tasks.",
+    "description": "Writes clean code, implements algorithms, interfaces, and backend services via Qwen Coder.",
     "examples": [
-      "Build a structured FAQ section for a new service",
-      "Create a technical glossary for engineering terms",
-      "Organize internal knowledge articles by topic",
-      "Index standard operating procedures for quick lookup"
+      "Write a clean Python class implementing an LRU cache with tests",
+      "Generate a TypeScript interface and parser for this JSON schema",
+      "Implement a thread-safe worker queue in Node.js",
+      "Write a complete CRUD service with input validation"
+    ],
+    "tools": [
+      "Code Synthesizer",
+      "Interface Generator",
+      "CRUD Builder"
     ]
   },
   {
@@ -3724,9 +4085,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Relief Valve (PSV) Testing & Calibration Agent (agent-062), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "inspection-maintenance",
-      "verify-document",
-      "calculate-step-by-step",
+      "Microservice Architecture",
+      "Domain-Driven Design",
+      "Message Queue Selection",
+      "C4 Diagram Modeling",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3742,12 +4104,17 @@
     },
     "displayName": "Software Architecture AI Agent",
     "displayNumber": "062",
-    "description": "Architects scalable microservices, system layers, and data flows.",
+    "description": "Architects scalable microservices, bounded contexts, C4 diagrams, and event systems.",
     "examples": [
-      "Formulate advanced search queries for specific patents",
-      "Filter and rank relevant articles on renewable energy",
-      "Extract key statistics from indexed search results",
-      "Find relevant documentation clauses for an error code"
+      "Design a fault-tolerant microservices architecture for IoT telemetry",
+      "Define bounded contexts and domain models for our platform",
+      "Evaluate message queue architectures (RabbitMQ vs Kafka vs Redis)",
+      "Create a C4 architecture diagram model for the Sovereign Workbench"
+    ],
+    "tools": [
+      "Architecture Modeler",
+      "Domain Mapper",
+      "C4 Diagrammer"
     ]
   },
   {
@@ -3783,9 +4150,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Flare Stack & Emission Monitor (agent-063), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "inspection-maintenance",
-      "read-excel",
-      "assess-risk",
+      "Circular Dependency Audit",
+      "Dead Code Identification",
+      "Cyclomatic Complexity Calculation",
+      "Dependency Graphing",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3801,12 +4169,17 @@
     },
     "displayName": "Codebase Analysis AI Agent",
     "displayNumber": "063",
-    "description": "Analyzes codebase structure, module coupling, and dead code.",
+    "description": "Analyzes codebase structure, module coupling, dead code, and cyclomatic complexity.",
     "examples": [
-      "Extract all contact details and addresses from this document",
-      "Parse dates, invoice numbers, and totals into JSON",
-      "Extract tabular data from raw plain text",
-      "Identify key stakeholder names and organizations in a transcript"
+      "Analyze circular dependencies and modular coupling in this repository",
+      "Identify dead code, unused exports, and duplicate utilities",
+      "Calculate cyclomatic complexity and maintainability index across files",
+      "Generate a dependency graph of all platform backend modules"
+    ],
+    "tools": [
+      "Complexity Analyzer",
+      "Dependency Grapher",
+      "Dead Code Finder"
     ]
   },
   {
@@ -3842,9 +4215,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Process Hazard Analysis (HAZOP) Specialist (agent-064), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "search-knowledge",
-      "assess-risk",
+      "Static Defect Detection",
+      "Auth Middleware Edge Cases",
+      "Overflow & Precision Auditing",
+      "Resource Leak Hunting",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3860,12 +4234,17 @@
     },
     "displayName": "Bug Hunting AI Agent",
     "displayNumber": "064",
-    "description": "Performs deep static analysis to find edge case software defects.",
+    "description": "Performs deep static analysis to find edge-case software defects, overflows, and leaks.",
     "examples": [
-      "Extract all text and tables from this multi-page PDF",
-      "Identify form fields and values inside this PDF",
-      "Summarize the executive summary page of this PDF",
-      "Extract financial table data from an annual report PDF"
+      "Perform static analysis to find potential null pointer exceptions",
+      "Hunt for unhandled edge cases in this authentication middleware",
+      "Identify potential integer overflow or precision loss in calculations",
+      "Detect resource leaks and unclosed file handles in this codebase"
+    ],
+    "tools": [
+      "Static Analyzer",
+      "Edge Case Inspector",
+      "Leak Hunter"
     ]
   },
   {
@@ -3901,9 +4280,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Material Safety Data Sheet (MSDS) Agent (agent-065), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "document-intelligence",
-      "search-knowledge",
-      "read-file",
+      "SQL Query Optimization",
+      "Memory Profiling",
+      "Memoization & Caching",
+      "Bundle Size Reduction",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3919,12 +4299,17 @@
     },
     "displayName": "Performance Optimization AI Agent",
     "displayNumber": "065",
-    "description": "Profiles CPU/memory bottlenecks, load times, and caching.",
+    "description": "Profiles CPU/memory bottlenecks, optimizes SQL queries, caching, and bundle size.",
     "examples": [
-      "Read and transcribe text from this scanned document photo",
-      "Extract numbers and labels from this scanned invoice",
-      "Transcribe handwritten notes into digital text",
-      "Recognize text within an engineering schematic image"
+      "Optimize this SQL query to reduce execution time and table scans",
+      "Profile and reduce memory consumption in this streaming pipeline",
+      "Implement memoization and caching for expensive compute functions",
+      "Reduce frontend bundle size and optimize DOM re-rendering"
+    ],
+    "tools": [
+      "Query Optimizer",
+      "Profiler Engine",
+      "Cache Designer"
     ]
   },
   {
@@ -3960,9 +4345,10 @@
     "domain": "Security & Systems",
     "system_prompt": "You are Permit-to-Work (PTW) Verification Agent (agent-066), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "verify-document",
-      "search-knowledge",
+      "OWASP Top 10 Audit",
+      "Injection & XSS Prevention",
+      "Cryptographic Review",
+      "Input Validation Check",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -3978,12 +4364,17 @@
     },
     "displayName": "Security Audit AI Agent",
     "displayNumber": "066",
-    "description": "Audits source code and systems for vulnerabilities and OWASP compliance.",
+    "description": "Audits source code and systems for vulnerabilities, OWASP compliance, and crypto safety.",
     "examples": [
-      "Describe the key objects and layout in this image",
-      "Identify surface defects or anomalies in this photo",
-      "Analyze the color contrast and visual composition",
-      "Extract diagram flows from this whiteboard photo"
+      "Audit this API endpoint for OWASP Top 10 vulnerabilities",
+      "Check this code for SQL injection, XSS, and CSRF vulnerabilities",
+      "Review cryptographic implementation and key management practices",
+      "Perform a static security analysis on all input validation layers"
+    ],
+    "tools": [
+      "Security Scanner",
+      "Vulnerability Auditor",
+      "Crypto Inspector"
     ]
   },
   {
@@ -4021,9 +4412,10 @@
     "domain": "Specialized AI",
     "system_prompt": "You are Lockout / Tagout (LOTO) Compliance Inspector (agent-067), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "search-knowledge",
-      "verify-document",
+      "E2E Test Strategy",
+      "Streaming UI Test Scenarios",
+      "Load & Concurrency Testing",
+      "Coverage Matrix Planning",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4039,12 +4431,17 @@
     },
     "displayName": "Test Engineer AI Agent",
     "displayNumber": "067",
-    "description": "Designs end-to-end regression suites, test plans, and assertions.",
+    "description": "Designs end-to-end regression suites, test coverage matrices, and load testing plans.",
     "examples": [
-      "Summarize key events and timestamps in this video log",
-      "Detect scene transitions and visual changes",
-      "Analyze activity sequences across security video frames",
-      "Extract key informational frames from a tutorial video"
+      "Design an end-to-end regression test strategy for our AI workbench",
+      "Build automated UI test scenarios for streaming responses",
+      "Create load testing scripts to measure throughput under concurrency",
+      "Establish a test coverage matrix across all platform endpoints"
+    ],
+    "tools": [
+      "Test Planner",
+      "Load Tester",
+      "Coverage Analyzer"
     ]
   },
   {
@@ -4080,9 +4477,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Confined Space Entry Safety Evaluator (agent-068), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "search-knowledge",
-      "assess-risk",
+      "Vulnerability Auditing",
+      "License Compliance Check",
+      "Upgrade Path Recommendation",
+      "Conflict Resolution",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4098,12 +4496,17 @@
     },
     "displayName": "Dependency Analysis AI Agent",
     "displayNumber": "068",
-    "description": "Audits package dependencies, vulnerabilities, and upgrade paths.",
+    "description": "Audits package dependencies, vulnerabilities, licenses, and upgrade paths.",
     "examples": [
-      "Transcribe speech from this audio recording",
-      "Analyze audio quality and background noise levels",
-      "Identify speakers in a multi-party conversation audio",
-      "Extract key discussion points from a podcast audio"
+      "Audit package.json for outdated or vulnerable dependencies",
+      "Identify supply chain risks and restrictive third-party licenses",
+      "Recommend safe upgrade paths for core platform packages",
+      "Detect transitive dependency conflicts in this project"
+    ],
+    "tools": [
+      "Dependency Auditor",
+      "License Checker",
+      "Version Resolver"
     ]
   },
   {
@@ -4139,9 +4542,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Fire Protection & Deluge System Inspector (agent-069), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "search-knowledge",
-      "read-file",
+      "OpenAPI 3.0 Authoring",
+      "Payload Schema Documentation",
+      "SSE Stream Contract Design",
+      "curl / Postman Examples",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4157,12 +4561,17 @@
     },
     "displayName": "API Documentation AI Agent",
     "displayNumber": "069",
-    "description": "Generates OpenAPI specifications, endpoint contracts, and API docs.",
+    "description": "Generates OpenAPI specifications, endpoint contracts, curl examples, and SSE stream docs.",
     "examples": [
-      "Format voice assistant responses for natural speech flow",
-      "Write an SSML script with pauses and emphasis",
-      "Design conversational voice dialogue turns",
-      "Optimize text pronunciation guides for TTS"
+      "Generate an OpenAPI 3.0 YAML specification for our gateway endpoints",
+      "Write clear request and response payload examples for /api/chat",
+      "Document SSE event streams, headers, and error codes",
+      "Create interactive Postman / curl examples for our REST API"
+    ],
+    "tools": [
+      "OpenAPI Generator",
+      "Payload Documenter",
+      "curl Formatter"
     ]
   },
   {
@@ -4198,9 +4607,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Gas Detection & Toxic Vapor Monitor (agent-070), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "plant-safety-hazards",
-      "read-excel",
-      "assess-risk",
+      "Modular Decomposition",
+      "Async/Await Modernization",
+      "Duplicate Logic Extraction",
+      "Readability Improvement",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4218,10 +4628,15 @@
     "displayNumber": "070",
     "description": "Refactors complex code into clean, modular, and maintainable patterns.",
     "examples": [
-      "Design an interactive customer support chatbot flow",
-      "Write friendly fallback responses for unrecognized user intents",
-      "Create branching dialogue trees for booking appointments",
-      "Draft conversational prompts for a virtual assistant"
+      "Refactor this 500-line monolithic function into clean, modular helpers",
+      "Convert this callback-based code to modern async/await syntax",
+      "Extract duplicated business logic into a shared utility service",
+      "Improve variable naming and eliminate deep nesting in this module"
+    ],
+    "tools": [
+      "Code Refactorer",
+      "Pattern Modernizer",
+      "Module Extractor"
     ]
   },
   {
@@ -4261,9 +4676,10 @@
     "domain": "Data & Analytics",
     "system_prompt": "You are Environmental Compliance & Effluent Agent (agent-071), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "regulatory-compliance",
-      "read-excel",
-      "search-knowledge",
+      "Schema Normalization",
+      "Window Function SQL",
+      "Index Strategy Design",
+      "Partition Migration Scripting",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4279,12 +4695,17 @@
     },
     "displayName": "Database AI Agent",
     "displayNumber": "071",
-    "description": "Designs database schemas, SQL queries, indexes, and migrations.",
+    "description": "Designs database schemas, SQL queries, indexes, and partition migrations.",
     "examples": [
-      "Write a helpful response to an upset customer regarding a delay",
-      "Draft step-by-step instructions to help a user reset their password",
-      "Create canned responses for common support ticket categories",
-      "Handle a product return inquiry professionally"
+      "Design a normalized PostgreSQL schema for industrial maintenance logs",
+      "Write an optimized SQL query with window functions for trend analysis",
+      "Create indexes and analyze query execution plans for slow queries",
+      "Write a migration script to add partitioned tables for time-series data"
+    ],
+    "tools": [
+      "Schema Designer",
+      "Query Builder",
+      "Index Optimizer"
     ]
   },
   {
@@ -4320,9 +4741,10 @@
     "domain": "Security & Systems",
     "system_prompt": "You are Pollution Control Board (CPCB/SPCB) Auditor (agent-072), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "regulatory-compliance",
-      "search-knowledge",
-      "verify-document",
+      "Docker Stack Configuration",
+      "Container Health Checking",
+      "Environment Variable Management",
+      "Boot Initialization Scripting",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4338,12 +4760,17 @@
     },
     "displayName": "DevOps AI Agent",
     "displayNumber": "072",
-    "description": "Configures Docker containers, deployment scripts, and infrastructure.",
+    "description": "Configures Docker containers, deployment scripts, environment variables, and boot triggers.",
     "examples": [
-      "Write a Product Requirements Document (PRD) for a new feature",
-      "Define user personas and pain points for a SaaS tool",
-      "Create an evaluation rubric for feature prioritization",
-      "Draft user stories with acceptance criteria"
+      "Write a Dockerfile and docker-compose.yml for running our AI stack",
+      "Configure automated health checks and restart policies for containers",
+      "Set up environment variable management for production deployment",
+      "Create shell scripts to initialize local Ollama models on system boot"
+    ],
+    "tools": [
+      "DevOps Configurator",
+      "Health Checker",
+      "Init Script Builder"
     ]
   },
   {
@@ -4379,9 +4806,10 @@
     "domain": "Security & Systems",
     "system_prompt": "You are PESO & Statutory Tank License Agent (agent-073), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "regulatory-compliance",
-      "verify-document",
-      "search-knowledge",
+      "Multi-Stage Dockerfiles",
+      "Layer Cache Optimization",
+      "Non-Root User Security",
+      "Volume Mount Configuration",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4397,12 +4825,17 @@
     },
     "displayName": "Docker AI Agent",
     "displayNumber": "073",
-    "description": "Authors multi-stage Dockerfiles, compose files, and container configs.",
+    "description": "Authors multi-stage Dockerfiles, compose files, layer caches, and volume mounts.",
     "examples": [
-      "Perform a SWOT analysis for expanding into a new market",
-      "Compare unit economics and revenue models",
-      "Analyze market competition and differentiation factors",
-      "Evaluate business process bottlenecks and efficiency gains"
+      "Create a lightweight multi-stage Dockerfile for our Node.js gateway",
+      "Optimize Docker layer caching to speed up build times",
+      "Configure non-root user security permissions in the container",
+      "Set up Docker volume mounts for persistent conversation storage"
+    ],
+    "tools": [
+      "Dockerfile Builder",
+      "Layer Optimizer",
+      "Compose Formatter"
     ]
   },
   {
@@ -4438,9 +4871,10 @@
     "domain": "Security & Systems",
     "system_prompt": "You are OISD Standard Audit & Compliance Agent (agent-074), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "regulatory-compliance",
-      "search-knowledge",
-      "assess-risk",
+      "GitHub Actions Workflows",
+      "Automated Lint & Test Gates",
+      "Semantic Versioning",
+      "Air-Gap Release Verification",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4456,12 +4890,17 @@
     },
     "displayName": "CI/CD AI Agent",
     "displayNumber": "074",
-    "description": "Configures GitHub Actions, automated test runs, and build pipelines.",
+    "description": "Configures GitHub Actions, automated test runs, security gates, and release pipelines.",
     "examples": [
-      "Calculate Return on Investment (ROI) and payback period",
-      "Analyze profit margins from an income statement",
-      "Draft a cash flow forecast for the next quarter",
-      "Explain EBITDA and operating leverage formulas"
+      "Build a GitHub Actions workflow to run test suites on every pull request",
+      "Configure automated linting, unit tests, and security scans in CI",
+      "Set up automated semantic versioning and changelog generation",
+      "Create a deployment pipeline that verifies zero egress before release"
+    ],
+    "tools": [
+      "Workflow Author",
+      "CI Pipeline Builder",
+      "Changelog Generator"
     ]
   },
   {
@@ -4497,9 +4936,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are ISO 14001 / ISO 45001 Compliance Specialist (agent-075), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "regulatory-compliance",
-      "search-knowledge",
-      "read-file",
+      "End-to-End Feature Development",
+      "Optimistic UI Updates",
+      "SVG & CSS Visualizations",
+      "SSE Stream Integration",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4515,12 +4955,17 @@
     },
     "displayName": "Full-Stack Developer AI Agent",
     "displayNumber": "075",
-    "description": "Builds full-stack features connecting frontend UI to backend APIs.",
+    "description": "Builds full-stack features connecting frontend UI components to backend gateway APIs.",
     "examples": [
-      "Create a 3-stage marketing funnel strategy for our SaaS launch",
-      "Write compelling value proposition headlines",
-      "Draft promotional copy for an upcoming product feature",
-      "Plan a multi-channel digital marketing campaign"
+      "Build a complete feature connecting the frontend UI to gateway endpoints",
+      "Implement optimistic UI updates with error rollback for chat actions",
+      "Create a responsive data visualization widget using SVG and CSS",
+      "Integrate real-time Server-Sent Events into a liquid-glass chat view"
+    ],
+    "tools": [
+      "Full-Stack Synthesizer",
+      "SSE Integrator",
+      "UI Widget Builder"
     ]
   },
   {
@@ -4557,9 +5002,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Internal Audit & Gap Finding Agent (agent-076), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "regulatory-compliance",
-      "search-knowledge",
-      "generate-docx",
+      "B2B Pitch Drafting",
+      "Objection Handling",
+      "Outreach Personalization",
+      "ROI Presentation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4575,12 +5021,17 @@
     },
     "displayName": "Sales AI Agent",
     "displayNumber": "076",
-    "description": "Drafts sales pitches, outbound outreach, and objection handling.",
+    "description": "Drafts sales pitches, objection handling scripts, outreach emails, and ROI comparisons.",
     "examples": [
-      "Suggest target keywords and search intent for a blog post",
-      "Write SEO-friendly title tags and meta descriptions",
-      "Audit this page structure for heading hierarchy and keywords",
-      "Provide internal linking recommendations to improve ranking"
+      "Draft a compelling B2B sales pitch for our Sovereign AI Workbench",
+      "Write objection handling scripts for enterprise security concerns",
+      "Create customized outreach emails for industrial plant managers",
+      "Highlight ROI and cost savings of on-premise AI vs cloud subscriptions"
+    ],
+    "tools": [
+      "Pitch Builder",
+      "Objection Handler",
+      "Outreach Formatter"
     ]
   },
   {
@@ -4617,9 +5068,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Crude Unit Throughput & Blending Optimizer (agent-077), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "calculate-step-by-step",
-      "read-excel",
+      "ICP Definition",
+      "Account Target Identification",
+      "CTO Outreach Tailoring",
+      "Lead Criteria Formulation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4635,12 +5087,17 @@
     },
     "displayName": "Lead Generation AI Agent",
     "displayNumber": "077",
-    "description": "Identifies ideal prospect profiles, lead criteria, and qualification.",
+    "description": "Identifies ideal prospect profiles, lead criteria, outreach strategies, and account targets.",
     "examples": [
-      "Write an engaging Twitter/X thread summarizing our launch",
-      "Create a LinkedIn post highlighting a technical milestone",
-      "Draft a weekly social media content calendar",
-      "Generate relevant hashtags and hook lines"
+      "Define ideal customer profiles (ICP) for on-premise AI software",
+      "Identify prospective enterprise accounts in refining and manufacturing",
+      "Create targeted outreach messaging tailored for Chief Technology Officers",
+      "Compile lead generation criteria based on compliance and security needs"
+    ],
+    "tools": [
+      "ICP Modeler",
+      "Account Prospector",
+      "Lead Scorer"
     ]
   },
   {
@@ -4676,9 +5133,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Steam & Power Utility Balance Agent (agent-078), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "calculate-step-by-step",
-      "read-excel",
+      "BANT Scoring",
+      "Hardware Readiness Check",
+      "Qualification Scorecards",
+      "Decision Maker Mapping",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4694,12 +5152,17 @@
     },
     "displayName": "Lead Qualification AI Agent",
     "displayNumber": "078",
-    "description": "Scores leads using BANT and MEDDIC qualification frameworks.",
+    "description": "Scores leads using BANT / MEDDIC frameworks, readiness assessments, and hardware checks.",
     "examples": [
-      "Write a persuasive product description with feature bullets",
-      "Suggest optimizations to reduce shopping cart abandonment",
-      "Structure an e-commerce catalog category taxonomy",
-      "Draft response templates for customer product reviews"
+      "Qualify incoming leads using the BANT (Budget, Authority, Need, Timeline) framework",
+      "Score prospect readiness for deploying on-premise AI infrastructure",
+      "Assess technical prerequisites (GPU hardware, system RAM) for prospective clients",
+      "Generate a qualification scorecard for enterprise opportunities"
+    ],
+    "tools": [
+      "BANT Evaluator",
+      "Scorecard Builder",
+      "Readiness Checker"
     ]
   },
   {
@@ -4735,9 +5198,10 @@
     "domain": "Writing & Communication",
     "system_prompt": "You are Hydrogen Network & Pressure Balancer (agent-079), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "calculate-step-by-step",
-      "read-excel",
+      "Empathetic Support Drafting",
+      "Troubleshooting Guide Authoring",
+      "Feature Instruction",
+      "FAQ Generation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4753,12 +5217,17 @@
     },
     "displayName": "Customer Support AI Agent",
     "displayNumber": "079",
-    "description": "Drafts empathetic customer service replies and troubleshooting steps.",
+    "description": "Drafts empathetic customer support replies, troubleshooting guides, and friendly FAQs.",
     "examples": [
-      "Write a job description for a Senior Frontend Engineer",
-      "Create a 30-60-90 day employee onboarding checklist",
-      "Draft a remote work and flexible hours policy",
-      "Design a structured employee performance review template"
+      "Draft an empathetic and solution-focused reply to a user issue",
+      "Create a troubleshooting guide for local Ollama model connection errors",
+      "Write clear instructions for exporting and downloading generated reports",
+      "Formulate friendly canned responses for frequent user questions"
+    ],
+    "tools": [
+      "Support Responder",
+      "Troubleshooting Builder",
+      "FAQ Formatter"
     ]
   },
   {
@@ -4795,9 +5264,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Cooling Tower & Water Chemistry Specialist (agent-080), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "calculate-step-by-step",
-      "read-file",
+      "Campaign Planning",
+      "Value Proposition Design",
+      "Landing Page Copywriting",
+      "Funnel Strategy",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4813,12 +5283,17 @@
     },
     "displayName": "Marketing AI Agent",
     "displayNumber": "080",
-    "description": "Plans marketing campaigns, value propositions, copywriting, and funnels.",
+    "description": "Plans marketing campaigns, value propositions, landing page copy, and funnel strategies.",
     "examples": [
-      "Optimize these resume bullet points using the STAR method",
-      "Tailor my resume for a Software Engineer position",
-      "Write a personalized cover letter for this job posting",
-      "Review my resume for formatting and action verbs"
+      "Create a comprehensive launch campaign for our 101 AI Agent fleet",
+      "Define clear value propositions emphasizing 100% air-gap sovereignty",
+      "Draft compelling marketing copy for our product landing page",
+      "Plan a content marketing funnel targeting industrial automation engineers"
+    ],
+    "tools": [
+      "Campaign Planner",
+      "Copywriter Engine",
+      "Funnel Modeler"
     ]
   },
   {
@@ -4855,9 +5330,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Product Dispatch & Tanker Loading Agent (agent-081), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "get-dispatch-queue",
-      "read-file",
+      "LinkedIn Post Crafting",
+      "Technical Thread Design",
+      "Hashtag Strategy",
+      "Content Calendar Scheduling",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4873,12 +5349,17 @@
     },
     "displayName": "Social Media AI Agent",
     "displayNumber": "081",
-    "description": "Creates engaging social posts, hashtags, threads, and content calendars.",
+    "description": "Creates engaging social posts, technical threads, hashtags, and social calendars.",
     "examples": [
-      "Ask me 5 behavioral interview questions using the STAR framework",
-      "Conduct a mock technical interview for a full-stack role",
-      "Provide feedback on my answer to 'Tell me about a time you failed'",
-      "Prepare questions to ask the interviewer at the end"
+      "Write an engaging LinkedIn post announcing our Sovereign AI release",
+      "Create a Twitter/X thread breaking down our local multi-agent architecture",
+      "Draft compelling product teaser posts with relevant technical hashtags",
+      "Plan a 2-week social media content calendar with key feature spotlights"
+    ],
+    "tools": [
+      "Post Creator",
+      "Thread Builder",
+      "Calendar Scheduler"
     ]
   },
   {
@@ -4915,9 +5396,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Pipeline Transfer & Custody Transfer Agent (agent-082), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "refinery-operations",
-      "calculate-step-by-step",
-      "verify-document",
+      "Meta Tag Optimization",
+      "Keyword Research",
+      "Readability Auditing",
+      "Blog Topic Strategy",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4933,12 +5415,17 @@
     },
     "displayName": "SEO AI Agent",
     "displayNumber": "082",
-    "description": "Optimizes search engine rankings, keywords, meta tags, and structure.",
+    "description": "Optimizes search engine rankings, keyword strategy, meta tags, and content structure.",
     "examples": [
-      "Design a 6-week curriculum roadmap to learn Python from scratch",
-      "Create a 10-question multiple-choice quiz on web security",
-      "Draft a step-by-step lesson plan on database normalization",
-      "Explain a complex computer science concept with analogies"
+      "Optimize title tags, meta descriptions, and headers for sovereign AI keywords",
+      "Perform keyword research for on-premise enterprise AI solutions",
+      "Audit site content for search intent, keyword density, and readability",
+      "Suggest high-intent blog topics to drive organic search traffic"
+    ],
+    "tools": [
+      "Meta Optimizer",
+      "Keyword Researcher",
+      "SEO Auditor"
     ]
   },
   {
@@ -4975,9 +5462,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Strategic Vendor Evaluation & Pre-Qual Agent (agent-083), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "procurement-supply-chain",
-      "search-knowledge",
-      "verify-document",
+      "Pillar Article Authoring",
+      "Lead Magnet Structuring",
+      "Content Repurposing",
+      "Editorial Calendar Planning",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -4993,12 +5481,17 @@
     },
     "displayName": "Content Marketing AI Agent",
     "displayNumber": "083",
-    "description": "Plans content strategy, blog pillars, and distribution channels.",
+    "description": "Plans content marketing strategies, pillar articles, lead magnets, and infographics.",
     "examples": [
-      "Create 10 active recall flashcards from these study notes",
-      "Generate 5 practice problems with step-by-step solutions",
-      "Structure these lecture notes using the Cornell Note-Taking method",
-      "Summarize key exam formulas and definitions"
+      "Write an in-depth pillar article on 'Why Sovereign AI is the Future of Industry'",
+      "Create a lead magnet checklist for evaluating on-premise AI readiness",
+      "Repurpose a technical whitepaper into 3 blog posts and infographics",
+      "Develop an editorial calendar focused on industrial intelligence"
+    ],
+    "tools": [
+      "Article Planner",
+      "Lead Magnet Builder",
+      "Editorial Scheduler"
     ]
   },
   {
@@ -5035,9 +5528,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are RFQ & Tender Document Formulation Agent (agent-084), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "procurement-supply-chain",
-      "generate-docx",
-      "read-file",
+      "Workflow Mapping",
+      "Bottleneck Analysis",
+      "Functional Spec Authoring",
+      "KPI Definition",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5053,12 +5547,17 @@
     },
     "displayName": "Business Analyst AI Agent",
     "displayNumber": "084",
-    "description": "Analyzes business workflows, KPIs, and process optimization.",
+    "description": "Analyzes business workflows, process bottlenecks, functional specifications, and KPIs.",
     "examples": [
-      "Provide feedback on my elevator pitch for clarity and impact",
-      "Suggest opening hook ideas for a keynote speech",
-      "Give tips to improve speech pacing and eliminate filler words",
-      "Structure answers for live Q&A sessions"
+      "Map out current state vs future state workflows for document approvals",
+      "Identify process bottlenecks and compute turnaround time savings",
+      "Write formal business requirements and functional specifications",
+      "Define KPIs and success metrics for enterprise AI adoption"
+    ],
+    "tools": [
+      "Process Mapper",
+      "Bottleneck Detector",
+      "Spec Formatter"
     ]
   },
   {
@@ -5095,9 +5594,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Purchase Order & Technical Bid Comparer (agent-085), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "procurement-supply-chain",
-      "read-excel",
-      "calculate-step-by-step",
+      "EBITDA & Margin Calculation",
+      "Revenue Forecasting",
+      "Sensitivity Modeling",
+      "Cash Flow Impact Analysis",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5113,12 +5613,17 @@
     },
     "displayName": "Financial Analysis AI Agent",
     "displayNumber": "085",
-    "description": "Analyzes financial statements, margins, ROI, budgets, and cash flows.",
+    "description": "Analyzes financial statements, EBITDA, revenue forecasts, and sensitivity models.",
     "examples": [
-      "Explain the differences between MIT, Apache 2.0, and GPL licenses",
-      "Highlight key obligations in this software license agreement",
-      "Draft a plain-language Terms of Service overview",
-      "Review a Non-Disclosure Agreement (NDA) clause structure"
+      "Analyze our financial statement to calculate operating margin and EBITDA",
+      "Build a 3-year revenue and expense forecast model",
+      "Perform sensitivity analysis on infrastructure costs vs user growth",
+      "Evaluate cash flow impact of hardware amortization vs cloud OPEX"
+    ],
+    "tools": [
+      "Financial Modeler",
+      "Forecast Engine",
+      "Sensitivity Calculator"
     ]
   },
   {
@@ -5155,9 +5660,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Critical Spare Parts & Inventory Optimizer (agent-086), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "procurement-supply-chain",
-      "read-excel",
-      "search-knowledge",
+      "Expense Categorization",
+      "Bank Reconciliation",
+      "Depreciation Scheduling",
+      "Trial Balance Preparation",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5173,12 +5679,17 @@
     },
     "displayName": "Accounting Assistant AI Agent",
     "displayNumber": "086",
-    "description": "Assists with bookkeeping ledger categorization, reconciliation, and VAT.",
+    "description": "Assists with bookkeeping ledger categorization, bank reconciliation, and asset depreciation.",
     "examples": [
-      "Provide a SOC 2 Type II audit readiness checklist",
-      "Explain GDPR user data deletion compliance requirements",
-      "Audit this data retention policy against ISO 27001 norms",
-      "Draft a compliance report template for security controls"
+      "Categorize monthly expense transactions into chart of accounts",
+      "Reconcile bank statement entries against internal billing ledgers",
+      "Calculate depreciation schedules for GPU workstation hardware",
+      "Prepare a preliminary trial balance and variance report"
+    ],
+    "tools": [
+      "Ledger Categorizer",
+      "Reconciliation Matcher",
+      "Depreciation Calculator"
     ]
   },
   {
@@ -5215,9 +5726,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Chemical Reagents & Catalyst Procurement Agent (agent-087), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "procurement-supply-chain",
-      "read-excel",
-      "search-knowledge",
+      "Product Title & Listing Optimization",
+      "Customer Review Mining",
+      "Bundle Strategy Design",
+      "Cart Abandonment Sequences",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5233,12 +5745,17 @@
     },
     "displayName": "E-Commerce AI Agent",
     "displayNumber": "087",
-    "description": "Optimizes product listings, descriptions, cart conversions, and reviews.",
+    "description": "Optimizes product listings, descriptions, cart conversion funnels, and customer review insights.",
     "examples": [
-      "Perform a threat model analysis for a web application",
-      "Explain how to remediate OWASP Top 10 vulnerabilities",
-      "Draft an incident response plan for a suspected data breach",
-      "Provide security hardening guidelines for Linux servers"
+      "Optimize product titles, bullet points, and descriptions for conversion",
+      "Analyze customer reviews to identify top product improvement areas",
+      "Recommend cross-sell and up-sell product bundle strategies",
+      "Design an abandoned cart recovery email sequence"
+    ],
+    "tools": [
+      "Listing Optimizer",
+      "Review Miner",
+      "Bundle Designer"
     ]
   },
   {
@@ -5275,9 +5792,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Supply Chain Lead Time & Risk Analyst (agent-088), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "procurement-supply-chain",
-      "calculate-step-by-step",
-      "read-excel",
+      "EOQ & Reorder Modeling",
+      "Lead Time Risk Assessment",
+      "Inventory Turnover Optimization",
+      "Logistics Route Planning",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5293,12 +5811,17 @@
     },
     "displayName": "Supply Chain AI Agent",
     "displayNumber": "088",
-    "description": "Analyzes inventory reorder points, logistics, and supplier lead times.",
+    "description": "Analyzes inventory reorder points, economic order quantity (EOQ), logistics, and supplier lead times.",
     "examples": [
-      "Draft a comprehensive Privacy Policy for a web platform",
-      "Design a data anonymization and masking strategy",
-      "Explain cookie consent banner compliance requirements",
-      "Audit personal data storage for minimization principles"
+      "Calculate optimal economic order quantity (EOQ) and reorder points",
+      "Analyze supplier lead times and identify single-point supply chain risks",
+      "Build an inventory turnover model for critical spare parts",
+      "Recommend logistics routing to minimize transit delays and freight costs"
+    ],
+    "tools": [
+      "EOQ Modeler",
+      "Lead Time Analyzer",
+      "Inventory Planner"
     ]
   },
   {
@@ -5336,9 +5859,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Refinery OPEX & Maintenance Cost Analyst (agent-089), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "industrial-finance-cost",
-      "calculate-step-by-step",
-      "read-excel",
+      "Inclusive Job Description Drafting",
+      "Onboarding Plan Creation",
+      "Competency Scorecard Design",
+      "Workplace Policy Authoring",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5354,12 +5878,17 @@
     },
     "displayName": "HR & Recruitment AI Agent",
     "displayNumber": "089",
-    "description": "Drafts job descriptions, onboarding plans, and workplace policies.",
+    "description": "Drafts job descriptions, onboarding plans, interview scorecards, and workplace policies.",
     "examples": [
-      "Design Prometheus alert rules for high error rates",
-      "Configure uptime monitoring and status page checks",
-      "Define SLI and SLO thresholds for an API service",
-      "Draft a runbook for investigating elevated latency alerts"
+      "Draft an inclusive job description for a Lead AI Systems Engineer",
+      "Create an onboarding plan and checklist for new engineering hires",
+      "Design standard interview scorecards for technical competencies",
+      "Draft clear workplace policy guidelines for internal AI tool usage"
+    ],
+    "tools": [
+      "JD Builder",
+      "Onboarding Planner",
+      "Scorecard Designer"
     ]
   },
   {
@@ -5395,9 +5924,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Equipment Repair vs Replacement Cost Evaluator (agent-090), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "industrial-finance-cost",
-      "calculate-step-by-step",
-      "read-excel",
+      "WBS & Gantt Scheduling",
+      "Critical Path Tracking",
+      "Status Report Generation",
+      "Cross-Team Coordination",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5413,12 +5943,17 @@
     },
     "displayName": "Project Manager AI Agent",
     "displayNumber": "090",
-    "description": "Tracks deliverables, manages timelines, risks, and project status reports.",
+    "description": "Tracks deliverables, manages WBS milestones, Gantt schedules, and project status reports.",
     "examples": [
-      "Analyze this code profile to find the CPU hotspot",
-      "Design a load testing plan with k6 or Apache Bench",
-      "Suggest caching strategies to reduce database load",
-      "Optimize Node.js event loop lag under heavy traffic"
+      "Build a comprehensive project work breakdown structure (WBS) and Gantt schedule",
+      "Track project milestones, dependencies, and critical path items",
+      "Generate a weekly project status report with risks and mitigation plans",
+      "Coordinate deliverables and deadlines across multiple engineering teams"
+    ],
+    "tools": [
+      "WBS Builder",
+      "Gantt Planner",
+      "Status Reporter"
     ]
   },
   {
@@ -5454,9 +5989,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are Energy Efficiency & Fuel Loss Accountant (agent-091), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "industrial-finance-cost",
-      "calculate-step-by-step",
-      "read-excel",
+      "Autonomous Multi-Step Investigation",
+      "Knowledge Gap Detection",
+      "Hypothesis Formulation & Testing",
+      "Evidence-Grounded Synthesis",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5472,12 +6008,17 @@
     },
     "displayName": "Autonomous Research AI Agent",
     "displayNumber": "091",
-    "description": "Executes deep multi-step autonomous research and structured synthesis.",
+    "description": "Executes deep multi-step autonomous research, gap detection, and evidence-grounded synthesis.",
     "examples": [
-      "Optimize this O(n^2) algorithm to O(n log n)",
-      "Reduce frontend bundle size by tree-shaking dependencies",
-      "Optimize memory allocation in a high-throughput loop",
-      "Refactor recursive function with dynamic programming memoization"
+      "Conduct an autonomous multi-source investigation into plant thermal efficiency",
+      "Iteratively gather evidence, identify knowledge gaps, and synthesize answers",
+      "Formulate grounded hypotheses and test them against internal records",
+      "Generate a comprehensive autonomous research report with cited proofs"
+    ],
+    "tools": [
+      "Autonomous Researcher",
+      "Gap Detector",
+      "Evidence Synthesizer"
     ]
   },
   {
@@ -5513,9 +6054,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Depreciation & Asset Valuation Specialist (agent-092), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "industrial-finance-cost",
-      "calculate-step-by-step",
-      "read-excel",
+      "Playwright / Puppeteer Scripting",
+      "Resilient DOM Selection",
+      "Visual Regression Capture",
+      "Headless Report Export",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5531,12 +6073,17 @@
     },
     "displayName": "Browser Automation AI Agent",
     "displayNumber": "092",
-    "description": "Designs browser automation scripts, DOM selectors, and scraping.",
+    "description": "Designs Playwright / Puppeteer browser automation scripts, DOM selectors, and scraping flows.",
     "examples": [
-      "Design a multi-step document approval workflow",
-      "Create a trigger-based automation for incoming files",
-      "Map a customer onboarding workflow with decision nodes",
-      "Build an automated escalation path for critical alerts"
+      "Generate Playwright / Puppeteer automation scripts for dashboard testing",
+      "Write resilient DOM selectors and action sequences for web workflows",
+      "Automate periodic screenshot capture and visual regression checks",
+      "Design headless browser workflows to export internal HTML reports"
+    ],
+    "tools": [
+      "Browser Script Generator",
+      "DOM Selector Engine",
+      "Screenshot Runner"
     ]
   },
   {
@@ -5573,9 +6120,10 @@
     "domain": "Research & Knowledge",
     "system_prompt": "You are Tariff, Duty & Petrochemical Tax Evaluator (agent-093), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "industrial-finance-cost",
-      "calculate-step-by-step",
-      "read-file",
+      "Semantic Document Indexing",
+      "Grounded Citation Retrieval",
+      "Chunking Strategy Optimization",
+      "Local Knowledge QA",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5591,12 +6139,17 @@
     },
     "displayName": "RAG Knowledge AI Agent",
     "displayNumber": "093",
-    "description": "Indexes document embeddings and performs high-precision semantic search.",
+    "description": "Indexes document embeddings and performs high-precision semantic search over internal archives.",
     "examples": [
-      "Write a webhook receiver with signature validation in Node.js",
-      "Connect a payment provider webhook to our database",
-      "Design a connector for syncing data between two local APIs",
-      "Transform payload formats between different REST services"
+      "Index internal engineering manuals and perform high-precision semantic search",
+      "Retrieve relevant SOP clauses with grounded document citations",
+      "Optimize chunking strategies and embedding distance for technical text",
+      "Answer complex questions strictly grounded in our local knowledge base"
+    ],
+    "tools": [
+      "Embedding Indexer",
+      "Semantic Retriever",
+      "Citation Matcher"
     ]
   },
   {
@@ -5632,9 +6185,10 @@
     "domain": "Specialized AI",
     "system_prompt": "You are Annual Maintenance Budget Reconciler (agent-094), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "industrial-finance-cost",
-      "read-excel",
-      "write-excel",
+      "Multi-Perspective Debate Orchestration",
+      "Opposing Argument Synthesis",
+      "Consensus Recommendation",
+      "Premise Stress-Testing",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5650,12 +6204,17 @@
     },
     "displayName": "Multi-Agent Debate AI Agent",
     "displayNumber": "094",
-    "description": "Orchestrates multi-perspective agent debate and consensus synthesis.",
+    "description": "Orchestrates multi-perspective agent debate, argument stress-testing, and consensus synthesis.",
     "examples": [
-      "Write an automated smoke test suite for our core API endpoints",
-      "Design a regression test matrix covering edge cases",
-      "Build an automated testing script in JavaScript",
-      "Create test assertions for air-gapped zero-egress compliance"
+      "Orchestrate a structured debate between safety and cost optimization perspectives",
+      "Synthesize opposing arguments on equipment replacement vs repair",
+      "Formulate a balanced consensus recommendation with trade-off analysis",
+      "Identify underlying assumptions and stress-test strategic arguments"
+    ],
+    "tools": [
+      "Debate Moderator",
+      "Argument Synthesizer",
+      "Consensus Engine"
     ]
   },
   {
@@ -5691,9 +6250,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are Refinery Turnaround Gantt & Schedule Agent (agent-095), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "project-management",
-      "read-excel",
-      "calculate-step-by-step",
+      "SOP Modeling",
+      "SLA & Escalation Mapping",
+      "Shift Handover Optimization",
+      "Throughput Bottleneck Elimination",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5709,12 +6269,17 @@
     },
     "displayName": "Business Operations AI Agent",
     "displayNumber": "095",
-    "description": "Models standard operating procedures, SLAs, and organizational throughput.",
+    "description": "Models standard operating procedures, SLAs, shift handovers, and operational throughput.",
     "examples": [
-      "Suggest the best chart type to visualize multi-year growth",
-      "Write Chart.js configuration for a multi-line trend graph",
-      "Design an interactive metrics dashboard wireframe",
-      "Create a heatmap visualization for server utilization"
+      "Model end-to-end standard operating procedures for plant incident response",
+      "Define operational SLAs and escalation matrices for equipment alerts",
+      "Optimize shift handover protocols to prevent critical communication gaps",
+      "Conduct a throughput analysis to eliminate operational friction"
+    ],
+    "tools": [
+      "SOP Modeler",
+      "SLA Engine",
+      "Throughput Analyzer"
     ]
   },
   {
@@ -5750,9 +6315,10 @@
     "domain": "Coding & Development",
     "system_prompt": "You are Critical Path & Delay Prediction Specialist (agent-096), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "project-management",
-      "read-excel",
-      "assess-risk",
+      "Autonomous Module Generation",
+      "Self-Testing & Patch Verification",
+      "Multi-File Code Synthesis",
+      "Specification Execution",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5768,12 +6334,17 @@
     },
     "displayName": "Autonomous Coding AI Agent",
     "displayNumber": "096",
-    "description": "Plans, writes, and self-tests end-to-end software modules autonomously.",
+    "description": "Plans, writes, and self-tests end-to-end software modules autonomously with test verification.",
     "examples": [
-      "Generate a structured executive report from this dataset",
-      "Format a monthly operational performance report",
-      "Create a summary report with key metrics and charts",
-      "Draft an audit report with findings and recommendations"
+      "Plan, generate, test, and refactor a complete backend microservice",
+      "Autonomously implement a feature from technical specification to passing tests",
+      "Identify bugs, generate patches, and verify them against the test suite",
+      "Execute multi-step autonomous code changes with verification"
+    ],
+    "tools": [
+      "Autonomous Coder",
+      "Self-Tester",
+      "Patch Validator"
     ]
   },
   {
@@ -5810,9 +6381,10 @@
     "domain": "Specialized AI",
     "system_prompt": "You are Contractor Manpower & Progress Tracker (agent-097), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "project-management",
-      "read-excel",
-      "calculate-step-by-step",
+      "Inference Throughput Evaluation",
+      "Ablation Study Design",
+      "Perplexity & Token Profiling",
+      "Reasoning Benchmark Design",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5828,12 +6400,17 @@
     },
     "displayName": "AI Research Scientist AI Agent",
     "displayNumber": "097",
-    "description": "Evaluates machine learning architectures, loss functions, and benchmarks.",
+    "description": "Evaluates machine learning architectures, loss functions, token efficiency, and model benchmarks.",
     "examples": [
-      "Write clear, concise push notification copy for an alert",
-      "Format in-app toast messages for success, warning, and error",
-      "Design an urgent alert template for critical system events",
-      "Draft reminder notification templates for user actions"
+      "Evaluate local model inference throughput, latency, and memory footprint",
+      "Design ablation studies to measure prompt optimization performance",
+      "Compare token efficiency and perplexity across quantized models",
+      "Formulate benchmarks to measure agent reasoning and accuracy"
+    ],
+    "tools": [
+      "ML Benchmark Evaluator",
+      "Ablation Runner",
+      "Perplexity Profiler"
     ]
   },
   {
@@ -5868,9 +6445,10 @@
     "domain": "Business & Management",
     "system_prompt": "You are EPC Project Milestone & Billing Verifier (agent-098), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "project-management",
-      "verify-document",
-      "read-excel",
+      "Zero-to-One Product Blueprinting",
+      "MVP Scope Definition",
+      "Rapid Architecture Design",
+      "GTM Execution Planning",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5886,12 +6464,17 @@
     },
     "displayName": "Startup Builder AI Agent",
     "displayNumber": "098",
-    "description": "Coordinates product ideation, tech stacks, and rapid go-to-market execution.",
+    "description": "Coordinates product ideation, MVP architectures, technical roadmaps, and go-to-market execution.",
     "examples": [
-      "Design an organized folder taxonomy for project assets",
-      "Write a script to batch rename and organize downloads by date",
-      "Create an automated archive and backup script",
-      "Detect and clean up duplicate files in a directory"
+      "Develop a complete zero-to-one product blueprint and technical roadmap",
+      "Define value proposition, MVP feature scope, and rapid iteration plan",
+      "Design product architecture optimized for speed of execution",
+      "Formulate a go-to-market plan for launching our sovereign AI product"
+    ],
+    "tools": [
+      "Blueprint Modeler",
+      "MVP Scoper",
+      "GTM Planner"
     ]
   },
   {
@@ -5928,9 +6511,10 @@
     "domain": "Specialized AI",
     "system_prompt": "You are Plant Commissioning Punchlist Agent (agent-099), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "project-management",
-      "read-file",
-      "write-file",
+      "Inter-Agent Message Passing",
+      "Task Sequential Dispatching",
+      "Failover & Retry Handling",
+      "Multi-Agent Output Synthesis",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -5946,12 +6530,17 @@
     },
     "displayName": "Multi-Agent Coordinator AI Agent",
     "displayNumber": "099",
-    "description": "Coordinates inter-agent message passing and workflow handoffs.",
+    "description": "Coordinates inter-agent message passing, task handoffs, failovers, and output synthesis.",
     "examples": [
-      "Organize my schedule and prioritize top 3 tasks for today",
-      "Draft a reminder and action item summary for tomorrow",
-      "Help me draft a quick reply to an urgent inquiry",
-      "Coordinate steps to prepare for an upcoming presentation"
+      "Coordinate workflow handoffs and data passing between specialist agents",
+      "Dispatch tasks to Writing, Coding, and Analysis agents sequentially",
+      "Monitor agent execution states and handle failover or retries",
+      "Synthesize partial outputs from multiple agents into a unified result"
+    ],
+    "tools": [
+      "Agent Dispatcher",
+      "Message Bus",
+      "Synthesis Aggregator"
     ]
   },
   {
@@ -5992,9 +6581,10 @@
     "domain": "Automation & Productivity",
     "system_prompt": "You are Executive Project Status Report Generator (agent-100), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
     "capabilities": [
-      "project-management",
-      "generate-pptx",
-      "generate-docx",
+      "General Task Assistance",
+      "Multi-Domain Drafting",
+      "Problem Solving & Reasoning",
+      "Specialist Agent Guidance",
       "sovereign-local"
     ],
     "primary_tools": [
@@ -6010,12 +6600,17 @@
     },
     "displayName": "General Assistant AI Agent",
     "displayNumber": "100",
-    "description": "Provides versatile assistance across tasks, inquiries, and workflows.",
+    "description": "Provides versatile assistance across tasks, drafting, reasoning, organization, and agent guidance.",
     "examples": [
-      "Help me brainstorm ideas for a new software project",
-      "Explain how this technology works in simple terms",
-      "Review this draft and provide suggestions for improvement",
-      "Help me organize and structure my thoughts on this problem"
+      "Help me organize my work, plan my day, and summarize key tasks",
+      "Explain complex concepts clearly and provide structured answers",
+      "Assist with drafting, editing, calculating, and problem solving",
+      "Guide me on selecting the right specialist AI agent for my current goal"
+    ],
+    "tools": [
+      "General Assistant",
+      "Reasoning Engine",
+      "Agent Directory Guide"
     ]
   },
   {
@@ -6033,8 +6628,10 @@
     "model": "nemotron-3-nano",
     "backend": "http://127.0.0.1:11434",
     "capabilities": [
-      "sovereign-orchestration",
-      "*",
+      "Autonomous Task Planning",
+      "Dynamic Multi-Model Routing",
+      "Evidence Synthesis",
+      "Specialist Fleet Orchestration",
       "sovereign-local"
     ],
     "ui_type": "master",
@@ -6073,9 +6670,15 @@
     "description": "The master AI agent that coordinates the specialist AI agents to solve complex tasks.",
     "examples": [
       "Build me a complete full-stack web application with database and tests",
-      "Perform end-to-end investigation, analyze data, and prepare deliverables",
+      "Perform end-to-end industrial investigation, analyze data, and generate deliverables",
       "Coordinate research, coding, documentation, and testing for this project",
-      "Analyze this complex problem using multiple specialized AI agents"
+      "Break this complex engineering goal into steps and execute across 101 agents"
+    ],
+    "tools": [
+      "Task Planner",
+      "Model Router",
+      "Evidence Synthesizer",
+      "Fleet Delegator"
     ]
   }
 ]

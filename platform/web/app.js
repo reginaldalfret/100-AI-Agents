@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentAttachments: [],
         isGenerating: false,
         activeView: 'agent-workspace',
-        activeTab: 'chat',
         inspectorOpen: false,
         sidebarOpen: false
     };
@@ -582,10 +581,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     return {
                         ...a,
                         id: a.agent_id || a.id,
+                        internalId: a.agent_id || a.id,
                         displayNumber: a.displayNumber || dispNum,
                         name: displayName,
                         category: a.category || a.domain || 'Specialized AI',
-                        description: a.description || `Specialist AI agent numbered ${dispNum} for ${displayName}.`
+                        description: a.description || `Specialist AI agent numbered ${dispNum} for ${displayName}.`,
+                        capabilities: Array.isArray(a.capabilities) && a.capabilities.length > 0 ? a.capabilities : ['Task Execution', 'Natural Language Processing', 'Data Reasoning'],
+                        tools: Array.isArray(a.tools) && a.tools.length > 0 ? a.tools : (Array.isArray(a.primary_tools) && a.primary_tools.length > 0 ? a.primary_tools : ['Local Inference', 'Knowledge Base Query']),
+                        examples: Array.isArray(a.examples) && a.examples.length > 0 ? a.examples : []
                     };
                 })
                 .sort((a, b) => parseInt(a.displayNumber, 10) - parseInt(b.displayNumber, 10));
@@ -705,9 +708,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         
-        // Refresh tabs
-        switchTab(state.activeTab);
-        
         // Switch view if not on workspace
         if (state.activeView !== 'agent-workspace') {
             switchMainView('agent-workspace');
@@ -743,133 +743,57 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function switchTab(tabName) {
-        state.activeTab = tabName;
-        
-        const tabToView = {
-            'chat': 'chatView',
-            'about': 'aboutView',
-            'capabilities': 'capabilitiesView',
-            'examples': 'examplesView'
-        };
-        
-        const viewId = tabToView[tabName] || tabName;
-        
-        if (elements.workspaceTabs) {
-            elements.workspaceTabs.querySelectorAll('button').forEach(tab => {
-                tab.classList.toggle('active', tab.dataset.tab === viewId);
-            });
+    function getAgentExamples(agent) {
+        if (agent && Array.isArray(agent.examples) && agent.examples.length > 0) {
+            return agent.examples;
         }
-        
-        ['chatView', 'aboutView', 'capabilitiesView', 'examplesView'].forEach(id => {
-            const panel = document.getElementById(id);
-            if (panel) {
-                if (id === viewId) {
-                    panel.classList.add('active');
-                    panel.style.display = '';
-                } else {
-                    panel.classList.remove('active');
-                    panel.style.display = 'none';
-                }
-            }
-        });
-        
-        if (tabName === 'about' && state.selectedAgent) {
-            renderAbout(state.selectedAgent, elements.aboutView);
-        } else if (tabName === 'capabilities' && state.selectedAgent) {
-            renderCapabilities(state.selectedAgent, elements.capabilitiesView);
-        } else if (tabName === 'examples' && state.selectedAgent) {
-            renderExamples(state.selectedAgent, elements.examplesView);
-        }
-    }
-
-    function renderAbout(agent, container) {
-        if (!container) return;
-        const avatar = generateAgentAvatar(agent);
-        container.innerHTML = `
-            <div class="about-card" style="background:var(--bg-surface);padding:24px;border-radius:16px;border:1px solid var(--border-subtle);max-width:800px;margin:0 auto;">
-                <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
-                    <div style="width:52px;height:42px;border-radius:10px;background:${avatar.color};display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--font-mono);font-size:16px;font-weight:800;">
-                        ${avatar.number}
-                    </div>
-                    <div>
-                        <h2 style="margin:0;font-size:20px;color:var(--text-primary);">${escapeHtml(agent.name)}</h2>
-                        <span style="font-size:12px;color:var(--text-secondary);">agent-${avatar.number} · ${escapeHtml(agent.category || agent.domain || 'Specialist')}</span>
-                    </div>
-                </div>
-                <p style="color:var(--text-secondary);line-height:1.6;font-size:14px;margin-bottom:20px;">
-                    ${escapeHtml(agent.description || 'On-premise industrial AI specialist agent ready to assist with tasks.')}
-                </p>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;">
-                    <div><strong>Category:</strong> <span style="color:var(--text-secondary);">${escapeHtml(agent.category || 'Specialized AI')}</span></div>
-                    <div><strong>Status:</strong> <span style="color:var(--accent-green);">● Active & Ready</span></div>
-                    <div><strong>Model:</strong> <span style="color:var(--text-secondary);">${escapeHtml(agent.model || 'Local Open-Weight LLM')}</span></div>
-                    <div><strong>Zero Egress:</strong> <span style="color:var(--accent-green);">100% On-Premise Air-Gapped</span></div>
-                </div>
-            </div>
-        `;
-    }
-
-    function renderCapabilities(agent, container) {
-        if (!container) return;
-        const caps = agent.capabilities || ['Task Execution', 'Natural Language Processing', 'Data Reasoning'];
-        const tools = agent.tools || agent.primary_tools || ['Local Inference', 'Knowledge Base Query', 'Artifact Generation'];
-        
-        container.innerHTML = `
-            <div style="max-width:800px;margin:0 auto;display:flex;flex-direction:column;gap:20px;">
-                <div style="background:var(--bg-surface);padding:20px;border-radius:14px;border:1px solid var(--border-subtle);">
-                    <h3 style="margin-top:0;font-size:16px;color:var(--text-primary);margin-bottom:12px;">Core Capabilities</h3>
-                    <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                        ${caps.map(c => `<span style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.35);color:#a5b4fc;padding:6px 12px;border-radius:20px;font-size:12.5px;">✓ ${escapeHtml(c)}</span>`).join('')}
-                    </div>
-                </div>
-                <div style="background:var(--bg-surface);padding:20px;border-radius:14px;border:1px solid var(--border-subtle);">
-                    <h3 style="margin-top:0;font-size:16px;color:var(--text-primary);margin-bottom:12px;">Allowed Local Tools</h3>
-                    <div style="display:flex;flex-wrap:wrap;gap:8px;">
-                        ${tools.map(t => `<span style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.35);color:#67e8f9;padding:6px 12px;border-radius:20px;font-size:12.5px;">⚙ ${escapeHtml(t)}</span>`).join('')}
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-
-    function renderExamples(agent, container) {
-        if (!container) return;
-        const examples = getAgentExamples(agent);
-        container.innerHTML = `
-            <div style="max-width:800px;margin:0 auto;">
-                <h3 style="margin-top:0;font-size:16px;color:var(--text-primary);margin-bottom:16px;">Example Prompts for ${escapeHtml(agent.name)}</h3>
-                <div style="display:flex;flex-direction:column;gap:10px;">
-                    ${examples.map(ex => `
-                        <div class="clickable-example-card" style="background:var(--bg-surface);padding:14px 18px;border-radius:12px;border:1px solid var(--border-subtle);cursor:pointer;color:var(--text-primary);font-size:13.5px;transition:all 0.15s ease;" onclick="window.useExamplePrompt('${escapeHtml(ex).replace(/'/g, "\\'")}')">
-                            💬 "${escapeHtml(ex)}"
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        `;
+        return ['No example prompts available yet.'];
     }
 
     window.useExamplePrompt = function(promptText) {
-        switchTab('chat');
-        elements.chatInput.value = promptText;
-        elements.chatInput.focus();
-        elements.chatInput.dispatchEvent(new Event('input'));
+        if (!promptText || promptText === 'No example prompts available yet.') return;
+        if (elements.chatInput) {
+            elements.chatInput.value = promptText;
+            elements.chatInput.focus();
+            elements.chatInput.dispatchEvent(new Event('input'));
+        }
+    };
+
+    window.switchAgentAndRetainPrompt = function(targetAgentId, promptText) {
+        selectAgent(targetAgentId, true);
+        if (elements.chatInput && promptText) {
+            elements.chatInput.value = promptText;
+            elements.chatInput.focus();
+            elements.chatInput.dispatchEvent(new Event('input'));
+        }
     };
 
     function showEmptyState(agent) {
         if (!elements.chatEmptyState) return;
         const avatar = generateAgentAvatar(agent);
         const examples = getAgentExamples(agent);
+        const caps = agent?.capabilities?.filter(c => c !== 'sovereign-local') || [];
         
+        const capsHtml = caps.length > 0 ? `
+            <div class="empty-caps-row" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:560px;margin:0 auto 18px auto;">
+                ${caps.slice(0, 4).map(c => `<span style="font-size:11.5px;color:#a5b4fc;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.30);padding:3px 10px;border-radius:14px;">✓ ${escapeHtml(c)}</span>`).join('')}
+            </div>
+        ` : '';
+
         elements.chatEmptyState.innerHTML = `
             <div class="empty-avatar" style="background:${avatar.color}; border-color:${avatar.borderGlow}">
                 ${avatar.number}
             </div>
             <h2>${escapeHtml(agent.name)}</h2>
-            <p>${escapeHtml(agent.description || 'Ask questions, submit documents, or request complex multi-agent analysis.')}</p>
+            <p>${escapeHtml(agent.description || 'Specialist AI agent ready to assist on local hardware.')}</p>
+            ${capsHtml}
             <div class="example-chips">
-                ${examples.map(ex => `<button class="example-chip" onclick="window.useExamplePrompt('${escapeHtml(ex).replace(/'/g, "\\'")}')">${escapeHtml(ex)}</button>`).join('')}
+                ${examples.map(ex => {
+                    if (ex === 'No example prompts available yet.') {
+                        return `<span class="example-chip-empty" style="padding:6px 14px;border-radius:20px;font-size:12px;color:var(--text-tertiary);border:1px dashed var(--border-glass);">${escapeHtml(ex)}</span>`;
+                    }
+                    return `<button class="example-chip" onclick="window.useExamplePrompt('${escapeHtml(ex).replace(/'/g, "\\'")}')">${escapeHtml(ex)}</button>`;
+                }).join('')}
             </div>
         `;
         elements.chatEmptyState.style.display = 'flex';
@@ -1673,6 +1597,34 @@ document.addEventListener('DOMContentLoaded', () => {
             ? `[Replying to previous response from ${replyTo.agentName || 'AI Assistant'}]: "${(replyTo.content || '').slice(0, 300)}"\n\nUser follow-up: ${text}`
             : text;
 
+        let isScopeRedirect = false;
+        let renderRafPending = false;
+
+        // Process attachments to base64
+        const processedAttachments = await Promise.all((attachments || []).map(async (att) => {
+            if (att.file) {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const result = reader.result;
+                        let base64 = '';
+                        if (typeof result === 'string') {
+                            base64 = result.includes(',') ? result.split(',')[1] : result;
+                        }
+                        resolve({
+                            name: att.name,
+                            type: att.type,
+                            size: att.size,
+                            data: base64
+                        });
+                    };
+                    reader.onerror = () => resolve({ name: att.name, type: att.type, size: att.size, data: '' });
+                    reader.readAsDataURL(att.file);
+                });
+            }
+            return { name: att.name, type: att.type, size: att.size, data: att.data || '' };
+        }));
+
         try {
             const res = await fetch('/api/chat', {
                 method: 'POST',
@@ -1681,9 +1633,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Accept': 'text/event-stream'
                 },
                 body: JSON.stringify({
+                    conversationId: state.currentConversationId,
+                    conversation_id: state.currentConversationId,
                     agent_id: targetAgentId,
                     task: effectiveTask,
                     original_task: text,
+                    attachments: processedAttachments,
                     replyTo: replyTo ? {
                         messageId: replyTo.messageId,
                         agentId: replyTo.agentId,
@@ -1739,8 +1694,48 @@ document.addEventListener('DOMContentLoaded', () => {
                     try {
                         const parsed = JSON.parse(eventData);
 
-                        if (eventType === 'status') {
-                            if (statusText) {
+                        if (eventType === 'scope_redirect') {
+                            isScopeRedirect = true;
+                            if (statusPill && statusPill.parentNode) statusPill.remove();
+                            const recs = parsed.recommendedAgents || [];
+                            const promptToRetain = parsed.userPrompt || text || '';
+                            const recsHtml = recs.map(rec => `
+                                <div class="recommended-agent-pill">
+                                    <div class="rec-agent-info">
+                                        <div class="rec-agent-number">${escapeHtml(rec.displayNumber || rec.id.replace(/\D/g, ''))}</div>
+                                        <div>
+                                            <div class="rec-agent-name">${escapeHtml(rec.displayName || rec.name)}</div>
+                                            <div class="rec-agent-category">${escapeHtml(rec.category || rec.reason || 'Specialist')}</div>
+                                        </div>
+                                    </div>
+                                    <button class="btn-switch-agent" onclick="window.switchAgentAndRetainPrompt('${escapeHtml(rec.id)}', '${escapeHtml(promptToRetain).replace(/'/g, "\\'")}')">
+                                        <span>Switch to ${escapeHtml(rec.displayName || rec.name)}</span> →
+                                    </button>
+                                </div>
+                            `).join('');
+
+                            textTarget.innerHTML = `
+                                <div class="scope-recommendation-card">
+                                    <div class="scope-rec-header">
+                                        <span class="sparkle">✦</span>
+                                        <span>Recommended Specialist</span>
+                                    </div>
+                                    <div class="scope-rec-message">
+                                        ${formatResponse(parsed.politeMessage || 'This task is better suited to another specialist agent.')}
+                                    </div>
+                                    <div class="scope-rec-cards">
+                                        ${recsHtml}
+                                    </div>
+                                    <div class="scope-rec-actions-footer">
+                                        <button class="btn-ask-super-agent" onclick="window.switchAgentAndRetainPrompt('agent-101', '${escapeHtml(promptToRetain).replace(/'/g, "\\'")}')">
+                                            Ask Super AI Agent (Master Orchestrator)
+                                        </button>
+                                    </div>
+                                </div>
+                            `;
+                            accumulatedText = parsed.politeMessage || '';
+                        } else if (eventType === 'status') {
+                            if (statusText && !isScopeRedirect) {
                                 statusText.textContent = parsed.message || (parsed.state === 'model_ready' ? `${parsed.model} active` : 'Preparing model...');
                                 if (parsed.state === 'model_ready') {
                                     statusPill.className = 'stream-status-pill active';
@@ -1757,13 +1752,20 @@ document.addEventListener('DOMContentLoaded', () => {
                                 statusPill.remove();
                             }
                             accumulatedText += (parsed.text || '');
-                            textTarget.innerHTML = formatResponse(accumulatedText) + `<span class="stream-cursor"></span>`;
-                            scrollToBottom();
+                            if (!renderRafPending) {
+                                renderRafPending = true;
+                                requestAnimationFrame(() => {
+                                    renderRafPending = false;
+                                    textTarget.innerHTML = formatResponse(accumulatedText) + `<span class="stream-cursor"></span>`;
+                                    scrollToBottom();
+                                });
+                            }
                         } else if (eventType === 'complete') {
+                            textTarget.innerHTML = formatResponse(accumulatedText);
                             actualModelTag = parsed.actual_model || actualModelTag;
                             durationMs = parsed.duration_ms || null;
                             tokensPerSec = parsed.tokens_per_sec || null;
-                            if (modelLabelEl) modelLabelEl.textContent = `● ${modelDisplayName}`;
+                            if (modelLabelEl && !isScopeRedirect) modelLabelEl.textContent = `● ${modelDisplayName}`;
                             if (egressTagEl) egressTagEl.textContent = `⚡ ${actualModelTag} · 0 External Calls`;
                         } else if (eventType === 'error') {
                             if (statusPill && statusPill.parentNode) statusPill.remove();
@@ -1792,45 +1794,47 @@ document.addEventListener('DOMContentLoaded', () => {
             if (cursor) cursor.remove();
             if (statusPill && statusPill.parentNode) statusPill.remove();
 
-            // Append backend flow card
-            const agentName = state.selectedAgent?.name || 'Super AI';
-            const statsStr = [
-                durationMs ? `${durationMs}ms` : null,
-                tokensPerSec ? `${tokensPerSec} t/s` : null
-            ].filter(Boolean).join(' · ');
+            if (!isScopeRedirect) {
+                // Append backend flow card
+                const agentName = state.selectedAgent?.name || 'Super AI';
+                const statsStr = [
+                    durationMs ? `${durationMs}ms` : null,
+                    tokensPerSec ? `${tokensPerSec} t/s` : null
+                ].filter(Boolean).join(' · ');
 
-            const backendFlow = document.createElement('div');
-            backendFlow.className = 'backend-flow-card';
-            backendFlow.innerHTML = `
-                <div class="backend-flow-header">
-                    <span>⚡ What happened in the backend</span>
-                    <span class="backend-flow-badge">100% On-Premise Stream</span>
-                </div>
-                <div class="backend-flow-steps">
-                    <div class="backend-flow-item">
-                        <span class="backend-flow-check">✓</span>
-                        <span><strong>1. Agent Dispatched:</strong> Handled by <code>${escapeHtml(agentName)}</code> (Agent ${state.selectedAgent?.displayNumber || '101'})</span>
+                const backendFlow = document.createElement('div');
+                backendFlow.className = 'backend-flow-card';
+                backendFlow.innerHTML = `
+                    <div class="backend-flow-header">
+                        <span>⚡ What happened in the backend</span>
+                        <span class="backend-flow-badge">100% On-Premise Stream</span>
                     </div>
-                    <div class="backend-flow-item">
-                        <span class="backend-flow-check">✓</span>
-                        <span><strong>2. Model Engine:</strong> Executed via <code>${escapeHtml(modelDisplayName)}</code> (Actual Runtime: <code>${escapeHtml(actualModelTag)}</code>${statsStr ? ` · ${statsStr}` : ''})</span>
+                    <div class="backend-flow-steps">
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>1. Agent Dispatched:</strong> Handled by <code>${escapeHtml(agentName)}</code> (Agent ${state.selectedAgent?.displayNumber || '101'})</span>
+                        </div>
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>2. Model Engine:</strong> Executed via <code>${escapeHtml(modelDisplayName)}</code> (Actual Runtime: <code>${escapeHtml(actualModelTag)}</code>${statsStr ? ` · ${statsStr}` : ''})</span>
+                        </div>
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>3. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
+                        </div>
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>4. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
+                        </div>
                     </div>
-                    <div class="backend-flow-item">
-                        <span class="backend-flow-check">✓</span>
-                        <span><strong>3. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
-                    </div>
-                    <div class="backend-flow-item">
-                        <span class="backend-flow-check">✓</span>
-                        <span><strong>4. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
-                    </div>
-                </div>
-            `;
-            const bubble = streamMsgDiv.querySelector('.msg-bubble');
-            if (bubble) {
-                bubble.appendChild(backendFlow);
-                if (accumulatedText) {
-                    const actionsRow = createActionsRow(accumulatedText, modelDisplayName, actualModelTag, `msg-${Date.now()}`);
-                    bubble.appendChild(actionsRow);
+                `;
+                const bubble = streamMsgDiv.querySelector('.msg-bubble');
+                if (bubble) {
+                    bubble.appendChild(backendFlow);
+                    if (accumulatedText) {
+                        const actionsRow = createActionsRow(accumulatedText, modelDisplayName, actualModelTag, `msg-${Date.now()}`);
+                        bubble.appendChild(actionsRow);
+                    }
                 }
             }
 

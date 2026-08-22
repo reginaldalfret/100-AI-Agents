@@ -1,0 +1,20 @@
+{
+  "id": "chat-CONV-1787417453168-4",
+  "title": "HX-204 Ultrasonic Thickness Analysis",
+  "agentId": "agent-101",
+  "agentName": "Super AI Agent",
+  "modelMode": "auto",
+  "pinned": false,
+  "createdAt": "2026-08-22T16:50:53.168Z",
+  "updatedAt": "2026-08-22T16:50:53.168Z",
+  "messages": [
+    {
+      "id": "MSG-1787417453168",
+      "role": "user",
+      "content": "Please analyze the ultrasonic thickness report for Heat Exchanger HX-204.",
+      "model": "NVIDIA Nemotron 3",
+      "actualModel": "nemotron-3-nano:latest",
+      "timestamp": "2026-08-22T16:50:53.168Z"
+    }
+  ]
+}

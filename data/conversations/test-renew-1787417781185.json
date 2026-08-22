@@ -1,0 +1,45 @@
+{
+  "id": "test-renew-1787417781185",
+  "title": "New Conversation",
+  "agentId": "agent-101",
+  "modelMode": "auto",
+  "messages": [
+    {
+      "id": "msg-1787417781186",
+      "role": "user",
+      "content": "Write a professional article about renewable energy.",
+      "model": null,
+      "actualModel": null,
+      "timestamp": "2026-08-22T16:56:21.186Z"
+    },
+    {
+      "id": "msg-1787417781188",
+      "role": "assistant",
+      "content": "Renewable energy is derived from natural processes that are replenished constantly...",
+      "model": null,
+      "actualModel": null,
+      "timestamp": "2026-08-22T16:56:21.188Z"
+    }
+  ],
+  "memory": {
+    "summary": "",
+    "activeTopic": "Renewable Energy",
+    "subtopic": "",
+    "intent": "writing",
+    "entities": [
+      {
+        "id": "renewable energy",
+        "name": "Renewable energy",
+        "type": "concept",
+        "aliases": [],
+        "attributes": {},
+        "mentions": 4,
+        "confidence": 0.96,
+        "firstMentionedAt": "2026-08-22T16:56:21.187Z",
+        "lastMentionedAt": "2026-08-22T16:56:21.189Z"
+      }
+    ]
+  },
+  "createdAt": "2026-08-22T16:56:21.185Z",
+  "updatedAt": "2026-08-22T16:56:21.190Z"
+}

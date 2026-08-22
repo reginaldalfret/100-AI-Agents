@@ -1,0 +1,108 @@
+{
+  "id": "test-ordinal-1787417889050",
+  "title": "New Conversation",
+  "agentId": "agent-101",
+  "modelMode": "auto",
+  "messages": [
+    {
+      "id": "msg-1787417889050",
+      "role": "user",
+      "content": "What are the types of renewable energy?",
+      "model": null,
+      "actualModel": null,
+      "timestamp": "2026-08-22T16:58:09.050Z"
+    },
+    {
+      "id": "msg-1787417889051",
+      "role": "assistant",
+      "content": "1. Solar Energy\n2. Wind Energy\n3. Geothermal Energy\n4. Biomass",
+      "model": null,
+      "actualModel": null,
+      "timestamp": "2026-08-22T16:58:09.051Z"
+    }
+  ],
+  "memory": {
+    "summary": "",
+    "activeTopic": "Renewable Energy",
+    "subtopic": "types & classifications",
+    "intent": "general",
+    "entities": [
+      {
+        "id": "renewable energy",
+        "name": "renewable energy",
+        "type": "concept",
+        "aliases": [],
+        "attributes": {},
+        "mentions": 2,
+        "confidence": 0.96,
+        "firstMentionedAt": "2026-08-22T16:58:09.050Z",
+        "lastMentionedAt": "2026-08-22T16:58:09.054Z"
+      },
+      {
+        "id": "solar energy",
+        "name": "Solar Energy",
+        "type": "list_item",
+        "aliases": [],
+        "attributes": {
+          "ordinal": 0
+        },
+        "mentions": 4,
+        "confidence": 0.96,
+        "firstMentionedAt": "2026-08-22T16:58:09.051Z",
+        "lastMentionedAt": "2026-08-22T16:58:09.054Z"
+      },
+      {
+        "id": "wind energy",
+        "name": "Wind Energy",
+        "type": "list_item",
+        "aliases": [],
+        "attributes": {
+          "ordinal": 1
+        },
+        "mentions": 4,
+        "confidence": 0.96,
+        "firstMentionedAt": "2026-08-22T16:58:09.051Z",
+        "lastMentionedAt": "2026-08-22T16:58:09.054Z"
+      },
+      {
+        "id": "geothermal",
+        "name": "Geothermal",
+        "type": "concept",
+        "aliases": [],
+        "attributes": {},
+        "mentions": 2,
+        "confidence": 0.96,
+        "firstMentionedAt": "2026-08-22T16:58:09.051Z",
+        "lastMentionedAt": "2026-08-22T16:58:09.054Z"
+      },
+      {
+        "id": "biomass",
+        "name": "Biomass",
+        "type": "list_item",
+        "aliases": [],
+        "attributes": {
+          "ordinal": 3
+        },
+        "mentions": 4,
+        "confidence": 0.96,
+        "firstMentionedAt": "2026-08-22T16:58:09.051Z",
+        "lastMentionedAt": "2026-08-22T16:58:09.054Z"
+      },
+      {
+        "id": "geothermal energy",
+        "name": "Geothermal Energy",
+        "type": "list_item",
+        "aliases": [],
+        "attributes": {
+          "ordinal": 2
+        },
+        "mentions": 2,
+        "confidence": 0.92,
+        "firstMentionedAt": "2026-08-22T16:58:09.051Z",
+        "lastMentionedAt": "2026-08-22T16:58:09.054Z"
+      }
+    ]
+  },
+  "createdAt": "2026-08-22T16:58:09.050Z",
+  "updatedAt": "2026-08-22T16:58:09.055Z"
+}
