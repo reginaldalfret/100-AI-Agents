@@ -19,10 +19,14 @@ export async function executeInCodeSandbox(code, language = "python", options = 
   const ext = language === "python" ? "py" : "js";
   const scriptPath = path.join(SANDBOX_ROOT, `${executionId}.${ext}`);
 
-  // Safety checks against dangerous system operations
+  // Safety checks against dangerous system operations and path traversals
   const prohibitedPatterns = [
-    /os\.system/i,
-    /subprocess\.call/i,
+    /\.\.\//,
+    /\.\.\\/,
+    /os\./i,
+    /sys\./i,
+    /shutil/i,
+    /subprocess/i,
     /process\.env/i,
     /child_process/i,
     /fetch\(/i,
