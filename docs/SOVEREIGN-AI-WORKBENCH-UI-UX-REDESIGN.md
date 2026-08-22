@@ -1,4 +1,4 @@
-﻿# Sovereign AI Workbench — RGB Neon & Liquid Glass UI/UX Redesign
+# Sovereign AI Workbench — RGB Neon & Liquid Glass UI/UX Redesign
 
 **Project:** Sovereign AI Workbench  
 **Client / Problem Statement:** Mangalore Refinery and Petrochemicals Limited (MRPL) / Smart India Hackathon  
@@ -93,7 +93,7 @@ http://127.0.0.1:8300/app.js                         200 (41,555 bytes JS)
 ```
 node tests/sih/run-all-tests.js
 ============================================================
-ALL 25 TEST SUITES PASSED (100% PASS RATE ACROSS PLATFORM)
+ALL 28 TEST SUITES PASSED (100% PASS RATE ACROSS PLATFORM)
 EXTERNAL EGRESS: 0 CALLS (100% AIR-GAP VERIFIED)
 ============================================================
 ```
@@ -102,6 +102,38 @@ EXTERNAL EGRESS: 0 CALLS (100% AIR-GAP VERIFIED)
 ```
 node tests/run-all-agents.js --concurrency=10
 ======================================================
-Fleet Test Complete: 101/101 Passed (100.0%) in 9.89s
+Fleet Test Complete: 101/101 Passed (100.0%) in 9.23s
 ======================================================
 ```
+
+---
+
+## 6. Liquid Glass Motion System
+
+### A. Centralized Design Token System
+- **Core Surfaces**: `--bg-0` (`#030509`), `--bg-1` (`#060911`), `--bg-2` (`#0a0e1c`).
+- **5-Level Glass Layers**:
+  - `Level 1` (`--glass-1: rgba(6, 10, 20, 0.40)`): Canvas / ambient underlay.
+  - `Level 2` (`--glass-2: rgba(10, 15, 28, 0.68)`): Floating sidebar & workspace shell.
+  - `Level 3` (`--glass-3: rgba(16, 22, 40, 0.58)`): Standard cards & empty states.
+  - `Level 4` (`--glass-4: rgba(12, 18, 34, 0.82)`): Active cards & composer capsule.
+  - `Level 5` (`--glass-5: rgba(8, 12, 24, 0.94)`): Floating model dropdown, inspector, and modals.
+- **Blur Hierarchy**: `--blur-sm` (`8px`), `--blur-md` (`18px`), `--blur-lg` (`28px`), `--blur-xl` (`40px`).
+- **Transitions**: `--transition-fast` (`0.15s`), `--transition-normal` (`0.22s`), `--transition-slow` (`0.35s`).
+
+### B. Ambient Atmosphere & Light Fields
+- Four large blurred ambient orbs (`.orb-blue`, `.orb-violet`, `.orb-cyan`, `.orb-magenta`) with `filter: blur(140px)` and subtle `0.06–0.11` opacity.
+- 30–44s slow breathing animations (`@keyframes orbFloat1`, `orbFloat2`, `orbFloat3`) creating a soft atmospheric background without visible distraction.
+- Subtle 28px radial micro-mesh dot grid (`.bg-mesh`) at `0.035` opacity.
+
+### C. Glass Depth, Micro-Interactions & Borders
+- **Inner Highlights**: Every glass card incorporates `inset 0 1px 1px 0 rgba(255, 255, 255, 0.12)` mimicking real glass refraction.
+- **Light Sweep**: A subtle diagonal reflection (`@keyframes lightSweep`) sweeps across the pinned composer capsule every 8s.
+- **Dynamic Super AI Orb**: Multi-layered glowing radial core (`@keyframes agentOrbBreath`) with cyan, blue, and violet gradients.
+- **Message Entry Motion**: New chat messages animate via `fadeSlideIn` (`translateY(8px → 0)`, `scale(0.99 → 1)`, `opacity 0 → 1`) in `260ms`.
+- **Button Micro-Interactions**: Hover elevation (`translateY(-1px)`), active click depressions (`scale(0.96)`), and localized RGB neon glows.
+
+### D. Accessibility & Performance
+- **Zero Heavy Packages**: Pure CSS transforms, opacity, gradients, and backdrop-filter without WebGL, Three.js, or external JS animation engines.
+- **Prefers-Reduced-Motion**: Full `@media (prefers-reduced-motion: reduce)` support disabling all ambient orb floatings, light sweeps, and message slide transitions.
+- **Minimal Thin Glass Scrollbar**: 5px custom scrollbar with translucent glass thumb and cyan hover glow.
