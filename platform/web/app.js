@@ -1111,12 +1111,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function switchMainView(viewIdOrName) {
         state.activeView = viewIdOrName;
         
-        // Close context dropdown
-        const dropdown = document.getElementById('contextToolsDropdown');
-        if (dropdown) dropdown.style.display = 'none';
-        const btn = document.getElementById('btnContextTools');
-        if (btn) btn.classList.remove('active');
-        
         // Hide all view panels
         document.querySelectorAll('.view-panel').forEach(panel => {
             panel.classList.remove('active');
@@ -1133,12 +1127,6 @@ document.addEventListener('DOMContentLoaded', () => {
             targetEl.classList.add('active');
             targetEl.style.display = '';
         }
-        
-        // Update context items active state
-        document.querySelectorAll('.context-item').forEach(item => {
-            const target = item.dataset.target || item.dataset.view;
-            item.classList.toggle('active', target === viewIdOrName);
-        });
         
         // Load specific view data
         if (viewIdOrName === 'modelsView' || viewIdOrName === 'models') loadModelsView();
@@ -1328,34 +1316,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAgents(e.target.value);
     }, 300));
 
-    // Contextual tools launcher dropdown toggle & outside click
-    const btnContextTools = document.getElementById('btnContextTools');
-    const contextToolsDropdown = document.getElementById('contextToolsDropdown');
 
-    if (btnContextTools && contextToolsDropdown) {
-        btnContextTools.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isOpen = contextToolsDropdown.style.display === 'flex';
-            contextToolsDropdown.style.display = isOpen ? 'none' : 'flex';
-            btnContextTools.classList.toggle('active', !isOpen);
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!contextToolsDropdown.contains(e.target) && e.target !== btnContextTools) {
-                contextToolsDropdown.style.display = 'none';
-                btnContextTools.classList.remove('active');
-            }
-        });
-    }
-
-    // Context item clicks
-    document.querySelectorAll('.context-item').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const target = e.currentTarget.dataset.target || e.currentTarget.dataset.view;
-            if (target) switchMainView(target);
-        });
-    });
 
     // Workspace tab buttons
     if (elements.workspaceTabs) {

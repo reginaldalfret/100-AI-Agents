@@ -96,6 +96,24 @@ try {
   throw err;
 }
 
+// Test 6: Minimal Top-Right Header (No Three-Dots Menu)
+try {
+  assert(!htmlContent.includes('btnContextTools'), 'index.html must not contain btnContextTools');
+  assert(!htmlContent.includes('contextToolsDropdown'), 'index.html must not contain contextToolsDropdown');
+  assert(!htmlContent.includes('context-menu-wrapper'), 'index.html must not contain context-menu-wrapper');
+  assert(!cssContent.includes('.btn-context-tools'), 'styles.css must not contain .btn-context-tools');
+  assert(!jsContent.includes('btnContextTools'), 'app.js must not contain btnContextTools references');
+  
+  // Verify header has status pills
+  assert(htmlContent.includes('Gateway active'), 'Header must retain Gateway active pill');
+  assert(htmlContent.includes('101 agents active'), 'Header must retain 101 agents active pill');
+  
+  console.log(`  [PASS] Top-right header is clean and minimal with only status pills (zero three-dot menu)`);
+} catch (err) {
+  console.error(`  [FAIL] Header minimalism check failed:`, err.message);
+  throw err;
+}
+
 console.log(`------------------------------------------------------------`);
-console.log(`Summary: 5 Passed, 0 Failed`);
+console.log(`Summary: 6 Passed, 0 Failed`);
 console.log(`============================================================\n`);

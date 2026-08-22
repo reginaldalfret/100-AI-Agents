@@ -91,9 +91,20 @@ The chat composer incorporates a floating liquid glass Model Selector allowing o
 
 ---
 
-## 7. Verification Results
+## 7. Header Minimalism & Top-Right Cleanliness
 
-- **Composer & UI Regression Suite (`tests/sih/ui/composer-ui.test.js`)**: **PASS (5/5)**
+- **Three-Dots / Ellipsis Menu Elimination**: The obsolete top-right overflow button (`btnContextTools`), dropdown (`contextToolsDropdown`), and related DOM/CSS/JS event listeners have been completely removed.
+- **Clean Status Indicators**: The top-right header area is now strictly dedicated to high-visibility, non-interactive status pills:
+  - `[ ● Gateway active ]` (Status glow blue)
+  - `[ ● 101 agents active ]` (Status glow cyan)
+  - `[ ● Local & Secure ]` (Sovereignty air-gap indicator)
+- **Direct Workspace Focus**: Eliminates visual clutter, ensuring the operator's attention remains focused on the selected agent, active conversation context, and composer tools.
+
+---
+
+## 8. Verification Results
+
+- **Composer & UI Regression Suite (`tests/sih/ui/composer-ui.test.js`)**: **PASS (6/6)**
 - **Numeric Agent Identity Test (`tests/ui/agent-numbering.test.js`)**: **PASS (6/6)**
 - **Local Model Selector Test (`tests/ui/model-selector.test.js`)**: **PASS (5/5)**
 - **Full SIH Test Matrix (`tests/sih/run-all-tests.js`)**: **PASS (28/28 Suites)**
