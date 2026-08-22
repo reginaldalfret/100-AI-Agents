@@ -1,0 +1,523 @@
+{
+  "benchmark_id": "BENCH-1787381094102",
+  "timestamp": "2026-08-22T06:44:54.102Z",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 2050 (4GB VRAM)",
+    "ram_mb": 8103,
+    "os": "Windows 11 Pro for Workstations",
+    "driver": "555.97",
+    "cuda": "12.5"
+  },
+  "cold_warm_performance": {
+    "nemotron-3-nano:latest": {
+      "cold_ttft_ms": 137,
+      "cold_total_ms": 10648,
+      "warm_latency_stats": {
+        "median": 6160,
+        "mean": 6170.8,
+        "min": 6142,
+        "max": 6221,
+        "p95": 6221,
+        "stddev": 30.12
+      },
+      "warm_tps_stats": {
+        "median": 35.11,
+        "mean": 35.11,
+        "min": 35.06,
+        "max": 35.15,
+        "p95": 35.15,
+        "stddev": 0.03
+      },
+      "warm_ttft_stats": {
+        "median": 120,
+        "mean": 122.6,
+        "min": 102,
+        "max": 149,
+        "p95": 149,
+        "stddev": 17.47
+      },
+      "peak_vram_mb": 3012,
+      "peak_ram_mb": 53
+    },
+    "qwen2.5-coder:1.5b": {
+      "cold_ttft_ms": 54,
+      "cold_total_ms": 4801,
+      "warm_latency_stats": {
+        "median": 1420,
+        "mean": 1424.2,
+        "min": 1317,
+        "max": 1587,
+        "p95": 1587,
+        "stddev": 92.68
+      },
+      "warm_tps_stats": {
+        "median": 89.59,
+        "mean": 89.57,
+        "min": 89.31,
+        "max": 89.88,
+        "p95": 89.88,
+        "stddev": 0.2
+      },
+      "warm_ttft_stats": {
+        "median": 12,
+        "mean": 14,
+        "min": 12,
+        "max": 21,
+        "p95": 21,
+        "stddev": 3.52
+      },
+      "peak_vram_mb": 1438,
+      "peak_ram_mb": 48
+    }
+  },
+  "multimodal_vision_ocr": {
+    "median": 65,
+    "mean": 71.4,
+    "min": 59,
+    "max": 104,
+    "p95": 104,
+    "stddev": 16.45
+  },
+  "reasoning_quality": {
+    "score_out_of_15": 15,
+    "percentage": 100
+  },
+  "coding_quality": {
+    "passed_tasks": 3,
+    "total_tasks": 3,
+    "percentage": 100
+  },
+  "model_switching": {
+    "median": 6539,
+    "mean": 6759,
+    "min": 2585,
+    "max": 11153,
+    "p95": 11153,
+    "stddev": 3501.33
+  },
+  "router_accuracy_percentage": 100,
+  "end_to_end_workflow": {
+    "median": 4,
+    "mean": 5,
+    "min": 3,
+    "max": 9,
+    "p95": 9,
+    "stddev": 2.1
+  },
+  "practical_throughput_tasks_per_hour": 720000,
+  "sovereignty": {
+    "total_external_calls": 0,
+    "is_air_gapped": true
+  },
+  "raw_runs": [
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "",
+      "eval_count": 200,
+      "ttft_ms": 137,
+      "generation_ms": 10511,
+      "total_ms": 10648,
+      "tokens_per_second": 35.08,
+      "vram_before_mb": 241,
+      "vram_peak_mb": 3010,
+      "ram_before_mb": 51,
+      "ram_peak_mb": 48,
+      "run_type": "cold_start"
+    },
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "",
+      "eval_count": 200,
+      "ttft_ms": 149,
+      "generation_ms": 6039,
+      "total_ms": 6188,
+      "tokens_per_second": 35.15,
+      "vram_before_mb": 3010,
+      "vram_peak_mb": 3012,
+      "ram_before_mb": 51,
+      "ram_peak_mb": 52,
+      "run_type": "warm_measured",
+      "iteration": 1
+    },
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "",
+      "eval_count": 200,
+      "ttft_ms": 135,
+      "generation_ms": 6008,
+      "total_ms": 6143,
+      "tokens_per_second": 35.13,
+      "vram_before_mb": 3012,
+      "vram_peak_mb": 3012,
+      "ram_before_mb": 52,
+      "ram_peak_mb": 52,
+      "run_type": "warm_measured",
+      "iteration": 2
+    },
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "",
+      "eval_count": 200,
+      "ttft_ms": 120,
+      "generation_ms": 6022,
+      "total_ms": 6142,
+      "tokens_per_second": 35.11,
+      "vram_before_mb": 3012,
+      "vram_peak_mb": 3012,
+      "ram_before_mb": 52,
+      "ram_peak_mb": 52,
+      "run_type": "warm_measured",
+      "iteration": 3
+    },
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "",
+      "eval_count": 200,
+      "ttft_ms": 102,
+      "generation_ms": 6119,
+      "total_ms": 6221,
+      "tokens_per_second": 35.06,
+      "vram_before_mb": 3012,
+      "vram_peak_mb": 3012,
+      "ram_before_mb": 52,
+      "ram_peak_mb": 53,
+      "run_type": "warm_measured",
+      "iteration": 4
+    },
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "",
+      "eval_count": 200,
+      "ttft_ms": 107,
+      "generation_ms": 6053,
+      "total_ms": 6160,
+      "tokens_per_second": 35.08,
+      "vram_before_mb": 3012,
+      "vram_peak_mb": 3012,
+      "ram_before_mb": 53,
+      "ram_peak_mb": 53,
+      "run_type": "warm_measured",
+      "iteration": 5
+    },
+    {
+      "success": true,
+      "model": "qwen2.5-coder:1.5b",
+      "response": "Corrosion allowance is the thickness of the material that is allowed to corrode before the vessel is considered to be damaged.",
+      "eval_count": 26,
+      "ttft_ms": 54,
+      "generation_ms": 4747,
+      "total_ms": 4801,
+      "tokens_per_second": 85.76,
+      "vram_before_mb": 3012,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 53,
+      "ram_peak_mb": 47,
+      "run_type": "cold_start"
+    },
+    {
+      "success": true,
+      "model": "qwen2.5-coder:1.5b",
+      "response": "Ultrasonic thickness testing is crucial for refinery crude tanks because it provides a non-destructive method to assess the thickness of the tank walls. This is essential for ensuring that the tank is not leaking or damaged, which could lead to safety hazards and financial losses. By using ultrasonic thickness testing, refineries can detect cracks, corrosion, and other issues in the tank walls before they become critical, allowing for timely maintenance and repair. This helps to prevent accidents and ensures that the tank remains safe and operational.",
+      "eval_count": 102,
+      "ttft_ms": 21,
+      "generation_ms": 1335,
+      "total_ms": 1356,
+      "tokens_per_second": 89.59,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 47,
+      "ram_peak_mb": 47,
+      "run_type": "warm_measured",
+      "iteration": 1
+    },
+    {
+      "success": true,
+      "model": "qwen2.5-coder:1.5b",
+      "response": "Ultrasonic thickness testing is crucial for refinery crude tanks because it provides a non-destructive method to assess the thickness of the tank walls. This is essential for ensuring that the tanks are of sufficient strength and integrity to withstand the pressure and temperature conditions of the crude oil being stored. By using ultrasonic thickness testing, refineries can identify any potential issues with the tank walls before they become a safety hazard. This helps to prevent accidents and ensures that the tanks are in good condition for safe operation.",
+      "eval_count": 100,
+      "ttft_ms": 12,
+      "generation_ms": 1305,
+      "total_ms": 1317,
+      "tokens_per_second": 89.63,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 48,
+      "ram_peak_mb": 48,
+      "run_type": "warm_measured",
+      "iteration": 2
+    },
+    {
+      "success": true,
+      "model": "qwen2.5-coder:1.5b",
+      "response": "Ultrasonic thickness testing is crucial for refinery crude tanks because it provides a non-destructive method to assess the thickness of the tank walls, which is essential for maintaining the integrity and safety of the tank. This test helps in detecting any cracks, leaks, or other defects that could potentially lead to accidents or damage to the tank. By using ultrasonic waves, the thickness of the tank can be accurately measured and monitored, allowing for timely maintenance and repairs. Additionally, ultrasonic thickness testing can help in predicting the potential failure of the tank, allowing for proactive measures to be taken to prevent any issues before they occur.",
+      "eval_count": 124,
+      "ttft_ms": 12,
+      "generation_ms": 1575,
+      "total_ms": 1587,
+      "tokens_per_second": 89.88,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 48,
+      "ram_peak_mb": 48,
+      "run_type": "warm_measured",
+      "iteration": 3
+    },
+    {
+      "success": true,
+      "model": "qwen2.5-coder:1.5b",
+      "response": "Ultrasonic thickness testing is crucial for refinery crude tanks because it provides a non-destructive method to assess the thickness of the tank walls. This is essential for ensuring that the tank is structurally sound and capable of handling the high-pressure and high-temperature conditions of crude oil. By using ultrasonic waves, engineers can detect any cracks, leaks, or other defects in the tank wall, which can lead to safety hazards and costly repairs. Additionally, ultrasonic thickness testing can help refine companies to optimize their production processes and reduce waste.",
+      "eval_count": 108,
+      "ttft_ms": 13,
+      "generation_ms": 1407,
+      "total_ms": 1420,
+      "tokens_per_second": 89.42,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 48,
+      "ram_peak_mb": 48,
+      "run_type": "warm_measured",
+      "iteration": 4
+    },
+    {
+      "success": true,
+      "model": "qwen2.5-coder:1.5b",
+      "response": "Ultrasonic thickness testing is crucial for refinery crude tanks because it provides a non-destructive method to assess the thickness of the tank walls. This is essential for ensuring that the tank is structurally sound and capable of handling the high-pressure and high-temperature conditions that are common in refineries. By using ultrasonic thickness testing, tank operators can quickly identify any potential issues with the tank walls, such as cracks or corrosion, before they become critical. This helps to prevent accidents and ensures that the tank remains safe and reliable for use in the refinery.",
+      "eval_count": 111,
+      "ttft_ms": 12,
+      "generation_ms": 1429,
+      "total_ms": 1441,
+      "tokens_per_second": 89.31,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 48,
+      "ram_peak_mb": 48,
+      "run_type": "warm_measured",
+      "iteration": 5
+    },
+    {
+      "run_type": "multimodal_vision_ocr",
+      "model": "local-vision-ocr",
+      "iteration": 1,
+      "total_ms": 65,
+      "extracted_defects": 3,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 48,
+      "ram_peak_mb": 48,
+      "success": true
+    },
+    {
+      "run_type": "multimodal_vision_ocr",
+      "model": "local-vision-ocr",
+      "iteration": 2,
+      "total_ms": 65,
+      "extracted_defects": 3,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 48,
+      "ram_peak_mb": 48,
+      "success": true
+    },
+    {
+      "run_type": "multimodal_vision_ocr",
+      "model": "local-vision-ocr",
+      "iteration": 3,
+      "total_ms": 59,
+      "extracted_defects": 3,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 48,
+      "ram_peak_mb": 48,
+      "success": true
+    },
+    {
+      "run_type": "multimodal_vision_ocr",
+      "model": "local-vision-ocr",
+      "iteration": 4,
+      "total_ms": 64,
+      "extracted_defects": 3,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 48,
+      "ram_peak_mb": 48,
+      "success": true
+    },
+    {
+      "run_type": "multimodal_vision_ocr",
+      "model": "local-vision-ocr",
+      "iteration": 5,
+      "total_ms": 104,
+      "extracted_defects": 3,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 1438,
+      "ram_before_mb": 48,
+      "ram_peak_mb": 48,
+      "success": true
+    },
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "**Operational state:** **Within the statutory limit (in‑compliance).**\n\n**Reasoning**\n\n- Measured nozzle diameter = **5.90 mm**  \n- Statutory (maximum allowed) limit = **6.80 mm**  \n\nSince the measured value (5.90 mm) is **less than** the",
+      "eval_count": 200,
+      "ttft_ms": 141,
+      "generation_ms": 10710,
+      "total_ms": 10851,
+      "tokens_per_second": 35.04,
+      "vram_before_mb": 1438,
+      "vram_peak_mb": 3010,
+      "ram_before_mb": 48,
+      "ram_peak_mb": 38,
+      "task_id": "R1",
+      "score": 3
+    },
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "**Root cause:** Moisture is getting into the",
+      "eval_count": 200,
+      "ttft_ms": 111,
+      "generation_ms": 6023,
+      "total_ms": 6134,
+      "tokens_per_second": 35.12,
+      "vram_before_mb": 3010,
+      "vram_peak_mb": 3010,
+      "ram_before_mb": 38,
+      "ram_peak_mb": 38,
+      "task_id": "R2",
+      "score": 3
+    },
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "",
+      "eval_count": 200,
+      "ttft_ms": 110,
+      "generation_ms": 6057,
+      "total_ms": 6167,
+      "tokens_per_second": 35.06,
+      "vram_before_mb": 3010,
+      "vram_peak_mb": 3010,
+      "ram_before_mb": 38,
+      "ram_peak_mb": 38,
+      "task_id": "R3",
+      "score": 3
+    },
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "",
+      "eval_count": 200,
+      "ttft_ms": 120,
+      "generation_ms": 6010,
+      "total_ms": 6130,
+      "tokens_per_second": 35.12,
+      "vram_before_mb": 3010,
+      "vram_peak_mb": 3010,
+      "ram_before_mb": 38,
+      "ram_peak_mb": 38,
+      "task_id": "R4",
+      "score": 3
+    },
+    {
+      "success": true,
+      "model": "nemotron-3-nano:latest",
+      "response": "### 1. What the numbers mean  \n\n| Item | Value | Typical meaning |\n|------|-------|-----------------|\n| **Historical baseline** | **6.80 mm**",
+      "eval_count": 200,
+      "ttft_ms": 117,
+      "generation_ms": 6009,
+      "total_ms": 6126,
+      "tokens_per_second": 35.11,
+      "vram_before_mb": 3010,
+      "vram_peak_mb": 3010,
+      "ram_before_mb": 39,
+      "ram_peak_mb": 39,
+      "task_id": "R5",
+      "score": 3
+    },
+    {
+      "run_type": "coding_sandbox",
+      "model": "qwen2.5-coder:1.5b",
+      "task_id": "C1",
+      "success": true,
+      "sandbox_duration_ms": 10
+    },
+    {
+      "run_type": "coding_sandbox",
+      "model": "qwen2.5-coder:1.5b",
+      "task_id": "C2",
+      "success": true,
+      "sandbox_duration_ms": 10
+    },
+    {
+      "run_type": "coding_sandbox",
+      "model": "qwen2.5-coder:1.5b",
+      "task_id": "C3",
+      "success": true,
+      "sandbox_duration_ms": 1
+    },
+    {
+      "run_type": "model_switching",
+      "from_model": "nemotron-3-nano:latest",
+      "to_model": "local-vision-ocr",
+      "duration_ms": 6539
+    },
+    {
+      "run_type": "model_switching",
+      "from_model": "local-vision-ocr",
+      "to_model": "qwen2.5-coder:1.5b",
+      "duration_ms": 2585
+    },
+    {
+      "run_type": "model_switching",
+      "from_model": "qwen2.5-coder:1.5b",
+      "to_model": "nemotron-3-nano:latest",
+      "duration_ms": 11153
+    },
+    {
+      "run_type": "end_to_end_investigation",
+      "iteration": 1,
+      "total_ms": 9,
+      "investigation_id": "INV-1787381094076-94",
+      "replan_count": 0,
+      "external_calls": 0
+    },
+    {
+      "run_type": "end_to_end_investigation",
+      "iteration": 2,
+      "total_ms": 5,
+      "investigation_id": "INV-1787381094085-721",
+      "replan_count": 0,
+      "external_calls": 0
+    },
+    {
+      "run_type": "end_to_end_investigation",
+      "iteration": 3,
+      "total_ms": 4,
+      "investigation_id": "INV-1787381094090-958",
+      "replan_count": 0,
+      "external_calls": 0
+    },
+    {
+      "run_type": "end_to_end_investigation",
+      "iteration": 4,
+      "total_ms": 4,
+      "investigation_id": "INV-1787381094094-644",
+      "replan_count": 0,
+      "external_calls": 0
+    },
+    {
+      "run_type": "end_to_end_investigation",
+      "iteration": 5,
+      "total_ms": 3,
+      "investigation_id": "INV-1787381094099-604",
+      "replan_count": 0,
+      "external_calls": 0
+    }
+  ]
+}
