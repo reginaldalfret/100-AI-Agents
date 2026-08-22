@@ -13,6 +13,15 @@ class EgressMonitor {
     this.blockedViolations = 0;
   }
 
+  recordLocalInference(info = {}) {
+    this.localCalls++;
+    return {
+      recorded: true,
+      model_id: info.model_id || "local-model",
+      is_air_gapped: true
+    };
+  }
+
   recordConnection(event) {
     const { process = "sovereign-gateway", destination, port = 80, protocol = "HTTP" } = event;
     const policyResult = evaluateSovereignEgress(destination, `${protocol}_OUTBOUND`);

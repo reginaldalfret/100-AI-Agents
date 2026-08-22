@@ -23,7 +23,16 @@ export function classifyNetworkDestination(destination) {
   if (!destination) return NetworkClassification.LOCAL_LOOPBACK;
 
   const destStr = String(destination).toLowerCase().trim();
-  const host = destStr.split(":")[0];
+  let host = destStr;
+  try {
+    if (destStr.includes("://")) {
+      host = new URL(destStr).hostname;
+    } else {
+      host = destStr.split(":")[0];
+    }
+  } catch {
+    host = destStr.split(":")[0];
+  }
 
   if (SovereignState.allowed_loopback_ips.includes(host)) {
     return NetworkClassification.LOCAL_LOOPBACK;

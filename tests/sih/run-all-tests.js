@@ -11,6 +11,7 @@ try {
   await import("./real-network-isolation.test.js");
   await import("./adversarial-security.test.js");
   await import("./model-router.test.js");
+  await import("./multimodel/multimodel.test.js");
   await import("./multimodal.test.js");
   await import("./rag.test.js");
   await import("./sandbox.test.js");
@@ -20,7 +21,7 @@ try {
   await import("./fleet.test.js");
 
   console.log(`\n============================================================`);
-  console.log(`ALL 11 TEST SUITES PASSED (100% PASS RATE)`);
+  console.log(`ALL 12 TEST SUITES PASSED (100% PASS RATE)`);
   console.log(`EXTERNAL EGRESS: 0 CALLS (AIR-GAP VERIFIED)`);
   console.log(`============================================================\n`);
 } catch (err) {

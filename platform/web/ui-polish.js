@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
     msgRow.innerHTML = `
       <div class="msg-bubble">
         <div class="ai-header">
-          <span>● Sovereign AI</span>
+          <span>● ${data.model_name || "Sovereign AI (Nemotron 3 Nano)"}</span>
           <span style="font-size: 10px; color: var(--accent-green); margin-left: auto;">0 External Calls</span>
         </div>
         <p>${data.message || data.text}</p>

@@ -1,76 +1,52 @@
 /**
- * Sovereign AI Workbench — Model Router
- * Dynamic task classifier and local model auto-selector ensuring zero cloud inference.
+ * Sovereign AI Workbench — Model Router & Inference Dispatcher
+ * Routes classified tasks to the optimal local open-weight model with zero data exfiltration.
  */
 
-import { LOCAL_MODELS, ModelModality, getModelById } from "./model-registry.js";
+import { LOCAL_MODELS, getModelById, ModelModality } from "./model-registry.js";
+import { getHardwareProfile } from "./hardware-profiler.js";
+import { classifyTask } from "./task-classifier.js";
+import { modelLifecycle } from "./model-lifecycle.js";
+import { evaluateSovereignEgress } from "../security/sovereign-policy.js";
+import { egressMonitor } from "../security/egress-monitor.js";
 
-export function classifyTaskModelRequirements(taskDescription, attachments = []) {
-  const lower = (taskDescription || "").toLowerCase();
+export async function routeTaskToLocalModel(taskInput = {}) {
+  const classification = classifyTask(taskInput);
+  const selectedModelId = classification.preferred_model_id;
+  const modelSpec = getModelById(selectedModelId) || LOCAL_MODELS[0];
+
+  // 1. Verify Egress Sovereignty (Must be strictly local)
+  const endpoint = modelSpec.endpoint || "http://127.0.0.1:11434";
+  const egressCheck = evaluateSovereignEgress(endpoint, "LOCAL_MODEL_INFERENCE");
   
-  const hasImages = attachments.some(a => /\.(png|jpe?g|bmp|webp|tiff|svg)$/i.test(a.name || a.filename || a));
-  const hasPDFs = attachments.some(a => /\.pdf$/i.test(a.name || a.filename || a));
-  const hasDrawings = /p&id|p\s*and\s*id|piping|isometric|drawing|schematic|blueprint|diagram/i.test(lower) || hasImages;
-  const hasCodeRequest = /python|script|code|automate|calculate\s+script|sandbox|algorithm|parse\s+csv/i.test(lower);
-  const hasOCR = /ocr|scan|scanned|transcript|handwritten|handwriting|extract\s+table/i.test(lower) || hasPDFs || hasImages;
-
-  if (hasDrawings || (hasImages && !hasCodeRequest)) {
-    return {
-      primary_modality: ModelModality.VISION,
-      recommended_model_id: "local-vision-ocr",
-      pipeline: ["local-vision-ocr", "nemotron-3-nano"],
-      rationale: "Task involves visual inspection / drawing / diagram processing. Routed to Local Multimodal Vision Engine."
-    };
+  if (!egressCheck.allowed) {
+    throw new Error(`SOVEREIGN_VIOLATION: Attempted access to non-local model endpoint: ${endpoint}`);
   }
 
-  if (hasOCR) {
-    return {
-      primary_modality: ModelModality.OCR,
-      recommended_model_id: "local-vision-ocr",
-      pipeline: ["local-vision-ocr", "nemotron-3-nano"],
-      rationale: "Task involves document OCR / text extraction from scanned sources. Routed to Local OCR Engine."
-    };
-  }
+  // 2. Hardware Resource Check & Slot Allocation
+  const slot = await modelLifecycle.acquireModelSlot(modelSpec.model_id);
 
-  if (hasCodeRequest) {
-    return {
-      primary_modality: ModelModality.CODE,
-      recommended_model_id: "local-code-specialist",
-      pipeline: ["local-code-specialist", "nemotron-3-nano"],
-      rationale: "Task involves software automation / scripting. Routed to Local Code Specialist."
-    };
-  }
+  // 3. Record local inference telemetry
+  egressMonitor.recordLocalInference({
+    model_id: modelSpec.model_id,
+    task_type: classification.task_type
+  });
 
   return {
-    primary_modality: ModelModality.TEXT,
-    recommended_model_id: "nemotron-3-nano",
-    pipeline: ["nemotron-3-nano"],
-    rationale: "Task requires general technical reasoning, SOP synthesis, or report drafting. Routed to Nemotron 3 Nano."
-  };
-}
-
-export async function routeTaskToLocalModel(taskPayload) {
-  const { prompt, task, attachments = [], model_override } = taskPayload;
-  const taskText = prompt || task || "";
-  
-  const requirements = classifyTaskModelRequirements(taskText, attachments);
-  const selectedModelId = model_override || requirements.recommended_model_id;
-  let model = getModelById(selectedModelId);
-
-  if (!model || model.status !== "ready") {
-    // Graceful fallback to Nemotron (NEVER CLOUD)
-    model = getModelById("nemotron-3-nano");
-  }
-
-  return {
-    selected_model: model.model_id,
-    model_name: model.name,
-    provider: model.provider,
-    runtime: model.runtime,
-    endpoint: model.endpoint,
-    pipeline: requirements.pipeline,
-    rationale: requirements.rationale,
-    is_sovereign_local: true,
-    external_calls: 0
+    selected_model: modelSpec.model_id,
+    model_name: modelSpec.name,
+    modality: classification.primary_modality,
+    pipeline: [modelSpec.model_id, "nemotron-3-nano"],
+    confidence: classification.confidence,
+    reason: classification.reason,
+    recommended_agents: classification.recommended_agents,
+    hardware_footprint: {
+      vram_mb: modelSpec.vram_mb,
+      ram_mb: modelSpec.ram_mb,
+      quantization: modelSpec.quantization
+    },
+    external_calls: 0,
+    is_air_gapped: true,
+    is_sovereign_local: true
   };
 }
