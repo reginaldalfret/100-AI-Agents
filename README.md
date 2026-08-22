@@ -1,162 +1,132 @@
 # Super AI
 
-### Sovereign On-Premise Agentic AI Workbench
-
-> **Super AI** is the user-facing product powered by the **Sovereign AI Workbench** architecture using Open-Weight Multimodal LLMs for Confidential Industrial Work.  
-> **Target Organization:** Mangalore Refinery and Petrochemicals Limited (MRPL)  
-> **Environment:** 100% Air-Gapped / On-Premise Execution (Zero External Cloud Telemetry)  
+### 100% On-Premise Industrial Autonomous Agentic Platform
+**Client / Problem Statement:** Mangalore Refinery and Petrochemicals Limited (MRPL) / Smart India Hackathon  
+**Environment:** 100% Air-Gapped / On-Premise Execution (Zero External Cloud Calls)  
 
 ---
 
-## 🌟 Executive Overview
+## 🌟 What is Super AI?
 
-**Super AI** (powered by the **Sovereign AI Workbench** architecture) is an enterprise on-premise industrial AI operating platform. Built specifically for high-security refinery operations at MRPL, it unifies **Super AI (Agent 101 Orchestrator)**, **100 specialized industrial agents**, a **Hardware-Aware Multi-Model Router**, an **Autonomous Task Planner & Replanner**, a **Multimodal Document Pipeline**, an **Evidence Relationship Graph**, and a **Local Deliverables Engine** into a single cohesive, air-gapped system.
+**Super AI** (Sovereign AI Workbench) is a secure on-premise industrial AI operating system. Built for mission-critical industrial operations where cloud LLMs violate safety and cybersecurity regulations, Super AI orchestrates a fleet of **101 autonomous agents** across **3 local open-weight AI models** (NVIDIA Nemotron 3, Google Gemma 3, Qwen 2.5 Coder) to perform complex asset integrity investigations, statutory compliance audits, and enterprise deliverable generation with **zero cloud dependencies** and **zero data egress**.
 
-```
-                           USER DIRECTIVE
-                                 │
-                                 ▼
-                     CHOOSE EXECUTION STRATEGY
-                      /                     \
-        [Explicit Workflow]             [Unseen Goal]
-                │                             │
-                ▼                             ▼
-        Workflow Engine              AUTONOMOUS PLANNER
-     (Deterministic SOP)                      │
-                                              ▼
-                                   STRUCTURED TASK DAG
-                                              │
-                                              ▼
-                                   LOCAL MODEL & AGENT ROUTER
-                           (Nemotron / Gemma-Vision / Qwen Coder)
-                                              │
-                                              ▼
-                                      DAG STEP RUNNER
-                                              │
-                                              ▼
-                                   RESULT INSPECTION & VALIDATION
-                                       /              \
-                           [Missing / Conflict]   [Valid Output]
-                                     │                  │
-                                     ▼                  ▼
-                                 REPLANNER          HITL GATE
-                             (Bounded Max = 3)          │
-                                     │                  ▼
-                                     └──────────►  DELIVERABLES
-                                              (.docx / .xlsx / .pptx)
+---
+
+## 🏛️ System Architecture
+
+```mermaid
+flowchart TD
+    U[User Request / Scanned NDT Scans] --> FE[Super AI Cosmic Liquid Glass UI]
+    FE --> GW[Platform Gateway - Port 8300]
+    GW --> TC[Task Intent Classifier]
+    TC --> MR[Hardware-Aware Model Router]
+    MR --> TP[Autonomous Task DAG Planner]
+    TP --> WF[101 Industrial Domain Agents]
+    WF --> EE[Step-by-Step Execution Engine]
+    EE --> TR[Local Tools & Document RAG]
+    TR --> EE
+    EE --> VAL[Validation & Uncertainty Engine]
+    VAL -->|Conflict / Missing Info| RP[Self-Healing Replanner - Max 3 Loops]
+    RP --> EE
+    VAL -->|High Risk Action| HITL[Human-In-The-Loop Sign-Off]
+    HITL --> DE[Deliverable Engine - DOCX / XLSX / PPTX]
+    DE --> AUD[Cryptographic Audit Log]
+    AUD --> RES[Streamed Response & Grounded Citations]
 ```
 
 ---
 
-## 🚀 Key Capabilities
+## ⚡ Core Platform Capabilities
 
-### 1. 🛡️ Absolute Sovereignty & Zero Egress
-- **100% Air-Gapped:** Operates entirely on local hardware with zero external API calls (`0` external cloud egress).
-- **Strict Egress Monitor:** Hard kernel-level loopback enforcement blocking all outbound telemetry and public IPs.
-
-### 2. 🧠 Tri-Model Local Intelligence
-- **NVIDIA Nemotron 3 Nano (4B Q4_K_M):** Primary reasoning, epistemic synthesis, and autonomous task orchestration.
-- **Local Vision & OCR (Gemma 3 / ONNX):** Scanned NDT reports, P&ID schematics, and site defect photographs.
-- **Qwen2.5-Coder (1.5B / 3B):** Local Python sandbox scripting, corrosion calculations, and tabular parsing.
-
-### 3. 👥 101-Agent Industrial Workforce
-- **100 Domain Specialists:** Chemical engineering, rotating equipment, piping, metallurgy, HSE, instrumentation, etc.
-- **Agent 101 Master Orchestrator:** Dynamic intent classification, capability matching, and multi-agent coordination.
-
-### 4. 🔄 Autonomous Planning & Self-Healing Replanner
-- **Dynamic DAG Generation:** Decomposes unseen natural language objectives into dependency graphs.
-- **Self-Healing Replanner:** Detects missing data, reconciles evidence conflicts, substitutes unavailable agents, and enforces `MAX_REPLANS = 3`.
-
-### 5. 📊 Evidence Graph & Provenance
-- **Typed Relationships:** `SUPPORTS`, `CONTRADICTS`, `DERIVED_FROM`, `REFERS_TO`, `SUPERSEDES`.
-- **Source Authority Hierarchy:** $\text{OISD / Statutory SOP (100)} > \text{Technical Spec (80)} > \text{NDT Report (70)} > \text{History (50)}$.
-- **6-State Epistemic Uncertainty:** `FACT`, `INFERENCE`, `MISSING`, `CONFLICT`, `UNCERTAIN`, `ESTIMATE`.
-
-### 6. 📄 Official Deliverables Engine
-- **Native Word (.docx):** Statutory Approval Notes & Work Permits.
-- **Native Excel (.xlsx):** Detailed multi-year ultrasonic thickness workbooks.
-- **Native PowerPoint (.pptx):** Executive slide decks with grounded standard citations.
+1. **🛡️ 100% Air-Gapped Sovereignty**: Enforced by socket-level egress monitoring (`egress-monitor.js`). Exactly `0` external calls throughout all workflows.
+2. **🧠 Tri-Model Local Stack**:
+   - **NVIDIA Nemotron 3** (`nemotron-3-nano`): Deep reasoning, statutory compliance checks, and multi-agent debate.
+   - **Google Gemma 3** (`gemma3:4b`): Multimodal document OCR, vision inspection, and P&ID drawing reading.
+   - **Qwen 2.5 Coder** (`qwen2.5-coder:1.5b`): Deterministic formula validation, scripts, and Excel calculation macros.
+3. **🤖 101-Agent Workforce**:
+   - **Agent 101 (Super AI)**: Master Orchestrator, goal deconstruction, cross-domain synthesis.
+   - **Agents 001–100**: 100 domain specialists spanning Engineering, Safety, Operations, Compliance, and Procurement.
+4. **🗺️ Autonomous DAG Planning & Self-Healing Replanning**:
+   - Converts natural language goals into a structured Directed Acyclic Graph (DAG) of task steps.
+   - Dynamically adapts the DAG if missing information or conflicting NDT measurements are detected (bounded by `MAX_REPLANS = 3`).
+5. **🔍 Grounded Evidence Graph & Uncertainty Scoring**:
+   - Every claim is tied to statutory clauses (OISD-STD-129, API-653, ASME) with calibrated confidence levels (`HIGH`, `MEDIUM`, `LOW`).
+6. **👥 Human-In-The-Loop (HITL) Checkpoints**:
+   - High-risk operations (e.g. emergency outage authorizations) pause execution until an authorized human engineer signs off.
+7. **📄 Real Enterprise Deliverables**:
+   - Generates official binary files locally: `.docx` (Executive Memo), `.xlsx` (Corrosion Grid), `.pptx` (Management Briefing Deck).
+8. **✨ Cosmic Liquid Glass UI**:
+   - Modern, high-performance UI featuring 5-level glass depth, responsive composer capsule, and interactive model selector.
 
 ---
 
-## 🛠️ Local Hardware Profile
+## 🚀 Quick Start (10 Minutes)
 
-- **GPU:** NVIDIA RTX 2050 (4GB VRAM)
-- **System Memory:** 8GB RAM
-- **Operating System:** Windows / Linux
-- **Local Inference Host:** Ollama (`127.0.0.1:11434`)
-- **Authoritative Storage:** `E:\Smart Automation\` (100% portable)
+### 1. Prerequisites
+- **Node.js** v18.0.0+
+- **Ollama** running locally on port `11434` with `OLLAMA_MODELS=E:\Smart Automation\AI\Models\Ollama`
 
----
-
-## 🚦 Quick Start Guide
-
-### 1. Clone & Configure Environment
+### 2. Install & Start
 ```powershell
-# Copy environment configuration
-cp .env.example .env
+# 1. Navigate to workspace
+cd "E:\Smart Automation\100-AI-Agents"
 
-# Set storage environment variables
-$env:OLLAMA_MODELS = "E:\Smart Automation\AI\Models\Ollama"
+# 2. Run test matrix
+npm test
+
+# 3. Start local gateway & web UI
+npm start
 ```
-
-### 2. Install Local Models
-```powershell
-# Pull open-weight local models via Ollama
-ollama pull nemotron-3-nano
-ollama pull qwen2.5-coder:1.5b
-```
-
-### 3. Start Local Fleet & Gateway
-```powershell
-# Launch 101 agents and central gateway
-.\scripts\start-local-fleet.ps1
-```
-
-Access the Sovereign AI Workbench Web UI at `http://localhost:8300`.
+Open **`http://127.0.0.1:8300/`** in your browser.
 
 ---
 
-## 🧪 Comprehensive Verification Suite
+## 🧪 Testing & Verification
 
-```powershell
-# Run the 101-Agent Fleet Verification
-node tests/run-all-agents.js --concurrency=10
-# Output: 101/101 Passed (100.0%)
+| Test Suite | Command | Expected Result |
+|---|---|---|
+| **SIH Platform Matrix (28 Suites)** | `npm test` | **28/28 Passed (100%)** |
+| **Workforce Fleet Test (101 Agents)** | `npm run test:fleet` | **101/101 Passed (100%)** |
+| **UI & Composer Invariants** | `npm run test:ui` | **All Passed (100%)** |
+| **Hardware Benchmark** | `npm run benchmark` | **100% Local Inference** |
 
-# Run the Full SIH Platform Test Matrix (24 Suites / 75 Tests)
-node tests/sih/run-all-tests.js
-# Output: ALL 24 TEST SUITES PASSED (100% PASS RATE, 0 EXTERNAL CALLS)
+---
 
-# Run the 100-Scenario Autonomous Industrial Benchmark
-node tests/sih/evaluation/expanded-benchmark-100.test.js
-# Output: 100/100 Scenarios Evaluated (100.0% Plan Validity)
+## 📂 Project Structure
+
+```
+100-AI-Agents/
+├── platform/
+│   ├── web/               # Cosmic Liquid Glass Frontend (HTML5 / CSS3 / JS)
+│   ├── gateway/           # Platform API Server & Stream Handlers (Port 8300)
+│   ├── intelligence/      # Task Planner, Replanner, Execution Engine, HITL Policy
+│   ├── models/            # Model Router, Task Classifier, Hardware Profiler
+│   ├── knowledge/         # Local RAG Engine & Vector Store
+│   ├── multimodal/        # Document Pipeline, OCR Engine, Drawing Analyzer
+│   ├── evidence/          # Evidence Graph, Uncertainty Engine, Trend Analysis
+│   ├── tools/             # Canonical Tool Registry & Deterministic Handlers
+│   ├── deliverables/      # Official DOCX / XLSX / PPTX Document Generators
+│   ├── security/          # Egress Monitor & Air-Gap Enforcement
+│   └── workflow-engine/   # Industrial Workflow Engine & Predefined SOPs
+│
+├── agents/                # 101 Specialized Agent Implementations
+├── registry/              # Single Source of Truth (sih-agent-mapping.json)
+├── tests/                 # SIH Test Suites, Agent Tests, Benchmarks, UI Tests
+├── scripts/               # Development, Fleet Runners, Benchmarks, Auto-Start
+├── docs/                  # Master Documentation Suite (Architecture, Onboarding, SIH)
+├── artifacts/             # Locally Generated Deliverables (.docx, .xlsx, .pptx)
+├── package.json           # Root Project Manifest & NPM Lifecycle Scripts
+└── README.md              # Project Overview & Quick Start
 ```
 
 ---
 
-## 📚 Complete SIH Documentation Index
-
-- [`docs/SIH-GAP-CLOSURE-FINAL-REPORT.md`](docs/SIH-GAP-CLOSURE-FINAL-REPORT.md) — Comprehensive Platform Acceptance Report
-- [`docs/SIH-AUTONOMOUS-PLANNER.md`](docs/SIH-AUTONOMOUS-PLANNER.md) — Autonomous Planner & Replanner Architecture
-- [`docs/SIH-GAP-CLOSURE-BENCHMARK.md`](docs/SIH-GAP-CLOSURE-BENCHMARK.md) — 100-Scenario Golden Benchmark Report
-- [`docs/SIH-CONTEXT-ARCHITECTURE.md`](docs/SIH-CONTEXT-ARCHITECTURE.md) — Canonical Context & Persistence Architecture
-- [`docs/SIH-INVESTIGATION-MODE.md`](docs/SIH-INVESTIGATION-MODE.md) — Industrial Investigation Mode & Provenance
-- [`docs/SIH-EVIDENCE-GRAPH.md`](docs/SIH-EVIDENCE-GRAPH.md) — Evidence Graph & Relationship Engine
-- [`docs/SIH-HISTORICAL-INTELLIGENCE.md`](docs/SIH-HISTORICAL-INTELLIGENCE.md) — Corrosion Trend & Degradation Analytics
-- [`docs/SIH-UNCERTAINTY-CONFIDENCE.md`](docs/SIH-UNCERTAINTY-CONFIDENCE.md) — Epistemic Uncertainty & Confidence Scoring
-- [`docs/SIH-HITL-EVIDENCE-BUNDLES.md`](docs/SIH-HITL-EVIDENCE-BUNDLES.md) — Human-In-The-Loop Governance
-- [`docs/SIH-AUTOMATION.md`](docs/SIH-AUTOMATION.md) — Local Event Bus & Scheduler
-- [`docs/SIH-CONNECTORS.md`](docs/SIH-CONNECTORS.md) — Private Local Connectors & Data Classification
-
----
-
-## 🔒 Security & Air-Gap Compliance
-
-- **Zero Cloud Leakage:** All inference, embeddings, and vector stores run on `127.0.0.1`.
-- **RBAC Policy:** 30+ industrial tools protected with agent capability allowlists.
-- **Isolated Code Sandbox:** Python/Node scripts run in restricted execution sandboxes without network access.
-- **Mandatory HITL:** Safety-critical actions require explicit human sign-off before downstream execution.
-
----
-*Developed for Smart India Hackathon (SIH) — Mangalore Refinery and Petrochemicals Limited (MRPL).*
+## 📚 Documentation Links
+- [**Codebase Architecture Map**](file:///E:/Smart%20Automation/100-AI-Agents/docs/CODEBASE-ARCHITECTURE-MAP.md)
+- [**How Super AI Works**](file:///E:/Smart%20Automation/100-AI-Agents/docs/architecture/HOW-SUPER-AI-WORKS.md)
+- [**Request Lifecycle & Data Contracts**](file:///E:/Smart%20Automation/100-AI-Agents/docs/architecture/REQUEST-LIFECYCLE.md)
+- [**Code Responsibility Matrix**](file:///E:/Smart%20Automation/100-AI-Agents/docs/CODE-RESPONSIBILITY-MATRIX.md)
+- [**Developer Onboarding Guide**](file:///E:/Smart%20Automation/100-AI-Agents/docs/development/ONBOARDING.md)
+- [**Troubleshooting & Diagnostics**](file:///E:/Smart%20Automation/100-AI-Agents/docs/development/TROUBLESHOOTING.md)
+- [**Hackathon Jury Briefing**](file:///E:/Smart%20Automation/100-AI-Agents/docs/sih/JUDGE-CODEBASE-EXPLANATION.md)
+- [**Documentation Index**](file:///E:/Smart%20Automation/100-AI-Agents/docs/README.md)
