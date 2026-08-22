@@ -23,10 +23,18 @@ try {
   await import("./autonomous/replanner.test.js");
   await import("./autonomous/execution-engine.test.js");
   await import("./autonomous/golden-benchmark.test.js");
+  await import("./context/context-store.test.js");
+  await import("./evidence/evidence-graph.test.js");
+  await import("./evidence/uncertainty-confidence.test.js");
+  await import("./history/historical-intelligence.test.js");
+  await import("./investigation/investigation-mode.test.js");
+  await import("./automation/automation-notifications.test.js");
+  await import("./connectors/connectors.test.js");
+  await import("./evaluation/expanded-benchmark-100.test.js");
 
   console.log(`\n============================================================`);
-  console.log(`ALL 16 TEST SUITES PASSED (100% PASS RATE)`);
-  console.log(`EXTERNAL EGRESS: 0 CALLS (AIR-GAP VERIFIED)`);
+  console.log(`ALL 24 TEST SUITES PASSED (100% PASS RATE ACROSS PLATFORM)`);
+  console.log(`EXTERNAL EGRESS: 0 CALLS (100% AIR-GAP VERIFIED)`);
   console.log(`============================================================\n`);
 } catch (err) {
   console.error(`\nTEST RUN FAILED:`, err);

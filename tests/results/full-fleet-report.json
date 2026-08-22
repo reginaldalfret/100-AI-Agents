@@ -1,12 +1,12 @@
 {
   "summary": {
-    "generated_at": "2026-08-22T06:00:37.871Z",
+    "generated_at": "2026-08-22T06:13:42.081Z",
     "total_agents_tested": 101,
     "passed": 101,
     "failed": 0,
     "pass_rate_pct": 100,
-    "total_execution_duration_ms": 9350,
-    "average_health_latency_ms": 57,
+    "total_execution_duration_ms": 10576,
+    "average_health_latency_ms": 62,
     "system_specs": {
       "node_version": "v24.18.0",
       "platform": "win32",
@@ -78,7 +78,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 81,
+          "latencyMs": 87,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -129,7 +129,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 83,
+      "durationMs": 89,
       "error": null
     },
     {
@@ -159,7 +159,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 73,
+          "latencyMs": 79,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -210,7 +210,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 74,
+      "durationMs": 81,
       "error": null
     },
     {
@@ -240,7 +240,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 70,
+          "latencyMs": 77,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -291,7 +291,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 71,
+      "durationMs": 78,
       "error": null
     },
     {
@@ -321,7 +321,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 67,
+          "latencyMs": 74,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -372,7 +372,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 68,
+      "durationMs": 75,
       "error": null
     },
     {
@@ -402,7 +402,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 63,
+          "latencyMs": 71,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -453,7 +453,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 65,
+      "durationMs": 73,
       "error": null
     },
     {
@@ -483,7 +483,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 62,
+          "latencyMs": 72,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -534,7 +534,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 63,
+      "durationMs": 73,
       "error": null
     },
     {
@@ -544,6 +544,87 @@
       "slug": "translation-agent",
       "category": "foundation",
       "port": 8107,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 65,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 66,
+      "error": null
+    },
+    {
+      "agent_id": "agent-008",
+      "day": 8,
+      "name": "AI Idea Generation Agent",
+      "slug": "idea-generation-agent",
+      "category": "foundation",
+      "port": 8108,
       "checks": {
         "static_files": {
           "passed": true,
@@ -619,87 +700,6 @@
       "error": null
     },
     {
-      "agent_id": "agent-008",
-      "day": 8,
-      "name": "AI Idea Generation Agent",
-      "slug": "idea-generation-agent",
-      "category": "foundation",
-      "port": 8108,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 52,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 53,
-      "error": null
-    },
-    {
       "agent_id": "agent-009",
       "day": 9,
       "name": "AI Storytelling Agent",
@@ -726,7 +726,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 51,
+          "latencyMs": 62,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -777,7 +777,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 52,
+      "durationMs": 63,
       "error": null
     },
     {
@@ -787,411 +787,6 @@
       "slug": "goal-planning-agent",
       "category": "foundation",
       "port": 8110,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 48,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 50,
-      "error": null
-    },
-    {
-      "agent_id": "agent-011",
-      "day": 11,
-      "name": "AI Note-Taking Agent",
-      "slug": "note-taking-agent",
-      "category": "foundation",
-      "port": 8111,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 67,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 69,
-      "error": null
-    },
-    {
-      "agent_id": "agent-012",
-      "day": 12,
-      "name": "AI Task Management Agent",
-      "slug": "task-management-agent",
-      "category": "foundation",
-      "port": 8112,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 64,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: plausible-relevance-fallback)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 65,
-      "error": null
-    },
-    {
-      "agent_id": "agent-013",
-      "day": 13,
-      "name": "AI Resume Agent",
-      "slug": "resume-agent",
-      "category": "foundation",
-      "port": 8113,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 61,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 62,
-      "error": null
-    },
-    {
-      "agent_id": "agent-014",
-      "day": 14,
-      "name": "AI Job Matching Agent",
-      "slug": "job-matching-agent",
-      "category": "foundation",
-      "port": 8114,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 58,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 59,
-      "error": null
-    },
-    {
-      "agent_id": "agent-015",
-      "day": 15,
-      "name": "AI Interview Agent",
-      "slug": "interview-agent",
-      "category": "foundation",
-      "port": 8115,
       "checks": {
         "static_files": {
           "passed": true,
@@ -1267,12 +862,12 @@
       "error": null
     },
     {
-      "agent_id": "agent-016",
-      "day": 16,
-      "name": "AI Communication Agent",
-      "slug": "communication-agent",
+      "agent_id": "agent-011",
+      "day": 11,
+      "name": "AI Note-Taking Agent",
+      "slug": "note-taking-agent",
       "category": "foundation",
-      "port": 8116,
+      "port": 8111,
       "checks": {
         "static_files": {
           "passed": true,
@@ -1293,7 +888,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 50,
+          "latencyMs": 81,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -1344,7 +939,412 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 51,
+      "durationMs": 82,
+      "error": null
+    },
+    {
+      "agent_id": "agent-012",
+      "day": 12,
+      "name": "AI Task Management Agent",
+      "slug": "task-management-agent",
+      "category": "foundation",
+      "port": 8112,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 72,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: plausible-relevance-fallback)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 74,
+      "error": null
+    },
+    {
+      "agent_id": "agent-013",
+      "day": 13,
+      "name": "AI Resume Agent",
+      "slug": "resume-agent",
+      "category": "foundation",
+      "port": 8113,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 63,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 65,
+      "error": null
+    },
+    {
+      "agent_id": "agent-014",
+      "day": 14,
+      "name": "AI Job Matching Agent",
+      "slug": "job-matching-agent",
+      "category": "foundation",
+      "port": 8114,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 64,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 65,
+      "error": null
+    },
+    {
+      "agent_id": "agent-015",
+      "day": 15,
+      "name": "AI Interview Agent",
+      "slug": "interview-agent",
+      "category": "foundation",
+      "port": 8115,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 66,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 67,
+      "error": null
+    },
+    {
+      "agent_id": "agent-016",
+      "day": 16,
+      "name": "AI Communication Agent",
+      "slug": "communication-agent",
+      "category": "foundation",
+      "port": 8116,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 59,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 59,
       "error": null
     },
     {
@@ -1374,7 +1374,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 47,
+          "latencyMs": 52,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -1425,7 +1425,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 48,
+      "durationMs": 53,
       "error": null
     },
     {
@@ -1455,7 +1455,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 43,
+          "latencyMs": 46,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -1506,7 +1506,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 44,
+      "durationMs": 47,
       "error": null
     },
     {
@@ -1536,7 +1536,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 42,
+          "latencyMs": 43,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -1617,7 +1617,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 36,
+          "latencyMs": 38,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -1668,7 +1668,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 37,
+      "durationMs": 40,
       "error": null
     },
     {
@@ -1698,7 +1698,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 69,
+          "latencyMs": 74,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -1749,7 +1749,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 71,
+      "durationMs": 76,
       "error": null
     },
     {
@@ -1759,6 +1759,249 @@
       "slug": "news-research-agent",
       "category": "research",
       "port": 8122,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 75,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 76,
+      "error": null
+    },
+    {
+      "agent_id": "agent-023",
+      "day": 23,
+      "name": "AI Research Paper Agent",
+      "slug": "research-paper-agent",
+      "category": "research",
+      "port": 8123,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 67,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 68,
+      "error": null
+    },
+    {
+      "agent_id": "agent-024",
+      "day": 24,
+      "name": "AI Literature Review Agent",
+      "slug": "literature-review-agent",
+      "category": "research",
+      "port": 8124,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 64,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 65,
+      "error": null
+    },
+    {
+      "agent_id": "agent-025",
+      "day": 25,
+      "name": "AI Book Research Agent",
+      "slug": "book-research-agent",
+      "category": "research",
+      "port": 8125,
       "checks": {
         "static_files": {
           "passed": true,
@@ -1834,174 +2077,12 @@
       "error": null
     },
     {
-      "agent_id": "agent-023",
-      "day": 23,
-      "name": "AI Research Paper Agent",
-      "slug": "research-paper-agent",
+      "agent_id": "agent-026",
+      "day": 26,
+      "name": "AI Company Research Agent",
+      "slug": "company-research-agent",
       "category": "research",
-      "port": 8123,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 62,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 63,
-      "error": null
-    },
-    {
-      "agent_id": "agent-024",
-      "day": 24,
-      "name": "AI Literature Review Agent",
-      "slug": "literature-review-agent",
-      "category": "research",
-      "port": 8124,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 56,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 57,
-      "error": null
-    },
-    {
-      "agent_id": "agent-025",
-      "day": 25,
-      "name": "AI Book Research Agent",
-      "slug": "book-research-agent",
-      "category": "research",
-      "port": 8125,
+      "port": 8126,
       "checks": {
         "static_files": {
           "passed": true,
@@ -2077,741 +2158,12 @@
       "error": null
     },
     {
-      "agent_id": "agent-026",
-      "day": 26,
-      "name": "AI Company Research Agent",
-      "slug": "company-research-agent",
-      "category": "research",
-      "port": 8126,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 51,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 52,
-      "error": null
-    },
-    {
       "agent_id": "agent-027",
       "day": 27,
       "name": "AI Competitor Research Agent",
       "slug": "competitor-research-agent",
       "category": "research",
       "port": 8127,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 49,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 50,
-      "error": null
-    },
-    {
-      "agent_id": "agent-028",
-      "day": 28,
-      "name": "AI Market Research Agent",
-      "slug": "market-research-agent",
-      "category": "research",
-      "port": 8128,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 47,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 48,
-      "error": null
-    },
-    {
-      "agent_id": "agent-029",
-      "day": 29,
-      "name": "AI Startup Research Agent",
-      "slug": "startup-research-agent",
-      "category": "research",
-      "port": 8129,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 44,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 45,
-      "error": null
-    },
-    {
-      "agent_id": "agent-030",
-      "day": 30,
-      "name": "AI Investment Research Agent",
-      "slug": "investment-research-agent",
-      "category": "research",
-      "port": 8130,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 41,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 42,
-      "error": null
-    },
-    {
-      "agent_id": "agent-031",
-      "day": 31,
-      "name": "AI Product Research Agent",
-      "slug": "product-research-agent",
-      "category": "research",
-      "port": 8131,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 68,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 69,
-      "error": null
-    },
-    {
-      "agent_id": "agent-032",
-      "day": 32,
-      "name": "AI Travel Research Agent",
-      "slug": "travel-research-agent",
-      "category": "research",
-      "port": 8132,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 65,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 66,
-      "error": null
-    },
-    {
-      "agent_id": "agent-033",
-      "day": 33,
-      "name": "AI Restaurant Research Agent",
-      "slug": "restaurant-research-agent",
-      "category": "research",
-      "port": 8133,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 54,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 56,
-      "error": null
-    },
-    {
-      "agent_id": "agent-034",
-      "day": 34,
-      "name": "AI Course Research Agent",
-      "slug": "course-research-agent",
-      "category": "research",
-      "port": 8134,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 55,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 56,
-      "error": null
-    },
-    {
-      "agent_id": "agent-035",
-      "day": 35,
-      "name": "AI College Research Agent",
-      "slug": "college-research-agent",
-      "category": "research",
-      "port": 8135,
       "checks": {
         "static_files": {
           "passed": true,
@@ -2887,12 +2239,12 @@
       "error": null
     },
     {
-      "agent_id": "agent-036",
-      "day": 36,
-      "name": "AI GitHub Research Agent",
-      "slug": "github-research-agent",
+      "agent_id": "agent-028",
+      "day": 28,
+      "name": "AI Market Research Agent",
+      "slug": "market-research-agent",
       "category": "research",
-      "port": 8136,
+      "port": 8128,
       "checks": {
         "static_files": {
           "passed": true,
@@ -2913,7 +2265,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 47,
+          "latencyMs": 50,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -2964,16 +2316,16 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 48,
+      "durationMs": 51,
       "error": null
     },
     {
-      "agent_id": "agent-037",
-      "day": 37,
-      "name": "AI Document Research Agent",
-      "slug": "document-research-agent",
+      "agent_id": "agent-029",
+      "day": 29,
+      "name": "AI Startup Research Agent",
+      "slug": "startup-research-agent",
       "category": "research",
-      "port": 8137,
+      "port": 8129,
       "checks": {
         "static_files": {
           "passed": true,
@@ -2994,7 +2346,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 44,
+          "latencyMs": 46,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -3045,16 +2397,16 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 45,
+      "durationMs": 47,
       "error": null
     },
     {
-      "agent_id": "agent-038",
-      "day": 38,
-      "name": "AI Fact-Checking Agent",
-      "slug": "fact-checking-agent",
+      "agent_id": "agent-030",
+      "day": 30,
+      "name": "AI Investment Research Agent",
+      "slug": "investment-research-agent",
       "category": "research",
-      "port": 8138,
+      "port": 8130,
       "checks": {
         "static_files": {
           "passed": true,
@@ -3075,7 +2427,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 41,
+          "latencyMs": 42,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -3126,16 +2478,16 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 42,
+      "durationMs": 43,
       "error": null
     },
     {
-      "agent_id": "agent-039",
-      "day": 39,
-      "name": "AI Source Verification Agent",
-      "slug": "source-verification-agent",
+      "agent_id": "agent-031",
+      "day": 31,
+      "name": "AI Product Research Agent",
+      "slug": "product-research-agent",
       "category": "research",
-      "port": 8139,
+      "port": 8131,
       "checks": {
         "static_files": {
           "passed": true,
@@ -3156,7 +2508,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 39,
+          "latencyMs": 92,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -3207,16 +2559,16 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 40,
+      "durationMs": 94,
       "error": null
     },
     {
-      "agent_id": "agent-040",
-      "day": 40,
-      "name": "AI Research Assistant Agent",
-      "slug": "research-assistant-agent",
+      "agent_id": "agent-032",
+      "day": 32,
+      "name": "AI Travel Research Agent",
+      "slug": "travel-research-agent",
       "category": "research",
-      "port": 8140,
+      "port": 8132,
       "checks": {
         "static_files": {
           "passed": true,
@@ -3237,7 +2589,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 33,
+          "latencyMs": 92,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -3288,16 +2640,16 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 34,
+      "durationMs": 93,
       "error": null
     },
     {
-      "agent_id": "agent-041",
-      "day": 41,
-      "name": "AI Email Management Agent",
-      "slug": "email-management-agent",
-      "category": "productivity",
-      "port": 8141,
+      "agent_id": "agent-033",
+      "day": 33,
+      "name": "AI Restaurant Research Agent",
+      "slug": "restaurant-research-agent",
+      "category": "research",
+      "port": 8133,
       "checks": {
         "static_files": {
           "passed": true,
@@ -3318,7 +2670,169 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 72,
+          "latencyMs": 87,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 88,
+      "error": null
+    },
+    {
+      "agent_id": "agent-034",
+      "day": 34,
+      "name": "AI Course Research Agent",
+      "slug": "course-research-agent",
+      "category": "research",
+      "port": 8134,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 83,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 84,
+      "error": null
+    },
+    {
+      "agent_id": "agent-035",
+      "day": 35,
+      "name": "AI College Research Agent",
+      "slug": "college-research-agent",
+      "category": "research",
+      "port": 8135,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 73,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -3373,6 +2887,492 @@
       "error": null
     },
     {
+      "agent_id": "agent-036",
+      "day": 36,
+      "name": "AI GitHub Research Agent",
+      "slug": "github-research-agent",
+      "category": "research",
+      "port": 8136,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 74,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 75,
+      "error": null
+    },
+    {
+      "agent_id": "agent-037",
+      "day": 37,
+      "name": "AI Document Research Agent",
+      "slug": "document-research-agent",
+      "category": "research",
+      "port": 8137,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 71,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 71,
+      "error": null
+    },
+    {
+      "agent_id": "agent-038",
+      "day": 38,
+      "name": "AI Fact-Checking Agent",
+      "slug": "fact-checking-agent",
+      "category": "research",
+      "port": 8138,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 61,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 62,
+      "error": null
+    },
+    {
+      "agent_id": "agent-039",
+      "day": 39,
+      "name": "AI Source Verification Agent",
+      "slug": "source-verification-agent",
+      "category": "research",
+      "port": 8139,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 55,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 56,
+      "error": null
+    },
+    {
+      "agent_id": "agent-040",
+      "day": 40,
+      "name": "AI Research Assistant Agent",
+      "slug": "research-assistant-agent",
+      "category": "research",
+      "port": 8140,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 48,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 49,
+      "error": null
+    },
+    {
+      "agent_id": "agent-041",
+      "day": 41,
+      "name": "AI Email Management Agent",
+      "slug": "email-management-agent",
+      "category": "productivity",
+      "port": 8141,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 76,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 78,
+      "error": null
+    },
+    {
       "agent_id": "agent-042",
       "day": 42,
       "name": "AI Calendar Management Agent",
@@ -3399,7 +3399,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 70,
+          "latencyMs": 71,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -3480,7 +3480,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 68,
+          "latencyMs": 63,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -3531,7 +3531,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 69,
+      "durationMs": 65,
       "error": null
     },
     {
@@ -3561,7 +3561,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 65,
+          "latencyMs": 64,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -3612,7 +3612,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 67,
+      "durationMs": 65,
       "error": null
     },
     {
@@ -3642,7 +3642,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 65,
+          "latencyMs": 63,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -3693,7 +3693,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 67,
+      "durationMs": 65,
       "error": null
     },
     {
@@ -3723,7 +3723,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 58,
+          "latencyMs": 55,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -3774,7 +3774,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 60,
+      "durationMs": 56,
       "error": null
     },
     {
@@ -3784,249 +3784,6 @@
       "slug": "spreadsheet-agent",
       "category": "productivity",
       "port": 8147,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 58,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 61,
-      "error": null
-    },
-    {
-      "agent_id": "agent-048",
-      "day": 48,
-      "name": "AI Data Analysis Agent",
-      "slug": "data-analysis-agent",
-      "category": "productivity",
-      "port": 8148,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 57,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 59,
-      "error": null
-    },
-    {
-      "agent_id": "agent-049",
-      "day": 49,
-      "name": "AI Report Generation Agent",
-      "slug": "report-generation-agent",
-      "category": "productivity",
-      "port": 8149,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 59,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 60,
-      "error": null
-    },
-    {
-      "agent_id": "agent-050",
-      "day": 50,
-      "name": "AI Presentation Agent",
-      "slug": "presentation-agent",
-      "category": "productivity",
-      "port": 8150,
       "checks": {
         "static_files": {
           "passed": true,
@@ -4098,16 +3855,16 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 53,
+      "durationMs": 52,
       "error": null
     },
     {
-      "agent_id": "agent-051",
-      "day": 51,
-      "name": "AI Image Analysis Agent",
-      "slug": "image-analysis-agent",
+      "agent_id": "agent-048",
+      "day": 48,
+      "name": "AI Data Analysis Agent",
+      "slug": "data-analysis-agent",
       "category": "productivity",
-      "port": 8151,
+      "port": 8148,
       "checks": {
         "static_files": {
           "passed": true,
@@ -4128,7 +3885,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 76,
+          "latencyMs": 50,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -4179,7 +3936,250 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 77,
+      "durationMs": 51,
+      "error": null
+    },
+    {
+      "agent_id": "agent-049",
+      "day": 49,
+      "name": "AI Report Generation Agent",
+      "slug": "report-generation-agent",
+      "category": "productivity",
+      "port": 8149,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 37,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 38,
+      "error": null
+    },
+    {
+      "agent_id": "agent-050",
+      "day": 50,
+      "name": "AI Presentation Agent",
+      "slug": "presentation-agent",
+      "category": "productivity",
+      "port": 8150,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 39,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 40,
+      "error": null
+    },
+    {
+      "agent_id": "agent-051",
+      "day": 51,
+      "name": "AI Image Analysis Agent",
+      "slug": "image-analysis-agent",
+      "category": "productivity",
+      "port": 8151,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 73,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 74,
       "error": null
     },
     {
@@ -4209,7 +4209,88 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 70,
+          "latencyMs": 65,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 67,
+      "error": null
+    },
+    {
+      "agent_id": "agent-053",
+      "day": 53,
+      "name": "AI Meeting Assistant Agent",
+      "slug": "meeting-assistant-agent",
+      "category": "productivity",
+      "port": 8153,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 69,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -4264,12 +4345,12 @@
       "error": null
     },
     {
-      "agent_id": "agent-053",
-      "day": 53,
-      "name": "AI Meeting Assistant Agent",
-      "slug": "meeting-assistant-agent",
+      "agent_id": "agent-054",
+      "day": 54,
+      "name": "AI Voice Assistant Agent",
+      "slug": "voice-assistant-agent",
       "category": "productivity",
-      "port": 8153,
+      "port": 8154,
       "checks": {
         "static_files": {
           "passed": true,
@@ -4290,7 +4371,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 59,
+          "latencyMs": 60,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -4342,87 +4423,6 @@
       },
       "passed": true,
       "durationMs": 61,
-      "error": null
-    },
-    {
-      "agent_id": "agent-054",
-      "day": 54,
-      "name": "AI Voice Assistant Agent",
-      "slug": "voice-assistant-agent",
-      "category": "productivity",
-      "port": 8154,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 56,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 57,
       "error": null
     },
     {
@@ -4533,7 +4533,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 50,
+          "latencyMs": 57,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -4584,7 +4584,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 51,
+      "durationMs": 58,
       "error": null
     },
     {
@@ -4665,7 +4665,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 49,
+      "durationMs": 50,
       "error": null
     },
     {
@@ -4695,7 +4695,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 44,
+          "latencyMs": 49,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -4746,7 +4746,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 45,
+      "durationMs": 50,
       "error": null
     },
     {
@@ -4756,6 +4756,87 @@
       "slug": "workflow-automation-agent",
       "category": "productivity",
       "port": 8159,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 43,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 44,
+      "error": null
+    },
+    {
+      "agent_id": "agent-060",
+      "day": 60,
+      "name": "AI Personal Assistant Agent",
+      "slug": "personal-assistant-agent",
+      "category": "productivity",
+      "port": 8160,
       "checks": {
         "static_files": {
           "passed": true,
@@ -4831,87 +4912,6 @@
       "error": null
     },
     {
-      "agent_id": "agent-060",
-      "day": 60,
-      "name": "AI Personal Assistant Agent",
-      "slug": "personal-assistant-agent",
-      "category": "productivity",
-      "port": 8160,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 37,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 38,
-      "error": null
-    },
-    {
       "agent_id": "agent-061",
       "day": 61,
       "name": "AI Code Generation Agent",
@@ -4938,7 +4938,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 83,
+          "latencyMs": 70,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -4989,7 +4989,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 84,
+      "durationMs": 72,
       "error": null
     },
     {
@@ -4999,6 +4999,87 @@
       "slug": "software-architecture-agent",
       "category": "developer",
       "port": 8162,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 67,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 69,
+      "error": null
+    },
+    {
+      "agent_id": "agent-063",
+      "day": 63,
+      "name": "AI Codebase Analysis Agent",
+      "slug": "codebase-analysis-agent",
+      "category": "developer",
+      "port": 8163,
       "checks": {
         "static_files": {
           "passed": true,
@@ -5074,87 +5155,6 @@
       "error": null
     },
     {
-      "agent_id": "agent-063",
-      "day": 63,
-      "name": "AI Codebase Analysis Agent",
-      "slug": "codebase-analysis-agent",
-      "category": "developer",
-      "port": 8163,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 63,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 64,
-      "error": null
-    },
-    {
       "agent_id": "agent-064",
       "day": 64,
       "name": "AI Bug Hunting Agent",
@@ -5181,7 +5181,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 60,
+          "latencyMs": 58,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -5262,6 +5262,87 @@
         "health": {
           "passed": true,
           "statusCode": 200,
+          "latencyMs": 58,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 59,
+      "error": null
+    },
+    {
+      "agent_id": "agent-066",
+      "day": 66,
+      "name": "AI Security Audit Agent",
+      "slug": "security-audit-agent",
+      "category": "developer",
+      "port": 8166,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
           "latencyMs": 57,
           "model": "qwen3.5:9b",
           "status": "ok"
@@ -5317,87 +5398,6 @@
       "error": null
     },
     {
-      "agent_id": "agent-066",
-      "day": 66,
-      "name": "AI Security Audit Agent",
-      "slug": "security-audit-agent",
-      "category": "developer",
-      "port": 8166,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 55,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 56,
-      "error": null
-    },
-    {
       "agent_id": "agent-067",
       "day": 67,
       "name": "AI Test Engineer Agent",
@@ -5424,7 +5424,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 55,
+          "latencyMs": 56,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -5475,7 +5475,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 56,
+      "durationMs": 57,
       "error": null
     },
     {
@@ -5485,6 +5485,87 @@
       "slug": "dependency-analysis-agent",
       "category": "developer",
       "port": 8168,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 50,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 51,
+      "error": null
+    },
+    {
+      "agent_id": "agent-069",
+      "day": 69,
+      "name": "AI API Documentation Agent",
+      "slug": "api-documentation-agent",
+      "category": "developer",
+      "port": 8169,
       "checks": {
         "static_files": {
           "passed": true,
@@ -5560,87 +5641,6 @@
       "error": null
     },
     {
-      "agent_id": "agent-069",
-      "day": 69,
-      "name": "AI API Documentation Agent",
-      "slug": "api-documentation-agent",
-      "category": "developer",
-      "port": 8169,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 37,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 38,
-      "error": null
-    },
-    {
       "agent_id": "agent-070",
       "day": 70,
       "name": "AI Code Refactoring Agent",
@@ -5667,7 +5667,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 36,
+          "latencyMs": 38,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -5718,7 +5718,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 37,
+      "durationMs": 39,
       "error": null
     },
     {
@@ -5748,7 +5748,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 78,
+          "latencyMs": 77,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -5799,7 +5799,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 79,
+      "durationMs": 78,
       "error": null
     },
     {
@@ -5829,7 +5829,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 67,
+          "latencyMs": 72,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -5880,7 +5880,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 68,
+      "durationMs": 74,
       "error": null
     },
     {
@@ -5961,7 +5961,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 70,
+      "durationMs": 69,
       "error": null
     },
     {
@@ -5971,816 +5971,6 @@
       "slug": "ci-cd-agent",
       "category": "developer",
       "port": 8174,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 54,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 56,
-      "error": null
-    },
-    {
-      "agent_id": "agent-075",
-      "day": 75,
-      "name": "AI Full-Stack Developer Agent",
-      "slug": "full-stack-developer-agent",
-      "category": "developer",
-      "port": 8175,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 69,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 71,
-      "error": null
-    },
-    {
-      "agent_id": "agent-076",
-      "day": 76,
-      "name": "AI Sales Agent",
-      "slug": "sales-agent",
-      "category": "business",
-      "port": 8176,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 51,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 53,
-      "error": null
-    },
-    {
-      "agent_id": "agent-077",
-      "day": 77,
-      "name": "AI Lead Generation Agent",
-      "slug": "lead-generation-agent",
-      "category": "business",
-      "port": 8177,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 54,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 55,
-      "error": null
-    },
-    {
-      "agent_id": "agent-078",
-      "day": 78,
-      "name": "AI Lead Qualification Agent",
-      "slug": "lead-qualification-agent",
-      "category": "business",
-      "port": 8178,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 53,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 55,
-      "error": null
-    },
-    {
-      "agent_id": "agent-079",
-      "day": 79,
-      "name": "AI Customer Support Agent",
-      "slug": "customer-support-agent",
-      "category": "business",
-      "port": 8179,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 48,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 49,
-      "error": null
-    },
-    {
-      "agent_id": "agent-080",
-      "day": 80,
-      "name": "AI Marketing Agent",
-      "slug": "marketing-agent",
-      "category": "business",
-      "port": 8180,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 39,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 41,
-      "error": null
-    },
-    {
-      "agent_id": "agent-081",
-      "day": 81,
-      "name": "AI Social Media Agent",
-      "slug": "social-media-agent",
-      "category": "business",
-      "port": 8181,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 73,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 74,
-      "error": null
-    },
-    {
-      "agent_id": "agent-082",
-      "day": 82,
-      "name": "AI SEO Agent",
-      "slug": "seo-agent",
-      "category": "business",
-      "port": 8182,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 63,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 65,
-      "error": null
-    },
-    {
-      "agent_id": "agent-083",
-      "day": 83,
-      "name": "AI Content Marketing Agent",
-      "slug": "content-marketing-agent",
-      "category": "business",
-      "port": 8183,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 65,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 66,
-      "error": null
-    },
-    {
-      "agent_id": "agent-084",
-      "day": 84,
-      "name": "AI Business Analyst Agent",
-      "slug": "business-analyst-agent",
-      "category": "business",
-      "port": 8184,
       "checks": {
         "static_files": {
           "passed": true,
@@ -6856,12 +6046,93 @@
       "error": null
     },
     {
-      "agent_id": "agent-085",
-      "day": 85,
-      "name": "AI Financial Analysis Agent",
-      "slug": "financial-analysis-agent",
+      "agent_id": "agent-075",
+      "day": 75,
+      "name": "AI Full-Stack Developer Agent",
+      "slug": "full-stack-developer-agent",
+      "category": "developer",
+      "port": 8175,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 59,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 60,
+      "error": null
+    },
+    {
+      "agent_id": "agent-076",
+      "day": 76,
+      "name": "AI Sales Agent",
+      "slug": "sales-agent",
       "category": "business",
-      "port": 8185,
+      "port": 8176,
       "checks": {
         "static_files": {
           "passed": true,
@@ -6937,12 +6208,12 @@
       "error": null
     },
     {
-      "agent_id": "agent-086",
-      "day": 86,
-      "name": "AI Accounting Assistant Agent",
-      "slug": "accounting-assistant-agent",
+      "agent_id": "agent-077",
+      "day": 77,
+      "name": "AI Lead Generation Agent",
+      "slug": "lead-generation-agent",
       "category": "business",
-      "port": 8186,
+      "port": 8177,
       "checks": {
         "static_files": {
           "passed": true,
@@ -6963,7 +6234,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 49,
+          "latencyMs": 50,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -7014,7 +6285,736 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 50,
+      "durationMs": 51,
+      "error": null
+    },
+    {
+      "agent_id": "agent-078",
+      "day": 78,
+      "name": "AI Lead Qualification Agent",
+      "slug": "lead-qualification-agent",
+      "category": "business",
+      "port": 8178,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 50,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 52,
+      "error": null
+    },
+    {
+      "agent_id": "agent-079",
+      "day": 79,
+      "name": "AI Customer Support Agent",
+      "slug": "customer-support-agent",
+      "category": "business",
+      "port": 8179,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 41,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 44,
+      "error": null
+    },
+    {
+      "agent_id": "agent-080",
+      "day": 80,
+      "name": "AI Marketing Agent",
+      "slug": "marketing-agent",
+      "category": "business",
+      "port": 8180,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 35,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 36,
+      "error": null
+    },
+    {
+      "agent_id": "agent-081",
+      "day": 81,
+      "name": "AI Social Media Agent",
+      "slug": "social-media-agent",
+      "category": "business",
+      "port": 8181,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 116,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 118,
+      "error": null
+    },
+    {
+      "agent_id": "agent-082",
+      "day": 82,
+      "name": "AI SEO Agent",
+      "slug": "seo-agent",
+      "category": "business",
+      "port": 8182,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 97,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 99,
+      "error": null
+    },
+    {
+      "agent_id": "agent-083",
+      "day": 83,
+      "name": "AI Content Marketing Agent",
+      "slug": "content-marketing-agent",
+      "category": "business",
+      "port": 8183,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 100,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 102,
+      "error": null
+    },
+    {
+      "agent_id": "agent-084",
+      "day": 84,
+      "name": "AI Business Analyst Agent",
+      "slug": "business-analyst-agent",
+      "category": "business",
+      "port": 8184,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 88,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 90,
+      "error": null
+    },
+    {
+      "agent_id": "agent-085",
+      "day": 85,
+      "name": "AI Financial Analysis Agent",
+      "slug": "financial-analysis-agent",
+      "category": "business",
+      "port": 8185,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 84,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 85,
+      "error": null
+    },
+    {
+      "agent_id": "agent-086",
+      "day": 86,
+      "name": "AI Accounting Assistant Agent",
+      "slug": "accounting-assistant-agent",
+      "category": "business",
+      "port": 8186,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 67,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 68,
       "error": null
     },
     {
@@ -7044,7 +7044,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 50,
+          "latencyMs": 54,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -7095,7 +7095,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 52,
+      "durationMs": 55,
       "error": null
     },
     {
@@ -7125,7 +7125,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 46,
+          "latencyMs": 59,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -7176,7 +7176,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 47,
+      "durationMs": 60,
       "error": null
     },
     {
@@ -7206,7 +7206,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 38,
+          "latencyMs": 34,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -7257,7 +7257,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 39,
+      "durationMs": 35,
       "error": null
     },
     {
@@ -7287,7 +7287,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 38,
+          "latencyMs": 36,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -7338,7 +7338,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 39,
+      "durationMs": 38,
       "error": null
     },
     {
@@ -7368,7 +7368,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 93,
+          "latencyMs": 84,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -7419,7 +7419,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 95,
+      "durationMs": 85,
       "error": null
     },
     {
@@ -7449,7 +7449,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 91,
+          "latencyMs": 80,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -7500,7 +7500,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 91,
+      "durationMs": 81,
       "error": null
     },
     {
@@ -7510,249 +7510,6 @@
       "slug": "rag-knowledge-agent",
       "category": "advanced",
       "port": 8193,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 83,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 84,
-      "error": null
-    },
-    {
-      "agent_id": "agent-094",
-      "day": 94,
-      "name": "AI Multi-Agent Debate Agent",
-      "slug": "multi-agent-debate-agent",
-      "category": "advanced",
-      "port": 8194,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 79,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 80,
-      "error": null
-    },
-    {
-      "agent_id": "agent-095",
-      "day": 95,
-      "name": "AI Business Operations Agent",
-      "slug": "business-operations-agent",
-      "category": "advanced",
-      "port": 8195,
-      "checks": {
-        "static_files": {
-          "passed": true,
-          "details": [
-            "agent.json",
-            "package.json",
-            "backend/src/server.js",
-            "backend/src/agent.js",
-            "backend/src/config.js",
-            "backend/src/model.js",
-            "backend/src/capability-gate.js"
-          ]
-        },
-        "import_integrity": {
-          "passed": true,
-          "error": null
-        },
-        "health": {
-          "passed": true,
-          "statusCode": 200,
-          "latencyMs": 78,
-          "model": "qwen3.5:9b",
-          "status": "ok"
-        },
-        "contract": {
-          "passed": true,
-          "statusCode": 200,
-          "structureValid": true
-        },
-        "valid_task": {
-          "passed": true,
-          "allowed": true,
-          "durationMs": null,
-          "responsePreview": "Allowed by capability gate (reason: capability-match)"
-        },
-        "invalid_task": {
-          "passed": true,
-          "rejected": true,
-          "code": "AGENT_CAPABILITY_MISMATCH",
-          "reason": "better-agent-available"
-        },
-        "negative_tests": {
-          "passed": true,
-          "total": 4,
-          "passedCount": 4,
-          "details": [
-            {
-              "name": "empty_request_body",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "empty_task_string",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "missing_task_field",
-              "passed": true,
-              "error": "task is required"
-            },
-            {
-              "name": "oversized_task",
-              "passed": true,
-              "error": "task exceeds the 20000 character limit"
-            }
-          ]
-        },
-        "orchestration": null
-      },
-      "passed": true,
-      "durationMs": 79,
-      "error": null
-    },
-    {
-      "agent_id": "agent-096",
-      "day": 96,
-      "name": "AI Autonomous Coding Agent",
-      "slug": "autonomous-coding-agent",
-      "category": "advanced",
-      "port": 8196,
       "checks": {
         "static_files": {
           "passed": true,
@@ -7828,12 +7585,12 @@
       "error": null
     },
     {
-      "agent_id": "agent-097",
-      "day": 97,
-      "name": "AI AI-Research Scientist Agent",
-      "slug": "ai-research-scientist-agent",
+      "agent_id": "agent-094",
+      "day": 94,
+      "name": "AI Multi-Agent Debate Agent",
+      "slug": "multi-agent-debate-agent",
       "category": "advanced",
-      "port": 8197,
+      "port": 8194,
       "checks": {
         "static_files": {
           "passed": true,
@@ -7854,7 +7611,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 66,
+          "latencyMs": 70,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -7905,7 +7662,250 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 67,
+      "durationMs": 71,
+      "error": null
+    },
+    {
+      "agent_id": "agent-095",
+      "day": 95,
+      "name": "AI Business Operations Agent",
+      "slug": "business-operations-agent",
+      "category": "advanced",
+      "port": 8195,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 73,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 75,
+      "error": null
+    },
+    {
+      "agent_id": "agent-096",
+      "day": 96,
+      "name": "AI Autonomous Coding Agent",
+      "slug": "autonomous-coding-agent",
+      "category": "advanced",
+      "port": 8196,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 61,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 63,
+      "error": null
+    },
+    {
+      "agent_id": "agent-097",
+      "day": 97,
+      "name": "AI AI-Research Scientist Agent",
+      "slug": "ai-research-scientist-agent",
+      "category": "advanced",
+      "port": 8197,
+      "checks": {
+        "static_files": {
+          "passed": true,
+          "details": [
+            "agent.json",
+            "package.json",
+            "backend/src/server.js",
+            "backend/src/agent.js",
+            "backend/src/config.js",
+            "backend/src/model.js",
+            "backend/src/capability-gate.js"
+          ]
+        },
+        "import_integrity": {
+          "passed": true,
+          "error": null
+        },
+        "health": {
+          "passed": true,
+          "statusCode": 200,
+          "latencyMs": 51,
+          "model": "qwen3.5:9b",
+          "status": "ok"
+        },
+        "contract": {
+          "passed": true,
+          "statusCode": 200,
+          "structureValid": true
+        },
+        "valid_task": {
+          "passed": true,
+          "allowed": true,
+          "durationMs": null,
+          "responsePreview": "Allowed by capability gate (reason: capability-match)"
+        },
+        "invalid_task": {
+          "passed": true,
+          "rejected": true,
+          "code": "AGENT_CAPABILITY_MISMATCH",
+          "reason": "better-agent-available"
+        },
+        "negative_tests": {
+          "passed": true,
+          "total": 4,
+          "passedCount": 4,
+          "details": [
+            {
+              "name": "empty_request_body",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "empty_task_string",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "missing_task_field",
+              "passed": true,
+              "error": "task is required"
+            },
+            {
+              "name": "oversized_task",
+              "passed": true,
+              "error": "task exceeds the 20000 character limit"
+            }
+          ]
+        },
+        "orchestration": null
+      },
+      "passed": true,
+      "durationMs": 52,
       "error": null
     },
     {
@@ -7935,7 +7935,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 63,
+          "latencyMs": 44,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -7986,7 +7986,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 64,
+      "durationMs": 45,
       "error": null
     },
     {
@@ -8016,7 +8016,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 55,
+          "latencyMs": 40,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -8067,7 +8067,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 56,
+      "durationMs": 41,
       "error": null
     },
     {
@@ -8097,7 +8097,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 49,
+          "latencyMs": 42,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -8148,7 +8148,7 @@
         "orchestration": null
       },
       "passed": true,
-      "durationMs": 50,
+      "durationMs": 43,
       "error": null
     },
     {
@@ -8182,7 +8182,7 @@
         "health": {
           "passed": true,
           "statusCode": 200,
-          "latencyMs": 15,
+          "latencyMs": 17,
           "model": "qwen3.5:9b",
           "status": "ok"
         },
@@ -8237,7 +8237,7 @@
         }
       },
       "passed": true,
-      "durationMs": 8421,
+      "durationMs": 9583,
       "error": null
     }
   ]
