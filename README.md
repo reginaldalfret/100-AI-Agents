@@ -1,6 +1,8 @@
-# SOVEREIGN AI WORKBENCH
+# Super AI
 
-> **Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work**  
+### Sovereign On-Premise Agentic AI Workbench
+
+> **Super AI** is the user-facing product powered by the **Sovereign AI Workbench** architecture using Open-Weight Multimodal LLMs for Confidential Industrial Work.  
 > **Target Organization:** Mangalore Refinery and Petrochemicals Limited (MRPL)  
 > **Environment:** 100% Air-Gapped / On-Premise Execution (Zero External Cloud Telemetry)  
 
@@ -8,7 +10,7 @@
 
 ## 🌟 Executive Overview
 
-The **Sovereign AI Workbench** is an enterprise on-premise industrial AI operating platform. Built specifically for high-security refinery operations at MRPL, it unifies **100 specialized industrial agents**, a **Day-101 Sovereign Master Orchestrator**, a **Hardware-Aware Multi-Model Router**, an **Autonomous Task Planner & Replanner**, a **Multimodal Document Pipeline**, an **Evidence Relationship Graph**, and a **Local Deliverables Engine** into a single cohesive, air-gapped system.
+**Super AI** (powered by the **Sovereign AI Workbench** architecture) is an enterprise on-premise industrial AI operating platform. Built specifically for high-security refinery operations at MRPL, it unifies **Super AI (Agent 101 Orchestrator)**, **100 specialized industrial agents**, a **Hardware-Aware Multi-Model Router**, an **Autonomous Task Planner & Replanner**, a **Multimodal Document Pipeline**, an **Evidence Relationship Graph**, and a **Local Deliverables Engine** into a single cohesive, air-gapped system.
 
 ```
                            USER DIRECTIVE

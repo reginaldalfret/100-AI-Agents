@@ -115,20 +115,52 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    function generateAgentAvatar(agent) {
-        const name = agent.name || 'Unknown';
-        const initial = name.charAt(0).toUpperCase();
-        
-        // Generate a consistent color based on domain or name
-        const str = agent.domain || agent.name || 'default';
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    function getAgentDisplayNumber(agent) {
+        if (!agent) return '101';
+        if (agent.id === 'auto' || agent.id === 'agent-101' || agent.internalId === 'agent-101' || agent.agent_id === 'agent-101' || agent.name === 'Super AI') {
+            return '101';
         }
-        const h = Math.abs(hash) % 360;
-        const color = `hsl(${h}, 70%, 50%)`;
+        const rawId = agent.agent_id || agent.id || '';
+        const num = parseInt(rawId.replace(/\D/g, ''), 10);
+        if (!isNaN(num)) {
+            return String(num).padStart(3, '0');
+        }
+        return '001';
+    }
+
+    function generateAgentAvatar(agent) {
+        const number = getAgentDisplayNumber(agent);
+        const isSuper = number === '101';
         
-        return { initial, color };
+        // Consistent domain-aware accent styling
+        const domain = (agent?.domain || '').toLowerCase();
+        let color = 'linear-gradient(135deg, #0284c7, #0369a1)';
+        let borderGlow = 'rgba(6, 182, 212, 0.4)';
+        
+        if (isSuper) {
+            color = 'linear-gradient(135deg, #06b6d4, #3b82f6, #8b5cf6)';
+            borderGlow = 'rgba(139, 92, 246, 0.6)';
+        } else if (domain.includes('foundation') || domain.includes('writing') || domain.includes('communication')) {
+            color = 'linear-gradient(135deg, #3b82f6, #6366f1)';
+            borderGlow = 'rgba(59, 130, 246, 0.4)';
+        } else if (domain.includes('research') || domain.includes('analytics')) {
+            color = 'linear-gradient(135deg, #06b6d4, #0284c7)';
+            borderGlow = 'rgba(6, 182, 212, 0.4)';
+        } else if (domain.includes('productivity') || domain.includes('automation')) {
+            color = 'linear-gradient(135deg, #10b981, #059669)';
+            borderGlow = 'rgba(16, 185, 129, 0.4)';
+        } else if (domain.includes('developer') || domain.includes('code') || domain.includes('software')) {
+            color = 'linear-gradient(135deg, #8b5cf6, #ec4899)';
+            borderGlow = 'rgba(139, 92, 246, 0.4)';
+        } else if (domain.includes('business') || domain.includes('finance') || domain.includes('cost')) {
+            color = 'linear-gradient(135deg, #f59e0b, #d97706)';
+            borderGlow = 'rgba(245, 158, 11, 0.4)';
+        } else if (domain.includes('advanced') || domain.includes('master') || domain.includes('orchestrat')) {
+            color = 'linear-gradient(135deg, #6366f1, #a855f7)';
+            borderGlow = 'rgba(99, 102, 241, 0.4)';
+        }
+        
+        return { number, color, borderGlow, isSuper };
     }
 
     function getAgentColor(agent) {
@@ -136,6 +168,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getAgentExamples(agent) {
+        if (!agent || agent.id === 'auto' || agent.name === 'Super AI') {
+            return ['Investigate this inspection.', 'Analyze this document.', 'Review the evidence.', 'Prepare a management briefing.'];
+        }
         const domain = (agent.domain || '').toLowerCase();
         if (domain.includes('engineering')) {
             return ['Analyze this inspection report', 'Compare previous inspection data', 'Check the relevant SOP', 'Prepare a management briefing'];
@@ -181,27 +216,47 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 // Fallback mock data if API is down
                 data.agents = [
-                    { id: 'ai-eng-1', name: 'Engineering AI', domain: 'Engineering', status: 'ready', capabilities: ['Data Analysis', 'Reporting'] },
-                    { id: 'ai-ops-1', name: 'Operations AI', domain: 'Operations', status: 'busy', capabilities: ['Monitoring', 'Alerting'] },
-                    { id: 'ai-saf-1', name: 'Safety AI', domain: 'Safety', status: 'ready', capabilities: ['Compliance Check'] }
+                    { id: 'agent-001', name: 'AI Writing Agent', domain: 'foundation', status: 'ready', capabilities: ['Document Drafting', 'Reporting'] },
+                    { id: 'agent-002', name: 'AI Email Agent', domain: 'foundation', status: 'ready', capabilities: ['Notification', 'Email Routing'] },
+                    { id: 'agent-042', name: 'AI Calendar Management Agent', domain: 'productivity', status: 'ready', capabilities: ['Monitoring', 'Alerting'] }
                 ];
             }
             
-            // Add Sovereign AI (Auto) at top
-            const autoAgent = {
+            // Add Super AI (Agent 101 Orchestrator) at top
+            const superAiAgent = {
                 id: 'auto',
-                name: 'Sovereign AI (Auto)',
-                domain: 'Orchestrator',
+                internalId: 'agent-101',
+                displayNumber: '101',
+                name: 'Super AI',
+                domain: 'orchestrator',
                 status: 'ready',
-                capabilities: ['Autonomous Planning', 'Agent Orchestration', 'Multi-step Reasoning'],
-                tools: ['Delegate Task', 'Summarize', 'Access KB'],
-                description: 'The central orchestrator that autonomously plans and delegates tasks to specialized agents.'
+                capabilities: ['Autonomous Task Planning', 'Dynamic Multi-Model Routing', 'Evidence Synthesis', 'Human-In-The-Loop Sign-off'],
+                tools: ['Delegate Task', 'Summarize', 'Access KB', 'Multi-Model Router'],
+                description: 'Your autonomous industrial AI orchestrator for confidential on-premise operations.'
             };
             
-            state.agents = [autoAgent, ...data.agents];
+            // Process specialist agents (exclude duplicate 101/master if returned by API)
+            const specialistAgents = (data.agents || [])
+                .filter(a => {
+                    const rawId = a.agent_id || a.id || '';
+                    return rawId !== 'agent-101' && a.id !== 'auto' && a.name !== 'Super AI';
+                })
+                .map(a => {
+                    const num = parseInt((a.agent_id || a.id || '').replace(/\D/g, ''), 10);
+                    const dispNum = !isNaN(num) ? String(num).padStart(3, '0') : '000';
+                    return {
+                        ...a,
+                        id: a.agent_id || a.id,
+                        displayNumber: dispNum
+                    };
+                })
+                .sort((a, b) => parseInt(a.displayNumber, 10) - parseInt(b.displayNumber, 10));
+            
+            // 101 Super AI pinned at top, followed by 001..100
+            state.agents = [superAiAgent, ...specialistAgents];
             renderAgentList();
             
-            // Select auto agent by default
+            // Select Super AI by default
             selectAgent('auto');
             
         } catch (error) {
@@ -211,20 +266,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getStatusClass(agent) {
-        if (!agent.status) return 'status-ready';
-        return `status-${agent.status.toLowerCase()}`;
+        if (!agent.status) return 'status-active';
+        const st = agent.status.toLowerCase();
+        if (st === 'ready' || st === 'active' || st === 'ok') return 'status-active';
+        if (st === 'busy' || st === 'processing') return 'status-busy';
+        if (st === 'error' || st === 'failed') return 'status-error';
+        return 'status-offline';
     }
 
     function renderAgentList(query = '') {
+        const q = query.trim().toLowerCase();
         elements.agentList.innerHTML = '';
         
         const filteredAgents = state.agents.filter(agent => {
-            const searchStr = `${agent.name} ${agent.id} ${agent.domain}`.toLowerCase();
-            return searchStr.includes(query.toLowerCase());
+            const isSuperAi = agent.id === 'auto' || agent.name === 'Super AI';
+            const num = agent.displayNumber || getAgentDisplayNumber(agent);
+            const numWithoutZero = String(parseInt(num, 10));
+            
+            const matchesSuperAlias = isSuperAi && (
+                q.includes('super') || q.includes('auto') || q.includes('sovereign') || 
+                q.includes('orchestrator') || q.includes('101')
+            );
+            
+            const matchesNumber = q === num || q === numWithoutZero || (`agent-${num}`).includes(q) || (`agent-${numWithoutZero}`).includes(q);
+            const searchStr = `${agent.name} ${agent.id} ${agent.domain} ${agent.description || ''}`.toLowerCase();
+            
+            return matchesSuperAlias || matchesNumber || searchStr.includes(q);
         });
         
         if (filteredAgents.length === 0) {
-            elements.agentList.innerHTML = '<div class="empty-list">No agents found</div>';
+            elements.agentList.innerHTML = '<div class="empty-list" style="padding:20px;text-align:center;color:var(--text-tertiary);font-size:13px;">No agents found</div>';
             return;
         }
         
@@ -234,15 +305,17 @@ document.addEventListener('DOMContentLoaded', () => {
             div.dataset.id = agent.id;
             
             const avatar = generateAgentAvatar(agent);
+            const isSuper = avatar.isSuper;
+            const subtitle = isSuper ? 'agent-101 · orchestrator' : `agent-${avatar.number} · ${escapeHtml(agent.domain || 'specialist')}`;
             
             div.innerHTML = `
-                <div class="agent-row-avatar" style="background-color: ${avatar.color}">
-                    ${avatar.initial}
+                <div class="agent-row-avatar" style="background: ${avatar.color}; border-color: ${avatar.borderGlow}" aria-label="Agent ${avatar.number} — ${escapeHtml(agent.name)}">
+                    ${avatar.number}
                     <span class="status-indicator ${getStatusClass(agent)}"></span>
                 </div>
                 <div class="agent-row-info">
                     <div class="agent-row-name">${escapeHtml(agent.name)}</div>
-                    <div class="agent-row-domain">${escapeHtml(agent.domain)}</div>
+                    <div class="agent-row-domain">${subtitle}</div>
                 </div>
             `;
             
@@ -295,19 +368,25 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateAgentHeader(agent) {
         const avatar = generateAgentAvatar(agent);
         if (elements.agentAvatar) {
-            elements.agentAvatar.style.background = `linear-gradient(135deg, ${avatar.color}, #6366f1)`;
-            elements.agentAvatar.textContent = avatar.initial;
+            elements.agentAvatar.style.background = avatar.color;
+            elements.agentAvatar.textContent = avatar.number;
+            elements.agentAvatar.setAttribute('aria-label', `Agent ${avatar.number} — ${agent.name}`);
         }
         
         if (elements.agentName) elements.agentName.textContent = agent.name;
-        if (elements.agentSubtitle) elements.agentSubtitle.textContent = `${agent.id} · ${agent.domain}`;
+        
+        if (avatar.isSuper) {
+            if (elements.agentSubtitle) elements.agentSubtitle.textContent = 'agent-101 · orchestrator';
+            document.title = 'Super AI — Industrial Agentic Intelligence';
+        } else {
+            if (elements.agentSubtitle) elements.agentSubtitle.textContent = `agent-${avatar.number} · ${agent.domain || 'specialist'}`;
+            document.title = `[${avatar.number}] ${agent.name} — Super AI`;
+        }
         
         const orb = document.getElementById('agentOrb');
         if (orb) {
-            orb.style.background = `radial-gradient(circle, ${avatar.color} 0%, rgba(139, 92, 246, 0.4) 60%, transparent 80%)`;
+            orb.style.background = `radial-gradient(circle, ${avatar.borderGlow} 0%, rgba(139, 92, 246, 0.4) 60%, transparent 80%)`;
         }
-        
-        document.title = `${agent.name} — Sovereign AI Workbench`;
     }
 
     function switchTab(tabName) {
@@ -356,6 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderAbout(agent, container) {
         if (!container) return;
+        const avatar = generateAgentAvatar(agent);
         container.innerHTML = `
             <div class="panel-section" style="padding:18px;background:var(--glass-card);border:1px solid var(--border-glass);border-radius:12px;margin-bottom:14px;">
                 <h3 style="color:#38bdf8;margin-bottom:8px;font-size:15px;">Agent Profile</h3>
@@ -363,8 +443,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="panel-section" style="padding:18px;background:var(--glass-card);border:1px solid var(--border-glass);border-radius:12px;">
                 <h3 style="color:#38bdf8;margin-bottom:8px;font-size:15px;">Industrial Domain & Specifications</h3>
-                <p style="color:var(--text-secondary);"><strong>Domain:</strong> ${escapeHtml(agent.domain || 'Engineering')}</p>
-                <p style="color:var(--text-secondary);margin-top:4px;"><strong>Assigned Port:</strong> :8201 · <strong>Model:</strong> Nemotron 3 Nano / Gemma 3 4B</p>
+                <p style="color:var(--text-secondary);"><strong>Display Number:</strong> ${avatar.number} · <strong>Identifier:</strong> agent-${avatar.number}</p>
+                <p style="color:var(--text-secondary);margin-top:4px;"><strong>Domain:</strong> ${escapeHtml(agent.domain || 'Engineering')}</p>
                 <p style="color:var(--text-secondary);margin-top:4px;"><strong>Execution Environment:</strong> 100% Air-Gapped Local Hardware</p>
             </div>
         `;
@@ -415,15 +495,18 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const examples = getAgentExamples(agent);
         const avatar = generateAgentAvatar(agent);
+        const description = avatar.isSuper
+            ? 'Your autonomous industrial AI orchestrator for confidential on-premise operations.'
+            : (agent.description || `Specialized on-premise industrial AI agent for ${agent.domain || 'operational'} workflows.`);
         
         elements.chatEmptyState.innerHTML = `
-            <div class="empty-avatar" style="background: linear-gradient(135deg, ${avatar.color}, #6366f1)">
-                ${avatar.initial}
+            <div class="empty-avatar" style="background: ${avatar.color}; border-color: ${avatar.borderGlow}" aria-label="Agent ${avatar.number} — ${escapeHtml(agent.name)}">
+                ${avatar.number}
             </div>
             <h2>${escapeHtml(agent.name)}</h2>
-            <p>${escapeHtml(agent.description || `Specialized on-premise industrial AI agent for ${agent.domain} operations.`)}</p>
+            <p>${escapeHtml(description)}</p>
             <div class="empty-examples">
-                ${examples.slice(0, 3).map(ex => `
+                ${examples.slice(0, 4).map(ex => `
                     <button class="empty-example-btn" onclick="document.getElementById('chatInput').value = '${escapeHtml(ex)}'; document.getElementById('sendBtn').click();">
                         ${escapeHtml(ex)}
                     </button>
@@ -484,6 +567,9 @@ document.addEventListener('DOMContentLoaded', () => {
         hideEmptyState();
         removeThinkingIndicator();
         
+        const isSuper = !state.selectedAgent || state.selectedAgent.id === 'auto' || state.selectedAgent.name === 'Super AI';
+        const defaultModel = isSuper ? 'Super AI' : 'NVIDIA Nemotron 3 Nano (4B)';
+        
         const msgId = Date.now().toString();
         const msgObj = {
             id: msgId,
@@ -491,7 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
             content: data.text || data.content || data.message || '',
             evidence: data.evidence || null,
             deliverables: data.deliverables || null,
-            model: data.model || 'NVIDIA Nemotron 3 Nano (4B)',
+            model: data.model || defaultModel,
             traceId: data.trace_id || data.traceId || `TRC-${Date.now().toString().slice(-6)}`,
             timestamp: new Date(),
             plan: data.plan || null
@@ -564,7 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="msg-bubble" style="padding:10px 14px;">
                 <div class="thinking-indicator">
                     <span class="thinking-orb"></span>
-                    <span>Autonomous task planner evaluating evidence on local hardware...</span>
+                    <span>Super AI is analyzing your evidence on local hardware...</span>
                 </div>
             </div>
         `;
@@ -668,7 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     plan: [
                         { step: 'Extract data from PDF', agent: 'Extraction AI' },
                         { step: 'Compare with historical data', agent: 'Engineering AI' },
-                        { step: 'Generate report', agent: 'Sovereign AI (Auto)' }
+                        { step: 'Generate report', agent: 'Super AI' }
                     ]
                 });
                 
@@ -754,8 +840,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updatePlaceholder(agent) {
         if (!elements.chatInput) return;
-        if (!agent || agent.id === 'auto') {
-            elements.chatInput.placeholder = "Ask Sovereign AI anything...";
+        if (!agent || agent.id === 'auto' || agent.name === 'Super AI') {
+            elements.chatInput.placeholder = "Ask Super AI anything...";
         } else {
             elements.chatInput.placeholder = `Message ${agent.name}...`;
         }
@@ -768,7 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (domain.includes('code') || domain.includes('developer')) {
                 elements.modelPill.innerHTML = '<span class="model-dot"></span> Qwen 2.5 Coder (1.5B Local)';
             } else {
-                elements.modelPill.innerHTML = '<span class="model-dot"></span> Auto (Nemotron 3 Nano / Local)';
+                elements.modelPill.innerHTML = '<span class="model-dot"></span> Super AI (Nemotron 3 Nano / Local)';
             }
         }
     }
@@ -1081,13 +1167,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('/api/health');
             if (res.ok) {
                 elements.modelPill.classList.remove('offline');
-                elements.modelPill.classList.add('online');
+                elements.modelPill.classList.add('active');
             } else {
-                elements.modelPill.classList.remove('online');
+                elements.modelPill.classList.remove('active');
                 elements.modelPill.classList.add('offline');
             }
         } catch (e) {
-            elements.modelPill.classList.remove('online');
+            elements.modelPill.classList.remove('active');
             elements.modelPill.classList.add('offline');
         }
     }, 30000);

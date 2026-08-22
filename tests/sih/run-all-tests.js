@@ -32,10 +32,11 @@ try {
   await import("./connectors/connectors.test.js");
   await import("./evaluation/expanded-benchmark-100.test.js");
   await import("./ui/composer-ui.test.js");
+  await import("../ui/agent-numbering.test.js");
   await import("../benchmark/benchmark.test.js");
 
   console.log(`\n============================================================`);
-  console.log(`ALL 26 TEST SUITES PASSED (100% PASS RATE ACROSS PLATFORM)`);
+  console.log(`ALL 27 TEST SUITES PASSED (100% PASS RATE ACROSS PLATFORM)`);
   console.log(`EXTERNAL EGRESS: 0 CALLS (100% AIR-GAP VERIFIED)`);
   console.log(`============================================================\n`);
 } catch (err) {
