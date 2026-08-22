@@ -339,13 +339,74 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // SOVEREIGN WORKBENCH ENDPOINTS
+    if (req.method === "GET" && url.pathname === "/api/sovereign/status") {
+      const { getSovereigntyDashboardData } = await import("../../security/index.js");
+      json(res, 200, { status: "success", ...getSovereigntyDashboardData() });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/sovereign/events") {
+      const { egressMonitor } = await import("../../security/index.js");
+      json(res, 200, { status: "success", events: egressMonitor.getRecentEvents(50) });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/models/list") {
+      const { listAvailableModels, getHardwareProfile } = await import("../../models/index.js");
+      json(res, 200, { status: "success", models: listAvailableModels(), hardware: getHardwareProfile() });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/models/route") {
+      const payload = await readBody(req);
+      const { routeTaskToLocalModel } = await import("../../models/index.js");
+      const routed = await routeTaskToLocalModel(payload);
+      json(res, 200, { status: "success", routing: routed });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/knowledge/query") {
+      const payload = await readBody(req);
+      const { queryLocalKnowledgeBase } = await import("../../knowledge/index.js");
+      const results = queryLocalKnowledgeBase(payload.query || payload.prompt || "");
+      json(res, 200, { status: "success", results });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/multimodal/process") {
+      const payload = await readBody(req);
+      const { executeMultimodalPipeline } = await import("../../multimodal/index.js");
+      const resData = await executeMultimodalPipeline(payload.filePath || payload.file || "report.pdf", payload);
+      json(res, 200, { status: "success", result: resData });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/sandbox/execute") {
+      const payload = await readBody(req);
+      const { executeInCodeSandbox } = await import("../../sandbox/index.js");
+      const resData = await executeInCodeSandbox(payload.code || payload.script || "", payload.language || "python");
+      json(res, 200, { status: "success", result: resData });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/deliverables/generate") {
+      const payload = await readBody(req);
+      const { generateFullDeliverablePackage } = await import("../../deliverables/index.js");
+      const pkg = generateFullDeliverablePackage(payload);
+      json(res, 200, { status: "success", package: pkg });
+      return;
+    }
+
     if (
       req.method === "GET" &&
       url.pathname === "/api/info"
     ) {
       json(res, 200, {
-        project: "100-to-1",
-        version: "1.0.0",
+        project: "Sovereign AI Workbench",
+        version: "2.0.0",
+        client: "Mangalore Refinery and Petrochemicals Limited (MRPL)",
+        mode: "SOVEREIGN_AIR_GAPPED",
         total_agents: agents.length,
         gateway_port: PORT,
         ollama: "http://127.0.0.1:11434"
@@ -428,9 +489,14 @@ const server = http.createServer(async (req, res) => {
       req.method === "GET" &&
       url.pathname === "/api/workforce"
     ) {
-      const mappingPath = path.join(ROOT, "registry", "sa-s03-agent-mapping.json");
-      if (fs.existsSync(mappingPath)) {
-        const mapping = JSON.parse(fs.readFileSync(mappingPath, "utf8"));
+      const sihPath = path.join(ROOT, "registry", "sih-agent-mapping.json");
+      const saPath = path.join(ROOT, "registry", "sa-s03-agent-mapping.json");
+      if (fs.existsSync(sihPath)) {
+        const raw = JSON.parse(fs.readFileSync(sihPath, "utf8"));
+        const list = Array.isArray(raw) ? raw : (raw.agents || []);
+        json(res, 200, { platform: "Sovereign AI Workbench", total_agents: list.length, agents: list });
+      } else if (fs.existsSync(saPath)) {
+        const mapping = JSON.parse(fs.readFileSync(saPath, "utf8"));
         json(res, 200, mapping);
       } else {
         json(res, 200, { agents: loadRegistry().agents });
@@ -456,7 +522,10 @@ const server = http.createServer(async (req, res) => {
       const os = await import("node:os");
       json(res, 200, {
         status: "healthy",
-        platform: "SA-S03 Educational Intelligent Workflow Management",
+        platform: "Sovereign AI Workbench",
+        client: "Mangalore Refinery and Petrochemicals Limited (MRPL)",
+        mode: "SOVEREIGN_AIR_GAPPED",
+        external_calls: 0,
         uptimeSeconds: Math.round(process.uptime()),
         memory: {
           totalMb: Math.round(os.totalmem() / 1024 / 1024),

@@ -1,0 +1,5172 @@
+[
+  {
+    "day": 1,
+    "agent_id": "agent-001",
+    "name": "Industrial Document Analyst",
+    "slug": "writing-agent",
+    "category": "foundation",
+    "status": "ready",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8101",
+    "health_url": "http://127.0.0.1:8101/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8101,
+    "educational_name": "Institutional Formal Document & Letter Drafting Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_notification",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "graduation-clearance"
+    ],
+    "id": "agent-001",
+    "role": "Industrial Document Analyst",
+    "industrial_role": "Industrial Document Analyst",
+    "domain": "Document Intelligence",
+    "system_prompt": "You are Industrial Document Analyst (agent-001), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "document-intelligence",
+      "extract-pdf",
+      "ocr-document",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "extract_pdf",
+      "ocr_document",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text",
+        "vision"
+      ]
+    }
+  },
+  {
+    "day": 2,
+    "agent_id": "agent-002",
+    "name": "Technical Communication Specialist",
+    "slug": "email-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8102",
+    "health_url": "http://127.0.0.1:8102/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8102,
+    "educational_name": "Official Institutional Notice & Email Communication Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_email",
+      "send_notification",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility",
+      "attendance-intervention",
+      "course-override",
+      "graduation-clearance"
+    ],
+    "id": "agent-002",
+    "role": "Technical Communication Specialist",
+    "industrial_role": "Technical Communication Specialist",
+    "domain": "Technical Communication",
+    "system_prompt": "You are Technical Communication Specialist (agent-002), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-communication",
+      "generate-docx",
+      "send-notification",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "generate_docx",
+      "send_notification"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 3,
+    "agent_id": "agent-003",
+    "name": "SOP Training & Onboarding Agent",
+    "slug": "study-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8103",
+    "health_url": "http://127.0.0.1:8103/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8103,
+    "educational_name": "Curriculum & Academic Study Plan Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_courses",
+      "get_marks",
+      "get_prerequisites",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "course-override"
+    ],
+    "id": "agent-003",
+    "role": "SOP Training & Onboarding Agent",
+    "industrial_role": "SOP Training & Onboarding Agent",
+    "domain": "Technical Communication",
+    "system_prompt": "You are SOP Training & Onboarding Agent (agent-003), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-communication",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 4,
+    "agent_id": "agent-004",
+    "name": "Safety Assessment & Quiz Agent",
+    "slug": "quiz-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8104",
+    "health_url": "http://127.0.0.1:8104/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8104,
+    "educational_name": "Academic Examination & Assessment Validation Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_marks",
+      "get_grades",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "graduation-clearance"
+    ],
+    "id": "agent-004",
+    "role": "Safety Assessment & Quiz Agent",
+    "industrial_role": "Safety Assessment & Quiz Agent",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Safety Assessment & Quiz Agent (agent-004), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "search-knowledge",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 5,
+    "agent_id": "agent-005",
+    "name": "Executive Technical Summarizer",
+    "slug": "summarization-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8105",
+    "health_url": "http://127.0.0.1:8105/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8105,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-005",
+    "role": "Executive Technical Summarizer",
+    "industrial_role": "Executive Technical Summarizer",
+    "domain": "Document Intelligence",
+    "system_prompt": "You are Executive Technical Summarizer (agent-005), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "document-intelligence",
+      "read-file",
+      "generate-docx",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_file",
+      "generate_docx"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 6,
+    "agent_id": "agent-006",
+    "name": "Equipment Records & Asset Historian",
+    "slug": "grammar-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8106",
+    "health_url": "http://127.0.0.1:8106/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8106,
+    "educational_name": "Academic Performance & Course Records Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_marks",
+      "get_grades",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "graduation-clearance"
+    ],
+    "id": "agent-006",
+    "role": "Equipment Records & Asset Historian",
+    "industrial_role": "Equipment Records & Asset Historian",
+    "domain": "Engineering",
+    "system_prompt": "You are Equipment Records & Asset Historian (agent-006), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "get-asset-history",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "get_asset_history",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 7,
+    "agent_id": "agent-007",
+    "name": "Technical Translation & Standards Agent",
+    "slug": "translation-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8107",
+    "health_url": "http://127.0.0.1:8107/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8107,
+    "educational_name": "Multilingual Student Translation & Accessibility Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_notification",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "student-service"
+    ],
+    "id": "agent-007",
+    "role": "Technical Translation & Standards Agent",
+    "industrial_role": "Technical Translation & Standards Agent",
+    "domain": "Technical Communication",
+    "system_prompt": "You are Technical Translation & Standards Agent (agent-007), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-communication",
+      "read-file",
+      "search-knowledge",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_file",
+      "search_knowledge"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 8,
+    "agent_id": "agent-008",
+    "name": "Hazard Mitigation & Brainstorming Agent",
+    "slug": "idea-generation-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8108",
+    "health_url": "http://127.0.0.1:8108/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8108,
+    "educational_name": "Campus Announcement & Student Engagement Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_notification",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "student-service"
+    ],
+    "id": "agent-008",
+    "role": "Hazard Mitigation & Brainstorming Agent",
+    "industrial_role": "Hazard Mitigation & Brainstorming Agent",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Hazard Mitigation & Brainstorming Agent (agent-008), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "search-knowledge",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 9,
+    "agent_id": "agent-009",
+    "name": "Incident Investigation Narrative Agent",
+    "slug": "storytelling-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8109",
+    "health_url": "http://127.0.0.1:8109/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8109,
+    "educational_name": "Campus Announcement & Student Engagement Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_notification",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "student-service"
+    ],
+    "id": "agent-009",
+    "role": "Incident Investigation Narrative Agent",
+    "industrial_role": "Incident Investigation Narrative Agent",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Incident Investigation Narrative Agent (agent-009), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 10,
+    "agent_id": "agent-010",
+    "name": "Turnaround & Maintenance Goal Planner",
+    "slug": "goal-planning-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8110",
+    "health_url": "http://127.0.0.1:8110/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8110,
+    "educational_name": "Academic Performance & Course Records Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_marks",
+      "get_grades",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "graduation-clearance"
+    ],
+    "id": "agent-010",
+    "role": "Turnaround & Maintenance Goal Planner",
+    "industrial_role": "Turnaround & Maintenance Goal Planner",
+    "domain": "Engineering",
+    "system_prompt": "You are Turnaround & Maintenance Goal Planner (agent-010), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 11,
+    "agent_id": "agent-011",
+    "name": "Field Log & Shift Handover Agent",
+    "slug": "note-taking-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8111",
+    "health_url": "http://127.0.0.1:8111/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8111,
+    "educational_name": "Academic Performance & Course Records Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_marks",
+      "get_grades",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "graduation-clearance"
+    ],
+    "id": "agent-011",
+    "role": "Field Log & Shift Handover Agent",
+    "industrial_role": "Field Log & Shift Handover Agent",
+    "domain": "Inspection & Maintenance",
+    "system_prompt": "You are Field Log & Shift Handover Agent (agent-011), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "inspection-maintenance",
+      "read-file",
+      "write-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_file",
+      "write_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 12,
+    "agent_id": "agent-012",
+    "name": "Work Order Task Automation Agent",
+    "slug": "task-management-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8112",
+    "health_url": "http://127.0.0.1:8112/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8112,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-012",
+    "role": "Work Order Task Automation Agent",
+    "industrial_role": "Work Order Task Automation Agent",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Work Order Task Automation Agent (agent-012), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "get-work-orders",
+      "update-work-order",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "get_work_orders",
+      "update_work_order"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 13,
+    "agent_id": "agent-013",
+    "name": "Contractor Compliance & Qualification Agent",
+    "slug": "resume-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8113",
+    "health_url": "http://127.0.0.1:8113/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8113,
+    "educational_name": "Student Support & Inquiries Agent",
+    "educational_domain": "student-services",
+    "domain_name": "Student Services",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_student_profile",
+      "get_student_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "student-service"
+    ],
+    "id": "agent-013",
+    "role": "Contractor Compliance & Qualification Agent",
+    "industrial_role": "Contractor Compliance & Qualification Agent",
+    "domain": "Regulatory Compliance",
+    "system_prompt": "You are Contractor Compliance & Qualification Agent (agent-013), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "regulatory-compliance",
+      "search-knowledge",
+      "verify-document",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "verify_document"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 14,
+    "agent_id": "agent-014",
+    "name": "Maintenance Crew Dispatch & Matching Agent",
+    "slug": "job-matching-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8114",
+    "health_url": "http://127.0.0.1:8114/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8114,
+    "educational_name": "Student Support & Inquiries Agent",
+    "educational_domain": "student-services",
+    "domain_name": "Student Services",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_student_profile",
+      "get_student_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "student-service"
+    ],
+    "id": "agent-014",
+    "role": "Maintenance Crew Dispatch & Matching Agent",
+    "industrial_role": "Maintenance Crew Dispatch & Matching Agent",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Maintenance Crew Dispatch & Matching Agent (agent-014), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "get-crew-schedule",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "get_crew_schedule",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 15,
+    "agent_id": "agent-015",
+    "name": "Safety Interview & Debriefing Agent",
+    "slug": "interview-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8115",
+    "health_url": "http://127.0.0.1:8115/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8115,
+    "educational_name": "Applicant Interview & Screening Assessment Agent",
+    "educational_domain": "admission",
+    "domain_name": "Admissions & Enrollment",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_admission_application",
+      "check_admission_eligibility",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification"
+    ],
+    "id": "agent-015",
+    "role": "Safety Interview & Debriefing Agent",
+    "industrial_role": "Safety Interview & Debriefing Agent",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Safety Interview & Debriefing Agent (agent-015), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "read-file",
+      "generate-docx",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_file",
+      "generate_docx"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 16,
+    "agent_id": "agent-016",
+    "name": "Inter-Departmental Memo Dispatcher",
+    "slug": "communication-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8116",
+    "health_url": "http://127.0.0.1:8116/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8116,
+    "educational_name": "Campus Announcement & Student Engagement Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_notification",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "student-service"
+    ],
+    "id": "agent-016",
+    "role": "Inter-Departmental Memo Dispatcher",
+    "industrial_role": "Inter-Departmental Memo Dispatcher",
+    "domain": "Technical Communication",
+    "system_prompt": "You are Inter-Departmental Memo Dispatcher (agent-016), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-communication",
+      "generate-docx",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "generate_docx",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 17,
+    "agent_id": "agent-017",
+    "name": "Plant Risk SWOT Analysis Agent",
+    "slug": "swot-analysis-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8117",
+    "health_url": "http://127.0.0.1:8117/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8117,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-017",
+    "role": "Plant Risk SWOT Analysis Agent",
+    "industrial_role": "Plant Risk SWOT Analysis Agent",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Plant Risk SWOT Analysis Agent (agent-017), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "search-knowledge",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 18,
+    "agent_id": "agent-018",
+    "name": "Technical Career & Competency Advisor",
+    "slug": "career-advisor-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8118",
+    "health_url": "http://127.0.0.1:8118/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8118,
+    "educational_name": "Student Academic & Career Advisory Agent",
+    "educational_domain": "student-services",
+    "domain_name": "Student Services",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_student_profile",
+      "get_grades",
+      "get_courses",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "course-override",
+      "graduation-clearance"
+    ],
+    "id": "agent-018",
+    "role": "Technical Career & Competency Advisor",
+    "industrial_role": "Technical Career & Competency Advisor",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Technical Career & Competency Advisor (agent-018), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 19,
+    "agent_id": "agent-019",
+    "name": "Operational Decision Tree Evaluator",
+    "slug": "decision-making-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8119",
+    "health_url": "http://127.0.0.1:8119/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8119,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-019",
+    "role": "Operational Decision Tree Evaluator",
+    "industrial_role": "Operational Decision Tree Evaluator",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Operational Decision Tree Evaluator (agent-019), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "calculate-step-by-step",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 20,
+    "agent_id": "agent-020",
+    "name": "Engineering Innovation & Design Agent",
+    "slug": "brainstorming-agent",
+    "category": "foundation",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8120",
+    "health_url": "http://127.0.0.1:8120/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8120,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-020",
+    "role": "Engineering Innovation & Design Agent",
+    "industrial_role": "Engineering Innovation & Design Agent",
+    "domain": "Engineering",
+    "system_prompt": "You are Engineering Innovation & Design Agent (agent-020), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "search-knowledge",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 21,
+    "agent_id": "agent-021",
+    "name": "Local Technical Patent & Literature Agent",
+    "slug": "web-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8121",
+    "health_url": "http://127.0.0.1:8121/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8121,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-021",
+    "role": "Local Technical Patent & Literature Agent",
+    "industrial_role": "Local Technical Patent & Literature Agent",
+    "domain": "Technical Research",
+    "system_prompt": "You are Local Technical Patent & Literature Agent (agent-021), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-research",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 22,
+    "agent_id": "agent-022",
+    "name": "Industry News & Standards Monitor",
+    "slug": "news-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8122",
+    "health_url": "http://127.0.0.1:8122/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8122,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-022",
+    "role": "Industry News & Standards Monitor",
+    "industrial_role": "Industry News & Standards Monitor",
+    "domain": "Technical Research",
+    "system_prompt": "You are Industry News & Standards Monitor (agent-022), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-research",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 23,
+    "agent_id": "agent-023",
+    "name": "Petrochemical Research Paper Analyst",
+    "slug": "research-paper-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8123",
+    "health_url": "http://127.0.0.1:8123/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8123,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-023",
+    "role": "Petrochemical Research Paper Analyst",
+    "industrial_role": "Petrochemical Research Paper Analyst",
+    "domain": "Technical Research",
+    "system_prompt": "You are Petrochemical Research Paper Analyst (agent-023), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-research",
+      "extract-pdf",
+      "search-knowledge",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "extract_pdf",
+      "search_knowledge"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 24,
+    "agent_id": "agent-024",
+    "name": "Refinery Engineering Literature Reviewer",
+    "slug": "literature-review-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8124",
+    "health_url": "http://127.0.0.1:8124/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8124,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-024",
+    "role": "Refinery Engineering Literature Reviewer",
+    "industrial_role": "Refinery Engineering Literature Reviewer",
+    "domain": "Technical Research",
+    "system_prompt": "You are Refinery Engineering Literature Reviewer (agent-024), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-research",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 25,
+    "agent_id": "agent-025",
+    "name": "Technical Manuals & Codex Agent",
+    "slug": "book-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8125",
+    "health_url": "http://127.0.0.1:8125/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8125,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-025",
+    "role": "Technical Manuals & Codex Agent",
+    "industrial_role": "Technical Manuals & Codex Agent",
+    "domain": "Technical Research",
+    "system_prompt": "You are Technical Manuals & Codex Agent (agent-025), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-research",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 26,
+    "agent_id": "agent-026",
+    "name": "Vendor Profile & Intelligence Agent",
+    "slug": "company-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8126",
+    "health_url": "http://127.0.0.1:8126/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8126,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-026",
+    "role": "Vendor Profile & Intelligence Agent",
+    "industrial_role": "Vendor Profile & Intelligence Agent",
+    "domain": "Procurement & Supply Chain",
+    "system_prompt": "You are Vendor Profile & Intelligence Agent (agent-026), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "procurement-supply-chain",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 27,
+    "agent_id": "agent-027",
+    "name": "Benchmark & Refinery Competitor Analyst",
+    "slug": "competitor-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8127",
+    "health_url": "http://127.0.0.1:8127/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8127,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-027",
+    "role": "Benchmark & Refinery Competitor Analyst",
+    "industrial_role": "Benchmark & Refinery Competitor Analyst",
+    "domain": "Technical Research",
+    "system_prompt": "You are Benchmark & Refinery Competitor Analyst (agent-027), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-research",
+      "search-knowledge",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 28,
+    "agent_id": "agent-028",
+    "name": "Petrochemical Market Trends Analyst",
+    "slug": "market-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8128",
+    "health_url": "http://127.0.0.1:8128/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8128,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-028",
+    "role": "Petrochemical Market Trends Analyst",
+    "industrial_role": "Petrochemical Market Trends Analyst",
+    "domain": "Procurement & Supply Chain",
+    "system_prompt": "You are Petrochemical Market Trends Analyst (agent-028), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "procurement-supply-chain",
+      "read-excel",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 29,
+    "agent_id": "agent-029",
+    "name": "New Technology & Pilot Evaluator",
+    "slug": "startup-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8129",
+    "health_url": "http://127.0.0.1:8129/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8129,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-029",
+    "role": "New Technology & Pilot Evaluator",
+    "industrial_role": "New Technology & Pilot Evaluator",
+    "domain": "Engineering",
+    "system_prompt": "You are New Technology & Pilot Evaluator (agent-029), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "search-knowledge",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 30,
+    "agent_id": "agent-030",
+    "name": "CAPEX Investment & ROI Analyst",
+    "slug": "investment-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8130",
+    "health_url": "http://127.0.0.1:8130/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8130,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-030",
+    "role": "CAPEX Investment & ROI Analyst",
+    "industrial_role": "CAPEX Investment & ROI Analyst",
+    "domain": "Industrial Finance & Cost",
+    "system_prompt": "You are CAPEX Investment & ROI Analyst (agent-030), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "industrial-finance-cost",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 31,
+    "agent_id": "agent-031",
+    "name": "Refinery Product Specification Agent",
+    "slug": "product-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8131",
+    "health_url": "http://127.0.0.1:8131/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8131,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-031",
+    "role": "Refinery Product Specification Agent",
+    "industrial_role": "Refinery Product Specification Agent",
+    "domain": "Engineering",
+    "system_prompt": "You are Refinery Product Specification Agent (agent-031), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 32,
+    "agent_id": "agent-032",
+    "name": "Logistics & Fleet Dispatch Optimizer",
+    "slug": "travel-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8132",
+    "health_url": "http://127.0.0.1:8132/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8132,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-032",
+    "role": "Logistics & Fleet Dispatch Optimizer",
+    "industrial_role": "Logistics & Fleet Dispatch Optimizer",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Logistics & Fleet Dispatch Optimizer (agent-032), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 33,
+    "agent_id": "agent-033",
+    "name": "Site Facility & Mess Management Agent",
+    "slug": "restaurant-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8133",
+    "health_url": "http://127.0.0.1:8133/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8133,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-033",
+    "role": "Site Facility & Mess Management Agent",
+    "industrial_role": "Site Facility & Mess Management Agent",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Site Facility & Mess Management Agent (agent-033), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "read-file",
+      "write-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_file",
+      "write_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 34,
+    "agent_id": "agent-034",
+    "name": "Technical Curriculum & Training Agent",
+    "slug": "course-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8134",
+    "health_url": "http://127.0.0.1:8134/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8134,
+    "educational_name": "Course Catalog & Prerequisite Validation Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_courses",
+      "get_prerequisites",
+      "check_academic_eligibility",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "course-override",
+      "graduation-clearance"
+    ],
+    "id": "agent-034",
+    "role": "Technical Curriculum & Training Agent",
+    "industrial_role": "Technical Curriculum & Training Agent",
+    "domain": "Technical Communication",
+    "system_prompt": "You are Technical Curriculum & Training Agent (agent-034), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-communication",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 35,
+    "agent_id": "agent-035",
+    "name": "Engineering Campus & Talent Scout",
+    "slug": "college-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8135",
+    "health_url": "http://127.0.0.1:8135/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8135,
+    "educational_name": "Course Catalog & Prerequisite Validation Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_courses",
+      "get_prerequisites",
+      "check_academic_eligibility",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "course-override",
+      "graduation-clearance"
+    ],
+    "id": "agent-035",
+    "role": "Engineering Campus & Talent Scout",
+    "industrial_role": "Engineering Campus & Talent Scout",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Engineering Campus & Talent Scout (agent-035), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "read-file",
+      "search-knowledge",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_file",
+      "search_knowledge"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 36,
+    "agent_id": "agent-036",
+    "name": "Internal Code Repository & Version Agent",
+    "slug": "github-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8136",
+    "health_url": "http://127.0.0.1:8136/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8136,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-036",
+    "role": "Internal Code Repository & Version Agent",
+    "industrial_role": "Internal Code Repository & Version Agent",
+    "domain": "Software & Automation Coding",
+    "system_prompt": "You are Internal Code Repository & Version Agent (agent-036), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "software-automation-coding",
+      "search-files",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_files",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 37,
+    "agent_id": "agent-037",
+    "name": "Confidential Archive & Dossier Researcher",
+    "slug": "document-research-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8137",
+    "health_url": "http://127.0.0.1:8137/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8137,
+    "educational_name": "Institutional Document Research & Policy Lookup Agent",
+    "educational_domain": "document-intelligence",
+    "domain_name": "Document Intelligence",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_document",
+      "classify_document",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "graduation-clearance"
+    ],
+    "id": "agent-037",
+    "role": "Confidential Archive & Dossier Researcher",
+    "industrial_role": "Confidential Archive & Dossier Researcher",
+    "domain": "Document Intelligence",
+    "system_prompt": "You are Confidential Archive & Dossier Researcher (agent-037), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "document-intelligence",
+      "extract-pdf",
+      "ocr-document",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "extract_pdf",
+      "ocr_document"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text",
+        "vision"
+      ]
+    }
+  },
+  {
+    "day": 38,
+    "agent_id": "agent-038",
+    "name": "Technical Fact-Checking & Verification Agent",
+    "slug": "fact-checking-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8138",
+    "health_url": "http://127.0.0.1:8138/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8138,
+    "educational_name": "Institutional Data Verification & Fact-Checking Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_student_profile",
+      "get_marks",
+      "verify_document",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility"
+    ],
+    "id": "agent-038",
+    "role": "Technical Fact-Checking & Verification Agent",
+    "industrial_role": "Technical Fact-Checking & Verification Agent",
+    "domain": "Knowledge & SOP Management",
+    "system_prompt": "You are Technical Fact-Checking & Verification Agent (agent-038), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "knowledge-sop-management",
+      "search-knowledge",
+      "verify-document",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "verify_document"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 39,
+    "agent_id": "agent-039",
+    "name": "Source Citation & Provenance Verifier",
+    "slug": "source-verification-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8139",
+    "health_url": "http://127.0.0.1:8139/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8139,
+    "educational_name": "Institutional Data Verification & Fact-Checking Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_student_profile",
+      "get_marks",
+      "verify_document",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility"
+    ],
+    "id": "agent-039",
+    "role": "Source Citation & Provenance Verifier",
+    "industrial_role": "Source Citation & Provenance Verifier",
+    "domain": "Knowledge & SOP Management",
+    "system_prompt": "You are Source Citation & Provenance Verifier (agent-039), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "knowledge-sop-management",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 40,
+    "agent_id": "agent-040",
+    "name": "SOP Retrieval & Search Agent",
+    "slug": "research-assistant-agent",
+    "category": "research",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8140",
+    "health_url": "http://127.0.0.1:8140/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8140,
+    "educational_name": "Student Verification & Profile Intake Agent",
+    "educational_domain": "student-services",
+    "domain_name": "Student Services",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_student_profile",
+      "get_student_status",
+      "verify_student_identity",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility",
+      "attendance-intervention",
+      "course-override",
+      "graduation-clearance"
+    ],
+    "id": "agent-040",
+    "role": "SOP Retrieval & Search Agent",
+    "industrial_role": "SOP Retrieval & Search Agent",
+    "domain": "Knowledge & SOP Management",
+    "system_prompt": "You are SOP Retrieval & Search Agent (agent-040), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "knowledge-sop-management",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 41,
+    "agent_id": "agent-041",
+    "name": "Plant Dispatch Communication Agent",
+    "slug": "email-management-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8141",
+    "health_url": "http://127.0.0.1:8141/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8141,
+    "educational_name": "Official Institutional Notice & Email Communication Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_email",
+      "send_notification",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility",
+      "attendance-intervention",
+      "course-override",
+      "graduation-clearance"
+    ],
+    "id": "agent-041",
+    "role": "Plant Dispatch Communication Agent",
+    "industrial_role": "Plant Dispatch Communication Agent",
+    "domain": "Technical Communication",
+    "system_prompt": "You are Plant Dispatch Communication Agent (agent-041), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "technical-communication",
+      "generate-docx",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "generate_docx",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 42,
+    "agent_id": "agent-042",
+    "name": "Shutdown & Maintenance Calendar Agent",
+    "slug": "calendar-management-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8142",
+    "health_url": "http://127.0.0.1:8142/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8142,
+    "educational_name": "Academic Scheduling & Committee Meeting Assistant Agent",
+    "educational_domain": "faculty-hr",
+    "domain_name": "Faculty & Staff HR",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_faculty_profile",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "course-override"
+    ],
+    "id": "agent-042",
+    "role": "Shutdown & Maintenance Calendar Agent",
+    "industrial_role": "Shutdown & Maintenance Calendar Agent",
+    "domain": "Project Management",
+    "system_prompt": "You are Shutdown & Maintenance Calendar Agent (agent-042), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "project-management",
+      "get-schedule",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "get_schedule",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 43,
+    "agent_id": "agent-043",
+    "name": "Automation Scripting & Trigger Agent",
+    "slug": "task-automation-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8143",
+    "health_url": "http://127.0.0.1:8143/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8143,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-043",
+    "role": "Automation Scripting & Trigger Agent",
+    "industrial_role": "Automation Scripting & Trigger Agent",
+    "domain": "Software & Automation Coding",
+    "system_prompt": "You are Automation Scripting & Trigger Agent (agent-043), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "software-automation-coding",
+      "execute-python-sandbox",
+      "write-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "execute_python_sandbox",
+      "write_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 44,
+    "agent_id": "agent-044",
+    "name": "Secure Archive & File Organizer",
+    "slug": "file-organization-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8144",
+    "health_url": "http://127.0.0.1:8144/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8144,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-044",
+    "role": "Secure Archive & File Organizer",
+    "industrial_role": "Secure Archive & File Organizer",
+    "domain": "Document Intelligence",
+    "system_prompt": "You are Secure Archive & File Organizer (agent-044), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "document-intelligence",
+      "list-files",
+      "search-files",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "list_files",
+      "search_files"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 45,
+    "agent_id": "agent-045",
+    "name": "Scanned PDF & Drawing OCR Specialist",
+    "slug": "pdf-processing-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8145",
+    "health_url": "http://127.0.0.1:8145/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8145,
+    "educational_name": "Institutional PDF & Transcript Processing Agent",
+    "educational_domain": "document-intelligence",
+    "domain_name": "Document Intelligence",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_document",
+      "extract_document_data",
+      "classify_document",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility",
+      "graduation-clearance"
+    ],
+    "id": "agent-045",
+    "role": "Scanned PDF & Drawing OCR Specialist",
+    "industrial_role": "Scanned PDF & Drawing OCR Specialist",
+    "domain": "Document Intelligence",
+    "system_prompt": "You are Scanned PDF & Drawing OCR Specialist (agent-045), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "document-intelligence",
+      "ocr-document",
+      "extract-pdf",
+      "analyze-image",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "ocr_document",
+      "extract_pdf",
+      "analyze_image"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text",
+        "vision"
+      ]
+    }
+  },
+  {
+    "day": 46,
+    "agent_id": "agent-046",
+    "name": "Industrial Invoice & Bill of Quantities Agent",
+    "slug": "invoice-processing-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8146",
+    "health_url": "http://127.0.0.1:8146/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8146,
+    "educational_name": "Institutional Fee Invoice & Receipt Verification Agent",
+    "educational_domain": "finance",
+    "domain_name": "Finance & Financial Aid",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_fee_status",
+      "get_payment_history",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "scholarship-eligibility",
+      "graduation-clearance"
+    ],
+    "id": "agent-046",
+    "role": "Industrial Invoice & Bill of Quantities Agent",
+    "industrial_role": "Industrial Invoice & Bill of Quantities Agent",
+    "domain": "Industrial Finance & Cost",
+    "system_prompt": "You are Industrial Invoice & Bill of Quantities Agent (agent-046), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "industrial-finance-cost",
+      "ocr-document",
+      "read-excel",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "ocr_document",
+      "read_excel",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text",
+        "vision"
+      ]
+    }
+  },
+  {
+    "day": 47,
+    "agent_id": "agent-047",
+    "name": "Industrial Spreadsheet & Telemetry Analyst",
+    "slug": "spreadsheet-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8147",
+    "health_url": "http://127.0.0.1:8147/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8147,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-047",
+    "role": "Industrial Spreadsheet & Telemetry Analyst",
+    "industrial_role": "Industrial Spreadsheet & Telemetry Analyst",
+    "domain": "Data Analytics & Telemetry",
+    "system_prompt": "You are Industrial Spreadsheet & Telemetry Analyst (agent-047), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "data-analytics-telemetry",
+      "read-excel",
+      "write-excel",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "write_excel",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 48,
+    "agent_id": "agent-048",
+    "name": "Process Sensor & SCADA Data Analyst",
+    "slug": "data-analysis-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8148",
+    "health_url": "http://127.0.0.1:8148/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8148,
+    "educational_name": "Institutional Academic & Attendance Analytics Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_marks",
+      "get_grades",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "graduation-clearance"
+    ],
+    "id": "agent-048",
+    "role": "Process Sensor & SCADA Data Analyst",
+    "industrial_role": "Process Sensor & SCADA Data Analyst",
+    "domain": "Data Analytics & Telemetry",
+    "system_prompt": "You are Process Sensor & SCADA Data Analyst (agent-048), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "data-analytics-telemetry",
+      "read-excel",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 49,
+    "agent_id": "agent-049",
+    "name": "Technical Report & Deliverable Generator",
+    "slug": "report-generation-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8149",
+    "health_url": "http://127.0.0.1:8149/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8149,
+    "educational_name": "Institutional Performance & Accreditation Reporting Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_marks",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "graduation-clearance",
+      "attendance-intervention"
+    ],
+    "id": "agent-049",
+    "role": "Technical Report & Deliverable Generator",
+    "industrial_role": "Technical Report & Deliverable Generator",
+    "domain": "Document Intelligence",
+    "system_prompt": "You are Technical Report & Deliverable Generator (agent-049), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "document-intelligence",
+      "generate-docx",
+      "generate-pdf",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "generate_docx",
+      "generate_pdf"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 50,
+    "agent_id": "agent-050",
+    "name": "Plant KPI & Dashboard Visualizer",
+    "slug": "presentation-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8150",
+    "health_url": "http://127.0.0.1:8150/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8150,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-050",
+    "role": "Plant KPI & Dashboard Visualizer",
+    "industrial_role": "Plant KPI & Dashboard Visualizer",
+    "domain": "Data Analytics & Telemetry",
+    "system_prompt": "You are Plant KPI & Dashboard Visualizer (agent-050), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "data-analytics-telemetry",
+      "read-excel",
+      "generate-pptx",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "generate_pptx"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 51,
+    "agent_id": "agent-051",
+    "name": "Predictive Analytics & Maintenance Forecaster",
+    "slug": "image-analysis-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8151",
+    "health_url": "http://127.0.0.1:8151/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8151,
+    "educational_name": "Institutional Certificate & ID Image Verification Agent",
+    "educational_domain": "document-intelligence",
+    "domain_name": "Document Intelligence",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_document",
+      "verify_document",
+      "compare_documents",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility"
+    ],
+    "id": "agent-051",
+    "role": "Predictive Analytics & Maintenance Forecaster",
+    "industrial_role": "Predictive Analytics & Maintenance Forecaster",
+    "domain": "Data Analytics & Telemetry",
+    "system_prompt": "You are Predictive Analytics & Maintenance Forecaster (agent-051), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "data-analytics-telemetry",
+      "read-excel",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 52,
+    "agent_id": "agent-052",
+    "name": "P&ID & Piping Layout Specialist",
+    "slug": "video-analysis-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8152",
+    "health_url": "http://127.0.0.1:8152/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8152,
+    "educational_name": "Document Intelligence & Knowledge Extraction Agent",
+    "educational_domain": "document-intelligence",
+    "domain_name": "Document Intelligence",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_document",
+      "extract_document_data",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility"
+    ],
+    "id": "agent-052",
+    "role": "P&ID & Piping Layout Specialist",
+    "industrial_role": "P&ID & Piping Layout Specialist",
+    "domain": "Engineering",
+    "system_prompt": "You are P&ID & Piping Layout Specialist (agent-052), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "analyze-image",
+      "ocr-document",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "analyze_image",
+      "ocr_document",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text",
+        "vision"
+      ]
+    }
+  },
+  {
+    "day": 53,
+    "agent_id": "agent-053",
+    "name": "Pressure Vessel & Piping Thickness Analyst",
+    "slug": "meeting-assistant-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8153",
+    "health_url": "http://127.0.0.1:8153/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8153,
+    "educational_name": "Academic Scheduling & Committee Meeting Assistant Agent",
+    "educational_domain": "faculty-hr",
+    "domain_name": "Faculty & Staff HR",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_faculty_profile",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "course-override"
+    ],
+    "id": "agent-053",
+    "role": "Pressure Vessel & Piping Thickness Analyst",
+    "industrial_role": "Pressure Vessel & Piping Thickness Analyst",
+    "domain": "Engineering",
+    "system_prompt": "You are Pressure Vessel & Piping Thickness Analyst (agent-053), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "calculate-step-by-step",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 54,
+    "agent_id": "agent-054",
+    "name": "Pump & Compressor Vibration Specialist",
+    "slug": "voice-assistant-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8154",
+    "health_url": "http://127.0.0.1:8154/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8154,
+    "educational_name": "Campus Announcement & Student Engagement Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_notification",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "student-service"
+    ],
+    "id": "agent-054",
+    "role": "Pump & Compressor Vibration Specialist",
+    "industrial_role": "Pump & Compressor Vibration Specialist",
+    "domain": "Engineering",
+    "system_prompt": "You are Pump & Compressor Vibration Specialist (agent-054), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "read-excel",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 55,
+    "agent_id": "agent-055",
+    "name": "Distillation Column & Thermal Analyst",
+    "slug": "code-review-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8155",
+    "health_url": "http://127.0.0.1:8155/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8155,
+    "educational_name": "Academic Performance & Course Records Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_marks",
+      "get_grades",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "graduation-clearance"
+    ],
+    "id": "agent-055",
+    "role": "Distillation Column & Thermal Analyst",
+    "industrial_role": "Distillation Column & Thermal Analyst",
+    "domain": "Engineering",
+    "system_prompt": "You are Distillation Column & Thermal Analyst (agent-055), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "calculate-step-by-step",
+      "search-knowledge",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "search_knowledge"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 56,
+    "agent_id": "agent-056",
+    "name": "Heat Exchanger Fouling & Thermal Agent",
+    "slug": "debugging-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8156",
+    "health_url": "http://127.0.0.1:8156/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8156,
+    "educational_name": "Academic Performance & Course Records Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_marks",
+      "get_grades",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "graduation-clearance"
+    ],
+    "id": "agent-056",
+    "role": "Heat Exchanger Fouling & Thermal Agent",
+    "industrial_role": "Heat Exchanger Fouling & Thermal Agent",
+    "domain": "Engineering",
+    "system_prompt": "You are Heat Exchanger Fouling & Thermal Agent (agent-056), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "calculate-step-by-step",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 57,
+    "agent_id": "agent-057",
+    "name": "Catalyst Performance & Yield Analyst",
+    "slug": "test-generation-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8157",
+    "health_url": "http://127.0.0.1:8157/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8157,
+    "educational_name": "Academic Performance & Course Records Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_marks",
+      "get_grades",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "graduation-clearance"
+    ],
+    "id": "agent-057",
+    "role": "Catalyst Performance & Yield Analyst",
+    "industrial_role": "Catalyst Performance & Yield Analyst",
+    "domain": "Engineering",
+    "system_prompt": "You are Catalyst Performance & Yield Analyst (agent-057), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "engineering",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 58,
+    "agent_id": "agent-058",
+    "name": "NDT & Ultrasonic Thickness Inspection Agent",
+    "slug": "documentation-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8158",
+    "health_url": "http://127.0.0.1:8158/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8158,
+    "educational_name": "Campus Announcement & Student Engagement Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_notification",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "student-service"
+    ],
+    "id": "agent-058",
+    "role": "NDT & Ultrasonic Thickness Inspection Agent",
+    "industrial_role": "NDT & Ultrasonic Thickness Inspection Agent",
+    "domain": "Inspection & Maintenance",
+    "system_prompt": "You are NDT & Ultrasonic Thickness Inspection Agent (agent-058), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "inspection-maintenance",
+      "ocr-document",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "ocr_document",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text",
+        "vision"
+      ]
+    }
+  },
+  {
+    "day": 59,
+    "agent_id": "agent-059",
+    "name": "Corrosion Under Insulation (CUI) Specialist",
+    "slug": "workflow-automation-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8159",
+    "health_url": "http://127.0.0.1:8159/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8159,
+    "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-059",
+    "role": "Corrosion Under Insulation (CUI) Specialist",
+    "industrial_role": "Corrosion Under Insulation (CUI) Specialist",
+    "domain": "Inspection & Maintenance",
+    "system_prompt": "You are Corrosion Under Insulation (CUI) Specialist (agent-059), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "inspection-maintenance",
+      "analyze-image",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "analyze_image",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text",
+        "vision"
+      ]
+    }
+  },
+  {
+    "day": 60,
+    "agent_id": "agent-060",
+    "name": "Flange Leak & Gasket Integrity Analyst",
+    "slug": "personal-assistant-agent",
+    "category": "productivity",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8160",
+    "health_url": "http://127.0.0.1:8160/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8160,
+    "educational_name": "Student Verification & Profile Intake Agent",
+    "educational_domain": "student-services",
+    "domain_name": "Student Services",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_student_profile",
+      "get_student_status",
+      "verify_student_identity",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility",
+      "attendance-intervention",
+      "course-override",
+      "graduation-clearance"
+    ],
+    "id": "agent-060",
+    "role": "Flange Leak & Gasket Integrity Analyst",
+    "industrial_role": "Flange Leak & Gasket Integrity Analyst",
+    "domain": "Inspection & Maintenance",
+    "system_prompt": "You are Flange Leak & Gasket Integrity Analyst (agent-060), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "inspection-maintenance",
+      "analyze-image",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "analyze_image",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text",
+        "vision"
+      ]
+    }
+  },
+  {
+    "day": 61,
+    "agent_id": "agent-061",
+    "name": "Storage Tank & Containment Dyke Inspector",
+    "slug": "code-generation-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8161",
+    "health_url": "http://127.0.0.1:8161/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8161,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-061",
+    "role": "Storage Tank & Containment Dyke Inspector",
+    "industrial_role": "Storage Tank & Containment Dyke Inspector",
+    "domain": "Inspection & Maintenance",
+    "system_prompt": "You are Storage Tank & Containment Dyke Inspector (agent-061), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "inspection-maintenance",
+      "ocr-document",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "ocr_document",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text",
+        "vision"
+      ]
+    }
+  },
+  {
+    "day": 62,
+    "agent_id": "agent-062",
+    "name": "Relief Valve (PSV) Testing & Calibration Agent",
+    "slug": "software-architecture-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8162",
+    "health_url": "http://127.0.0.1:8162/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8162,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-062",
+    "role": "Relief Valve (PSV) Testing & Calibration Agent",
+    "industrial_role": "Relief Valve (PSV) Testing & Calibration Agent",
+    "domain": "Inspection & Maintenance",
+    "system_prompt": "You are Relief Valve (PSV) Testing & Calibration Agent (agent-062), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "inspection-maintenance",
+      "verify-document",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "verify_document",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 63,
+    "agent_id": "agent-063",
+    "name": "Flare Stack & Emission Monitor",
+    "slug": "codebase-analysis-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8163",
+    "health_url": "http://127.0.0.1:8163/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8163,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-063",
+    "role": "Flare Stack & Emission Monitor",
+    "industrial_role": "Flare Stack & Emission Monitor",
+    "domain": "Inspection & Maintenance",
+    "system_prompt": "You are Flare Stack & Emission Monitor (agent-063), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "inspection-maintenance",
+      "read-excel",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 64,
+    "agent_id": "agent-064",
+    "name": "Process Hazard Analysis (HAZOP) Specialist",
+    "slug": "bug-hunting-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8164",
+    "health_url": "http://127.0.0.1:8164/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8164,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-064",
+    "role": "Process Hazard Analysis (HAZOP) Specialist",
+    "industrial_role": "Process Hazard Analysis (HAZOP) Specialist",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Process Hazard Analysis (HAZOP) Specialist (agent-064), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "search-knowledge",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 65,
+    "agent_id": "agent-065",
+    "name": "Material Safety Data Sheet (MSDS) Agent",
+    "slug": "performance-optimization-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8165",
+    "health_url": "http://127.0.0.1:8165/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8165,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-065",
+    "role": "Material Safety Data Sheet (MSDS) Agent",
+    "industrial_role": "Material Safety Data Sheet (MSDS) Agent",
+    "domain": "Document Intelligence",
+    "system_prompt": "You are Material Safety Data Sheet (MSDS) Agent (agent-065), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "document-intelligence",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 66,
+    "agent_id": "agent-066",
+    "name": "Permit-to-Work (PTW) Verification Agent",
+    "slug": "security-audit-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8166",
+    "health_url": "http://127.0.0.1:8166/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8166,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-066",
+    "role": "Permit-to-Work (PTW) Verification Agent",
+    "industrial_role": "Permit-to-Work (PTW) Verification Agent",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Permit-to-Work (PTW) Verification Agent (agent-066), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "verify-document",
+      "search-knowledge",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "verify_document",
+      "search_knowledge"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 67,
+    "agent_id": "agent-067",
+    "name": "Lockout / Tagout (LOTO) Compliance Inspector",
+    "slug": "test-engineer-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8167",
+    "health_url": "http://127.0.0.1:8167/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8167,
+    "educational_name": "Academic Performance & Course Records Agent",
+    "educational_domain": "academic",
+    "domain_name": "Academics & Examination",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_marks",
+      "get_grades",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "graduation-clearance"
+    ],
+    "id": "agent-067",
+    "role": "Lockout / Tagout (LOTO) Compliance Inspector",
+    "industrial_role": "Lockout / Tagout (LOTO) Compliance Inspector",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Lockout / Tagout (LOTO) Compliance Inspector (agent-067), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "search-knowledge",
+      "verify-document",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "verify_document"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 68,
+    "agent_id": "agent-068",
+    "name": "Confined Space Entry Safety Evaluator",
+    "slug": "dependency-analysis-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8168",
+    "health_url": "http://127.0.0.1:8168/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8168,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-068",
+    "role": "Confined Space Entry Safety Evaluator",
+    "industrial_role": "Confined Space Entry Safety Evaluator",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Confined Space Entry Safety Evaluator (agent-068), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "search-knowledge",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 69,
+    "agent_id": "agent-069",
+    "name": "Fire Protection & Deluge System Inspector",
+    "slug": "api-documentation-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8169",
+    "health_url": "http://127.0.0.1:8169/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8169,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-069",
+    "role": "Fire Protection & Deluge System Inspector",
+    "industrial_role": "Fire Protection & Deluge System Inspector",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Fire Protection & Deluge System Inspector (agent-069), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 70,
+    "agent_id": "agent-070",
+    "name": "Gas Detection & Toxic Vapor Monitor",
+    "slug": "code-refactoring-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8170",
+    "health_url": "http://127.0.0.1:8170/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8170,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-070",
+    "role": "Gas Detection & Toxic Vapor Monitor",
+    "industrial_role": "Gas Detection & Toxic Vapor Monitor",
+    "domain": "Plant Safety & Hazards",
+    "system_prompt": "You are Gas Detection & Toxic Vapor Monitor (agent-070), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "plant-safety-hazards",
+      "read-excel",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 71,
+    "agent_id": "agent-071",
+    "name": "Environmental Compliance & Effluent Agent",
+    "slug": "database-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8171",
+    "health_url": "http://127.0.0.1:8171/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8171,
+    "educational_name": "Institutional Data Gateway & Persistence Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "get_student_profile",
+      "get_courses",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility",
+      "course-override",
+      "graduation-clearance"
+    ],
+    "id": "agent-071",
+    "role": "Environmental Compliance & Effluent Agent",
+    "industrial_role": "Environmental Compliance & Effluent Agent",
+    "domain": "Regulatory Compliance",
+    "system_prompt": "You are Environmental Compliance & Effluent Agent (agent-071), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "regulatory-compliance",
+      "read-excel",
+      "search-knowledge",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "search_knowledge"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 72,
+    "agent_id": "agent-072",
+    "name": "Pollution Control Board (CPCB/SPCB) Auditor",
+    "slug": "devops-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8172",
+    "health_url": "http://127.0.0.1:8172/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8172,
+    "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-072",
+    "role": "Pollution Control Board (CPCB/SPCB) Auditor",
+    "industrial_role": "Pollution Control Board (CPCB/SPCB) Auditor",
+    "domain": "Regulatory Compliance",
+    "system_prompt": "You are Pollution Control Board (CPCB/SPCB) Auditor (agent-072), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "regulatory-compliance",
+      "search-knowledge",
+      "verify-document",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "verify_document"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 73,
+    "agent_id": "agent-073",
+    "name": "PESO & Statutory Tank License Agent",
+    "slug": "docker-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8173",
+    "health_url": "http://127.0.0.1:8173/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8173,
+    "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-073",
+    "role": "PESO & Statutory Tank License Agent",
+    "industrial_role": "PESO & Statutory Tank License Agent",
+    "domain": "Regulatory Compliance",
+    "system_prompt": "You are PESO & Statutory Tank License Agent (agent-073), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "regulatory-compliance",
+      "verify-document",
+      "search-knowledge",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "verify_document",
+      "search_knowledge"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 74,
+    "agent_id": "agent-074",
+    "name": "OISD Standard Audit & Compliance Agent",
+    "slug": "ci-cd-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8174",
+    "health_url": "http://127.0.0.1:8174/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8174,
+    "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-074",
+    "role": "OISD Standard Audit & Compliance Agent",
+    "industrial_role": "OISD Standard Audit & Compliance Agent",
+    "domain": "Regulatory Compliance",
+    "system_prompt": "You are OISD Standard Audit & Compliance Agent (agent-074), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "regulatory-compliance",
+      "search-knowledge",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 75,
+    "agent_id": "agent-075",
+    "name": "ISO 14001 / ISO 45001 Compliance Specialist",
+    "slug": "full-stack-developer-agent",
+    "category": "developer",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8175",
+    "health_url": "http://127.0.0.1:8175/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8175,
+    "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-075",
+    "role": "ISO 14001 / ISO 45001 Compliance Specialist",
+    "industrial_role": "ISO 14001 / ISO 45001 Compliance Specialist",
+    "domain": "Regulatory Compliance",
+    "system_prompt": "You are ISO 14001 / ISO 45001 Compliance Specialist (agent-075), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "regulatory-compliance",
+      "search-knowledge",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 76,
+    "agent_id": "agent-076",
+    "name": "Internal Audit & Gap Finding Agent",
+    "slug": "sales-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8176",
+    "health_url": "http://127.0.0.1:8176/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8176,
+    "educational_name": "Admission Application Intake & Merit Evaluation Agent",
+    "educational_domain": "admission",
+    "domain_name": "Admissions & Enrollment",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_admission_application",
+      "calculate_merit",
+      "check_admission_eligibility",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification"
+    ],
+    "id": "agent-076",
+    "role": "Internal Audit & Gap Finding Agent",
+    "industrial_role": "Internal Audit & Gap Finding Agent",
+    "domain": "Regulatory Compliance",
+    "system_prompt": "You are Internal Audit & Gap Finding Agent (agent-076), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "regulatory-compliance",
+      "search-knowledge",
+      "generate-docx",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "generate_docx"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 77,
+    "agent_id": "agent-077",
+    "name": "Crude Unit Throughput & Blending Optimizer",
+    "slug": "lead-generation-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8177",
+    "health_url": "http://127.0.0.1:8177/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8177,
+    "educational_name": "Admission Application Intake & Merit Evaluation Agent",
+    "educational_domain": "admission",
+    "domain_name": "Admissions & Enrollment",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_admission_application",
+      "calculate_merit",
+      "check_admission_eligibility",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification"
+    ],
+    "id": "agent-077",
+    "role": "Crude Unit Throughput & Blending Optimizer",
+    "industrial_role": "Crude Unit Throughput & Blending Optimizer",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Crude Unit Throughput & Blending Optimizer (agent-077), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 78,
+    "agent_id": "agent-078",
+    "name": "Steam & Power Utility Balance Agent",
+    "slug": "lead-qualification-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8178",
+    "health_url": "http://127.0.0.1:8178/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8178,
+    "educational_name": "Student Support & Inquiries Agent",
+    "educational_domain": "student-services",
+    "domain_name": "Student Services",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_student_profile",
+      "get_student_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "student-service"
+    ],
+    "id": "agent-078",
+    "role": "Steam & Power Utility Balance Agent",
+    "industrial_role": "Steam & Power Utility Balance Agent",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Steam & Power Utility Balance Agent (agent-078), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 79,
+    "agent_id": "agent-079",
+    "name": "Hydrogen Network & Pressure Balancer",
+    "slug": "customer-support-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8179",
+    "health_url": "http://127.0.0.1:8179/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8179,
+    "educational_name": "Institutional Administrative Operations Agent",
+    "educational_domain": "administration",
+    "domain_name": "Administration & Operations",
+    "classification": "SUPPORT",
+    "allowed_tools": [
+      "get_student_status",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-079",
+    "role": "Hydrogen Network & Pressure Balancer",
+    "industrial_role": "Hydrogen Network & Pressure Balancer",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Hydrogen Network & Pressure Balancer (agent-079), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 80,
+    "agent_id": "agent-080",
+    "name": "Cooling Tower & Water Chemistry Specialist",
+    "slug": "marketing-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8180",
+    "health_url": "http://127.0.0.1:8180/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8180,
+    "educational_name": "Campus Announcement & Student Engagement Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_notification",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "student-service"
+    ],
+    "id": "agent-080",
+    "role": "Cooling Tower & Water Chemistry Specialist",
+    "industrial_role": "Cooling Tower & Water Chemistry Specialist",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Cooling Tower & Water Chemistry Specialist (agent-080), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "calculate-step-by-step",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 81,
+    "agent_id": "agent-081",
+    "name": "Product Dispatch & Tanker Loading Agent",
+    "slug": "social-media-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8181",
+    "health_url": "http://127.0.0.1:8181/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8181,
+    "educational_name": "Campus Announcement & Student Engagement Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_notification",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "student-service"
+    ],
+    "id": "agent-081",
+    "role": "Product Dispatch & Tanker Loading Agent",
+    "industrial_role": "Product Dispatch & Tanker Loading Agent",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Product Dispatch & Tanker Loading Agent (agent-081), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "get-dispatch-queue",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "get_dispatch_queue",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 82,
+    "agent_id": "agent-082",
+    "name": "Pipeline Transfer & Custody Transfer Agent",
+    "slug": "seo-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8182",
+    "health_url": "http://127.0.0.1:8182/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8182,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-082",
+    "role": "Pipeline Transfer & Custody Transfer Agent",
+    "industrial_role": "Pipeline Transfer & Custody Transfer Agent",
+    "domain": "Refinery Operations",
+    "system_prompt": "You are Pipeline Transfer & Custody Transfer Agent (agent-082), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "refinery-operations",
+      "calculate-step-by-step",
+      "verify-document",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "verify_document"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 83,
+    "agent_id": "agent-083",
+    "name": "Strategic Vendor Evaluation & Pre-Qual Agent",
+    "slug": "content-marketing-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8183",
+    "health_url": "http://127.0.0.1:8183/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8183,
+    "educational_name": "Campus Announcement & Student Engagement Agent",
+    "educational_domain": "communication",
+    "domain_name": "Institutional Communication",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "send_notification",
+      "create_reminder",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "student-service"
+    ],
+    "id": "agent-083",
+    "role": "Strategic Vendor Evaluation & Pre-Qual Agent",
+    "industrial_role": "Strategic Vendor Evaluation & Pre-Qual Agent",
+    "domain": "Procurement & Supply Chain",
+    "system_prompt": "You are Strategic Vendor Evaluation & Pre-Qual Agent (agent-083), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "procurement-supply-chain",
+      "search-knowledge",
+      "verify-document",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "search_knowledge",
+      "verify_document"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 84,
+    "agent_id": "agent-084",
+    "name": "RFQ & Tender Document Formulation Agent",
+    "slug": "business-analyst-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8184",
+    "health_url": "http://127.0.0.1:8184/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8184,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-084",
+    "role": "RFQ & Tender Document Formulation Agent",
+    "industrial_role": "RFQ & Tender Document Formulation Agent",
+    "domain": "Procurement & Supply Chain",
+    "system_prompt": "You are RFQ & Tender Document Formulation Agent (agent-084), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "procurement-supply-chain",
+      "generate-docx",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "generate_docx",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 85,
+    "agent_id": "agent-085",
+    "name": "Purchase Order & Technical Bid Comparer",
+    "slug": "financial-analysis-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8185",
+    "health_url": "http://127.0.0.1:8185/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8185,
+    "educational_name": "Scholarship & Financial Aid Eligibility Evaluator Agent",
+    "educational_domain": "finance",
+    "domain_name": "Finance & Financial Aid",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_fee_status",
+      "get_scholarship_rules",
+      "check_financial_eligibility",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "scholarship-eligibility"
+    ],
+    "id": "agent-085",
+    "role": "Purchase Order & Technical Bid Comparer",
+    "industrial_role": "Purchase Order & Technical Bid Comparer",
+    "domain": "Procurement & Supply Chain",
+    "system_prompt": "You are Purchase Order & Technical Bid Comparer (agent-085), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "procurement-supply-chain",
+      "read-excel",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 86,
+    "agent_id": "agent-086",
+    "name": "Critical Spare Parts & Inventory Optimizer",
+    "slug": "accounting-assistant-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8186",
+    "health_url": "http://127.0.0.1:8186/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8186,
+    "educational_name": "Institutional Accounting & Ledger Balance Agent",
+    "educational_domain": "finance",
+    "domain_name": "Finance & Financial Aid",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_fee_status",
+      "get_payment_history",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "scholarship-eligibility",
+      "graduation-clearance"
+    ],
+    "id": "agent-086",
+    "role": "Critical Spare Parts & Inventory Optimizer",
+    "industrial_role": "Critical Spare Parts & Inventory Optimizer",
+    "domain": "Procurement & Supply Chain",
+    "system_prompt": "You are Critical Spare Parts & Inventory Optimizer (agent-086), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "procurement-supply-chain",
+      "read-excel",
+      "search-knowledge",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "search_knowledge"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 87,
+    "agent_id": "agent-087",
+    "name": "Chemical Reagents & Catalyst Procurement Agent",
+    "slug": "e-commerce-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8187",
+    "health_url": "http://127.0.0.1:8187/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8187,
+    "educational_name": "Institutional Accounting & Ledger Balance Agent",
+    "educational_domain": "finance",
+    "domain_name": "Finance & Financial Aid",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_fee_status",
+      "get_payment_history",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "scholarship-eligibility",
+      "graduation-clearance"
+    ],
+    "id": "agent-087",
+    "role": "Chemical Reagents & Catalyst Procurement Agent",
+    "industrial_role": "Chemical Reagents & Catalyst Procurement Agent",
+    "domain": "Procurement & Supply Chain",
+    "system_prompt": "You are Chemical Reagents & Catalyst Procurement Agent (agent-087), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "procurement-supply-chain",
+      "read-excel",
+      "search-knowledge",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "search_knowledge"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 88,
+    "agent_id": "agent-088",
+    "name": "Supply Chain Lead Time & Risk Analyst",
+    "slug": "supply-chain-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8188",
+    "health_url": "http://127.0.0.1:8188/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8188,
+    "educational_name": "Institutional Accounting & Ledger Balance Agent",
+    "educational_domain": "finance",
+    "domain_name": "Finance & Financial Aid",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_fee_status",
+      "get_payment_history",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "scholarship-eligibility",
+      "graduation-clearance"
+    ],
+    "id": "agent-088",
+    "role": "Supply Chain Lead Time & Risk Analyst",
+    "industrial_role": "Supply Chain Lead Time & Risk Analyst",
+    "domain": "Procurement & Supply Chain",
+    "system_prompt": "You are Supply Chain Lead Time & Risk Analyst (agent-088), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "procurement-supply-chain",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 89,
+    "agent_id": "agent-089",
+    "name": "Refinery OPEX & Maintenance Cost Analyst",
+    "slug": "hr-and-recruitment-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8189",
+    "health_url": "http://127.0.0.1:8189/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8189,
+    "educational_name": "Faculty Affairs & Departmental Committee HR Agent",
+    "educational_domain": "faculty-hr",
+    "domain_name": "Faculty & Staff HR",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_faculty_profile",
+      "get_workload",
+      "create_approval",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "course-override",
+      "scholarship-eligibility"
+    ],
+    "id": "agent-089",
+    "role": "Refinery OPEX & Maintenance Cost Analyst",
+    "industrial_role": "Refinery OPEX & Maintenance Cost Analyst",
+    "domain": "Industrial Finance & Cost",
+    "system_prompt": "You are Refinery OPEX & Maintenance Cost Analyst (agent-089), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "industrial-finance-cost",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 90,
+    "agent_id": "agent-090",
+    "name": "Equipment Repair vs Replacement Cost Evaluator",
+    "slug": "project-manager-agent",
+    "category": "business",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8190",
+    "health_url": "http://127.0.0.1:8190/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8190,
+    "educational_name": "Institutional Operations & Faculty Process Agent",
+    "educational_domain": "faculty-hr",
+    "domain_name": "Faculty & Staff HR",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_faculty_profile",
+      "create_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention"
+    ],
+    "id": "agent-090",
+    "role": "Equipment Repair vs Replacement Cost Evaluator",
+    "industrial_role": "Equipment Repair vs Replacement Cost Evaluator",
+    "domain": "Industrial Finance & Cost",
+    "system_prompt": "You are Equipment Repair vs Replacement Cost Evaluator (agent-090), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "industrial-finance-cost",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 91,
+    "agent_id": "agent-091",
+    "name": "Energy Efficiency & Fuel Loss Accountant",
+    "slug": "autonomous-research-agent",
+    "category": "advanced",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8191",
+    "health_url": "http://127.0.0.1:8191/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8191,
+    "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-091",
+    "role": "Energy Efficiency & Fuel Loss Accountant",
+    "industrial_role": "Energy Efficiency & Fuel Loss Accountant",
+    "domain": "Industrial Finance & Cost",
+    "system_prompt": "You are Energy Efficiency & Fuel Loss Accountant (agent-091), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "industrial-finance-cost",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 92,
+    "agent_id": "agent-092",
+    "name": "Depreciation & Asset Valuation Specialist",
+    "slug": "browser-automation-agent",
+    "category": "advanced",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8192",
+    "health_url": "http://127.0.0.1:8192/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8192,
+    "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-092",
+    "role": "Depreciation & Asset Valuation Specialist",
+    "industrial_role": "Depreciation & Asset Valuation Specialist",
+    "domain": "Industrial Finance & Cost",
+    "system_prompt": "You are Depreciation & Asset Valuation Specialist (agent-092), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "industrial-finance-cost",
+      "calculate-step-by-step",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 93,
+    "agent_id": "agent-093",
+    "name": "Tariff, Duty & Petrochemical Tax Evaluator",
+    "slug": "rag-knowledge-agent",
+    "category": "advanced",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8193",
+    "health_url": "http://127.0.0.1:8193/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8193,
+    "educational_name": "Document Intelligence & Knowledge Extraction Agent",
+    "educational_domain": "document-intelligence",
+    "domain_name": "Document Intelligence",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_document",
+      "extract_document_data",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility"
+    ],
+    "id": "agent-093",
+    "role": "Tariff, Duty & Petrochemical Tax Evaluator",
+    "industrial_role": "Tariff, Duty & Petrochemical Tax Evaluator",
+    "domain": "Industrial Finance & Cost",
+    "system_prompt": "You are Tariff, Duty & Petrochemical Tax Evaluator (agent-093), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "industrial-finance-cost",
+      "calculate-step-by-step",
+      "read-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "calculate_step_by_step",
+      "read_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 94,
+    "agent_id": "agent-094",
+    "name": "Annual Maintenance Budget Reconciler",
+    "slug": "multi-agent-debate-agent",
+    "category": "advanced",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8194",
+    "health_url": "http://127.0.0.1:8194/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8194,
+    "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-094",
+    "role": "Annual Maintenance Budget Reconciler",
+    "industrial_role": "Annual Maintenance Budget Reconciler",
+    "domain": "Industrial Finance & Cost",
+    "system_prompt": "You are Annual Maintenance Budget Reconciler (agent-094), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "industrial-finance-cost",
+      "read-excel",
+      "write-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "write_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 95,
+    "agent_id": "agent-095",
+    "name": "Refinery Turnaround Gantt & Schedule Agent",
+    "slug": "business-operations-agent",
+    "category": "advanced",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8195",
+    "health_url": "http://127.0.0.1:8195/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8195,
+    "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-095",
+    "role": "Refinery Turnaround Gantt & Schedule Agent",
+    "industrial_role": "Refinery Turnaround Gantt & Schedule Agent",
+    "domain": "Project Management",
+    "system_prompt": "You are Refinery Turnaround Gantt & Schedule Agent (agent-095), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "project-management",
+      "read-excel",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 96,
+    "agent_id": "agent-096",
+    "name": "Critical Path & Delay Prediction Specialist",
+    "slug": "autonomous-coding-agent",
+    "category": "advanced",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8196",
+    "health_url": "http://127.0.0.1:8196/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8196,
+    "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "administrative-request"
+    ],
+    "id": "agent-096",
+    "role": "Critical Path & Delay Prediction Specialist",
+    "industrial_role": "Critical Path & Delay Prediction Specialist",
+    "domain": "Project Management",
+    "system_prompt": "You are Critical Path & Delay Prediction Specialist (agent-096), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "project-management",
+      "read-excel",
+      "assess-risk",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "assess_risk"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 97,
+    "agent_id": "agent-097",
+    "name": "Contractor Manpower & Progress Tracker",
+    "slug": "ai-research-scientist-agent",
+    "category": "advanced",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8197",
+    "health_url": "http://127.0.0.1:8197/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8197,
+    "educational_name": "Institutional Operations Intelligence & Assessment Agent",
+    "educational_domain": "analytics",
+    "domain_name": "Institutional Analytics & Reporting",
+    "classification": "DIRECT_REUSE",
+    "allowed_tools": [
+      "get_attendance",
+      "get_fee_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "attendance-intervention",
+      "administrative-request"
+    ],
+    "id": "agent-097",
+    "role": "Contractor Manpower & Progress Tracker",
+    "industrial_role": "Contractor Manpower & Progress Tracker",
+    "domain": "Project Management",
+    "system_prompt": "You are Contractor Manpower & Progress Tracker (agent-097), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "project-management",
+      "read-excel",
+      "calculate-step-by-step",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_excel",
+      "calculate_step_by_step"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 98,
+    "agent_id": "agent-098",
+    "name": "EPC Project Milestone & Billing Verifier",
+    "slug": "startup-builder-agent",
+    "category": "advanced",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8198",
+    "health_url": "http://127.0.0.1:8198/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8198,
+    "educational_name": "Admission Program Onboarding Agent",
+    "educational_domain": "admission",
+    "domain_name": "Admissions & Enrollment",
+    "classification": "REPURPOSE",
+    "allowed_tools": [
+      "get_admission_application",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification"
+    ],
+    "id": "agent-098",
+    "role": "EPC Project Milestone & Billing Verifier",
+    "industrial_role": "EPC Project Milestone & Billing Verifier",
+    "domain": "Project Management",
+    "system_prompt": "You are EPC Project Milestone & Billing Verifier (agent-098), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "project-management",
+      "verify-document",
+      "read-excel",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "verify_document",
+      "read_excel"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 99,
+    "agent_id": "agent-099",
+    "name": "Plant Commissioning Punchlist Agent",
+    "slug": "multi-agent-coordinator-agent",
+    "category": "advanced",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8199",
+    "health_url": "http://127.0.0.1:8199/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8199,
+    "educational_name": "Multi-Agent Consensus & Evidence Aggregator Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "record_decision",
+      "record_agent_action",
+      "create_approval"
+    ],
+    "workflow_roles": [
+      "scholarship-eligibility",
+      "graduation-clearance"
+    ],
+    "id": "agent-099",
+    "role": "Plant Commissioning Punchlist Agent",
+    "industrial_role": "Plant Commissioning Punchlist Agent",
+    "domain": "Project Management",
+    "system_prompt": "You are Plant Commissioning Punchlist Agent (agent-099), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "project-management",
+      "read-file",
+      "write-file",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "read_file",
+      "write_file"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 100,
+    "agent_id": "agent-100",
+    "name": "Executive Project Status Report Generator",
+    "slug": "agent-orchestrator-agent",
+    "category": "advanced",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8200",
+    "health_url": "http://127.0.0.1:8200/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "port": 8200,
+    "educational_name": "Sub-Workflow Orchestration & Task Execution Agent",
+    "educational_domain": "workflow-intelligence",
+    "domain_name": "Workflow & Multi-Agent Intelligence",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "create_task",
+      "update_task",
+      "get_workflow_status",
+      "record_agent_action"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility",
+      "attendance-intervention",
+      "course-override",
+      "graduation-clearance"
+    ],
+    "id": "agent-100",
+    "role": "Executive Project Status Report Generator",
+    "industrial_role": "Executive Project Status Report Generator",
+    "domain": "Project Management",
+    "system_prompt": "You are Executive Project Status Report Generator (agent-100), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "capabilities": [
+      "project-management",
+      "generate-pptx",
+      "generate-docx",
+      "sovereign-local"
+    ],
+    "primary_tools": [
+      "generate_pptx",
+      "generate_docx"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  },
+  {
+    "day": 101,
+    "agent_id": "agent-101",
+    "name": "Sovereign Orchestrator (Master Planner & DAG Engine)",
+    "slug": "master-agent",
+    "category": "master",
+    "status": "planned",
+    "github_repo": "",
+    "vercel_project": "",
+    "vercel_url": "",
+    "api_url": "http://127.0.0.1:8201",
+    "health_url": "http://127.0.0.1:8201/api/health",
+    "model": "nemotron-3-nano",
+    "backend": "http://127.0.0.1:11434",
+    "capabilities": [
+      "sovereign-orchestration",
+      "*",
+      "sovereign-local"
+    ],
+    "ui_type": "master",
+    "system_prompt": "You are Sovereign Orchestrator (Master Planner & DAG Engine) (agent-101), an expert on-premise industrial AI agent operating within the Sovereign AI Workbench for Mangalore Refinery and Petrochemicals Limited (MRPL). You operate strictly on-premise without external data exfiltration. Base all findings on verified facts and local technical standards.",
+    "port": 8201,
+    "educational_name": "Educational Master Workflow Orchestrator",
+    "educational_domain": "master-orchestration",
+    "domain_name": "Master Workflow Orchestration",
+    "classification": "ORCHESTRATION",
+    "allowed_tools": [
+      "*"
+    ],
+    "workflow_roles": [
+      "admission-verification",
+      "scholarship-eligibility",
+      "attendance-intervention",
+      "course-override",
+      "graduation-clearance"
+    ],
+    "id": "agent-101",
+    "role": "Sovereign Orchestrator (Master Planner & DAG Engine)",
+    "industrial_role": "Sovereign Orchestrator (Master Planner & DAG Engine)",
+    "domain": "Sovereign Orchestration",
+    "primary_tools": [
+      "*"
+    ],
+    "model_requirements": {
+      "preferred_model": "nemotron-3-nano",
+      "fallback_model": "local-dense-4b",
+      "modalities": [
+        "text"
+      ]
+    }
+  }
+]

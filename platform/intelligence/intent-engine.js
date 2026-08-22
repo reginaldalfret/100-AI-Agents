@@ -4,14 +4,19 @@
  */
 
 export const IntentDomains = Object.freeze({
-  ACADEMIC: "academic",
-  STUDENT_SERVICES: "student-services",
-  FINANCE_SCHOLARSHIP: "finance_scholarship",
   DOCUMENT_INTELLIGENCE: "document_intelligence",
-  ADMISSION: "admission",
-  FACULTY_HR: "faculty_hr",
+  ENGINEERING_INSPECTION: "engineering_inspection",
+  DRAWING_PID: "drawing_pid",
+  PLANT_SAFETY: "plant_safety",
+  REFINERY_OPERATIONS: "refinery_operations",
+  PROCUREMENT_COST: "procurement_cost",
+  CODING_SANDBOX: "coding_sandbox",
+  KNOWLEDGE_RAG: "knowledge_rag",
+  ACADEMIC: "academic",
+  FINANCE_SCHOLARSHIP: "finance_scholarship",
+  STUDENT_SERVICES: "student-services",
   SOCIAL_MEDIA: "social_media",
-  CODING_DEVELOPER: "coding_developer",
+  CODING_TECHNICAL: "coding_technical",
   WRITING_CONTENT: "writing_content",
   MULTI_DOMAIN: "multi_domain",
   UNRELATED: "unrelated"

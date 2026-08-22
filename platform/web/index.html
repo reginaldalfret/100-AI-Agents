@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#07090e">
-  <title>SA-S03 · Educational AI Operations Center</title>
+  <title>Sovereign AI Workbench · Mangalore Refinery & Petrochemicals Limited (MRPL)</title>
   
-  <!-- Inter Font -->
+  <!-- Inter & JetBrains Mono Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   
-  <!-- Enterprise Design System Stylesheet -->
+  <!-- Enterprise Industrial Design System Stylesheet -->
   <link rel="stylesheet" href="ui-polish.css">
 </head>
 
@@ -25,645 +25,614 @@
       <!-- Brand Header -->
       <div class="sidebar-header">
         <div class="brand-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
         </div>
         <div class="brand-info">
           <div class="brand-title">
-            <span>SA-S03</span>
-            <span class="brand-tag">AI OPS</span>
+            <span>SOVEREIGN AI</span>
+            <span class="brand-tag">MRPL</span>
           </div>
-          <span class="brand-subtitle">Educational Operations</span>
+          <span class="brand-subtitle">Air-Gapped Industrial AI</span>
+        </div>
+      </div>
+
+      <!-- Sovereignty Status Chip -->
+      <div class="sovereignty-chip">
+        <div class="sovereignty-indicator"></div>
+        <div class="sovereignty-text">
+          <span class="sovereignty-title">SOVEREIGN MODE</span>
+          <span class="sovereignty-sub">0 External Calls · Local AI</span>
         </div>
       </div>
 
       <!-- Navigation Tree -->
       <nav class="sidebar-nav">
-        <!-- Section: Overview -->
+        <!-- Section: Industrial Workbench -->
         <div>
-          <div class="nav-section-title">Core Operations</div>
+          <div class="nav-section-title">Industrial Workbench</div>
           <ul class="nav-items">
             <li>
               <button class="nav-item-btn active" data-view="dashboard">
-                <span class="nav-icon">📊</span>
-                <span>Operations Overview</span>
+                <span class="nav-icon">🛡️</span>
+                <span>Workbench Home</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view="demo" style="background: rgba(37,99,235,0.15); border: 1px solid rgba(59,130,246,0.3);">
+                <span class="nav-icon">⚡</span>
+                <span style="font-weight: 700; color: #60a5fa;">Run Industrial Demo</span>
+                <span class="nav-badge" style="background:#2563eb; color:#fff;">1-Click</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view="multimodal">
+                <span class="nav-icon">📄</span>
+                <span>Multimodal Documents</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view="knowledge">
+                <span class="nav-icon">📚</span>
+                <span>Refinery Knowledge (RAG)</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section: Intelligence & Workforce -->
+        <div>
+          <div class="nav-section-title">Workforce & Models</div>
+          <ul class="nav-items">
+            <li>
+              <button class="nav-item-btn" data-view="workforce">
+                <span class="nav-icon">👥</span>
+                <span>100 Industrial Agents</span>
+                <span class="nav-badge" id="navAgentCountBadge">101</span>
+              </button>
+            </li>
+            <li>
+              <button class="nav-item-btn" data-view="models">
+                <span class="nav-icon">🧠</span>
+                <span>Local Model Router</span>
+                <span class="nav-badge">3 Local</span>
               </button>
             </li>
             <li>
               <button class="nav-item-btn" data-view="workflows">
-                <span class="nav-icon">⚡</span>
-                <span>Workflow Center</span>
-                <span class="nav-badge" id="navWorkflowCountBadge">5</span>
+                <span class="nav-icon">🔄</span>
+                <span>Industrial Workflows</span>
+                <span class="nav-badge">4 Active</span>
               </button>
             </li>
             <li>
-              <button class="nav-item-btn" data-view="workforce">
-                <span class="nav-icon">🎓</span>
-                <span>100 AI Workforce</span>
-                <span class="nav-badge">101</span>
+              <button class="nav-item-btn" data-view="chat">
+                <span class="nav-icon">💬</span>
+                <span>Sovereign Chat Console</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section: Governance & Sovereignty -->
+        <div>
+          <div class="nav-section-title">Governance & Egress</div>
+          <ul class="nav-items">
+            <li>
+              <button class="nav-item-btn" data-view="deliverables">
+                <span class="nav-icon">📦</span>
+                <span>Deliverables Center</span>
+                <span class="nav-badge">DOCX/XLSX/PPTX</span>
               </button>
             </li>
             <li>
               <button class="nav-item-btn" data-view="approvals">
-                <span class="nav-icon">⚖️</span>
-                <span>Human Approvals</span>
-                <span class="nav-badge alert" id="navApprovalBadge" style="display: none;">0</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Section: Data & Intelligence -->
-        <div>
-          <div class="nav-section-title">Intelligence &amp; Records</div>
-          <ul class="nav-items">
-            <li>
-              <button class="nav-item-btn" data-view="documents">
-                <span class="nav-icon">📄</span>
-                <span>Document Workspace</span>
+                <span class="nav-icon">✍️</span>
+                <span>Human Approvals (HITL)</span>
+                <span class="nav-badge" id="navPendingApprovalBadge" style="background:#f59e0b; color:#000;">1</span>
               </button>
             </li>
             <li>
-              <button class="nav-item-btn" data-view="records">
-                <span class="nav-icon">🏛️</span>
-                <span>Institutional Data</span>
-              </button>
-            </li>
-            <li>
-              <button class="nav-item-btn" data-view="audit">
-                <span class="nav-icon">📜</span>
-                <span>Audit &amp; Evidence Trail</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Section: Fleet & System -->
-        <div>
-          <div class="nav-section-title">Fleet &amp; Observability</div>
-          <ul class="nav-items">
-            <li>
-              <button class="nav-item-btn" data-view="chat">
-                <span class="nav-icon">🤖</span>
-                <span>Fleet Console &amp; Chat</span>
-              </button>
-            </li>
-            <li>
-              <button class="nav-item-btn" data-view="health">
-                <span class="nav-icon">🖥️</span>
-                <span>System Observability</span>
+              <button class="nav-item-btn" data-view="sovereignty">
+                <span class="nav-icon">🔒</span>
+                <span>Sovereignty & Egress Monitor</span>
+                <span class="nav-badge" style="background:#10b981; color:#000;">0 Egress</span>
               </button>
             </li>
           </ul>
         </div>
       </nav>
 
-      <!-- Sidebar Status Footer -->
+      <!-- Sidebar Footer -->
       <div class="sidebar-footer">
-        <div class="footer-status-pill">
-          <span class="status-dot"></span>
-          <span>101/101 Fleet Operational</span>
+        <div class="footer-system-status">
+          <div class="system-status-indicator"></div>
+          <div class="system-status-text">
+            <span class="system-status-title">MRPL On-Premise Air-Gap</span>
+            <span class="system-status-sub" id="sidebarOllamaStatus">Nemotron 3 Nano · RTX 2050 (4GB)</span>
+          </div>
         </div>
-        <div class="footer-meta">Nemotron 3 Nano · RTX 2050</div>
       </div>
     </aside>
 
     <!-- =======================================================
-         MAIN APPLICATION CONTAINER
+         MAIN WORKSPACE AREA
          ======================================================= -->
-    <div class="app-container">
-
-      <!-- Top Bar -->
+    <main class="app-main">
+      <!-- Top Global Bar -->
       <header class="app-topbar">
-        <div class="topbar-left">
-          <button class="mobile-menu-btn" id="btnToggleSidebar">☰</button>
-          <div class="breadcrumb-nav">
-            <span class="breadcrumb-root">SA-S03 Platform</span>
-            <span class="breadcrumb-separator">/</span>
-            <span class="breadcrumb-current" id="topbarBreadcrumbTitle">Operations Overview</span>
+        <div class="topbar-breadcrumbs">
+          <span class="breadcrumb-root">Mangalore Refinery & Petrochemicals Limited (MRPL)</span>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current" id="topbarCurrentViewTitle">Sovereign AI Workbench</span>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="sovereign-badge-live">
+            <span class="pulse-dot"></span>
+            <span>AIR-GAPPED SOVEREIGN ENVIRONMENT</span>
           </div>
-        </div>
-
-        <!-- Global Search -->
-        <div class="topbar-search">
-          <span class="topbar-search-icon">🔍</span>
-          <input type="text" id="globalSearchInput" class="topbar-search-input" placeholder="Search agents, workflows, students, or documents..." />
-        </div>
-
-        <!-- Actions & Status Pill -->
-        <div class="topbar-right">
-          <button class="btn-flagship-top" id="btnTopFlagshipDemo">
-            <span>★</span>
-            <span>Run Flagship Demo</span>
-          </button>
-          <div class="edge-indicator-pill">
-            <span class="status-dot"></span>
-            <span>Cloudflare Edge Active</span>
+          <div class="external-calls-counter">
+            <span>EXTERNAL EGRESS:</span>
+            <strong style="color: #10b981;">0 CALLS</strong>
           </div>
         </div>
       </header>
 
-      <!-- Viewport Area (9 Modular Views) -->
-      <main class="app-viewport" id="appViewport">
+      <!-- Dynamic Content Area -->
+      <div class="app-content-container">
 
-        <!-- =====================================================
-             VIEW 1: OPERATIONS DASHBOARD (OVERVIEW)
-             ===================================================== -->
-        <section class="app-view active" id="view-dashboard">
-          <!-- Hero Operations Banner -->
-          <div class="card-panel" style="background: linear-gradient(135deg, rgba(16, 23, 38, 0.9), rgba(11, 15, 25, 0.95)); border-color: rgba(59, 130, 246, 0.25);">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-              <div style="max-width: 620px;">
-                <div style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 4px; background: rgba(59, 130, 246, 0.15); color: #93c5fd; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">
-                  <span>★</span> Institutional Automation &amp; Governance
-                </div>
-                <h1 style="font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.02em; margin-bottom: 6px;">
-                  Educational AI Operations Center
-                </h1>
-                <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
-                  Coordinating 100 specialized AI agents to automate admissions, scholarships, prerequisite overrides, and degree audits with verifiable evidence and Human-in-the-Loop governance.
-                </p>
-              </div>
-              <div style="display: flex; gap: 10px; align-items: center;">
-                <button class="btn-flagship-top" id="btnDashboardFlagship" style="height: 40px; padding: 0 18px; font-size: 13px;">
-                  <span>⚡</span> Run Flagship Scholarship Demo
+        <!-- ===================================================
+             VIEW 1: WORKBENCH HOME / DASHBOARD
+             =================================================== -->
+        <section class="view-panel active" id="view-dashboard">
+          <!-- Hero Banner -->
+          <div class="dashboard-hero">
+            <div class="hero-left">
+              <div class="hero-tag">SIH PROBLEM STATEMENT · SMART AUTOMATION</div>
+              <h1 class="hero-title">Sovereign AI Workbench</h1>
+              <p class="hero-subtitle">Private Intelligence. Autonomous Work. Zero Data Exfiltration.<br>An on-premise multi-model agentic AI workforce engineered for confidential refinery and petrochemical operations.</p>
+              <div class="hero-actions">
+                <button class="btn btn-primary btn-lg" id="btnLaunchFlagshipDemo">
+                  <span>⚡ Run Flagship Industrial Demo</span>
+                </button>
+                <button class="btn btn-secondary btn-lg" data-switch-view="sovereignty">
+                  <span>🔒 View Egress Telemetry</span>
                 </button>
               </div>
             </div>
-          </div>
-
-          <!-- KPI Cards Grid -->
-          <div class="kpi-grid">
-            <div class="kpi-card">
-              <div class="kpi-icon-box kpi-blue">🎓</div>
-              <div class="kpi-info">
-                <div class="kpi-value" id="kpiTotalAgents">101</div>
-                <div class="kpi-label">Specialized AI Workforce</div>
+            <div class="hero-right">
+              <div class="hero-stat-card">
+                <span class="stat-num">101</span>
+                <span class="stat-lbl">Industrial Agents</span>
               </div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-icon-box kpi-green">⚡</div>
-              <div class="kpi-info">
-                <div class="kpi-value" id="kpiActiveWorkflows">5</div>
-                <div class="kpi-label">Automated Pipelines</div>
+              <div class="hero-stat-card">
+                <span class="stat-num">3</span>
+                <span class="stat-lbl">Local Models</span>
               </div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-icon-box kpi-amber">⚖️</div>
-              <div class="kpi-info">
-                <div class="kpi-value" id="kpiPendingApprovals">0</div>
-                <div class="kpi-label">Human Decisions Awaiting</div>
+              <div class="hero-stat-card" style="border-color: rgba(16,185,129,0.4);">
+                <span class="stat-num" style="color: #10b981;">0</span>
+                <span class="stat-lbl">External Egress</span>
               </div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-icon-box kpi-purple">✓</div>
-              <div class="kpi-info">
-                <div class="kpi-value" id="kpiCompletedPipelines">0</div>
-                <div class="kpi-label">Completed Pipelines</div>
+              <div class="hero-stat-card">
+                <span class="stat-num">100%</span>
+                <span class="stat-lbl">On-Premise</span>
               </div>
             </div>
           </div>
 
-          <!-- Active Operations Table + Live Activity Stream -->
-          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
-            <!-- Active Pipelines Card -->
-            <div class="card-panel">
-              <div class="card-panel-header">
-                <span class="card-panel-title"><span>📋</span> Active Institutional Workflows</span>
-                <button class="segment-chip" onclick="switchMainView('workflows')">View All Pipelines →</button>
+          <!-- 4 Core Pillars Grid -->
+          <div class="pillars-grid">
+            <div class="pillar-card">
+              <div class="pillar-icon">📄</div>
+              <h3>Multimodal Intelligence</h3>
+              <p>OCR on scanned NDT inspection reports, P&ID engineering drawings, and site corrosion defect photographs without cloud APIs.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">🧠</div>
+              <h3>Model Auto-Router</h3>
+              <p>Dynamic local task routing across Nemotron 3 Nano (Reasoning), Local Multimodal (Vision/OCR), and Local Code Specialist.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">📚</div>
+              <h3>Refinery Knowledge RAG</h3>
+              <p>Local vector search and grounded reasoning referencing OISD-STD-129, API-653, and refinery operating manuals with exact page citations.</p>
+            </div>
+            <div class="pillar-card">
+              <div class="pillar-icon">📦</div>
+              <h3>Real Deliverables Engine</h3>
+              <p>Auto-generates official Word Approval Notes (.docx), Inspection Spreadsheets (.xlsx), and Management Decks (.pptx).</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================
+             VIEW 2: FLAGSHIP INDUSTRIAL DEMO
+             =================================================== -->
+        <section class="view-panel" id="view-demo">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Flagship Industrial Inspection Demo</h2>
+              <p class="section-subtitle">Simulate real-time analysis of a scanned static equipment inspection report (Tank TK-101) with multi-agent coordination.</p>
+            </div>
+            <button class="btn btn-primary" id="btnExecuteDemoStep">
+              <span>▶ Run Complete Industrial Pipeline</span>
+            </button>
+          </div>
+
+          <!-- Execution Graph Visualizer -->
+          <div class="dag-pipeline-card">
+            <div class="dag-header">
+              <span>MULTI-AGENT DAG EXECUTION GRAPH</span>
+              <span class="badge badge-success">Sovereign Orchestration</span>
+            </div>
+            <div class="dag-steps-row">
+              <div class="dag-step-node completed">
+                <span class="step-idx">1</span>
+                <span class="step-name">Local OCR Engine</span>
+                <span class="step-role">Scanned PDF Ingestion</span>
               </div>
-              <div id="dashboardActivePipelinesContainer" style="display: flex; flex-direction: column; gap: 10px;">
-                <!-- Populated dynamically -->
+              <div class="dag-arrow">→</div>
+              <div class="dag-step-node completed">
+                <span class="step-idx">2</span>
+                <span class="step-name">NDT Thickness Agent</span>
+                <span class="step-role">Corrosion Rate Math</span>
+              </div>
+              <div class="dag-arrow">→</div>
+              <div class="dag-step-node completed">
+                <span class="step-idx">3</span>
+                <span class="step-name">SOP Retrieval Agent</span>
+                <span class="step-role">API-653 / OISD Search</span>
+              </div>
+              <div class="dag-arrow">→</div>
+              <div class="dag-step-node completed">
+                <span class="step-idx">4</span>
+                <span class="step-name">Deliverables Engine</span>
+                <span class="step-role">DOCX / XLSX / PPTX</span>
+              </div>
+              <div class="dag-arrow">→</div>
+              <div class="dag-step-node pending">
+                <span class="step-idx">5</span>
+                <span class="step-name">Chief Engineer Sign-off</span>
+                <span class="step-role">Human Approval (HITL)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Demo Findings & Deliverables Result -->
+          <div class="demo-results-grid" style="margin-top: 24px;">
+            <div class="findings-card">
+              <h3>Extracted Inspection Findings (Tank TK-101)</h3>
+              <div class="finding-item critical">
+                <strong>CRITICAL DEFECT:</strong> Shell Course 3 measured minimum thickness at <strong>5.90 mm</strong> (Retirement Minimum: <strong>6.80 mm</strong>).
+              </div>
+              <div class="finding-item warning">
+                <strong>VISUAL DEFECT:</strong> Severe CUI detected around lower Nozzle N3 neck.
+              </div>
+              <div class="finding-item info">
+                <strong>CALCULATION:</strong> Corrosion Rate computed at <strong>0.421 mm/year</strong>. Remaining Life: <strong>0 years (Breached)</strong>.
+              </div>
+              <div class="finding-item info">
+                <strong>STATUTORY CITATION:</strong> OISD-STD-129 / API-653 Section 4.3.3 mandates emergency de-inventory and shell flush insert patch.
               </div>
             </div>
 
-            <!-- Recent Activity Stream -->
-            <div class="card-panel">
-              <div class="card-panel-header">
-                <span class="card-panel-title"><span>📡</span> Real-Time AI Event Stream</span>
-                <span class="card-panel-badge" style="color: var(--success);">● Live</span>
+            <div class="deliverables-preview-card">
+              <h3>Generated Industrial Deliverables</h3>
+              <div class="deliverable-file-item">
+                <div class="file-icon docx">DOCX</div>
+                <div class="file-info">
+                  <strong>Approval_Note_TK101.docx</strong>
+                  <span>Official Memorandum for GM Operations Sign-off</span>
+                </div>
+                <button class="btn btn-sm btn-secondary" onclick="alert('Generated on-premise at tmp/sih_deliverables/Approval_Note_TK101.docx')">Download</button>
               </div>
-              <div id="dashboardActivityStream" style="display: flex; flex-direction: column; gap: 12px; font-size: 12px;">
-                <!-- Populated dynamically -->
+              <div class="deliverable-file-item">
+                <div class="file-icon xlsx">XLSX</div>
+                <div class="file-info">
+                  <strong>Inspection_Analysis_TK101.xlsx</strong>
+                  <span>Complete NDT Ultrasonic Thickness Grid Workbook</span>
+                </div>
+                <button class="btn btn-sm btn-secondary" onclick="alert('Generated on-premise at tmp/sih_deliverables/Inspection_Analysis_TK101.xlsx')">Download</button>
+              </div>
+              <div class="deliverable-file-item">
+                <div class="file-icon pptx">PPTX</div>
+                <div class="file-info">
+                  <strong>Management_Briefing_TK101.pptx</strong>
+                  <span>4-Slide Executive Briefing Deck for Committee</span>
+                </div>
+                <button class="btn btn-sm btn-secondary" onclick="alert('Generated on-premise at tmp/sih_deliverables/Management_Briefing_TK101.pptx')">Download</button>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- =====================================================
-             VIEW 2: WORKFLOW AUTOMATION CENTER
-             ===================================================== -->
-        <section class="app-view" id="view-workflows">
-          <div class="view-header">
-            <div class="view-title-group">
-              <h2 class="view-title"><span>⚡</span> Workflow Automation Center</h2>
-              <p class="view-subtitle">Execute multi-agent educational workflows with autonomous document verification, policy calculation, and committee sign-off.</p>
+        <!-- ===================================================
+             VIEW 3: MULTIMODAL DOCUMENTS
+             =================================================== -->
+        <section class="view-panel" id="view-multimodal">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Multimodal Document & Vision Workspace</h2>
+              <p class="section-subtitle">Process scanned inspection dossiers, P&ID engineering schematics, and site defect photos locally.</p>
             </div>
           </div>
 
-          <!-- 5 Workflow Selection Deck Cards -->
-          <div class="workflow-deck-grid" id="workflowDeckGrid">
-            <!-- 1. Admission Verification -->
-            <div class="workflow-card">
-              <div class="workflow-card-top">
-                <div class="wf-card-icon">📝</div>
-                <div>
-                  <div class="wf-card-title">Student Admission &amp; Verification</div>
-                  <div class="wf-card-category">Admissions &amp; Enrollment</div>
-                </div>
-              </div>
-              <div class="wf-card-desc">Evaluates entrance dossiers, verifies high school transcripts with OCR, computes composite merit rank, and allocates seats.</div>
-              <div class="wf-card-meta">
-                <span class="meta-pill">8 Agents</span>
-                <span class="meta-pill">HITL Sign-Off</span>
-              </div>
-              <button class="btn-launch-wf" onclick="quickLaunchWorkflow('admission-verification')">⚡ Launch Pipeline</button>
-            </div>
-
-            <!-- 2. Scholarship & Financial Aid -->
-            <div class="workflow-card">
-              <div class="workflow-card-top">
-                <div class="wf-card-icon">🎓</div>
-                <div>
-                  <div class="wf-card-title">Scholarship &amp; Financial Aid</div>
-                  <div class="wf-card-category">Financial Aid &amp; Bursar</div>
-                </div>
-              </div>
-              <div class="wf-card-desc">Audits income certificates, verifies academic GPA thresholds, calculates award eligibility, and credits tuition fee ledgers.</div>
-              <div class="wf-card-meta">
-                <span class="meta-pill">9 Agents</span>
-                <span class="meta-pill">Dean Sign-Off</span>
-              </div>
-              <button class="btn-launch-wf" onclick="quickLaunchWorkflow('scholarship-eligibility')">⚡ Launch Pipeline</button>
-            </div>
-
-            <!-- 3. Attendance Intervention -->
-            <div class="workflow-card">
-              <div class="workflow-card-top">
-                <div class="wf-card-icon">⚠️</div>
-                <div>
-                  <div class="wf-card-title">Attendance Audit &amp; Warning</div>
-                  <div class="wf-card-category">Academic Advisory</div>
-                </div>
-              </div>
-              <div class="wf-card-desc">Analyzes class attendance logs, identifies at-risk students below 75%, drafts personalized remedial schedules, and alerts advisors.</div>
-              <div class="wf-card-meta">
-                <span class="meta-pill">7 Agents</span>
-                <span class="meta-pill">Advisor Review</span>
-              </div>
-              <button class="btn-launch-wf" onclick="quickLaunchWorkflow('attendance-intervention')">⚡ Launch Pipeline</button>
-            </div>
-
-            <!-- 4. Course Prerequisite Override -->
-            <div class="workflow-card">
-              <div class="workflow-card-top">
-                <div class="wf-card-icon">📚</div>
-                <div>
-                  <div class="wf-card-title">Course Prerequisite Override</div>
-                  <div class="wf-card-category">Department Curriculum</div>
-                </div>
-              </div>
-              <div class="wf-card-desc">Audits completed coursework prerequisites, checks student aptitude, and coordinates Department Chair waiver approvals.</div>
-              <div class="wf-card-meta">
-                <span class="meta-pill">7 Agents</span>
-                <span class="meta-pill">Chair Waiver</span>
-              </div>
-              <button class="btn-launch-wf" onclick="quickLaunchWorkflow('course-override')">⚡ Launch Pipeline</button>
-            </div>
-
-            <!-- 5. Degree Audit & Graduation Clearance -->
-            <div class="workflow-card">
-              <div class="workflow-card-top">
-                <div class="wf-card-icon">📜</div>
-                <div>
-                  <div class="wf-card-title">Degree Audit &amp; Clearance</div>
-                  <div class="wf-card-category">Registrar Office</div>
-                </div>
-              </div>
-              <div class="wf-card-desc">Performs complete curriculum credit audit, validates zero-balance fee clearance, and prepares digital degree conferral.</div>
-              <div class="wf-card-meta">
-                <span class="meta-pill">10 Agents</span>
-                <span class="meta-pill">Registrar Approval</span>
-              </div>
-              <button class="btn-launch-wf" onclick="quickLaunchWorkflow('graduation-clearance')">⚡ Launch Pipeline</button>
-            </div>
-          </div>
-
-          <!-- Split Center: Left Interactive Launcher & Active List + Right Step Visualizer -->
-          <div class="wf-center-layout">
-            <!-- Left Side: Interactive Launcher Form & Instance List -->
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-              <!-- Launcher Card -->
-              <div class="card-panel">
-                <div class="card-panel-header">
-                  <span class="card-panel-title"><span>🚀</span> Pipeline Custom Launcher</span>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                  <div>
-                    <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">Selected Pipeline</label>
-                    <select id="wfCustomSelect" class="topbar-search-input" style="padding-left: 12px; margin-top: 4px;">
-                      <option value="" disabled selected>Select an academic pipeline...</option>
-                    </select>
-                  </div>
-                  <div id="wfDynamicFieldsContainer"></div>
-                  <button id="btnExecuteLaunch" class="btn-flagship-top" style="height: 38px; justify-content: center; width: 100%;">
-                    <span>⚡</span> Initiate Pipeline Execution
-                  </button>
-                </div>
-              </div>
-
-              <!-- Previous / Running Instances -->
-              <div class="card-panel" style="flex: 1;">
-                <div class="card-panel-header">
-                  <span class="card-panel-title"><span>📋</span> Execution History</span>
-                  <span class="card-panel-badge" id="wfInstanceCountBadge">Live Tracker</span>
-                </div>
-                <div id="wfInstancesList" style="display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto;">
-                  <!-- Dynamically populated -->
-                </div>
+          <div class="multimodal-grid">
+            <div class="upload-dropzone-card">
+              <div class="dropzone-inner">
+                <div class="dropzone-icon">📁</div>
+                <h4>Upload Industrial Document / Drawing / Image</h4>
+                <p>Drag & drop scanned PDF, P&ID PNG/JPG, or Site Photograph</p>
+                <input type="file" id="localFileInput" style="display:none;">
+                <button class="btn btn-primary" onclick="document.getElementById('localFileInput').click();">Select Local File</button>
+                <span class="airgap-note">🔒 File remains on-premise. Never sent to cloud.</span>
               </div>
             </div>
 
-            <!-- Right Side: Step Visualizer & Pipeline Inspector -->
-            <div class="card-panel" style="min-height: 520px;">
-              <div class="card-panel-header">
-                <span class="card-panel-title"><span>🔍</span> Multi-Agent Step Visualizer &amp; Evidence Inspector</span>
-                <span class="card-panel-badge" style="color: var(--accent-cyan); border-color: rgba(6, 182, 212, 0.3);">Zero Raw JSON</span>
+            <div class="sample-documents-card">
+              <h4>Sample Industrial Assets in Local Workspace</h4>
+              <div class="sample-doc-item">
+                <span>📄 TK-101_UT_Thickness_Report.pdf (Scanned NDT Report)</span>
+                <button class="btn btn-sm btn-secondary" onclick="runSampleOCR()">Process OCR</button>
               </div>
-              <div id="wfVisualizerContainer" style="flex: 1; overflow-y: auto;">
-                <!-- Dynamically populated step cards -->
+              <div class="sample-doc-item">
+                <span>📐 DWG-MRPL-CDU-201-REV4.png (P&ID Schematic)</span>
+                <button class="btn btn-sm btn-secondary" onclick="runSampleDrawing()">Extract Tags</button>
+              </div>
+              <div class="sample-doc-item">
+                <span>📷 Nozzle_N3_Corrosion_SitePhoto.jpg (Visual CUI)</span>
+                <button class="btn btn-sm btn-secondary" onclick="runSamplePhoto()">Analyze Defect</button>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- =====================================================
-             VIEW 3: 100-AGENT WORKFORCE MATRIX
-             ===================================================== -->
-        <section class="app-view" id="view-workforce">
-          <div class="view-header">
-            <div class="view-title-group">
-              <h2 class="view-title"><span>🎓</span> Educational AI Workforce (100 Agents)</h2>
-              <p class="view-subtitle">Coordinated institutional workforce of 100 specialized AI agents + 1 Master Orchestrator categorized into 10 functional domains.</p>
-            </div>
-            <div style="display: flex; gap: 10px; align-items: center;">
-              <span class="edge-indicator-pill">
-                <span class="status-dot"></span>
-                <span>101/101 Agents Active · Nemotron 3 Nano</span>
-              </span>
+        <!-- ===================================================
+             VIEW 4: REFINERY KNOWLEDGE BASE (RAG)
+             =================================================== -->
+        <section class="view-panel" id="view-knowledge">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Refinery Knowledge Base & Local RAG</h2>
+              <p class="section-subtitle">Query local repository of OISD standards, API specifications, and refinery maintenance manuals with exact page citations.</p>
             </div>
           </div>
 
-          <!-- Domain Segmented Filters -->
-          <div class="segmented-filters" id="workforceSegmentedFilters">
-            <button class="segment-chip active" data-domain="all">All Domains (101)</button>
-            <button class="segment-chip" data-domain="student-services">Student Services</button>
-            <button class="segment-chip" data-domain="admission">Admissions</button>
-            <button class="segment-chip" data-domain="academic">Academics</button>
-            <button class="segment-chip" data-domain="document-intelligence">Documents</button>
-            <button class="segment-chip" data-domain="finance">Finance</button>
-            <button class="segment-chip" data-domain="faculty-hr">Faculty &amp; HR</button>
-            <button class="segment-chip" data-domain="administration">Administration</button>
-            <button class="segment-chip" data-domain="communication">Communication</button>
-            <button class="segment-chip" data-domain="analytics">Analytics</button>
-            <button class="segment-chip" data-domain="workflow-intelligence">Workflow Intelligence</button>
+          <div class="knowledge-search-bar">
+            <input type="text" id="knowledgeSearchInput" class="form-input" placeholder="Search refinery SOPs (e.g. 'Crude tank Shell Course 3 retirement thickness API-653')...">
+            <button class="btn btn-primary" id="btnKnowledgeSearch">Search Local SOPs</button>
           </div>
 
-          <!-- Search Filter -->
-          <div style="max-width: 420px;">
-            <input type="text" id="workforceFilterInput" class="topbar-search-input" placeholder="Search agents by role, tools, domain, or ID..." style="padding-left: 12px;" />
-          </div>
-
-          <!-- Agent Grid -->
-          <div class="agent-grid" id="workforceCardsGrid">
-            <!-- Dynamically populated -->
+          <div class="knowledge-results-container" id="knowledgeResultsArea" style="margin-top: 20px;">
+            <!-- Rendered dynamically -->
           </div>
         </section>
 
-        <!-- =====================================================
-             VIEW 4: HUMAN APPROVALS QUEUE
-             ===================================================== -->
-        <section class="app-view" id="view-approvals">
-          <div class="view-header">
-            <div class="view-title-group">
-              <h2 class="view-title"><span>⚖️</span> Academic Committee &amp; Dean Approvals Queue</h2>
-              <p class="view-subtitle">Review pending institutional workflow decisions requiring sign-off from authorized personnel with evidence dossiers.</p>
+        <!-- ===================================================
+             VIEW 5: 100-AGENT INDUSTRIAL WORKFORCE
+             =================================================== -->
+        <section class="view-panel" id="view-workforce">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">100-Agent Industrial AI Workforce</h2>
+              <p class="section-subtitle">Browse 100 specialized industrial AI micro-servers + Sovereign Master Orchestrator (Agent 101).</p>
             </div>
-            <button class="btn-launch-wf" onclick="refreshApprovalsQueue()" style="width: auto; padding: 0 14px;">↻ Refresh Queue</button>
+            <div class="workforce-filters">
+              <input type="text" id="agentFilterInput" class="form-input" placeholder="Search agents by role, domain, or tool...">
+            </div>
           </div>
 
-          <div id="approvalsQueueContent" style="display: flex; flex-direction: column; gap: 16px;">
-            <!-- Dynamically populated approval cards -->
+          <div class="agent-grid" id="agentWorkforceGrid">
+            <!-- Rendered dynamically from sih-agent-mapping.json -->
           </div>
         </section>
 
-        <!-- =====================================================
-             VIEW 5: DOCUMENT INTELLIGENCE WORKSPACE
-             ===================================================== -->
-        <section class="app-view" id="view-documents">
-          <div class="view-header">
-            <div class="view-title-group">
-              <h2 class="view-title"><span>📄</span> Document Intelligence Workspace</h2>
-              <p class="view-subtitle">Multimodal optical extraction, tamper verification hash analysis, and cross-document data conflict detection.</p>
+        <!-- ===================================================
+             VIEW 6: LOCAL MODEL ROUTER
+             =================================================== -->
+        <section class="view-panel" id="view-models">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Local Model Operations & Router</h2>
+              <p class="section-subtitle">Inspect registered local open-weight models, quantization, and hardware allocation.</p>
             </div>
           </div>
 
-          <div class="split-workspace">
-            <!-- Left: Document Selector -->
-            <div class="card-panel">
-              <div class="card-panel-header">
-                <span class="card-panel-title">Institutional Dossiers</span>
-              </div>
-              <div id="documentsListContainer" style="display: flex; flex-direction: column; gap: 8px;">
-                <!-- Populated dynamically -->
+          <div class="model-cards-grid">
+            <div class="model-card">
+              <div class="model-badge">TEXT & REASONING</div>
+              <h3>NVIDIA Nemotron 3 Nano</h3>
+              <p>4-Billion parameter dense model quantized to Q4_K_M running locally on Ollama. Powers task planning, SOP synthesis, and epistemic reasoning.</p>
+              <div class="model-meta">
+                <span>VRAM: 2.84 GB</span>
+                <span>Context: 4,096 tokens</span>
+                <span>Status: READY</span>
               </div>
             </div>
 
-            <!-- Right: Document Inspector & Data Extraction Details -->
-            <div class="dossier-panel" id="documentInspectorPanel">
-              <div style="padding: 40px; text-align: center; color: var(--text-muted);">
-                Select a document from the left to inspect optical extraction, cryptographic hash integrity, and validation status.
+            <div class="model-card">
+              <div class="model-badge" style="background:#8b5cf6;">MULTIMODAL & OCR</div>
+              <h3>Local Vision & OCR Engine</h3>
+              <p>In-process multimodal engine for scanned PDFs, table extraction, P&ID tag recognition, and visual defect classification.</p>
+              <div class="model-meta">
+                <span>VRAM: 1.20 GB</span>
+                <span>Modality: Vision / OCR</span>
+                <span>Status: READY</span>
+              </div>
+            </div>
+
+            <div class="model-card">
+              <div class="model-badge" style="background:#10b981;">CODE & AUTOMATION</div>
+              <h3>Local Code Specialist</h3>
+              <p>Dense open-weight coding specialist running in isolated sandbox for Python math scripts and telemetry parsing.</p>
+              <div class="model-meta">
+                <span>VRAM: 2.84 GB</span>
+                <span>Modality: Code</span>
+                <span>Status: READY</span>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- =====================================================
-             VIEW 6: INSTITUTIONAL RECORDS & DATA TABLES
-             ===================================================== -->
-        <section class="app-view" id="view-records">
-          <div class="view-header">
-            <div class="view-title-group">
-              <h2 class="view-title"><span>🏛️</span> Institutional Records &amp; Catalogs</h2>
-              <p class="view-subtitle">Authoritative repository of verified student demographics, academic courses, scholarship schemes, and faculty loads.</p>
+        <!-- ===================================================
+             VIEW 7: INDUSTRIAL WORKFLOWS
+             =================================================== -->
+        <section class="view-panel" id="view-workflows">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Industrial Workflow Engine</h2>
+              <p class="section-subtitle">Multi-step autonomous pipelines with state machine execution, evidence ledgers, and Human-in-the-Loop gates.</p>
             </div>
           </div>
 
-          <!-- Sub-tabs -->
-          <div class="segmented-filters" id="recordsSubTabs">
-            <button class="segment-chip active" data-subtab="students">Students Directory</button>
-            <button class="segment-chip" data-subtab="courses">Course Catalog</button>
-            <button class="segment-chip" data-subtab="scholarships">Scholarship Schemes</button>
+          <div class="workflows-list-grid" id="workflowsListGrid">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ===================================================
+             VIEW 8: DELIVERABLES CENTER
+             =================================================== -->
+        <section class="view-panel" id="view-deliverables">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Deliverables Center</h2>
+              <p class="section-subtitle">Browse, preview, and export generated Word, Excel, and PowerPoint deliverables.</p>
+            </div>
           </div>
 
-          <div style="max-width: 380px;">
-            <input type="text" id="recordsSearchInput" class="topbar-search-input" placeholder="Search institutional records..." style="padding-left: 12px;" />
+          <div class="deliverables-container" id="deliverablesContainer">
+            <!-- Rendered dynamically -->
+          </div>
+        </section>
+
+        <!-- ===================================================
+             VIEW 9: HUMAN-IN-THE-LOOP APPROVALS
+             =================================================== -->
+        <section class="view-panel" id="view-approvals">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Human-in-the-Loop Governance & Approvals</h2>
+              <p class="section-subtitle">Review high-impact engineering recommendations, emergency outage requests, and statutory sign-offs.</p>
+            </div>
           </div>
 
-          <div class="data-table-container">
-            <table class="data-table" id="institutionalDataTable">
-              <!-- Dynamically populated -->
+          <div class="pending-approvals-list" id="pendingApprovalsList">
+            <div class="approval-card">
+              <div class="approval-header">
+                <div>
+                  <h4>Emergency Outage & Shell Patch Repair Authorization</h4>
+                  <span class="approval-meta">Asset: Tank TK-101 | Risk: CRITICAL | Workflow Ref: WF-2026-TK101</span>
+                </div>
+                <span class="badge badge-warning">Awaiting Sign-off</span>
+              </div>
+              <p style="margin: 12px 0; color: #cbd5e1; font-size: 14px;">
+                Ultrasonic measurements indicate Shell Course 3 thickness is 5.90 mm (below 6.80 mm retirement limit). Immediate de-inventory and flush weld patch insertion recommended as per OISD-STD-129 / API-653.
+              </p>
+              <div class="approval-actions">
+                <button class="btn btn-primary" onclick="alert('Decision recorded: APPROVED by Chief Inspection Engineer. Audit logged.')">Approve & Authorize Outage</button>
+                <button class="btn btn-secondary" onclick="alert('Decision recorded: REJECTED with notes. Audit logged.')">Reject / Request Re-inspection</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================
+             VIEW 10: SOVEREIGNTY CENTER & NETWORK MONITOR
+             =================================================== -->
+        <section class="view-panel" id="view-sovereignty">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Sovereignty Center & Egress Monitor</h2>
+              <p class="section-subtitle">Real-time cryptographic proof that zero confidential data leaves the Mangalore Refinery network boundary.</p>
+            </div>
+          </div>
+
+          <div class="sovereignty-dashboard-grid">
+            <div class="telemetry-stat-card">
+              <span class="t-stat-val" style="color: #10b981;">0</span>
+              <span class="t-stat-lbl">External AI API Calls</span>
+            </div>
+            <div class="telemetry-stat-card">
+              <span class="t-stat-val" style="color: #10b981;">0 B</span>
+              <span class="t-stat-lbl">Cloud Data Egress</span>
+            </div>
+            <div class="telemetry-stat-card">
+              <span class="t-stat-val" style="color: #3b82f6;">100%</span>
+              <span class="t-stat-lbl">Local Loopback Traffic</span>
+            </div>
+            <div class="telemetry-stat-card">
+              <span class="t-stat-val" style="color: #60a5fa;">ACTIVE</span>
+              <span class="t-stat-lbl">Air-Gap Policy Gate</span>
+            </div>
+          </div>
+
+          <div class="network-event-stream-card" style="margin-top: 24px;">
+            <div class="stream-header">
+              <span>REAL-TIME NETWORK CONNECTION EVENT STREAM</span>
+              <span class="badge badge-success">Sovereign Interceptor Active</span>
+            </div>
+            <table class="stream-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Process / Agent</th>
+                  <th>Destination</th>
+                  <th>Classification</th>
+                  <th>Decision</th>
+                </tr>
+              </thead>
+              <tbody id="networkEventTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
             </table>
           </div>
         </section>
 
-        <!-- =====================================================
-             VIEW 7: IMMUTABLE AUDIT TRAIL
-             ===================================================== -->
-        <section class="app-view" id="view-audit">
-          <div class="view-header">
-            <div class="view-title-group">
-              <h2 class="view-title"><span>📜</span> Immutable Audit &amp; Evidence Trail</h2>
-              <p class="view-subtitle">Cryptographically verified chronological log of all AI agent tool calls, institutional service queries, and committee sign-offs.</p>
-            </div>
-          </div>
-
-          <div class="card-panel">
-            <div id="auditTimelineContainer" style="display: flex; flex-direction: column; gap: 12px;">
-              <!-- Populated dynamically -->
-            </div>
-          </div>
-        </section>
-
-        <!-- =====================================================
-             VIEW 8: AI FLEET CONSOLE & CHAT
-             ===================================================== -->
-        <section class="app-view" id="view-chat">
-          <div class="chat-console-grid">
-            <!-- Left: Agent Directory (Independently Scrollable) -->
-            <div class="card-panel chat-col-agents">
-              <div class="chat-search-wrap">
-                <input type="text" id="chatAgentSearch" class="topbar-search-input" placeholder="🔍 Search 101 agents..." style="padding-left: 12px;" />
-              </div>
-              <div id="chatAgentListContainer">
-                <!-- Populated dynamically -->
+        <!-- ===================================================
+             VIEW 11: SOVEREIGN CHAT CONSOLE
+             =================================================== -->
+        <section class="view-panel" id="view-chat">
+          <div class="chat-container">
+            <div class="chat-sidebar">
+              <h4>Consult Specialist Agent</h4>
+              <select id="chatAgentSelector" class="form-input" style="margin-bottom: 12px;">
+                <option value="agent-101">Agent 101 · Sovereign Orchestrator</option>
+                <option value="agent-045">Agent 045 · Scanned PDF & OCR Specialist</option>
+                <option value="agent-058">Agent 058 · NDT Ultrasonic Thickness Agent</option>
+                <option value="agent-052">Agent 052 · P&ID & Piping Layout Specialist</option>
+                <option value="agent-040">Agent 040 · SOP Retrieval & Search Agent</option>
+                <option value="agent-049">Agent 049 · Technical Deliverable Generator</option>
+              </select>
+              <div class="agent-quick-info" id="chatAgentInfo">
+                <strong>Sovereign Orchestrator</strong>
+                <p>Coordinates multi-agent task planning, tool calling, and deliverable synthesis.</p>
               </div>
             </div>
 
-            <!-- Center: Dialogue Stream & Fixed Composer -->
-            <div class="card-panel chat-col-main">
-              <!-- Pinned Top Header -->
-              <div class="chat-header-bar">
-                <div>
-                  <div style="font-size: 14px; font-weight: 700; color: #fff;" id="chatActiveAgentName">AI Master Agent</div>
-                  <div style="font-size: 11px; color: var(--text-muted);" id="chatActiveAgentId">agent-101 · master</div>
-                </div>
-                <span class="meta-pill" style="color: var(--accent-cyan);">⚡ Nemotron 3 Nano 4B</span>
-              </div>
-
-              <!-- Scrollable Messages Stream -->
-              <div class="chat-messages-stream" id="chatMessagesStream">
-                <div class="chat-bubble ai">
-                  Welcome to the Educational AI Fleet Operations Console. Select any specialist agent on the left or instruct them on institutional tasks below.
+            <div class="chat-messages-area">
+              <div class="chat-history" id="chatHistoryArea">
+                <div class="chat-bubble system">
+                  <strong>Sovereign AI Workbench:</strong> Air-gapped session initialized on local endpoint 127.0.0.1. Enter an industrial task or select an action.
                 </div>
               </div>
 
-              <!-- Pinned Bottom Composer (ALWAYS VISIBLE) -->
-              <div class="chat-composer-bar">
-                <input type="text" id="chatInput" class="topbar-search-input" placeholder="Type instruction for selected agent (e.g. 'do a research on the company microsoft')..." style="padding-left: 14px; flex: 1;" autocomplete="off" />
-                <button id="btnSendChat" class="btn-flagship-top" style="padding: 0 18px; height: 38px;">
-                  <span>Send</span>
-                  <span>➤</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- Right: Agent Capability Inspector -->
-            <div class="card-panel chat-col-context" id="chatAgentContextPanel">
-              <div class="card-panel-title" style="margin-bottom: 12px;">Agent Specifications</div>
-              <div id="chatAgentDetailsBox" style="font-size: 12px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 10px;">
-                <!-- Populated dynamically -->
+              <div class="chat-input-bar">
+                <input type="text" id="chatMessageInput" class="form-input" placeholder="Ask specialist agent (e.g. 'Analyze Shell Course 3 thickness report and check API-653')...">
+                <button class="btn btn-primary" id="btnSendChatMessage">Send</button>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- =====================================================
-             VIEW 9: SYSTEM OBSERVABILITY & HEALTH
-             ===================================================== -->
-        <section class="app-view" id="view-health">
-          <div class="view-header">
-            <div class="view-title-group">
-              <h2 class="view-title"><span>🖥️</span> System Observability &amp; Runtime Metrics</h2>
-              <p class="view-subtitle">Continuous hardware telemetry, process health, and public edge connection status.</p>
-            </div>
-            <button class="btn-launch-wf" onclick="refreshSystemHealth()" style="width: auto; padding: 0 14px;">↻ Refresh Metrics</button>
-          </div>
-
-          <!-- Component Health Grid -->
-          <div class="kpi-grid">
-            <div class="kpi-card">
-              <div class="kpi-icon-box kpi-green">⚡</div>
-              <div class="kpi-info">
-                <div class="kpi-value" id="healthGatewayStatus">Healthy</div>
-                <div class="kpi-label">API Gateway (:8300)</div>
-              </div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-icon-box kpi-blue">🤖</div>
-              <div class="kpi-info">
-                <div class="kpi-value" id="healthOllamaStatus">Healthy</div>
-                <div class="kpi-label">Ollama LLM Daemon (:11434)</div>
-              </div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-icon-box kpi-purple">🎓</div>
-              <div class="kpi-info">
-                <div class="kpi-value" id="healthFleetStatus">101/101</div>
-                <div class="kpi-label">AI Agents Fleet Ready</div>
-              </div>
-            </div>
-            <div class="kpi-card">
-              <div class="kpi-icon-box kpi-green">🔒</div>
-              <div class="kpi-info">
-                <div class="kpi-value">Connected</div>
-                <div class="kpi-label">Cloudflare Edge HTTPS</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Telemetry Specs -->
-          <div class="card-panel">
-            <div class="card-panel-title" style="margin-bottom: 14px;"><span>⚙️</span> Compute &amp; Hardware Telemetry</div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; font-size: 13px;" id="systemTelemetryGrid">
-              <!-- Populated dynamically -->
-            </div>
-          </div>
-        </section>
-
-      </main>
-    </div>
-
-    <!-- =======================================================
-         SLIDE-OUT INSPECTOR DRAWER
-         ======================================================= -->
-    <aside class="inspector-drawer" id="inspectorDrawer">
-      <div class="drawer-header">
-        <div style="font-size: 15px; font-weight: 700; color: #fff;" id="drawerTitle">Entity Inspector</div>
-        <button class="btn-close-drawer" id="btnCloseDrawer">✕</button>
       </div>
-      <div class="drawer-body" id="drawerContent">
-        <!-- Dynamically populated -->
-      </div>
-    </aside>
-
-    <!-- Floating Toast Notifications -->
-    <div id="toastContainer" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none;"></div>
-
+    </main>
   </div>
 
-  <!-- External Controller JS -->
+  <!-- Main JavaScript Controller -->
   <script src="ui-polish.js"></script>
 </body>
 </html>

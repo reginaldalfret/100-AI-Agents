@@ -1,50 +1,18 @@
-import http from 'node:http';
-import { getWorkflowDefinition, WORKFLOW_DEFINITIONS } from './definitions/index.js';
-import { StudentService, AuditService } from '../services/index.js';
+import { getWorkflow, listWorkflows } from "./definitions/index.js";
+import * as AuditService from "../services/audit-service.js";
 
 const instances = new Map();
 
-function postAgent(apiUrl, payload) {
-  return new Promise((resolve, reject) => {
-    const url = new URL('/api/agent', apiUrl);
-    const body = JSON.stringify(payload);
-
-    const req = http.request(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Content-Length': Buffer.byteLength(body)
-      },
-      timeout: 60000
-    }, (res) => {
-      let data = '';
-      res.setEncoding('utf8');
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch {
-          resolve({ status: 'success', result: data });
-        }
-      });
-    });
-
-    req.on('timeout', () => req.destroy(new Error('Agent call timeout')));
-    req.on('error', reject);
-    req.write(body);
-    req.end();
-  });
-}
-
 export class WorkflowEngine {
   static getAvailableWorkflows() {
-    return WORKFLOW_DEFINITIONS.map(w => ({
+    const list = listWorkflows();
+    return list.map(w => ({
       id: w.id,
       name: w.name,
+      domain: w.domain || "Industrial Operations",
       description: w.description,
-      category: w.category,
       totalSteps: w.steps.length,
-      steps: w.steps.map(s => ({ id: s.id, name: s.name, type: s.type, agentName: s.agentName }))
+      steps: w.steps.map(s => ({ id: s.id, name: s.name, agent_id: s.agent_id, action: s.action, is_hitl: Boolean(s.is_hitl) }))
     }));
   }
 
@@ -59,27 +27,18 @@ export class WorkflowEngine {
   }
 
   static async startWorkflow(workflowId, input = {}) {
-    const definition = getWorkflowDefinition(workflowId);
+    const definition = getWorkflow(workflowId);
     if (!definition) throw new Error(`Workflow definition not found: ${workflowId}`);
 
     const instanceId = `WF-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
-    let student = null;
-    if (input.studentId) {
-      student = StudentService.getStudentById(input.studentId);
-    }
-
     const context = {
-      workflowInstanceId: instanceId,
+      workflow_id: instanceId,
       workflowId,
-      studentId: input.studentId || (student ? student.id : null),
-      studentName: student ? student.name : input.studentName || 'Student',
-      studentEmail: student ? student.email : input.studentEmail || 'student@university.edu',
-      program: student ? student.program : input.program || 'General Academic',
-      gpa: student ? student.gpa : null,
-      courseCode: input.courseCode || 'CS201',
-      schemeId: input.schemeId || 'SCH-MERIT',
+      equipment_id: input.equipment_id || input.equipmentId || "TK-101",
+      filePath: input.filePath || input.file_path || "TK-101_UT_Report.pdf",
       stepOutputs: {},
+      evidenceLedger: [],
       ...input
     };
 
@@ -87,13 +46,14 @@ export class WorkflowEngine {
       id: instanceId,
       workflowId: definition.id,
       workflowName: definition.name,
-      category: definition.category,
-      status: 'running',
+      domain: definition.domain,
+      status: "running",
       currentStepIndex: 0,
       totalSteps: definition.steps.length,
       currentStep: definition.steps[0].id,
       context,
       stepHistory: [],
+      evidenceLedger: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       result: null,
@@ -102,144 +62,122 @@ export class WorkflowEngine {
 
     instances.set(instanceId, instance);
 
-    AuditService.logAudit({
-      workflowId: instanceId,
-      action: 'WORKFLOW_STARTED',
-      details: { workflowName: definition.name, studentId: context.studentId }
+    AuditService.logAudit(instanceId, "SYSTEM", "WORKFLOW_STARTED", {
+      workflowId: definition.id,
+      workflowName: definition.name,
+      equipment_id: context.equipment_id
     });
 
-    await this._runSteps(instance, definition);
-    return instance;
+    return await this.executeNextStep(instance, definition);
   }
 
-  static async submitDecision(instanceId, decision, notes = '') {
-    const instance = instances.get(instanceId);
-    if (!instance) throw new Error(`Workflow instance not found: ${instanceId}`);
-    if (instance.status !== 'pending_approval') {
-      throw new Error(`Instance is not waiting for approval (current status: ${instance.status})`);
-    }
-
-    const definition = getWorkflowDefinition(instance.workflowId);
+  static async executeNextStep(instance, definition) {
     const step = definition.steps[instance.currentStepIndex];
 
-    AuditService.logAudit({
-      workflowId: instanceId,
-      stepId: step.id,
-      action: `HUMAN_DECISION_${decision.toUpperCase()}`,
-      actor: 'Academic Committee / Administrator',
-      details: { decision, notes, stepName: step.name }
-    });
-
-    if (decision === 'rejected') {
-      instance.status = 'rejected';
+    if (!step) {
+      instance.status = "completed";
+      instance.currentStep = "finished";
       instance.updatedAt = new Date().toISOString();
-      instance.stepHistory.push({
-        stepId: step.id,
-        stepName: step.name,
-        type: step.type,
-        status: 'rejected',
-        decision,
-        notes,
-        completedAt: new Date().toISOString()
+
+      AuditService.logAudit(instance.id, "SYSTEM", "WORKFLOW_COMPLETED", {
+        workflowId: instance.workflowId,
+        totalSteps: instance.totalSteps,
+        evidenceCount: instance.evidenceLedger.length
       });
+
       return instance;
     }
 
-    // Decision is approved
-    instance.stepHistory.push({
-      stepId: step.id,
-      stepName: step.name,
-      type: step.type,
-      status: 'approved',
-      decision: 'approved',
-      notes,
-      completedAt: new Date().toISOString()
-    });
-
-    instance.currentStepIndex += 1;
-    instance.status = 'running';
+    instance.currentStep = step.id;
     instance.updatedAt = new Date().toISOString();
 
-    await this._runSteps(instance, definition);
-    return instance;
-  }
+    if (step.is_hitl) {
+      instance.status = "pending_approval";
+      instance.pendingDecision = {
+        stepId: step.id,
+        agentId: step.agent_id,
+        role: "Chief Inspection Engineer / General Manager",
+        requiredAction: step.action || "Executive Review & Sign-off",
+        timestamp: new Date().toISOString()
+      };
 
-  static async _runSteps(instance, definition) {
-    while (instance.currentStepIndex < definition.steps.length) {
-      const step = definition.steps[instance.currentStepIndex];
-      instance.currentStep = step.id;
-      instance.updatedAt = new Date().toISOString();
+      AuditService.logAudit(instance.id, step.agent_id || "agent-101", "HITL_DECISION_PENDING", {
+        stepId: step.id,
+        role: instance.pendingDecision.role
+      });
 
-      if (step.type === 'human_approval') {
-        const stepResult = await step.execute(instance.context, instance.context.stepOutputs);
-        instance.status = 'pending_approval';
-        instance.pendingDecision = {
-          stepId: step.id,
-          stepName: step.name,
-          description: step.description,
-          data: stepResult
-        };
-        return;
-      }
-
-      try {
-        let output;
-        if (step.type === 'agent_task' && step.taskPrompt) {
-          const prompt = typeof step.taskPrompt === 'function' ? step.taskPrompt(instance.context) : step.taskPrompt;
-          // Execute agent task
-          output = await step.execute(instance.context, instance.context.stepOutputs);
-          output.agentPrompt = prompt;
-        } else {
-          output = await step.execute(instance.context, instance.context.stepOutputs);
-        }
-
-        instance.context.stepOutputs[step.id] = output;
-        instance.stepHistory.push({
-          stepId: step.id,
-          stepName: step.name,
-          type: step.type,
-          agentId: step.agentId || null,
-          agentName: step.agentName || null,
-          status: 'completed',
-          output,
-          completedAt: new Date().toISOString()
-        });
-
-        AuditService.logAudit({
-          workflowId: instance.id,
-          stepId: step.id,
-          action: 'STEP_COMPLETED',
-          details: { stepName: step.name, outputSummary: Object.keys(output) }
-        });
-
-        instance.currentStepIndex += 1;
-      } catch (err) {
-        instance.status = 'failed';
-        instance.error = err.message;
-        instance.updatedAt = new Date().toISOString();
-        AuditService.logAudit({
-          workflowId: instance.id,
-          stepId: step.id,
-          action: 'STEP_FAILED',
-          status: 'failed',
-          details: { error: err.message }
-        });
-        return;
-      }
+      return instance;
     }
 
-    instance.status = 'completed';
-    instance.currentStep = 'finished';
-    instance.updatedAt = new Date().toISOString();
-    instance.result = {
-      message: `${definition.name} completed successfully.`,
-      finalOutputs: instance.context.stepOutputs
-    };
+    try {
+      let stepResult = null;
+      if (typeof step.execute === "function") {
+        stepResult = await step.execute(instance.context);
+      } else {
+        stepResult = { step: step.id, status: "completed", data: { action: step.action } };
+      }
 
-    AuditService.logAudit({
-      workflowId: instance.id,
-      action: 'WORKFLOW_COMPLETED',
-      details: { totalSteps: definition.steps.length }
-    });
+      instance.context.stepOutputs[step.id] = stepResult.data || stepResult;
+      if (stepResult.evidence && Array.isArray(stepResult.evidence)) {
+        instance.evidenceLedger.push(...stepResult.evidence);
+        instance.context.evidenceLedger.push(...stepResult.evidence);
+      }
+
+      instance.stepHistory.push({
+        stepId: step.id,
+        agentId: step.agent_id,
+        status: "completed",
+        timestamp: new Date().toISOString(),
+        data: stepResult.data
+      });
+
+      instance.currentStepIndex++;
+      return await this.executeNextStep(instance, definition);
+    } catch (err) {
+      instance.status = "failed";
+      instance.error = err.message;
+      instance.updatedAt = new Date().toISOString();
+
+      AuditService.logAudit(instance.id, step.agent_id || "SYSTEM", "STEP_FAILED", {
+        stepId: step.id,
+        error: err.message
+      });
+
+      return instance;
+    }
+  }
+
+  static async submitHumanDecision(instanceId, decisionPayload = {}) {
+    const instance = instances.get(instanceId);
+    if (!instance) throw new Error(`Workflow instance not found: ${instanceId}`);
+    if (instance.status !== "pending_approval") {
+      throw new Error(`Instance is not waiting for human decision (current status: ${instance.status})`);
+    }
+
+    const decision = (decisionPayload.decision || "approved").toLowerCase();
+    const definition = getWorkflow(instance.workflowId);
+
+    if (decision === "approved" || decision === "approve") {
+      AuditService.logAudit(instanceId, "HUMAN_OPERATOR", "HUMAN_DECISION_APPROVED", {
+        stepId: instance.pendingDecision?.stepId,
+        notes: decisionPayload.notes || "Approved by executive authority"
+      });
+
+      instance.status = "running";
+      instance.pendingDecision = null;
+      instance.currentStepIndex++;
+      return await this.executeNextStep(instance, definition);
+    } else {
+      instance.status = "rejected";
+      instance.pendingDecision = null;
+      instance.updatedAt = new Date().toISOString();
+
+      AuditService.logAudit(instanceId, "HUMAN_OPERATOR", "HUMAN_DECISION_REJECTED", {
+        stepId: instance.currentStep,
+        notes: decisionPayload.notes || "Rejected by executive authority"
+      });
+
+      return instance;
+    }
   }
 }
