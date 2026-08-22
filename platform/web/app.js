@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const input = document.createElement('input');
             input.type = 'file';
             input.multiple = true;
+            input.accept = '.pdf,.png,.jpg,.jpeg,.docx,.xlsx,.csv,.txt';
             input.id = 'hiddenFileInput';
             input.style.display = 'none';
             document.body.appendChild(input);
@@ -727,43 +728,63 @@ document.addEventListener('DOMContentLoaded', () => {
         if (state.currentAttachments.length === 0) {
             elements.attachmentArea.style.display = 'none';
             elements.attachmentArea.innerHTML = '';
-            return;
+        } else {
+            elements.attachmentArea.style.display = 'flex';
+            elements.attachmentArea.innerHTML = state.currentAttachments.map((file, idx) => `
+                <div class="attachment-pill">
+                    <span>📄 ${escapeHtml(file.name)}</span>
+                    <button class="attachment-remove" data-index="${idx}" title="Remove file">×</button>
+                </div>
+            `).join('');
+            
+            // Add listeners to remove buttons
+            elements.attachmentArea.querySelectorAll('.attachment-remove').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(e.currentTarget.dataset.index);
+                    state.currentAttachments.splice(idx, 1);
+                    renderAttachments();
+                });
+            });
         }
         
-        elements.attachmentArea.style.display = 'flex';
-        elements.attachmentArea.innerHTML = state.currentAttachments.map((file, idx) => `
-            <div class="attachment-pill">
-                <i class="icon-file"></i>
-                <span class="attachment-name">${escapeHtml(file.name)}</span>
-                <button class="attachment-remove" data-index="${idx}">×</button>
-            </div>
-        `).join('');
-        
-        // Add listeners to remove buttons
-        elements.attachmentArea.querySelectorAll('.attachment-remove').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const idx = parseInt(e.currentTarget.dataset.index);
-                state.currentAttachments.splice(idx, 1);
-                renderAttachments();
-            });
-        });
+        const hasContent = elements.chatInput.value.trim().length > 0 || state.currentAttachments.length > 0;
+        elements.sendBtn.disabled = !hasContent || state.isGenerating;
+        elements.sendBtn.classList.toggle('ready', hasContent && !state.isGenerating);
     }
 
     function updatePlaceholder(agent) {
-        if (elements.chatInput) {
+        if (!elements.chatInput) return;
+        if (!agent || agent.id === 'auto') {
+            elements.chatInput.placeholder = "Ask Sovereign AI anything...";
+        } else {
             elements.chatInput.placeholder = `Message ${agent.name}...`;
+        }
+        
+        // Update model indicator pill
+        if (elements.modelPill) {
+            const domain = (agent?.domain || '').toLowerCase();
+            if (domain.includes('visual') || domain.includes('vision') || domain.includes('image')) {
+                elements.modelPill.innerHTML = '<span class="model-dot"></span> Gemma 3 4B (Vision / Local)';
+            } else if (domain.includes('code') || domain.includes('developer')) {
+                elements.modelPill.innerHTML = '<span class="model-dot"></span> Qwen 2.5 Coder (1.5B Local)';
+            } else {
+                elements.modelPill.innerHTML = '<span class="model-dot"></span> Auto (Nemotron 3 Nano / Local)';
+            }
         }
     }
 
     function setGenerating(isGen) {
         state.isGenerating = isGen;
         if (isGen) {
-            elements.sendBtn.classList.add('generating');
-            elements.sendBtn.innerHTML = '<div class="spinner-small"></div>';
+            elements.sendBtn.disabled = true;
+            elements.sendBtn.classList.remove('ready');
+            elements.sendBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="spin-icon"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10" stroke-linecap="round"></path></svg>`;
             elements.chatInput.disabled = true;
         } else {
-            elements.sendBtn.classList.remove('generating');
-            elements.sendBtn.innerHTML = '<i class="icon-send"></i>';
+            const hasContent = elements.chatInput.value.trim().length > 0 || state.currentAttachments.length > 0;
+            elements.sendBtn.disabled = !hasContent;
+            elements.sendBtn.classList.toggle('ready', hasContent);
+            elements.sendBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`;
             elements.chatInput.disabled = false;
             elements.chatInput.focus();
         }
@@ -772,6 +793,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 6. NAVIGATION MANAGER
     function switchMainView(viewIdOrName) {
         state.activeView = viewIdOrName;
+        
+        // Close context dropdown
+        const dropdown = document.getElementById('contextToolsDropdown');
+        if (dropdown) dropdown.style.display = 'none';
+        const btn = document.getElementById('btnContextTools');
+        if (btn) btn.classList.remove('active');
         
         // Hide all view panels
         document.querySelectorAll('.view-panel').forEach(panel => {
@@ -790,10 +817,10 @@ document.addEventListener('DOMContentLoaded', () => {
             targetEl.style.display = '';
         }
         
-        // Update nav items
-        document.querySelectorAll('.secondary-nav button').forEach(btn => {
-            const target = btn.dataset.target || btn.dataset.view;
-            btn.classList.toggle('active', target === viewIdOrName);
+        // Update context items active state
+        document.querySelectorAll('.context-item').forEach(item => {
+            const target = item.dataset.target || item.dataset.view;
+            item.classList.toggle('active', target === viewIdOrName);
         });
         
         // Load specific view data
@@ -945,11 +972,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 9. EVENT LISTENERS & INIT
     
-    // Auto-resize textarea
+    // Auto-resize textarea & enable send button
     elements.chatInput.addEventListener('input', function() {
         this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-        if(this.value === '') this.style.height = 'auto';
+        const newHeight = Math.min(Math.max(this.scrollHeight, 52), 180);
+        this.style.height = `${newHeight}px`;
+        
+        const hasContent = this.value.trim().length > 0 || state.currentAttachments.length > 0;
+        elements.sendBtn.disabled = !hasContent || state.isGenerating;
+        elements.sendBtn.classList.toggle('ready', hasContent && !state.isGenerating);
     });
     
     // Keyboard shortcuts
@@ -980,8 +1011,28 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAgents(e.target.value);
     }, 300));
 
-    // Secondary nav buttons
-    document.querySelectorAll('.secondary-nav button').forEach(btn => {
+    // Contextual tools launcher dropdown toggle & outside click
+    const btnContextTools = document.getElementById('btnContextTools');
+    const contextToolsDropdown = document.getElementById('contextToolsDropdown');
+
+    if (btnContextTools && contextToolsDropdown) {
+        btnContextTools.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = contextToolsDropdown.style.display === 'flex';
+            contextToolsDropdown.style.display = isOpen ? 'none' : 'flex';
+            btnContextTools.classList.toggle('active', !isOpen);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!contextToolsDropdown.contains(e.target) && e.target !== btnContextTools) {
+                contextToolsDropdown.style.display = 'none';
+                btnContextTools.classList.remove('active');
+            }
+        });
+    }
+
+    // Context item clicks
+    document.querySelectorAll('.context-item').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const target = e.currentTarget.dataset.target || e.currentTarget.dataset.view;

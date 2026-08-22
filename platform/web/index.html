@@ -75,42 +75,19 @@
         </div>
       </header>
 
-      <!-- Scrollable Agent List -->
+      <!-- Scrollable Agent List (Full 101 Agents) -->
       <div id="agentList" class="agent-list">
         <!-- Agent items will be dynamically added here -->
       </div>
 
-      <!-- Secondary Nav Section -->
-      <nav class="secondary-nav">
-        <ul>
-          <li><button data-target="investigationsView"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg><span>Investigations</span></button></li>
-          <li><button data-target="filesView"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg><span>Files & Deliverables</span></button></li>
-          <li><button data-target="knowledgeView"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg><span>Knowledge (RAG)</span></button></li>
-          <li><button data-target="workflowsView"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg><span>Workflows</span></button></li>
-          <li><button data-target="approvalsView"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg><span>Approvals (HITL)</span></button></li>
-          <li>
-            <details class="more-dropdown">
-              <summary><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span>More</span></summary>
-              <ul>
-                <li><button data-target="modelsView">Models</button></li>
-                <li><button data-target="toolsView">Tools</button></li>
-                <li><button data-target="auditView">Audit</button></li>
-                <li><button data-target="automationView">Automation</button></li>
-                <li><button data-target="systemView">System</button></li>
-              </ul>
-            </details>
-          </li>
-        </ul>
-      </nav>
-
-      <!-- Footer: Sovereignty Badge -->
+      <!-- Footer: Compact System Status -->
       <footer class="sidebar-footer">
-        <div class="sovereignty-badge">
-          <span class="dot live-pulse">●</span>
-          <div class="sovereignty-text-block">
-            <span class="sovereignty-title">SOVEREIGN AIR-GAP</span>
-            <span class="sovereignty-subtitle">0 External Calls · Local GPU</span>
+        <div class="system-status-card">
+          <div class="status-indicator-row">
+            <span class="dot live-pulse">●</span>
+            <span class="status-title">101 agents online</span>
           </div>
+          <span class="status-subtitle">All systems operational · Air-Gapped</span>
         </div>
       </footer>
     </aside>
@@ -140,6 +117,24 @@
           <span class="status-pill status-glow-blue"><span class="dot">●</span> Gateway online</span>
           <span class="status-pill status-glow-cyan"><span class="dot">●</span> 101 agents online</span>
           <span class="sovereignty-indicator"><span class="dot">●</span> Local & Secure</span>
+          
+          <!-- Contextual Tools Launcher Dropdown -->
+          <div class="context-menu-wrapper">
+            <button id="btnContextTools" class="btn-context-tools" title="Workspace Tools & Secondary Views" aria-label="Workspace Tools">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+            </button>
+            <div id="contextToolsDropdown" class="context-tools-dropdown" style="display:none;">
+              <div class="dropdown-header">Workspace Tools</div>
+              <button class="context-item" data-target="investigationsView"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg> Investigations</button>
+              <button class="context-item" data-target="filesView"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg> Files & Deliverables</button>
+              <button class="context-item" data-target="knowledgeView"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg> Knowledge Base (RAG)</button>
+              <button class="context-item" data-target="workflowsView"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg> Industrial Workflows</button>
+              <button class="context-item" data-target="approvalsView"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg> Approvals (HITL)</button>
+              <div class="dropdown-divider"></div>
+              <button class="context-item" data-target="modelsView"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg> Models & Hardware</button>
+              <button class="context-item" data-target="systemView"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg> System Status & Proof</button>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -168,28 +163,8 @@
           </div>
           
           <!-- Scrollable Messages Container -->
-          <div id="chatMessages" class="chat-messages">
+          <div id="chatMessages" class="chat-messages" style="display:none;">
             <!-- Messages injected dynamically -->
-          </div>
-
-          <!-- Fixed Floating Composer Capsule -->
-          <div id="composerContainer" class="composer-container">
-            <div class="composer-capsule">
-              <div id="attachmentArea" class="attachment-area" style="display:none;"></div>
-              <div class="composer-input-row">
-                <button id="attachBtn" class="btn-attach-icon" title="Attach confidential document or image">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                </button>
-                <textarea id="chatInput" rows="1" placeholder="Message agent..."></textarea>
-                <button id="sendBtn" class="btn-send-glass" title="Send message (Enter)">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                </button>
-              </div>
-              <div class="composer-toolbar">
-                <div id="modelPill" class="model-indicator"><span class="model-dot"></span> Auto (Nemotron / Vision)</div>
-                <div class="composer-hints"><span>Enter to send · Shift+Enter for newline</span></div>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -378,6 +353,26 @@
             </table>
           </div>
         </section>
+      </div>
+
+      <!-- ALWAYS VISIBLE FIXED FLOATING COMPOSER CAPSULE -->
+      <div id="composerContainer" class="composer-container">
+        <div class="composer-capsule">
+          <div id="attachmentArea" class="attachment-area" style="display:none;"></div>
+          <div class="composer-input-row">
+            <button id="attachBtn" class="btn-attach-icon" title="Attach confidential files (PDF, PNG, JPG, DOCX, XLSX, CSV, TXT)" aria-label="Attach files">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+            </button>
+            <textarea id="chatInput" rows="1" placeholder="Message agent..." aria-label="Message agent"></textarea>
+            <button id="sendBtn" class="btn-send-glass" title="Send message (Enter)" aria-label="Send message" disabled>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+          </div>
+          <div class="composer-toolbar">
+            <div id="modelPill" class="model-indicator"><span class="model-dot"></span> Auto (Nemotron / Gemma 3 / Qwen)</div>
+            <div class="composer-hints"><span>Enter to send · Shift+Enter for newline</span></div>
+          </div>
+        </div>
       </div>
     </main>
 
