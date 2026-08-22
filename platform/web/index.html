@@ -389,6 +389,19 @@
       <!-- ALWAYS VISIBLE FIXED FLOATING COMPOSER CAPSULE -->
       <div id="composerContainer" class="composer-container">
         <div class="composer-capsule">
+          <!-- Compact Liquid-Glass Reply Context Banner -->
+          <div id="replyContextArea" class="reply-context-area" style="display:none;">
+            <div class="reply-context-card">
+              <div class="reply-context-header">
+                <span class="reply-agent-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
+                  <span id="replyAgentLabel">Replying to Super AI Agent</span>
+                </span>
+                <button id="closeReplyBtn" class="btn-close-reply" title="Cancel reply" aria-label="Cancel reply">×</button>
+              </div>
+              <div id="replyPreviewText" class="reply-preview-text">"..."</div>
+            </div>
+          </div>
           <div id="attachmentArea" class="attachment-area" style="display:none;"></div>
           <div class="composer-input-row">
             <button id="attachBtn" class="btn-attach-icon" title="Attach confidential files (PDF, PNG, JPG, DOCX, XLSX, CSV, TXT)" aria-label="Attach files">

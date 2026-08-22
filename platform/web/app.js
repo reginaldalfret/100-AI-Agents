@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         conversations: [],
         currentConversationId: null,
         deletingConversationId: null,
+        replyContext: null,
         chatHistories: {},
         currentAttachments: [],
         isGenerating: false,
@@ -49,10 +50,14 @@ document.addEventListener('DOMContentLoaded', () => {
         chatEmptyState: getEl('chatEmptyState'),
         chatMessages: getEl('chatMessages'),
         
-        // Composer
+        // Composer & Reply Context
         composerContainer: getEl('composerContainer'),
         chatInput: getEl('chatInput'),
         attachmentArea: getEl('attachmentArea'),
+        replyContextArea: getEl('replyContextArea'),
+        replyAgentLabel: getEl('replyAgentLabel'),
+        replyPreviewText: getEl('replyPreviewText'),
+        closeReplyBtn: getEl('closeReplyBtn'),
         sendBtn: getEl('sendBtn'),
         attachBtn: getEl('attachBtn'),
         
@@ -940,6 +945,94 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    async function copyCleanResponse(text, btnEl) {
+        if (!text) return;
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                document.execCommand('copy');
+                textArea.remove();
+            }
+
+            if (btnEl) {
+                const origHtml = btnEl.innerHTML;
+                btnEl.classList.add('copied');
+                btnEl.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Copied</span>`;
+                setTimeout(() => {
+                    btnEl.classList.remove('copied');
+                    btnEl.innerHTML = origHtml;
+                }, 1800);
+            }
+        } catch (err) {
+            console.error('Failed to copy text:', err);
+        }
+    }
+
+    function setReplyContext(replyData) {
+        state.replyContext = replyData;
+        if (elements.replyContextArea) {
+            if (elements.replyAgentLabel) {
+                elements.replyAgentLabel.textContent = `Replying to ${replyData.agentName || 'Super AI Agent'}`;
+            }
+            if (elements.replyPreviewText) {
+                const preview = (replyData.content || '').trim().replace(/\s+/g, ' ');
+                const truncated = preview.length > 180 ? preview.slice(0, 180) + '...' : preview;
+                elements.replyPreviewText.textContent = `"${truncated}"`;
+            }
+            elements.replyContextArea.style.display = 'block';
+        }
+        if (elements.chatInput) {
+            elements.chatInput.placeholder = `Reply to ${replyData.agentName || 'Super AI Agent'}...`;
+            elements.chatInput.focus();
+        }
+    }
+
+    function clearReplyContext() {
+        state.replyContext = null;
+        if (elements.replyContextArea) {
+            elements.replyContextArea.style.display = 'none';
+        }
+        updatePlaceholder(state.selectedAgent);
+    }
+
+    function createActionsRow(cleanContent, agentName, modelName, msgId) {
+        const row = document.createElement('div');
+        row.className = 'msg-actions-row';
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'btn-msg-action btn-copy-msg';
+        copyBtn.title = 'Copy clean response text';
+        copyBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> <span>Copy</span>`;
+        copyBtn.addEventListener('click', () => copyCleanResponse(cleanContent, copyBtn));
+
+        const answerBtn = document.createElement('button');
+        answerBtn.className = 'btn-msg-action btn-answer-msg';
+        answerBtn.title = 'Answer or refine this response';
+        answerBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg> <span>Answer</span>`;
+        answerBtn.addEventListener('click', () => {
+            setReplyContext({
+                messageId: msgId || `msg-${Date.now()}`,
+                agentId: state.selectedAgent?.id || 'auto',
+                agentName: agentName || state.selectedAgent?.name || 'Super AI Agent',
+                model: modelName,
+                content: cleanContent
+            });
+        });
+
+        row.appendChild(copyBtn);
+        row.appendChild(answerBtn);
+        return row;
+    }
+
     function renderUserMessage(msg) {
         const div = document.createElement('div');
         div.className = 'msg-row user';
@@ -956,9 +1049,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }
+
+        let replyQuoteHtml = '';
+        if (msg.replyTo) {
+            const quoteContent = (msg.replyTo.content || msg.replyTo.preview || '').trim().replace(/\s+/g, ' ');
+            const shortQuote = quoteContent.length > 90 ? quoteContent.slice(0, 90) + '...' : quoteContent;
+            replyQuoteHtml = `
+                <div class="user-reply-quote">
+                    ↳ Replying to <strong>${escapeHtml(msg.replyTo.agentName || 'Super AI')}</strong>: "${escapeHtml(shortQuote)}"
+                </div>
+            `;
+        }
         
         div.innerHTML = `
             <div class="msg-bubble">
+                ${replyQuoteHtml}
                 ${attachmentHtml}
                 <div class="msg-text">${formatResponse(msg.content)}</div>
             </div>
@@ -1102,6 +1207,12 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
+        const bubble = div.querySelector('.msg-bubble');
+        if (bubble) {
+            const actionsRow = createActionsRow(msg.content, msg.model || agentName, actualRuntime, msg.id);
+            bubble.appendChild(actionsRow);
+        }
+
         elements.chatMessages.appendChild(div);
     }
 
@@ -1454,6 +1565,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleSend() {
         let text = elements.chatInput.value.trim();
         const attachments = [...state.currentAttachments];
+        const activeReply = state.replyContext ? { ...state.replyContext } : null;
 
         if (!text && attachments.length === 0) return;
         if (state.isGenerating) {
@@ -1465,15 +1577,16 @@ document.addEventListener('DOMContentLoaded', () => {
             text = `Analyze and extract findings from: ${attachments.map(a => a.name).join(', ')}`;
         }
         
-        appendUserMessage(text, attachments);
+        appendUserMessage(text, attachments, activeReply);
         
-        // Clear input
+        // Clear input & reply banner
         elements.chatInput.value = '';
         elements.chatInput.style.height = 'auto';
         state.currentAttachments = [];
         renderAttachments();
+        clearReplyContext();
         
-        sendToBackend(state.selectedAgent?.id || 'auto', text, attachments);
+        sendToBackend(state.selectedAgent?.id || 'auto', text, attachments, activeReply);
     }
 
     function handleStopGeneration() {
@@ -1484,7 +1597,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setGenerating(false);
     }
 
-    async function sendToBackend(agentId, text, attachments) {
+    async function sendToBackend(agentId, text, attachments, replyTo = null) {
         setGenerating(true);
         state.currentAbortController = new AbortController();
         
@@ -1533,6 +1646,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let tokensPerSec = null;
         let isStopped = false;
 
+        const effectiveTask = replyTo
+            ? `[Replying to previous response from ${replyTo.agentName || 'AI Assistant'}]: "${(replyTo.content || '').slice(0, 300)}"\n\nUser follow-up: ${text}`
+            : text;
+
         try {
             const res = await fetch('/api/chat', {
                 method: 'POST',
@@ -1542,7 +1659,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify({
                     agent_id: targetAgentId,
-                    task: text,
+                    task: effectiveTask,
+                    original_task: text,
+                    replyTo: replyTo ? {
+                        messageId: replyTo.messageId,
+                        agentId: replyTo.agentId,
+                        agentName: replyTo.agentName,
+                        preview: (replyTo.content || '').slice(0, 180)
+                    } : null,
                     modelMode: currentModelMode,
                     model_override: modelOverride,
                     stream: true
@@ -1678,7 +1802,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `;
-            streamMsgDiv.querySelector('.msg-bubble')?.appendChild(backendFlow);
+            const bubble = streamMsgDiv.querySelector('.msg-bubble');
+            if (bubble) {
+                bubble.appendChild(backendFlow);
+                if (accumulatedText) {
+                    const actionsRow = createActionsRow(accumulatedText, modelDisplayName, actualModelTag, `msg-${Date.now()}`);
+                    bubble.appendChild(actionsRow);
+                }
+            }
 
             const finalMsg = {
                 id: `msg-${Date.now()}`,
@@ -2005,6 +2136,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (elements.newChatBtn) {
         elements.newChatBtn.addEventListener('click', createNewConversation);
+    }
+
+    if (elements.closeReplyBtn) {
+        elements.closeReplyBtn.addEventListener('click', clearReplyContext);
     }
 
     // Run Init
