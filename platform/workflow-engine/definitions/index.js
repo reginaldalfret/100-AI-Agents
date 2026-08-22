@@ -45,3 +45,6 @@ export function listWorkflows() {
 export function getWorkflow(id) {
   return WORKFLOW_DEFINITIONS[id] || null;
 }
+
+export const getWorkflowDefinition = getWorkflow;
+
