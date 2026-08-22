@@ -175,7 +175,7 @@ export const TOOL_DEFINITIONS = {
     domain: "finance",
     description: "Fetch scholarship eligibility criteria and award matrix",
     parameters: { scholarship_id: "string" },
-    handler: async ({ scholarship_id = 'SCH-MERIT-2026' }) => {
+    handler: async ({ scholarship_id = 'SCH-MERIT' }) => {
       return await FinanceService.getScholarship(scholarship_id);
     }
   },
@@ -184,7 +184,7 @@ export const TOOL_DEFINITIONS = {
     domain: "finance",
     description: "Check if student meets income threshold and financial requirements",
     parameters: { student_id: "string", scholarship_id: "string" },
-    handler: async ({ student_id, studentId, scholarship_id = 'SCH-MERIT-2026' }) => {
+    handler: async ({ student_id, studentId, scholarship_id = 'SCH-MERIT' }) => {
       const id = student_id || studentId;
       return await FinanceService.evaluateScholarshipEligibility(id, scholarship_id);
     }

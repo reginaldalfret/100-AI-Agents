@@ -305,6 +305,7 @@ const server = http.createServer(async (req, res) => {
 
       json(res, 200, {
         gateway: "100-to-1",
+        trace_id: payload.trace_id || `INT-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`,
         agent: {
           agent_id: agent.agent_id,
           name: agent.name,
@@ -313,6 +314,28 @@ const server = http.createServer(async (req, res) => {
         result
       });
 
+      return;
+    }
+
+    if (
+      req.method === "POST" &&
+      url.pathname === "/api/intelligence/intent"
+    ) {
+      const payload = await readBody(req);
+      const { parseIntent } = await import("../../intelligence/index.js");
+      const intent = parseIntent(payload.task || payload.prompt || "");
+      json(res, 200, { status: "success", intent });
+      return;
+    }
+
+    if (
+      req.method === "POST" &&
+      url.pathname === "/api/intelligence/route"
+    ) {
+      const payload = await readBody(req);
+      const { routeRequest } = await import("../../intelligence/index.js");
+      const routing = routeRequest(payload.task || payload.prompt || "");
+      json(res, 200, { status: "success", routing });
       return;
     }
 

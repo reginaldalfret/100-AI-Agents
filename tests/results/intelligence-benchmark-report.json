@@ -1,0 +1,79 @@
+{
+  "metrics": {
+    "totalRequests": 60,
+    "intentAccuracy": 100.0,
+    "routingAccuracy": 100.0,
+    "falseRejectionRate": 0.0,
+    "falseRoutingRate": 0.0,
+    "toolSuccessRate": 100.0,
+    "evidenceCompleteness": 100.0,
+    "hallucinationRate": 0.0,
+    "hitlDetectionAccuracy": 100.0,
+    "averageLatencyMs": 1.45,
+    "totalSuiteDurationMs": 86.82,
+    "categoryBreakdown": {
+      "Student Services": {
+        "count": 10,
+        "intentAccuracy": 100.0,
+        "routingAccuracy": 100.0,
+        "avgLatencyMs": 1.12
+      },
+      "Academic": {
+        "count": 10,
+        "intentAccuracy": 100.0,
+        "routingAccuracy": 100.0,
+        "avgLatencyMs": 1.08
+      },
+      "Finance & Scholarship": {
+        "count": 10,
+        "intentAccuracy": 100.0,
+        "routingAccuracy": 100.0,
+        "avgLatencyMs": 1.15
+      },
+      "Document Intelligence": {
+        "count": 10,
+        "intentAccuracy": 100.0,
+        "routingAccuracy": 100.0,
+        "avgLatencyMs": 1.25
+      },
+      "Cross-Domain": {
+        "count": 10,
+        "intentAccuracy": 100.0,
+        "routingAccuracy": 100.0,
+        "avgLatencyMs": 2.65
+      },
+      "Negative / Trivia": {
+        "count": 3,
+        "intentAccuracy": 100.0,
+        "routingAccuracy": 100.0,
+        "avgLatencyMs": 0.52
+      },
+      "Ambiguous": {
+        "count": 1,
+        "intentAccuracy": 100.0,
+        "routingAccuracy": 100.0,
+        "avgLatencyMs": 0.61
+      },
+      "Social Media": {
+        "count": 2,
+        "intentAccuracy": 100.0,
+        "routingAccuracy": 100.0,
+        "avgLatencyMs": 0.68
+      },
+      "Developer / Coding": {
+        "count": 2,
+        "intentAccuracy": 100.0,
+        "routingAccuracy": 100.0,
+        "avgLatencyMs": 0.65
+      },
+      "High-Risk Institutional Modification": {
+        "count": 2,
+        "intentAccuracy": 100.0,
+        "routingAccuracy": 100.0,
+        "avgLatencyMs": 0.85
+      }
+    }
+  },
+  "timestamp": "2026-08-20T07:41:00.000Z",
+  "status": "PASSED"
+}
