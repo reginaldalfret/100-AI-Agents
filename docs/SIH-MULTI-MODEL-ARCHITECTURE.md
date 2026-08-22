@@ -41,9 +41,10 @@ No single AI model excels at every industrial domain while fitting into constrai
 
 | Model | Role | Modalities | Quantization | VRAM Footprint | Primary Responsibilities |
 | :--- | :--- | :--- | :---: | :---: | :--- |
-| **NVIDIA Nemotron 3 Nano (4B)** | Epistemic Reasoning | Text / JSON | `Q4_K_M` | 2.84 GB | Orchestration, planning, SOP synthesis, statutory risk assessment, approval note drafting |
-| **Gemma 3 / Local Vision Engine** | Multimodal Vision & OCR | Image / PDF / Drawing | `FP16 / Int8` | 1.20 GB | Scanned NDT report tabular OCR, P&ID drawing tag extraction, CUI corrosion photo analysis |
-| **Qwen2.5-Coder (1.5B/3B)** | Code Generation & Debugging | Code / Text / Script | `Q4_K_M` | 1.10 GB | Python formula scripts, telemetry parsers, Excel formulas, sandbox automation |
+| **NVIDIA Nemotron 3 Nano (4B)** | Epistemic Reasoning | Text / JSON | `Q4_K_M` | 2.99 GB | Orchestration, planning, SOP synthesis, statutory risk assessment, approval note drafting |
+| **Google Gemma 3 (4B)** | Multimodal Vision & QA | Text / Image | `Q4_K_M` | 3.10 GB | Visual defect reasoning, P&ID drawing interpretation, equipment photo analysis |
+| **Local Vision & OCR Engine** | Document Ingestion & OCR | PDF / Image | `FP16 / Int8` | 0.45 GB | High-speed tabular NDT report digitization, P&ID tag extraction |
+| **Qwen2.5-Coder (1.5B)** | Code Generation & Math | Code / Python | `Q4_K_M` | 1.44 GB | Python formula scripts, corrosion rate math, sandbox automation |
 
 ---
 

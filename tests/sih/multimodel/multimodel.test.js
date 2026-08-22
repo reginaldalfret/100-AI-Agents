@@ -28,7 +28,7 @@ await runTestSuite("Sovereign Multi-Model Platform Tests (Nemotron, Vision, Code
       for (const t of visualTasks) {
         const c = classifyTask(t);
         assert.strictEqual(c.task_type, TaskType.VISION_MULTIMODAL);
-        assert.strictEqual(c.preferred_model_id, "local-vision-ocr");
+        assert.ok(c.preferred_model_id === "local-vision-ocr" || c.preferred_model_id === "gemma3-4b", `Expected vision model ID, got ${c.preferred_model_id}`);
       }
     }
   },

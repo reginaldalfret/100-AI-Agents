@@ -487,6 +487,41 @@ const server = http.createServer(async (req, res) => {
 
     if (
       req.method === "GET" &&
+      url.pathname.startsWith("/api/agents/") &&
+      url.pathname.endsWith("/details")
+    ) {
+      const agentId = url.pathname.replace(/^\/api\/agents\//, "").replace(/\/details$/, "");
+      const sihPath = path.join(ROOT, "registry", "sih-agent-mapping.json");
+      let agentList = agents;
+      if (fs.existsSync(sihPath)) {
+        const raw = JSON.parse(fs.readFileSync(sihPath, "utf8"));
+        agentList = Array.isArray(raw) ? raw : (raw.agents || []);
+      }
+      const agent = agentList.find(a => a.id === agentId || a.agent_id === agentId);
+      if (!agent) {
+        json(res, 404, { status: "error", error: `Agent not found: ${agentId}` });
+        return;
+      }
+      json(res, 200, {
+        status: "success",
+        agent: {
+          id: agent.id || agent.agent_id,
+          name: agent.name,
+          domain: agent.domain || agent.category || "general",
+          industrial_role: agent.industrial_role || agent.name,
+          description: agent.description || `Specialized AI agent for ${agent.domain || "general"} tasks.`,
+          capabilities: agent.capabilities || [],
+          tools: agent.tools || [],
+          permissions: agent.permissions || ["inference", "knowledge-search"],
+          model: agent.model || "nemotron-3-nano",
+          status: "ready"
+        }
+      });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
       url.pathname === "/api/workforce"
     ) {
       const sihPath = path.join(ROOT, "registry", "sih-agent-mapping.json");

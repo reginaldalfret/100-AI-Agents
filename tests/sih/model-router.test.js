@@ -34,6 +34,14 @@ await runTestSuite("Local Model Registry & Auto-Router Tests", [
     }
   },
   {
+    name: "Routes Equipment Photograph / Drawing to Google Gemma 3 4B",
+    fn: async () => {
+      const req = classifyTaskModelRequirements("Analyze this equipment photograph for localized pitting corrosion", [{ name: "defect_photo.jpg" }]);
+      assert.strictEqual(req.recommended_model_id, "gemma3-4b");
+      assert.strictEqual(req.primary_modality, "vision");
+    }
+  },
+  {
     name: "Route Task API returns zero external calls",
     fn: async () => {
       const result = await routeTaskToLocalModel({ prompt: "Review P&ID drawing DWG-201.png", attachments: [{ name: "DWG-201.png" }] });

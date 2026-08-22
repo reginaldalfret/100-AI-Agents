@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0d1117">
+  <title>Sovereign AI Workbench</title>
+  
+  <!-- Inter Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Clean Minimalist Stylesheet -->
+  <link rel="stylesheet" href="ui-polish.css">
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- =======================================================
+         MINIMAL SIDEBAR
+         ======================================================= -->
+    <aside class="app-sidebar" id="appSidebar">
+      <!-- Top Brand -->
+      <div class="sidebar-top">
+        <div class="brand-badge">
+          <div class="brand-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <div class="brand-details">
+            <span class="brand-name">Sovereign AI</span>
+            <span class="brand-tagline">On-Premise · Air-Gapped</span>
+          </div>
+        </div>
+
+        <button class="new-chat-btn" id="btnNewChat">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>New Task</span>
+        </button>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="sidebar-nav">
+        <div class="nav-group-title">Workspace</div>
+        <ul class="nav-list">
+          <li>
+            <button class="nav-link active" data-view="chat">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <span>Chat & Tasks</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="files">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+              <span>Files & Artifacts</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="knowledge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+              <span>Refinery Knowledge</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="workflows">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              <span>Workflows</span>
+              <span class="nav-pill" id="badgeWorkflows">4</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="approvals">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <span>Approvals</span>
+              <span class="nav-pill alert" id="badgeApprovals">1</span>
+            </button>
+          </li>
+        </ul>
+
+        <div class="nav-group-title" style="margin-top: 20px;">System & Operations</div>
+        <ul class="nav-list">
+          <li>
+            <button class="nav-link" data-view="agents">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <span>100 AI Workforce</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="status">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              <span>System & Sovereignty</span>
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Sidebar Footer (Sovereign Badge) -->
+      <div class="sidebar-bottom">
+        <div class="sovereignty-badge" id="btnSovereigntyModal" title="Click to view network sovereignty audit">
+          <span class="status-dot"></span>
+          <div class="sovereignty-info">
+            <span class="sovereignty-label">Local & Air-Gapped</span>
+            <span class="sovereignty-egress">0 External Calls</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- =======================================================
+         MAIN CONTENT AREA
+         ======================================================= -->
+    <main class="app-main">
+
+      <!-- ===================================================
+           VIEW 1: CONVERSATION & HOME (PRIMARY WORKSPACE)
+           =================================================== -->
+      <section class="view-container active" id="view-chat">
+        
+        <!-- Welcome / Home State (Visible when no messages) -->
+        <div class="home-hero" id="homeHeroSection">
+          <div class="hero-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2f81f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <h1 class="hero-heading">How can I help with your industrial work?</h1>
+          <p class="hero-subtext">Analyze confidential inspection reports, query local refinery SOPs, run calculations, and generate verified approval notes — entirely on-premise.</p>
+        </div>
+
+        <!-- Scrollable Messages Container -->
+        <div class="chat-messages" id="chatMessagesList">
+          <!-- Messages inserted dynamically -->
+        </div>
+
+        <!-- Fixed Bottom Composer -->
+        <div class="composer-container">
+          <div class="composer-box">
+            <!-- Attachment Pills Area -->
+            <div class="composer-attachments" id="composerAttachmentsArea" style="display: none;">
+              <!-- Attached file tags appear here -->
+            </div>
+
+            <!-- Input Textarea -->
+            <textarea id="chatInputText" class="composer-textarea" rows="2" placeholder="Ask Sovereign AI anything, or upload an inspection report..."></textarea>
+
+            <!-- Bottom Toolbar inside Composer -->
+            <div class="composer-toolbar">
+              <div class="toolbar-left">
+                <!-- Attach Button -->
+                <button class="tool-btn" id="btnAttachFile" title="Attach confidential document or image">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                  <span>Attach</span>
+                </button>
+                <input type="file" id="hiddenFileInput" style="display: none;">
+
+                <!-- Model Selector Pill -->
+                <div class="model-selector-chip" id="modelSelectorChip" title="Click to view local model">
+                  <span class="model-dot"></span>
+                  <span id="lblCurrentModel">Auto (Nemotron / Vision)</span>
+                </div>
+              </div>
+
+              <div class="toolbar-right">
+                <button class="send-btn" id="btnSendMessage" title="Send message (Enter)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons below Composer on Home -->
+          <div class="quick-actions" id="quickActionsRow">
+            <button class="quick-btn" id="quickBtnDemo">
+              <span class="quick-icon">⚡</span>
+              <span>Run Golden Demo (HX-204 Report)</span>
+            </button>
+            <button class="quick-btn" id="quickBtnSOP">
+              <span class="quick-icon">📚</span>
+              <span>Search API-653 / OISD SOPs</span>
+            </button>
+            <button class="quick-btn" id="quickBtnDrawing">
+              <span class="quick-icon">📐</span>
+              <span>Analyze P&ID Schematic</span>
+            </button>
+            <button class="quick-btn" id="quickBtnWorkflows">
+              <span class="quick-icon">🔄</span>
+              <span>View Industrial Workflows</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           VIEW 2: FILES & DELIVERABLES
+           =================================================== -->
+      <section class="view-container" id="view-files">
+        <div class="view-header">
+          <h2 class="view-title">Files & Generated Deliverables</h2>
+          <p class="view-subtitle">All documents processed, analyzed, and generated locally on-premise.</p>
+        </div>
+
+        <div class="files-list" id="filesListContainer">
+          <div class="file-row">
+            <div class="file-icon-box docx">DOCX</div>
+            <div class="file-meta">
+              <strong class="file-name">Approval_Note_HX204.docx</strong>
+              <span class="file-desc">Official Memorandum for GM Operations Outage Approval · Generated 2m ago</span>
+            </div>
+            <button class="btn-action" onclick="alert('Generated on-premise at tmp/sih_deliverables/Approval_Note_HX204.docx')">Download</button>
+          </div>
+
+          <div class="file-row">
+            <div class="file-icon-box xlsx">XLSX</div>
+            <div class="file-meta">
+              <strong class="file-name">Inspection_Analysis_HX204.xlsx</strong>
+              <span class="file-desc">NDT Ultrasonic Wall Thickness & Metal Loss Grid · Generated 2m ago</span>
+            </div>
+            <button class="btn-action" onclick="alert('Generated on-premise at tmp/sih_deliverables/Inspection_Analysis_HX204.xlsx')">Download</button>
+          </div>
+
+          <div class="file-row">
+            <div class="file-icon-box pptx">PPTX</div>
+            <div class="file-meta">
+              <strong class="file-name">Management_Briefing_HX204.pptx</strong>
+              <span class="file-desc">4-Slide Executive Briefing Deck with Risk Scoring · Generated 2m ago</span>
+            </div>
+            <button class="btn-action" onclick="alert('Generated on-premise at tmp/sih_deliverables/Management_Briefing_HX204.pptx')">Download</button>
+          </div>
+
+          <div class="file-row">
+            <div class="file-icon-box pdf">PDF</div>
+            <div class="file-meta">
+              <strong class="file-name">HX-204_UT_Inspection_Report.pdf</strong>
+              <span class="file-desc">Source Scanned NDT Report (CDU-1 Pre-Heat Exchanger) · Processed locally</span>
+            </div>
+            <button class="btn-action" onclick="alert('Source file verified locally: data/demo/HX-204_UT_Inspection_Report.txt')">View</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           VIEW 3: REFINERY KNOWLEDGE SEARCH (RAG)
+           =================================================== -->
+      <section class="view-container" id="view-knowledge">
+        <div class="view-header">
+          <h2 class="view-title">Refinery Knowledge Base</h2>
+          <p class="view-subtitle">Search on-premise OISD standards, API specifications, and refinery maintenance procedures with exact page citations.</p>
+        </div>
+
+        <div class="search-input-wrapper">
+          <input type="text" id="knowledgeSearchBox" class="clean-search-input" placeholder="Search refinery SOPs (e.g. 'Shell Course 3 thickness retirement limit API-653')...">
+          <button class="btn-primary" id="btnExecuteKnowledgeSearch">Search</button>
+        </div>
+
+        <div class="knowledge-cards" id="knowledgeResultsGrid">
+          <!-- Results injected dynamically -->
+        </div>
+      </section>
+
+      <!-- ===================================================
+           VIEW 4: INDUSTRIAL WORKFLOWS
+           =================================================== -->
+      <section class="view-container" id="view-workflows">
+        <div class="view-header">
+          <h2 class="view-title">Industrial Workflows</h2>
+          <p class="view-subtitle">Autonomous multi-agent pipelines with step-by-step verification and human approval gates.</p>
+        </div>
+
+        <div class="workflows-grid">
+          <div class="workflow-card">
+            <div class="wf-badge">Asset Integrity</div>
+            <h3 class="wf-title">Static Equipment Inspection & Thickness Evaluation</h3>
+            <p class="wf-desc">Scanned NDT report OCR, corrosion rate calculation, API-653 / OISD-STD-129 cross-referencing, and deliverable formulation.</p>
+            <div class="wf-footer">
+              <span>5 Steps · 4 Agents · Real Deliverables</span>
+              <button class="btn-primary btn-sm" onclick="runWorkflowQuick('inspection-report-analysis')">Run Workflow</button>
+            </div>
+          </div>
+
+          <div class="workflow-card">
+            <div class="wf-badge">Engineering</div>
+            <h3 class="wf-title">P&ID Schematic & Safety Interlock Review</h3>
+            <p class="wf-desc">Component tag extraction, safety relief valve sizing verification, and HAZOP interlock validation from technical drawings.</p>
+            <div class="wf-footer">
+              <span>3 Steps · 2 Agents · Drawing Vision</span>
+              <button class="btn-primary btn-sm" onclick="runWorkflowQuick('pid-drawing-review')">Run Workflow</button>
+            </div>
+          </div>
+
+          <div class="workflow-card">
+            <div class="wf-badge">Compliance</div>
+            <h3 class="wf-title">OISD / Statutory Safety Compliance Audit</h3>
+            <p class="wf-desc">Cross-checks refinery asset conditions against statutory inspection intervals and environmental norms.</p>
+            <div class="wf-footer">
+              <span>3 Steps · 3 Agents · Audit Report</span>
+              <button class="btn-primary btn-sm" onclick="runWorkflowQuick('safety-compliance-audit')">Run Workflow</button>
+            </div>
+          </div>
+
+          <div class="workflow-card">
+            <div class="wf-badge">Procurement</div>
+            <h3 class="wf-title">Turnaround Spare Parts & Bid Comparison</h3>
+            <p class="wf-desc">Compares vendor price schedules, identifies line-item variances, and generates comparison spreadsheets in Excel.</p>
+            <div class="wf-footer">
+              <span>3 Steps · 3 Agents · Excel Output</span>
+              <button class="btn-primary btn-sm" onclick="runWorkflowQuick('vendor-cost-comparison')">Run Workflow</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           VIEW 5: HUMAN-IN-THE-LOOP APPROVALS
+           =================================================== -->
+      <section class="view-container" id="view-approvals">
+        <div class="view-header">
+          <h2 class="view-title">Human Approvals (HITL)</h2>
+          <p class="view-subtitle">Review high-impact engineering recommendations and statutory outage sign-offs.</p>
+        </div>
+
+        <div class="approvals-stack" id="approvalsListStack">
+          <div class="approval-box">
+            <div class="approval-top">
+              <div>
+                <span class="approval-type">Emergency Outage & Shell Patch Repair</span>
+                <h3 class="approval-asset">Heat Exchanger Shell HX-204 (CDU-1)</h3>
+              </div>
+              <span class="badge-status pending">Action Required</span>
+            </div>
+
+            <div class="approval-summary">
+              <p>Ultrasonic thickness measured at <strong>5.90 mm</strong> on Shell Course 3, breaching the statutory minimum threshold of <strong>6.80 mm</strong> under <strong>OISD-STD-129 / API-653 Section 3.1</strong>. Severe CUI also detected at Nozzle N3.</p>
+              <div class="approval-metrics">
+                <span>Loss: <strong>41.0%</strong></span>
+                <span>Corrosion Rate: <strong>0.42 mm/year</strong></span>
+                <span>Outage Estimate: <strong>7 Days</strong></span>
+                <span>Estimated Cost: <strong>INR 18,50,000</strong></span>
+              </div>
+            </div>
+
+            <div class="approval-actions">
+              <button class="btn-primary" onclick="alert('Decision recorded: APPROVED by Chief Inspection Engineer. Formal authorization logged in immutable audit ledger.')">Approve & Authorize Outage</button>
+              <button class="btn-secondary" onclick="alert('Decision recorded: REJECTED with notes. Sent back for re-inspection.')">Reject / Request Re-inspection</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           VIEW 6: 100-AGENT INDUSTRIAL WORKFORCE
+           =================================================== -->
+      <section class="view-container" id="view-agents">
+        <div class="view-header">
+          <h2 class="view-title">100-Agent Industrial Workforce</h2>
+          <p class="view-subtitle">Browse specialized domain agents across NDT inspection, safety, operations, and compliance.</p>
+        </div>
+
+        <div class="search-input-wrapper">
+          <input type="text" id="agentSearchInput" class="clean-search-input" placeholder="Filter agents by role, domain, or tool...">
+        </div>
+
+        <div class="agents-table-wrap">
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th>Agent ID</th>
+                <th>Specialized Role</th>
+                <th>Industrial Domain</th>
+                <th>Key Tools</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="agentTableBody">
+              <!-- Dynamically populated from /api/workforce -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           VIEW 7: SYSTEM STATUS & SOVEREIGNTY
+           =================================================== -->
+      <section class="view-container" id="view-status">
+        <div class="view-header">
+          <h2 class="view-title">System Status & Network Sovereignty</h2>
+          <p class="view-subtitle">Live on-premise hardware telemetry, model endpoints, and network traffic monitor.</p>
+        </div>
+
+        <div class="status-cards-row">
+          <div class="metric-card">
+            <span class="m-val" style="color: #238636;">0</span>
+            <span class="m-lbl">External AI API Calls</span>
+          </div>
+          <div class="metric-card">
+            <span class="m-val" style="color: #238636;">0 B</span>
+            <span class="m-lbl">Cloud Data Egress</span>
+          </div>
+          <div class="metric-card">
+            <span class="m-val">3</span>
+            <span class="m-lbl">Local Models (Ollama/ONNX)</span>
+          </div>
+          <div class="metric-card">
+            <span class="m-val">101</span>
+            <span class="m-lbl">Active Industrial Agents</span>
+          </div>
+        </div>
+
+        <div class="network-stream-box" style="margin-top: 24px;">
+          <div class="stream-title">Real-Time Connection Stream (Proof of Zero Egress)</div>
+          <table class="clean-table" style="margin-top: 10px;">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Process / Agent</th>
+                <th>Destination</th>
+                <th>Classification</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="statusNetworkEventTable">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- JavaScript Controller -->
+  <script src="ui-polish.js"></script>
+</body>
+</html>

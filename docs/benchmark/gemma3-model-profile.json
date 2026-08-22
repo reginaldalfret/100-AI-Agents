@@ -1,0 +1,21 @@
+{
+  "model_name": "gemma3:4b",
+  "model_family": "gemma3",
+  "model_id": "a2af6cc3eb7f",
+  "parameter_count": "4.3B",
+  "quantization": "Q4_K_M",
+  "architecture": "gemma3",
+  "context_length": 131072,
+  "embedding_length": 2560,
+  "supported_modalities": ["text", "image"],
+  "capabilities": ["completion", "vision"],
+  "model_size_bytes": 3543348019,
+  "model_size_formatted": "3.3 GB",
+  "storage_location": "E:\\Smart Automation\\AI\\Models\\Ollama",
+  "primary_industrial_role": "multimodal_vision_and_defect_qa",
+  "hardware_requirements": {
+    "recommended_gpu": "NVIDIA RTX 2050 4GB VRAM",
+    "target_vram_mb": 3100,
+    "concurrency_policy": "sequential_single_slot"
+  }
+}
