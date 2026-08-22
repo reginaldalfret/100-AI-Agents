@@ -1033,6 +1033,23 @@ document.addEventListener('DOMContentLoaded', () => {
         return row;
     }
 
+    function createUserActionsRow(cleanContent) {
+        const row = document.createElement('div');
+        row.className = 'msg-actions-row user-actions-row';
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'btn-msg-action btn-copy-msg user-copy-btn';
+        copyBtn.title = 'Copy question text';
+        copyBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> <span>Copy</span>`;
+        copyBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            copyCleanResponse(cleanContent, copyBtn);
+        });
+
+        row.appendChild(copyBtn);
+        return row;
+    }
+
     function renderUserMessage(msg) {
         const div = document.createElement('div');
         div.className = 'msg-row user';
@@ -1069,6 +1086,12 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
+        const bubble = div.querySelector('.msg-bubble');
+        if (bubble && msg.content) {
+            const userActions = createUserActionsRow(msg.content);
+            bubble.appendChild(userActions);
+        }
+
         elements.chatMessages.appendChild(div);
     }
 
