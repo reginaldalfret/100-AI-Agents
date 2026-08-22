@@ -3,636 +3,438 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#07090e">
-  <title>Sovereign AI Workbench · Mangalore Refinery & Petrochemicals Limited (MRPL)</title>
+  <meta name="theme-color" content="#0d1117">
+  <title>Sovereign AI Workbench</title>
   
-  <!-- Inter & JetBrains Mono Fonts -->
+  <!-- Inter Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Enterprise Industrial Design System Stylesheet -->
+  <!-- Clean Minimalist Stylesheet -->
   <link rel="stylesheet" href="ui-polish.css">
 </head>
 
 <body>
-  <div class="app-shell">
+  <div class="app-layout">
 
     <!-- =======================================================
-         PERSISTENT SIDEBAR NAVIGATION
+         MINIMAL SIDEBAR
          ======================================================= -->
     <aside class="app-sidebar" id="appSidebar">
-      <!-- Brand Header -->
-      <div class="sidebar-header">
-        <div class="brand-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
-        </div>
-        <div class="brand-info">
-          <div class="brand-title">
-            <span>SOVEREIGN AI</span>
-            <span class="brand-tag">MRPL</span>
+      <!-- Top Brand -->
+      <div class="sidebar-top">
+        <div class="brand-badge">
+          <div class="brand-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
           </div>
-          <span class="brand-subtitle">Air-Gapped Industrial AI</span>
+          <div class="brand-details">
+            <span class="brand-name">Sovereign AI</span>
+            <span class="brand-tagline">On-Premise · Air-Gapped</span>
+          </div>
         </div>
+
+        <button class="new-chat-btn" id="btnNewChat">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>New Task</span>
+        </button>
       </div>
 
-      <!-- Sovereignty Status Chip -->
-      <div class="sovereignty-chip">
-        <div class="sovereignty-indicator"></div>
-        <div class="sovereignty-text">
-          <span class="sovereignty-title">SOVEREIGN MODE</span>
-          <span class="sovereignty-sub">0 External Calls · Local AI</span>
-        </div>
-      </div>
-
-      <!-- Navigation Tree -->
+      <!-- Navigation Links -->
       <nav class="sidebar-nav">
-        <!-- Section: Industrial Workbench -->
-        <div>
-          <div class="nav-section-title">Industrial Workbench</div>
-          <ul class="nav-items">
-            <li>
-              <button class="nav-item-btn active" data-view="dashboard">
-                <span class="nav-icon">🛡️</span>
-                <span>Workbench Home</span>
-              </button>
-            </li>
-            <li>
-              <button class="nav-item-btn" data-view="demo" style="background: rgba(37,99,235,0.15); border: 1px solid rgba(59,130,246,0.3);">
-                <span class="nav-icon">⚡</span>
-                <span style="font-weight: 700; color: #60a5fa;">Run Industrial Demo</span>
-                <span class="nav-badge" style="background:#2563eb; color:#fff;">1-Click</span>
-              </button>
-            </li>
-            <li>
-              <button class="nav-item-btn" data-view="multimodal">
-                <span class="nav-icon">📄</span>
-                <span>Multimodal Documents</span>
-              </button>
-            </li>
-            <li>
-              <button class="nav-item-btn" data-view="knowledge">
-                <span class="nav-icon">📚</span>
-                <span>Refinery Knowledge (RAG)</span>
-              </button>
-            </li>
-          </ul>
-        </div>
+        <div class="nav-group-title">Workspace</div>
+        <ul class="nav-list">
+          <li>
+            <button class="nav-link active" data-view="chat">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <span>Chat & Tasks</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="files">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+              <span>Files & Artifacts</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="knowledge">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+              <span>Refinery Knowledge</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="workflows">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+              <span>Workflows</span>
+              <span class="nav-pill" id="badgeWorkflows">4</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="approvals">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              <span>Approvals</span>
+              <span class="nav-pill alert" id="badgeApprovals">1</span>
+            </button>
+          </li>
+        </ul>
 
-        <!-- Section: Intelligence & Workforce -->
-        <div>
-          <div class="nav-section-title">Workforce & Models</div>
-          <ul class="nav-items">
-            <li>
-              <button class="nav-item-btn" data-view="workforce">
-                <span class="nav-icon">👥</span>
-                <span>100 Industrial Agents</span>
-                <span class="nav-badge" id="navAgentCountBadge">101</span>
-              </button>
-            </li>
-            <li>
-              <button class="nav-item-btn" data-view="models">
-                <span class="nav-icon">🧠</span>
-                <span>Local Model Router</span>
-                <span class="nav-badge">3 Local</span>
-              </button>
-            </li>
-            <li>
-              <button class="nav-item-btn" data-view="workflows">
-                <span class="nav-icon">🔄</span>
-                <span>Industrial Workflows</span>
-                <span class="nav-badge">4 Active</span>
-              </button>
-            </li>
-            <li>
-              <button class="nav-item-btn" data-view="chat">
-                <span class="nav-icon">💬</span>
-                <span>Sovereign Chat Console</span>
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Section: Governance & Sovereignty -->
-        <div>
-          <div class="nav-section-title">Governance & Egress</div>
-          <ul class="nav-items">
-            <li>
-              <button class="nav-item-btn" data-view="deliverables">
-                <span class="nav-icon">📦</span>
-                <span>Deliverables Center</span>
-                <span class="nav-badge">DOCX/XLSX/PPTX</span>
-              </button>
-            </li>
-            <li>
-              <button class="nav-item-btn" data-view="approvals">
-                <span class="nav-icon">✍️</span>
-                <span>Human Approvals (HITL)</span>
-                <span class="nav-badge" id="navPendingApprovalBadge" style="background:#f59e0b; color:#000;">1</span>
-              </button>
-            </li>
-            <li>
-              <button class="nav-item-btn" data-view="sovereignty">
-                <span class="nav-icon">🔒</span>
-                <span>Sovereignty & Egress Monitor</span>
-                <span class="nav-badge" style="background:#10b981; color:#000;">0 Egress</span>
-              </button>
-            </li>
-          </ul>
-        </div>
+        <div class="nav-group-title" style="margin-top: 20px;">System & Operations</div>
+        <ul class="nav-list">
+          <li>
+            <button class="nav-link" data-view="agents">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+              <span>100 AI Workforce</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-link" data-view="status">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              <span>System & Sovereignty</span>
+            </button>
+          </li>
+        </ul>
       </nav>
 
-      <!-- Sidebar Footer -->
-      <div class="sidebar-footer">
-        <div class="footer-system-status">
-          <div class="system-status-indicator"></div>
-          <div class="system-status-text">
-            <span class="system-status-title">MRPL On-Premise Air-Gap</span>
-            <span class="system-status-sub" id="sidebarOllamaStatus">Nemotron 3 Nano · RTX 2050 (4GB)</span>
+      <!-- Sidebar Footer (Sovereign Badge) -->
+      <div class="sidebar-bottom">
+        <div class="sovereignty-badge" id="btnSovereigntyModal" title="Click to view network sovereignty audit">
+          <span class="status-dot"></span>
+          <div class="sovereignty-info">
+            <span class="sovereignty-label">Local & Air-Gapped</span>
+            <span class="sovereignty-egress">0 External Calls</span>
           </div>
         </div>
       </div>
     </aside>
 
     <!-- =======================================================
-         MAIN WORKSPACE AREA
+         MAIN CONTENT AREA
          ======================================================= -->
     <main class="app-main">
-      <!-- Top Global Bar -->
-      <header class="app-topbar">
-        <div class="topbar-breadcrumbs">
-          <span class="breadcrumb-root">Mangalore Refinery & Petrochemicals Limited (MRPL)</span>
-          <span class="breadcrumb-separator">/</span>
-          <span class="breadcrumb-current" id="topbarCurrentViewTitle">Sovereign AI Workbench</span>
+
+      <!-- ===================================================
+           VIEW 1: CONVERSATION & HOME (PRIMARY WORKSPACE)
+           =================================================== -->
+      <section class="view-container active" id="view-chat">
+        
+        <!-- Welcome / Home State (Visible when no messages) -->
+        <div class="home-hero" id="homeHeroSection">
+          <div class="hero-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2f81f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <h1 class="hero-heading">How can I help with your industrial work?</h1>
+          <p class="hero-subtext">Analyze confidential inspection reports, query local refinery SOPs, run calculations, and generate verified approval notes — entirely on-premise.</p>
         </div>
 
-        <div class="topbar-actions">
-          <div class="sovereign-badge-live">
-            <span class="pulse-dot"></span>
-            <span>AIR-GAPPED SOVEREIGN ENVIRONMENT</span>
-          </div>
-          <div class="external-calls-counter">
-            <span>EXTERNAL EGRESS:</span>
-            <strong style="color: #10b981;">0 CALLS</strong>
-          </div>
+        <!-- Scrollable Messages Container -->
+        <div class="chat-messages" id="chatMessagesList">
+          <!-- Messages inserted dynamically -->
         </div>
-      </header>
 
-      <!-- Dynamic Content Area -->
-      <div class="app-content-container">
-
-        <!-- ===================================================
-             VIEW 1: WORKBENCH HOME / DASHBOARD
-             =================================================== -->
-        <section class="view-panel active" id="view-dashboard">
-          <!-- Hero Banner -->
-          <div class="dashboard-hero">
-            <div class="hero-left">
-              <div class="hero-tag">SIH PROBLEM STATEMENT · SMART AUTOMATION</div>
-              <h1 class="hero-title">Sovereign AI Workbench</h1>
-              <p class="hero-subtitle">Private Intelligence. Autonomous Work. Zero Data Exfiltration.<br>An on-premise multi-model agentic AI workforce engineered for confidential refinery and petrochemical operations.</p>
-              <div class="hero-actions">
-                <button class="btn btn-primary btn-lg" id="btnLaunchFlagshipDemo">
-                  <span>⚡ Run Flagship Industrial Demo</span>
-                </button>
-                <button class="btn btn-secondary btn-lg" data-switch-view="sovereignty">
-                  <span>🔒 View Egress Telemetry</span>
-                </button>
-              </div>
+        <!-- Fixed Bottom Composer -->
+        <div class="composer-container">
+          <div class="composer-box">
+            <!-- Attachment Pills Area -->
+            <div class="composer-attachments" id="composerAttachmentsArea" style="display: none;">
+              <!-- Attached file tags appear here -->
             </div>
-            <div class="hero-right">
-              <div class="hero-stat-card">
-                <span class="stat-num">101</span>
-                <span class="stat-lbl">Industrial Agents</span>
+
+            <!-- Input Textarea -->
+            <textarea id="chatInputText" class="composer-textarea" rows="2" placeholder="Ask Sovereign AI anything, or upload an inspection report..."></textarea>
+
+            <!-- Bottom Toolbar inside Composer -->
+            <div class="composer-toolbar">
+              <div class="toolbar-left">
+                <!-- Attach Button -->
+                <button class="tool-btn" id="btnAttachFile" title="Attach confidential document or image">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                  <span>Attach</span>
+                </button>
+                <input type="file" id="hiddenFileInput" style="display: none;">
+
+                <!-- Model Selector Pill -->
+                <div class="model-selector-chip" id="modelSelectorChip" title="Click to view local model">
+                  <span class="model-dot"></span>
+                  <span id="lblCurrentModel">Auto (Nemotron / Vision)</span>
+                </div>
               </div>
-              <div class="hero-stat-card">
-                <span class="stat-num">3</span>
-                <span class="stat-lbl">Local Models</span>
-              </div>
-              <div class="hero-stat-card" style="border-color: rgba(16,185,129,0.4);">
-                <span class="stat-num" style="color: #10b981;">0</span>
-                <span class="stat-lbl">External Egress</span>
-              </div>
-              <div class="hero-stat-card">
-                <span class="stat-num">100%</span>
-                <span class="stat-lbl">On-Premise</span>
+
+              <div class="toolbar-right">
+                <button class="send-btn" id="btnSendMessage" title="Send message (Enter)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
               </div>
             </div>
           </div>
 
-          <!-- 4 Core Pillars Grid -->
-          <div class="pillars-grid">
-            <div class="pillar-card">
-              <div class="pillar-icon">📄</div>
-              <h3>Multimodal Intelligence</h3>
-              <p>OCR on scanned NDT inspection reports, P&ID engineering drawings, and site corrosion defect photographs without cloud APIs.</p>
-            </div>
-            <div class="pillar-card">
-              <div class="pillar-icon">🧠</div>
-              <h3>Model Auto-Router</h3>
-              <p>Dynamic local task routing across Nemotron 3 Nano (Reasoning), Local Multimodal (Vision/OCR), and Local Code Specialist.</p>
-            </div>
-            <div class="pillar-card">
-              <div class="pillar-icon">📚</div>
-              <h3>Refinery Knowledge RAG</h3>
-              <p>Local vector search and grounded reasoning referencing OISD-STD-129, API-653, and refinery operating manuals with exact page citations.</p>
-            </div>
-            <div class="pillar-card">
-              <div class="pillar-icon">📦</div>
-              <h3>Real Deliverables Engine</h3>
-              <p>Auto-generates official Word Approval Notes (.docx), Inspection Spreadsheets (.xlsx), and Management Decks (.pptx).</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===================================================
-             VIEW 2: FLAGSHIP INDUSTRIAL DEMO
-             =================================================== -->
-        <section class="view-panel" id="view-demo">
-          <div class="section-header">
-            <div>
-              <h2 class="section-title">Flagship Industrial Inspection Demo</h2>
-              <p class="section-subtitle">Simulate real-time analysis of a scanned static equipment inspection report (Tank TK-101) with multi-agent coordination.</p>
-            </div>
-            <button class="btn btn-primary" id="btnExecuteDemoStep">
-              <span>▶ Run Complete Industrial Pipeline</span>
+          <!-- Quick Action Buttons below Composer on Home -->
+          <div class="quick-actions" id="quickActionsRow">
+            <button class="quick-btn" id="quickBtnDemo">
+              <span class="quick-icon">⚡</span>
+              <span>Run Golden Demo (HX-204 Report)</span>
+            </button>
+            <button class="quick-btn" id="quickBtnSOP">
+              <span class="quick-icon">📚</span>
+              <span>Search API-653 / OISD SOPs</span>
+            </button>
+            <button class="quick-btn" id="quickBtnDrawing">
+              <span class="quick-icon">📐</span>
+              <span>Analyze P&ID Schematic</span>
+            </button>
+            <button class="quick-btn" id="quickBtnWorkflows">
+              <span class="quick-icon">🔄</span>
+              <span>View Industrial Workflows</span>
             </button>
           </div>
+        </div>
+      </section>
 
-          <!-- Execution Graph Visualizer -->
-          <div class="dag-pipeline-card">
-            <div class="dag-header">
-              <span>MULTI-AGENT DAG EXECUTION GRAPH</span>
-              <span class="badge badge-success">Sovereign Orchestration</span>
+      <!-- ===================================================
+           VIEW 2: FILES & DELIVERABLES
+           =================================================== -->
+      <section class="view-container" id="view-files">
+        <div class="view-header">
+          <h2 class="view-title">Files & Generated Deliverables</h2>
+          <p class="view-subtitle">All documents processed, analyzed, and generated locally on-premise.</p>
+        </div>
+
+        <div class="files-list" id="filesListContainer">
+          <div class="file-row">
+            <div class="file-icon-box docx">DOCX</div>
+            <div class="file-meta">
+              <strong class="file-name">Approval_Note_HX204.docx</strong>
+              <span class="file-desc">Official Memorandum for GM Operations Outage Approval · Generated 2m ago</span>
             </div>
-            <div class="dag-steps-row">
-              <div class="dag-step-node completed">
-                <span class="step-idx">1</span>
-                <span class="step-name">Local OCR Engine</span>
-                <span class="step-role">Scanned PDF Ingestion</span>
-              </div>
-              <div class="dag-arrow">→</div>
-              <div class="dag-step-node completed">
-                <span class="step-idx">2</span>
-                <span class="step-name">NDT Thickness Agent</span>
-                <span class="step-role">Corrosion Rate Math</span>
-              </div>
-              <div class="dag-arrow">→</div>
-              <div class="dag-step-node completed">
-                <span class="step-idx">3</span>
-                <span class="step-name">SOP Retrieval Agent</span>
-                <span class="step-role">API-653 / OISD Search</span>
-              </div>
-              <div class="dag-arrow">→</div>
-              <div class="dag-step-node completed">
-                <span class="step-idx">4</span>
-                <span class="step-name">Deliverables Engine</span>
-                <span class="step-role">DOCX / XLSX / PPTX</span>
-              </div>
-              <div class="dag-arrow">→</div>
-              <div class="dag-step-node pending">
-                <span class="step-idx">5</span>
-                <span class="step-name">Chief Engineer Sign-off</span>
-                <span class="step-role">Human Approval (HITL)</span>
-              </div>
+            <button class="btn-action" onclick="alert('Generated on-premise at tmp/sih_deliverables/Approval_Note_HX204.docx')">Download</button>
+          </div>
+
+          <div class="file-row">
+            <div class="file-icon-box xlsx">XLSX</div>
+            <div class="file-meta">
+              <strong class="file-name">Inspection_Analysis_HX204.xlsx</strong>
+              <span class="file-desc">NDT Ultrasonic Wall Thickness & Metal Loss Grid · Generated 2m ago</span>
+            </div>
+            <button class="btn-action" onclick="alert('Generated on-premise at tmp/sih_deliverables/Inspection_Analysis_HX204.xlsx')">Download</button>
+          </div>
+
+          <div class="file-row">
+            <div class="file-icon-box pptx">PPTX</div>
+            <div class="file-meta">
+              <strong class="file-name">Management_Briefing_HX204.pptx</strong>
+              <span class="file-desc">4-Slide Executive Briefing Deck with Risk Scoring · Generated 2m ago</span>
+            </div>
+            <button class="btn-action" onclick="alert('Generated on-premise at tmp/sih_deliverables/Management_Briefing_HX204.pptx')">Download</button>
+          </div>
+
+          <div class="file-row">
+            <div class="file-icon-box pdf">PDF</div>
+            <div class="file-meta">
+              <strong class="file-name">HX-204_UT_Inspection_Report.pdf</strong>
+              <span class="file-desc">Source Scanned NDT Report (CDU-1 Pre-Heat Exchanger) · Processed locally</span>
+            </div>
+            <button class="btn-action" onclick="alert('Source file verified locally: data/demo/HX-204_UT_Inspection_Report.txt')">View</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           VIEW 3: REFINERY KNOWLEDGE SEARCH (RAG)
+           =================================================== -->
+      <section class="view-container" id="view-knowledge">
+        <div class="view-header">
+          <h2 class="view-title">Refinery Knowledge Base</h2>
+          <p class="view-subtitle">Search on-premise OISD standards, API specifications, and refinery maintenance procedures with exact page citations.</p>
+        </div>
+
+        <div class="search-input-wrapper">
+          <input type="text" id="knowledgeSearchBox" class="clean-search-input" placeholder="Search refinery SOPs (e.g. 'Shell Course 3 thickness retirement limit API-653')...">
+          <button class="btn-primary" id="btnExecuteKnowledgeSearch">Search</button>
+        </div>
+
+        <div class="knowledge-cards" id="knowledgeResultsGrid">
+          <!-- Results injected dynamically -->
+        </div>
+      </section>
+
+      <!-- ===================================================
+           VIEW 4: INDUSTRIAL WORKFLOWS
+           =================================================== -->
+      <section class="view-container" id="view-workflows">
+        <div class="view-header">
+          <h2 class="view-title">Industrial Workflows</h2>
+          <p class="view-subtitle">Autonomous multi-agent pipelines with step-by-step verification and human approval gates.</p>
+        </div>
+
+        <div class="workflows-grid">
+          <div class="workflow-card">
+            <div class="wf-badge">Asset Integrity</div>
+            <h3 class="wf-title">Static Equipment Inspection & Thickness Evaluation</h3>
+            <p class="wf-desc">Scanned NDT report OCR, corrosion rate calculation, API-653 / OISD-STD-129 cross-referencing, and deliverable formulation.</p>
+            <div class="wf-footer">
+              <span>5 Steps · 4 Agents · Real Deliverables</span>
+              <button class="btn-primary btn-sm" onclick="runWorkflowQuick('inspection-report-analysis')">Run Workflow</button>
             </div>
           </div>
 
-          <!-- Demo Findings & Deliverables Result -->
-          <div class="demo-results-grid" style="margin-top: 24px;">
-            <div class="findings-card">
-              <h3>Extracted Inspection Findings (Tank TK-101)</h3>
-              <div class="finding-item critical">
-                <strong>CRITICAL DEFECT:</strong> Shell Course 3 measured minimum thickness at <strong>5.90 mm</strong> (Retirement Minimum: <strong>6.80 mm</strong>).
-              </div>
-              <div class="finding-item warning">
-                <strong>VISUAL DEFECT:</strong> Severe CUI detected around lower Nozzle N3 neck.
-              </div>
-              <div class="finding-item info">
-                <strong>CALCULATION:</strong> Corrosion Rate computed at <strong>0.421 mm/year</strong>. Remaining Life: <strong>0 years (Breached)</strong>.
-              </div>
-              <div class="finding-item info">
-                <strong>STATUTORY CITATION:</strong> OISD-STD-129 / API-653 Section 4.3.3 mandates emergency de-inventory and shell flush insert patch.
-              </div>
-            </div>
-
-            <div class="deliverables-preview-card">
-              <h3>Generated Industrial Deliverables</h3>
-              <div class="deliverable-file-item">
-                <div class="file-icon docx">DOCX</div>
-                <div class="file-info">
-                  <strong>Approval_Note_TK101.docx</strong>
-                  <span>Official Memorandum for GM Operations Sign-off</span>
-                </div>
-                <button class="btn btn-sm btn-secondary" onclick="alert('Generated on-premise at tmp/sih_deliverables/Approval_Note_TK101.docx')">Download</button>
-              </div>
-              <div class="deliverable-file-item">
-                <div class="file-icon xlsx">XLSX</div>
-                <div class="file-info">
-                  <strong>Inspection_Analysis_TK101.xlsx</strong>
-                  <span>Complete NDT Ultrasonic Thickness Grid Workbook</span>
-                </div>
-                <button class="btn btn-sm btn-secondary" onclick="alert('Generated on-premise at tmp/sih_deliverables/Inspection_Analysis_TK101.xlsx')">Download</button>
-              </div>
-              <div class="deliverable-file-item">
-                <div class="file-icon pptx">PPTX</div>
-                <div class="file-info">
-                  <strong>Management_Briefing_TK101.pptx</strong>
-                  <span>4-Slide Executive Briefing Deck for Committee</span>
-                </div>
-                <button class="btn btn-sm btn-secondary" onclick="alert('Generated on-premise at tmp/sih_deliverables/Management_Briefing_TK101.pptx')">Download</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===================================================
-             VIEW 3: MULTIMODAL DOCUMENTS
-             =================================================== -->
-        <section class="view-panel" id="view-multimodal">
-          <div class="section-header">
-            <div>
-              <h2 class="section-title">Multimodal Document & Vision Workspace</h2>
-              <p class="section-subtitle">Process scanned inspection dossiers, P&ID engineering schematics, and site defect photos locally.</p>
+          <div class="workflow-card">
+            <div class="wf-badge">Engineering</div>
+            <h3 class="wf-title">P&ID Schematic & Safety Interlock Review</h3>
+            <p class="wf-desc">Component tag extraction, safety relief valve sizing verification, and HAZOP interlock validation from technical drawings.</p>
+            <div class="wf-footer">
+              <span>3 Steps · 2 Agents · Drawing Vision</span>
+              <button class="btn-primary btn-sm" onclick="runWorkflowQuick('pid-drawing-review')">Run Workflow</button>
             </div>
           </div>
 
-          <div class="multimodal-grid">
-            <div class="upload-dropzone-card">
-              <div class="dropzone-inner">
-                <div class="dropzone-icon">📁</div>
-                <h4>Upload Industrial Document / Drawing / Image</h4>
-                <p>Drag & drop scanned PDF, P&ID PNG/JPG, or Site Photograph</p>
-                <input type="file" id="localFileInput" style="display:none;">
-                <button class="btn btn-primary" onclick="document.getElementById('localFileInput').click();">Select Local File</button>
-                <span class="airgap-note">🔒 File remains on-premise. Never sent to cloud.</span>
+          <div class="workflow-card">
+            <div class="wf-badge">Compliance</div>
+            <h3 class="wf-title">OISD / Statutory Safety Compliance Audit</h3>
+            <p class="wf-desc">Cross-checks refinery asset conditions against statutory inspection intervals and environmental norms.</p>
+            <div class="wf-footer">
+              <span>3 Steps · 3 Agents · Audit Report</span>
+              <button class="btn-primary btn-sm" onclick="runWorkflowQuick('safety-compliance-audit')">Run Workflow</button>
+            </div>
+          </div>
+
+          <div class="workflow-card">
+            <div class="wf-badge">Procurement</div>
+            <h3 class="wf-title">Turnaround Spare Parts & Bid Comparison</h3>
+            <p class="wf-desc">Compares vendor price schedules, identifies line-item variances, and generates comparison spreadsheets in Excel.</p>
+            <div class="wf-footer">
+              <span>3 Steps · 3 Agents · Excel Output</span>
+              <button class="btn-primary btn-sm" onclick="runWorkflowQuick('vendor-cost-comparison')">Run Workflow</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           VIEW 5: HUMAN-IN-THE-LOOP APPROVALS
+           =================================================== -->
+      <section class="view-container" id="view-approvals">
+        <div class="view-header">
+          <h2 class="view-title">Human Approvals (HITL)</h2>
+          <p class="view-subtitle">Review high-impact engineering recommendations and statutory outage sign-offs.</p>
+        </div>
+
+        <div class="approvals-stack" id="approvalsListStack">
+          <div class="approval-box">
+            <div class="approval-top">
+              <div>
+                <span class="approval-type">Emergency Outage & Shell Patch Repair</span>
+                <h3 class="approval-asset">Heat Exchanger Shell HX-204 (CDU-1)</h3>
+              </div>
+              <span class="badge-status pending">Action Required</span>
+            </div>
+
+            <div class="approval-summary">
+              <p>Ultrasonic thickness measured at <strong>5.90 mm</strong> on Shell Course 3, breaching the statutory minimum threshold of <strong>6.80 mm</strong> under <strong>OISD-STD-129 / API-653 Section 3.1</strong>. Severe CUI also detected at Nozzle N3.</p>
+              <div class="approval-metrics">
+                <span>Loss: <strong>41.0%</strong></span>
+                <span>Corrosion Rate: <strong>0.42 mm/year</strong></span>
+                <span>Outage Estimate: <strong>7 Days</strong></span>
+                <span>Estimated Cost: <strong>INR 18,50,000</strong></span>
               </div>
             </div>
 
-            <div class="sample-documents-card">
-              <h4>Sample Industrial Assets in Local Workspace</h4>
-              <div class="sample-doc-item">
-                <span>📄 TK-101_UT_Thickness_Report.pdf (Scanned NDT Report)</span>
-                <button class="btn btn-sm btn-secondary" onclick="runSampleOCR()">Process OCR</button>
-              </div>
-              <div class="sample-doc-item">
-                <span>📐 DWG-MRPL-CDU-201-REV4.png (P&ID Schematic)</span>
-                <button class="btn btn-sm btn-secondary" onclick="runSampleDrawing()">Extract Tags</button>
-              </div>
-              <div class="sample-doc-item">
-                <span>📷 Nozzle_N3_Corrosion_SitePhoto.jpg (Visual CUI)</span>
-                <button class="btn btn-sm btn-secondary" onclick="runSamplePhoto()">Analyze Defect</button>
-              </div>
+            <div class="approval-actions">
+              <button class="btn-primary" onclick="alert('Decision recorded: APPROVED by Chief Inspection Engineer. Formal authorization logged in immutable audit ledger.')">Approve & Authorize Outage</button>
+              <button class="btn-secondary" onclick="alert('Decision recorded: REJECTED with notes. Sent back for re-inspection.')">Reject / Request Re-inspection</button>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <!-- ===================================================
-             VIEW 4: REFINERY KNOWLEDGE BASE (RAG)
-             =================================================== -->
-        <section class="view-panel" id="view-knowledge">
-          <div class="section-header">
-            <div>
-              <h2 class="section-title">Refinery Knowledge Base & Local RAG</h2>
-              <p class="section-subtitle">Query local repository of OISD standards, API specifications, and refinery maintenance manuals with exact page citations.</p>
-            </div>
+      <!-- ===================================================
+           VIEW 6: 100-AGENT INDUSTRIAL WORKFORCE
+           =================================================== -->
+      <section class="view-container" id="view-agents">
+        <div class="view-header">
+          <h2 class="view-title">100-Agent Industrial Workforce</h2>
+          <p class="view-subtitle">Browse specialized domain agents across NDT inspection, safety, operations, and compliance.</p>
+        </div>
+
+        <div class="search-input-wrapper">
+          <input type="text" id="agentSearchInput" class="clean-search-input" placeholder="Filter agents by role, domain, or tool...">
+        </div>
+
+        <div class="agents-table-wrap">
+          <table class="clean-table">
+            <thead>
+              <tr>
+                <th>Agent ID</th>
+                <th>Specialized Role</th>
+                <th>Industrial Domain</th>
+                <th>Key Tools</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="agentTableBody">
+              <!-- Dynamically populated from /api/workforce -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================================================
+           VIEW 7: SYSTEM STATUS & SOVEREIGNTY
+           =================================================== -->
+      <section class="view-container" id="view-status">
+        <div class="view-header">
+          <h2 class="view-title">System Status & Network Sovereignty</h2>
+          <p class="view-subtitle">Live on-premise hardware telemetry, model endpoints, and network traffic monitor.</p>
+        </div>
+
+        <div class="status-cards-row">
+          <div class="metric-card">
+            <span class="m-val" style="color: #238636;">0</span>
+            <span class="m-lbl">External AI API Calls</span>
           </div>
-
-          <div class="knowledge-search-bar">
-            <input type="text" id="knowledgeSearchInput" class="form-input" placeholder="Search refinery SOPs (e.g. 'Crude tank Shell Course 3 retirement thickness API-653')...">
-            <button class="btn btn-primary" id="btnKnowledgeSearch">Search Local SOPs</button>
+          <div class="metric-card">
+            <span class="m-val" style="color: #238636;">0 B</span>
+            <span class="m-lbl">Cloud Data Egress</span>
           </div>
-
-          <div class="knowledge-results-container" id="knowledgeResultsArea" style="margin-top: 20px;">
-            <!-- Rendered dynamically -->
+          <div class="metric-card">
+            <span class="m-val">3</span>
+            <span class="m-lbl">Local Models (Ollama/ONNX)</span>
           </div>
-        </section>
-
-        <!-- ===================================================
-             VIEW 5: 100-AGENT INDUSTRIAL WORKFORCE
-             =================================================== -->
-        <section class="view-panel" id="view-workforce">
-          <div class="section-header">
-            <div>
-              <h2 class="section-title">100-Agent Industrial AI Workforce</h2>
-              <p class="section-subtitle">Browse 100 specialized industrial AI micro-servers + Sovereign Master Orchestrator (Agent 101).</p>
-            </div>
-            <div class="workforce-filters">
-              <input type="text" id="agentFilterInput" class="form-input" placeholder="Search agents by role, domain, or tool...">
-            </div>
+          <div class="metric-card">
+            <span class="m-val">101</span>
+            <span class="m-lbl">Active Industrial Agents</span>
           </div>
+        </div>
 
-          <div class="agent-grid" id="agentWorkforceGrid">
-            <!-- Rendered dynamically from sih-agent-mapping.json -->
-          </div>
-        </section>
+        <div class="network-stream-box" style="margin-top: 24px;">
+          <div class="stream-title">Real-Time Connection Stream (Proof of Zero Egress)</div>
+          <table class="clean-table" style="margin-top: 10px;">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Process / Agent</th>
+                <th>Destination</th>
+                <th>Classification</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="statusNetworkEventTable">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-        <!-- ===================================================
-             VIEW 6: LOCAL MODEL ROUTER
-             =================================================== -->
-        <section class="view-panel" id="view-models">
-          <div class="section-header">
-            <div>
-              <h2 class="section-title">Local Model Operations & Router</h2>
-              <p class="section-subtitle">Inspect registered local open-weight models, quantization, and hardware allocation.</p>
-            </div>
-          </div>
-
-          <div class="model-cards-grid">
-            <div class="model-card">
-              <div class="model-badge">TEXT & REASONING</div>
-              <h3>NVIDIA Nemotron 3 Nano</h3>
-              <p>4-Billion parameter dense model quantized to Q4_K_M running locally on Ollama. Powers task planning, SOP synthesis, and epistemic reasoning.</p>
-              <div class="model-meta">
-                <span>VRAM: 2.84 GB</span>
-                <span>Context: 4,096 tokens</span>
-                <span>Status: READY</span>
-              </div>
-            </div>
-
-            <div class="model-card">
-              <div class="model-badge" style="background:#8b5cf6;">MULTIMODAL & OCR</div>
-              <h3>Local Vision & OCR Engine</h3>
-              <p>In-process multimodal engine for scanned PDFs, table extraction, P&ID tag recognition, and visual defect classification.</p>
-              <div class="model-meta">
-                <span>VRAM: 1.20 GB</span>
-                <span>Modality: Vision / OCR</span>
-                <span>Status: READY</span>
-              </div>
-            </div>
-
-            <div class="model-card">
-              <div class="model-badge" style="background:#10b981;">CODE & AUTOMATION</div>
-              <h3>Local Code Specialist</h3>
-              <p>Dense open-weight coding specialist running in isolated sandbox for Python math scripts and telemetry parsing.</p>
-              <div class="model-meta">
-                <span>VRAM: 2.84 GB</span>
-                <span>Modality: Code</span>
-                <span>Status: READY</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===================================================
-             VIEW 7: INDUSTRIAL WORKFLOWS
-             =================================================== -->
-        <section class="view-panel" id="view-workflows">
-          <div class="section-header">
-            <div>
-              <h2 class="section-title">Industrial Workflow Engine</h2>
-              <p class="section-subtitle">Multi-step autonomous pipelines with state machine execution, evidence ledgers, and Human-in-the-Loop gates.</p>
-            </div>
-          </div>
-
-          <div class="workflows-list-grid" id="workflowsListGrid">
-            <!-- Rendered dynamically -->
-          </div>
-        </section>
-
-        <!-- ===================================================
-             VIEW 8: DELIVERABLES CENTER
-             =================================================== -->
-        <section class="view-panel" id="view-deliverables">
-          <div class="section-header">
-            <div>
-              <h2 class="section-title">Deliverables Center</h2>
-              <p class="section-subtitle">Browse, preview, and export generated Word, Excel, and PowerPoint deliverables.</p>
-            </div>
-          </div>
-
-          <div class="deliverables-container" id="deliverablesContainer">
-            <!-- Rendered dynamically -->
-          </div>
-        </section>
-
-        <!-- ===================================================
-             VIEW 9: HUMAN-IN-THE-LOOP APPROVALS
-             =================================================== -->
-        <section class="view-panel" id="view-approvals">
-          <div class="section-header">
-            <div>
-              <h2 class="section-title">Human-in-the-Loop Governance & Approvals</h2>
-              <p class="section-subtitle">Review high-impact engineering recommendations, emergency outage requests, and statutory sign-offs.</p>
-            </div>
-          </div>
-
-          <div class="pending-approvals-list" id="pendingApprovalsList">
-            <div class="approval-card">
-              <div class="approval-header">
-                <div>
-                  <h4>Emergency Outage & Shell Patch Repair Authorization</h4>
-                  <span class="approval-meta">Asset: Tank TK-101 | Risk: CRITICAL | Workflow Ref: WF-2026-TK101</span>
-                </div>
-                <span class="badge badge-warning">Awaiting Sign-off</span>
-              </div>
-              <p style="margin: 12px 0; color: #cbd5e1; font-size: 14px;">
-                Ultrasonic measurements indicate Shell Course 3 thickness is 5.90 mm (below 6.80 mm retirement limit). Immediate de-inventory and flush weld patch insertion recommended as per OISD-STD-129 / API-653.
-              </p>
-              <div class="approval-actions">
-                <button class="btn btn-primary" onclick="alert('Decision recorded: APPROVED by Chief Inspection Engineer. Audit logged.')">Approve & Authorize Outage</button>
-                <button class="btn btn-secondary" onclick="alert('Decision recorded: REJECTED with notes. Audit logged.')">Reject / Request Re-inspection</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===================================================
-             VIEW 10: SOVEREIGNTY CENTER & NETWORK MONITOR
-             =================================================== -->
-        <section class="view-panel" id="view-sovereignty">
-          <div class="section-header">
-            <div>
-              <h2 class="section-title">Sovereignty Center & Egress Monitor</h2>
-              <p class="section-subtitle">Real-time cryptographic proof that zero confidential data leaves the Mangalore Refinery network boundary.</p>
-            </div>
-          </div>
-
-          <div class="sovereignty-dashboard-grid">
-            <div class="telemetry-stat-card">
-              <span class="t-stat-val" style="color: #10b981;">0</span>
-              <span class="t-stat-lbl">External AI API Calls</span>
-            </div>
-            <div class="telemetry-stat-card">
-              <span class="t-stat-val" style="color: #10b981;">0 B</span>
-              <span class="t-stat-lbl">Cloud Data Egress</span>
-            </div>
-            <div class="telemetry-stat-card">
-              <span class="t-stat-val" style="color: #3b82f6;">100%</span>
-              <span class="t-stat-lbl">Local Loopback Traffic</span>
-            </div>
-            <div class="telemetry-stat-card">
-              <span class="t-stat-val" style="color: #60a5fa;">ACTIVE</span>
-              <span class="t-stat-lbl">Air-Gap Policy Gate</span>
-            </div>
-          </div>
-
-          <div class="network-event-stream-card" style="margin-top: 24px;">
-            <div class="stream-header">
-              <span>REAL-TIME NETWORK CONNECTION EVENT STREAM</span>
-              <span class="badge badge-success">Sovereign Interceptor Active</span>
-            </div>
-            <table class="stream-table">
-              <thead>
-                <tr>
-                  <th>Timestamp</th>
-                  <th>Process / Agent</th>
-                  <th>Destination</th>
-                  <th>Classification</th>
-                  <th>Decision</th>
-                </tr>
-              </thead>
-              <tbody id="networkEventTableBody">
-                <!-- Dynamically populated -->
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- ===================================================
-             VIEW 11: SOVEREIGN CHAT CONSOLE
-             =================================================== -->
-        <section class="view-panel" id="view-chat">
-          <div class="chat-container">
-            <div class="chat-sidebar">
-              <h4>Consult Specialist Agent</h4>
-              <select id="chatAgentSelector" class="form-input" style="margin-bottom: 12px;">
-                <option value="agent-101">Agent 101 · Sovereign Orchestrator</option>
-                <option value="agent-045">Agent 045 · Scanned PDF & OCR Specialist</option>
-                <option value="agent-058">Agent 058 · NDT Ultrasonic Thickness Agent</option>
-                <option value="agent-052">Agent 052 · P&ID & Piping Layout Specialist</option>
-                <option value="agent-040">Agent 040 · SOP Retrieval & Search Agent</option>
-                <option value="agent-049">Agent 049 · Technical Deliverable Generator</option>
-              </select>
-              <div class="agent-quick-info" id="chatAgentInfo">
-                <strong>Sovereign Orchestrator</strong>
-                <p>Coordinates multi-agent task planning, tool calling, and deliverable synthesis.</p>
-              </div>
-            </div>
-
-            <div class="chat-messages-area">
-              <div class="chat-history" id="chatHistoryArea">
-                <div class="chat-bubble system">
-                  <strong>Sovereign AI Workbench:</strong> Air-gapped session initialized on local endpoint 127.0.0.1. Enter an industrial task or select an action.
-                </div>
-              </div>
-
-              <div class="chat-input-bar">
-                <input type="text" id="chatMessageInput" class="form-input" placeholder="Ask specialist agent (e.g. 'Analyze Shell Course 3 thickness report and check API-653')...">
-                <button class="btn btn-primary" id="btnSendChatMessage">Send</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </div>
     </main>
   </div>
 
-  <!-- Main JavaScript Controller -->
+  <!-- JavaScript Controller -->
   <script src="ui-polish.js"></script>
 </body>
 </html>
