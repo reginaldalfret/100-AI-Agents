@@ -82,52 +82,50 @@
         </div>
       </header>
 
-      <!-- Main Sidebar Scroll Container -->
-      <div class="sidebar-scroll-container">
-        <!-- 1. Conversation History Section -->
-        <div class="sidebar-section" id="historySection">
-          <div class="section-header" id="historyHeader">
-            <span class="section-title">CHATS</span>
-            <span class="section-badge" id="chatCountBadge">0</span>
+      <!-- Panel 1: Independent Scrollable Conversation History (Chats) -->
+      <section class="sidebar-panel history-panel" id="historySection" aria-label="Chat history">
+        <div class="panel-header" id="historyHeader">
+          <span class="panel-title">CHATS</span>
+          <span class="panel-badge" id="chatCountBadge">0</span>
+        </div>
+        <div id="conversationList" class="conversation-list" role="region" aria-label="Chat history scroll region" tabindex="0">
+          <!-- Dynamically populated conversations grouped by date -->
+        </div>
+      </section>
+
+      <!-- Subtle Glass Section Divider -->
+      <div class="sidebar-panel-divider" aria-hidden="true"></div>
+
+      <!-- Panel 2: Independent Scrollable Agent Directory (Agents) -->
+      <section class="sidebar-panel agents-panel" id="agentDirectorySection" aria-label="AI agents">
+        <div class="panel-header" id="agentsHeader" style="cursor:pointer;" title="Click to toggle agent directory">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="panel-title">AGENTS</span>
+            <span class="panel-badge">101</span>
           </div>
-          <div id="conversationList" class="conversation-list">
-            <!-- Dynamically populated conversations grouped by date -->
-          </div>
+          <svg class="section-chevron" id="agentsChevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        
+        <!-- Category Filter Pills Bar (Fixed above agent scroll) -->
+        <div id="categoryFilterBar" class="category-filter-bar" role="toolbar" aria-label="Agent category filters">
+          <button class="category-pill active" data-category="all">All</button>
+          <button class="category-pill" data-category="Writing & Communication">Writing</button>
+          <button class="category-pill" data-category="Research & Knowledge">Research</button>
+          <button class="category-pill" data-category="Coding & Development">Coding</button>
+          <button class="category-pill" data-category="Data & Analytics">Data</button>
+          <button class="category-pill" data-category="Design & Creative">Design</button>
+          <button class="category-pill" data-category="Automation & Productivity">Automation</button>
+          <button class="category-pill" data-category="Security & Systems">Security</button>
+          <button class="category-pill" data-category="Business & Management">Business</button>
+          <button class="category-pill" data-category="Education & Learning">Education</button>
+          <button class="category-pill" data-category="Specialized AI">AI</button>
         </div>
 
-        <!-- 2. Agent Workforce Directory Section -->
-        <div class="sidebar-section" id="agentDirectorySection">
-          <div class="section-header" id="agentsHeader" style="cursor:pointer;" title="Click to toggle agent directory">
-            <div style="display:flex;align-items:center;gap:6px;">
-              <span class="section-title">AGENTS</span>
-              <span class="section-badge">101</span>
-            </div>
-            <svg class="section-chevron" id="agentsChevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-          
-          <div id="agentDirectoryBody" class="agent-directory-body">
-            <!-- Category Filter Pills Bar -->
-            <div id="categoryFilterBar" class="category-filter-bar">
-              <button class="category-pill active" data-category="all">All</button>
-              <button class="category-pill" data-category="Writing & Communication">Writing</button>
-              <button class="category-pill" data-category="Research & Knowledge">Research</button>
-              <button class="category-pill" data-category="Coding & Development">Coding</button>
-              <button class="category-pill" data-category="Data & Analytics">Data</button>
-              <button class="category-pill" data-category="Design & Creative">Design</button>
-              <button class="category-pill" data-category="Automation & Productivity">Automation</button>
-              <button class="category-pill" data-category="Security & Systems">Security</button>
-              <button class="category-pill" data-category="Business & Management">Business</button>
-              <button class="category-pill" data-category="Education & Learning">Education</button>
-              <button class="category-pill" data-category="Specialized AI">AI</button>
-            </div>
-
-            <!-- Scrollable Agent List (001..100 then 101 Super AI Agent at bottom) -->
-            <div id="agentList" class="agent-list">
-              <!-- Dynamically populated 101 agents -->
-            </div>
-          </div>
+        <!-- Scrollable Agent List (001..100 then 101 Super AI Agent at bottom) -->
+        <div id="agentList" class="agent-list" role="region" aria-label="AI agent list" tabindex="0">
+          <!-- Dynamically populated 101 agents -->
         </div>
-      </div>
+      </section>
 
       <!-- Footer: Compact System Status -->
       <footer class="sidebar-footer">
