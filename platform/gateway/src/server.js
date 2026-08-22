@@ -463,6 +463,68 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    // CONVERSATION HISTORY ENDPOINTS
+    if (req.method === "GET" && url.pathname === "/api/chats") {
+      const { listChats, searchChats } = await import("../../services/conversation-service.js");
+      const q = url.searchParams.get("q");
+      const chats = q ? searchChats(q) : listChats();
+      json(res, 200, { status: "success", chats });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/chats") {
+      const payload = await readBody(req);
+      const { createChat } = await import("../../services/conversation-service.js");
+      const chat = createChat(payload);
+      json(res, 201, { status: "success", chat });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname.startsWith("/api/chats/")) {
+      const id = url.pathname.replace("/api/chats/", "");
+      const { getChat } = await import("../../services/conversation-service.js");
+      const chat = getChat(id);
+      if (!chat) {
+        json(res, 404, { status: "error", error: `Chat not found: ${id}` });
+        return;
+      }
+      json(res, 200, { status: "success", chat });
+      return;
+    }
+
+    if (req.method === "PATCH" && url.pathname.startsWith("/api/chats/")) {
+      const id = url.pathname.replace("/api/chats/", "");
+      const payload = await readBody(req);
+      const { updateChat } = await import("../../services/conversation-service.js");
+      const chat = updateChat(id, payload);
+      if (!chat) {
+        json(res, 404, { status: "error", error: `Chat not found: ${id}` });
+        return;
+      }
+      json(res, 200, { status: "success", chat });
+      return;
+    }
+
+    if (req.method === "DELETE" && url.pathname.startsWith("/api/chats/")) {
+      const id = url.pathname.replace("/api/chats/", "");
+      const { deleteChat } = await import("../../services/conversation-service.js");
+      const success = deleteChat(id);
+      json(res, 200, { status: "success", deleted: success });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname.includes("/messages")) {
+      const match = url.pathname.match(/^\/api\/chats\/([^/]+)\/messages$/);
+      if (match) {
+        const id = match[1];
+        const payload = await readBody(req);
+        const { appendMessage } = await import("../../services/conversation-service.js");
+        const chat = appendMessage(id, payload);
+        json(res, 200, { status: "success", chat });
+        return;
+      }
+    }
+
     // SOVEREIGN WORKBENCH ENDPOINTS
     if (req.method === "GET" && url.pathname === "/api/sovereign/status") {
       const { getSovereigntyDashboardData } = await import("../../security/index.js");

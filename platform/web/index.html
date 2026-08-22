@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0a0e1a">
-  <title>Super AI — Industrial Agentic Intelligence</title>
-  <meta name="description" content="Super AI — On-Premise Industrial Agentic AI Workbench with 101 specialized agents and local multimodal intelligence.">
-  <meta property="og:title" content="Super AI">
-  <meta property="og:description" content="Super AI — On-Premise Industrial Agentic AI Workbench for Confidential Industrial Operations.">
+  <title>101 Super AI Agents</title>
+  <meta name="description" content="101 Super AI Agents — Intelligent Multi-Agent AI Workspace with 100 specialist AI agents + 1 master AI agent.">
+  <meta property="og:title" content="101 Super AI Agents">
+  <meta property="og:description" content="101 Super AI Agents — Intelligent Multi-Agent AI Workspace with 100 specialist AI agents + 1 master AI agent.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Super AI">
-  <meta name="twitter:description" content="Super AI — On-Premise Industrial Agentic AI Workbench.">
+  <meta name="twitter:title" content="101 Super AI Agents">
+  <meta name="twitter:description" content="101 Super AI Agents — Intelligent Multi-Agent AI Workspace.">
   
   <style>
     /* System font stack fallback to avoid external CDNs */
@@ -66,8 +66,8 @@
             </svg>
           </div>
           <div class="brand-text">
-            <h1 class="brand-title">SUPER AI</h1>
-            <p class="brand-subtitle">INDUSTRIAL INTELLIGENCE</p>
+            <h1 class="brand-title">101 SUPER AI AGENTS</h1>
+            <p class="brand-subtitle">Intelligent Multi-Agent Workspace</p>
           </div>
         </div>
         
@@ -78,13 +78,55 @@
         
         <div class="search-box">
           <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" id="agentSearch" placeholder="Search 101 agents...">
+          <input type="text" id="sidebarSearch" placeholder="Search 101 AI agents & chats...">
         </div>
       </header>
 
-      <!-- Scrollable Agent List (Full 101 Agents) -->
-      <div id="agentList" class="agent-list">
-        <!-- Agent items will be dynamically added here -->
+      <!-- Main Sidebar Scroll Container -->
+      <div class="sidebar-scroll-container">
+        <!-- 1. Conversation History Section -->
+        <div class="sidebar-section" id="historySection">
+          <div class="section-header" id="historyHeader">
+            <span class="section-title">CHATS</span>
+            <span class="section-badge" id="chatCountBadge">0</span>
+          </div>
+          <div id="conversationList" class="conversation-list">
+            <!-- Dynamically populated conversations grouped by date -->
+          </div>
+        </div>
+
+        <!-- 2. Agent Workforce Directory Section -->
+        <div class="sidebar-section" id="agentDirectorySection">
+          <div class="section-header" id="agentsHeader" style="cursor:pointer;" title="Click to toggle agent directory">
+            <div style="display:flex;align-items:center;gap:6px;">
+              <span class="section-title">AGENTS</span>
+              <span class="section-badge">101</span>
+            </div>
+            <svg class="section-chevron" id="agentsChevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </div>
+          
+          <div id="agentDirectoryBody" class="agent-directory-body">
+            <!-- Category Filter Pills Bar -->
+            <div id="categoryFilterBar" class="category-filter-bar">
+              <button class="category-pill active" data-category="all">All</button>
+              <button class="category-pill" data-category="Writing & Communication">Writing</button>
+              <button class="category-pill" data-category="Research & Knowledge">Research</button>
+              <button class="category-pill" data-category="Coding & Development">Coding</button>
+              <button class="category-pill" data-category="Data & Analytics">Data</button>
+              <button class="category-pill" data-category="Design & Creative">Design</button>
+              <button class="category-pill" data-category="Automation & Productivity">Automation</button>
+              <button class="category-pill" data-category="Security & Systems">Security</button>
+              <button class="category-pill" data-category="Business & Management">Business</button>
+              <button class="category-pill" data-category="Education & Learning">Education</button>
+              <button class="category-pill" data-category="Specialized AI">AI</button>
+            </div>
+
+            <!-- Scrollable Agent List (001..100 then 101 Super AI Agent at bottom) -->
+            <div id="agentList" class="agent-list">
+              <!-- Dynamically populated 101 agents -->
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Footer: Compact System Status -->
@@ -92,7 +134,7 @@
         <div class="system-status-card">
           <div class="status-indicator-row">
             <span class="dot live-pulse">●</span>
-            <span class="status-title">101 agents active</span>
+            <span class="status-title">101 Agents Active</span>
           </div>
           <span class="status-subtitle">All systems operational · Air-Gapped</span>
         </div>
@@ -519,6 +561,20 @@
       </div>
     </aside>
 
+  </div>
+
+  <!-- Delete Conversation Confirmation Modal -->
+  <div id="deleteModalBackdrop" class="modal-backdrop" style="display:none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Conversation?</h3>
+      </div>
+      <p class="modal-desc">This will permanently remove this conversation history from local storage. This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button id="btnCancelDelete" class="btn-modal btn-cancel">Cancel</button>
+        <button id="btnConfirmDelete" class="btn-modal btn-danger">Delete</button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>

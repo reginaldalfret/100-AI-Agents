@@ -5,3 +5,4 @@ export * as DocumentService from './document-service.js';
 export * as AdmissionService from './admission-service.js';
 export * as FacultyService from './faculty-service.js';
 export * as AuditService from './audit-service.js';
+export * as ConversationService from './conversation-service.js';
