@@ -296,12 +296,51 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      const result = await requestAgent(agent, {
-        task,
-        context: payload.context || {},
-        parameters: payload.parameters || {},
-        output_format: payload.output_format || "text"
-      });
+      const modelMode = payload.modelMode || payload.model_override || "auto";
+      let modelUsed = "NVIDIA Nemotron 3";
+      if (modelMode === "nemotron" || modelMode === "nemotron-3-nano") {
+        modelUsed = "NVIDIA Nemotron 3";
+      } else if (modelMode === "qwen" || modelMode === "local-code-specialist" || modelMode === "qwen2.5-coder:1.5b") {
+        modelUsed = "Qwen 2.5 Coder";
+      } else if (modelMode === "gemma" || modelMode === "gemma3-4b" || modelMode === "gemma3:4b") {
+        modelUsed = "Google Gemma 3";
+      } else {
+        // Auto routing based on task
+        const taskLower = task.toLowerCase();
+        if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc")) {
+          modelUsed = "Qwen 2.5 Coder";
+        } else if (taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr")) {
+          modelUsed = "Google Gemma 3";
+        } else {
+          modelUsed = "NVIDIA Nemotron 3";
+        }
+      }
+
+      let result;
+      try {
+        result = await requestAgent(agent, {
+          task,
+          context: payload.context || {},
+          parameters: payload.parameters || {},
+          model_override: payload.model_override || null,
+          modelMode,
+          output_format: payload.output_format || "text"
+        });
+      } catch (err) {
+        const inProc = await executeAgentInProcess(agent.agent_id, {
+          task,
+          context: payload.context || {},
+          parameters: payload.parameters || {},
+          model_override: payload.model_override || null,
+          modelMode,
+          output_format: payload.output_format || "text"
+        });
+        if (inProc) {
+          result = inProc;
+        } else {
+          throw err;
+        }
+      }
 
       json(res, 200, {
         gateway: "100-to-1",
@@ -311,6 +350,8 @@ const server = http.createServer(async (req, res) => {
           name: agent.name,
           category: agent.category
         },
+        model: modelUsed,
+        modelMode,
         result
       });
 
@@ -482,6 +523,41 @@ const server = http.createServer(async (req, res) => {
 
       const updated = await WorkflowEngine.submitDecision(id, payload.decision, payload.notes || "");
       json(res, 200, { status: "success", instance: updated });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
+      url.pathname.startsWith("/api/agents/") &&
+      url.pathname.endsWith("/details")
+    ) {
+      const agentId = url.pathname.replace(/^\/api\/agents\//, "").replace(/\/details$/, "");
+      const sihPath = path.join(ROOT, "registry", "sih-agent-mapping.json");
+      let agentList = agents;
+      if (fs.existsSync(sihPath)) {
+        const raw = JSON.parse(fs.readFileSync(sihPath, "utf8"));
+        agentList = Array.isArray(raw) ? raw : (raw.agents || []);
+      }
+      const agent = agentList.find(a => a.id === agentId || a.agent_id === agentId);
+      if (!agent) {
+        json(res, 404, { status: "error", error: `Agent not found: ${agentId}` });
+        return;
+      }
+      json(res, 200, {
+        status: "success",
+        agent: {
+          id: agent.id || agent.agent_id,
+          name: agent.name,
+          domain: agent.domain || agent.category || "general",
+          industrial_role: agent.industrial_role || agent.name,
+          description: agent.description || `Specialized AI agent for ${agent.domain || "general"} tasks.`,
+          capabilities: agent.capabilities || [],
+          tools: agent.tools || [],
+          permissions: agent.permissions || ["inference", "knowledge-search"],
+          model: agent.model || "nemotron-3-nano",
+          status: "ready"
+        }
+      });
       return;
     }
 

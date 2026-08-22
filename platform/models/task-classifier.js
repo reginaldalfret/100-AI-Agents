@@ -12,7 +12,7 @@ export const TaskType = {
 };
 
 export function classifyTask(input = {}, maybeAttachments = []) {
-  const prompt = (typeof input === "string" ? input : input.prompt || "").toLowerCase();
+  const prompt = (typeof input === "string" ? input : input.task || input.prompt || input.query || "").toLowerCase();
   const attachments = Array.isArray(maybeAttachments) && maybeAttachments.length ? maybeAttachments : (Array.isArray(input.attachments) ? input.attachments : []);
 
   const hasImage = attachments.some(a => /\.(png|jpg|jpeg|webp|bmp|dwg|dxf)$/i.test(a.name || ""));
@@ -51,17 +51,18 @@ export function classifyTask(input = {}, maybeAttachments = []) {
   const isVision = hasImage || (hasPDF && (prompt.includes("scan") || prompt.includes("ocr"))) || visionKeywords.some(k => prompt.includes(k));
 
   if (isVision) {
-    const isScanPdf = hasPDF || prompt.includes("scan") || prompt.includes("ocr");
+    const isScanPdf = hasPDF || (prompt.includes("scan") && prompt.includes("pdf")) || (prompt.includes("ocr") && !prompt.includes("photo"));
+    const selectedModel = isScanPdf ? "local-vision-ocr" : "gemma3-4b";
     const mod = isScanPdf ? "ocr" : "vision";
     return {
       task_type: TaskType.VISION_MULTIMODAL,
       primary_modality: mod,
-      preferred_model_id: "local-vision-ocr",
-      recommended_model_id: "local-vision-ocr",
-      preferred_model_name: "Gemma 3 4B / Local Vision & OCR Engine",
+      preferred_model_id: selectedModel,
+      recommended_model_id: selectedModel,
+      preferred_model_name: isScanPdf ? "Local Vision & OCR Engine" : "Google Gemma 3 (4B Multimodal)",
       confidence: 0.95,
-      reason: "Visual or multimodal document understanding required",
-      recommended_agents: ["agent-045", "agent-052", "agent-058"]
+      reason: isScanPdf ? "High-speed OCR & document parsing required" : "Deep visual reasoning, photograph defect analysis, or P&ID schematic interpretation required",
+      recommended_agents: ["agent-045", "agent-051", "agent-052"]
     };
   }
 

@@ -4,10 +4,10 @@ import assert from "node:assert";
 
 await runTestSuite("Local Model Registry & Auto-Router Tests", [
   {
-    name: "Registers 3 Local Models with Zero Cloud Providers",
+    name: "Registers Local Models with Zero Cloud Providers",
     fn: async () => {
       const models = listAvailableModels();
-      assert.strictEqual(models.length, 3);
+      assert.ok(models.length >= 3);
       assert.ok(models.every(m => m.provider === "ollama" || m.provider === "local-multimodal"));
     }
   },
@@ -31,6 +31,14 @@ await runTestSuite("Local Model Registry & Auto-Router Tests", [
     fn: async () => {
       const req = classifyTaskModelRequirements("Summarize crude tank retirement limits under OISD standards");
       assert.strictEqual(req.recommended_model_id, "nemotron-3-nano");
+    }
+  },
+  {
+    name: "Routes Equipment Photograph / Drawing to Google Gemma 3 4B",
+    fn: async () => {
+      const req = classifyTaskModelRequirements("Analyze this equipment photograph for localized pitting corrosion", [{ name: "defect_photo.jpg" }]);
+      assert.strictEqual(req.recommended_model_id, "gemma3-4b");
+      assert.strictEqual(req.primary_modality, "vision");
     }
   },
   {

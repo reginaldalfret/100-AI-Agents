@@ -12,7 +12,22 @@ import { egressMonitor } from "../security/egress-monitor.js";
 
 export async function routeTaskToLocalModel(taskInput = {}) {
   const classification = classifyTask(taskInput);
-  const selectedModelId = classification.preferred_model_id;
+  let selectedModelId = classification.preferred_model_id;
+
+  if (taskInput.model_override) {
+    if (taskInput.model_override === 'gemma3:4b' || taskInput.model_override === 'gemma3-4b' || taskInput.model_override === 'gemma') {
+      selectedModelId = 'gemma3-4b';
+    } else if (taskInput.model_override === 'qwen2.5-coder:1.5b' || taskInput.model_override === 'local-code-specialist' || taskInput.model_override === 'qwen') {
+      selectedModelId = 'local-code-specialist';
+    } else if (taskInput.model_override === 'nemotron-3-nano' || taskInput.model_override === 'nemotron') {
+      selectedModelId = 'nemotron-3-nano';
+    }
+  } else if (taskInput.modelMode && taskInput.modelMode !== 'auto') {
+    if (taskInput.modelMode === 'gemma') selectedModelId = 'gemma3-4b';
+    else if (taskInput.modelMode === 'qwen') selectedModelId = 'local-code-specialist';
+    else if (taskInput.modelMode === 'nemotron') selectedModelId = 'nemotron-3-nano';
+  }
+
   const modelSpec = getModelById(selectedModelId) || LOCAL_MODELS[0];
 
   // 1. Verify Egress Sovereignty (Must be strictly local)

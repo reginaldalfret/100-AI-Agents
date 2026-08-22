@@ -1,0 +1,59 @@
+{
+  "audit_timestamp": "2026-08-22T12:30:00+05:30",
+  "operating_system": "Microsoft Windows 11 Pro for Workstations (Build 10.0.26200)",
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 2050 Laptop GPU",
+    "driver_version": "555.97",
+    "cuda_version": "12.5",
+    "total_vram_mb": 4096,
+    "initial_used_vram_mb": 247,
+    "free_vram_mb": 3849,
+    "power_cap_watts": 68,
+    "temperature_celsius": 57
+  },
+  "cpu": {
+    "architecture": "x64",
+    "cores": 8,
+    "logical_processors": 16
+  },
+  "memory": {
+    "total_ram_mb": 7913,
+    "free_ram_mb": 1108
+  },
+  "storage": {
+    "authoritative_workspace": "E:\\Smart Automation\\100-AI-Agents",
+    "ollama_models_path": "E:\\Smart Automation\\AI\\Models\\Ollama"
+  },
+  "runtime_stack": {
+    "ollama_host": "http://127.0.0.1:11434",
+    "node_version": "v22.x",
+    "models_installed": [
+      {
+        "name": "nemotron-3-nano:latest",
+        "id": "6f7a6b3e7130",
+        "size_bytes": 3006477107,
+        "size_formatted": "2.8 GB",
+        "primary_role": "epistemic_reasoning_and_orchestration"
+      },
+      {
+        "name": "gemma2:2b",
+        "id": "8ccf136fdd52",
+        "size_bytes": 1677721600,
+        "size_formatted": "1.6 GB",
+        "primary_role": "visual_reasoning_and_defect_qa"
+      },
+      {
+        "name": "qwen2.5-coder:1.5b",
+        "id": "d7372fd82851",
+        "size_bytes": 1033890201,
+        "size_formatted": "986 MB",
+        "primary_role": "code_and_math_sandbox"
+      },
+      {
+        "name": "local-vision-ocr",
+        "type": "in_process_multimodal_vision",
+        "primary_role": "document_ocr_and_drawing_extraction"
+      }
+    ]
+  }
+}

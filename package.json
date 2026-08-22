@@ -1,0 +1,31 @@
+{
+  "name": "super-ai-workbench",
+  "version": "2.0.0",
+  "description": "Super AI (Sovereign AI Workbench) - 100% On-Premise Industrial Autonomous Agentic Platform",
+  "type": "module",
+  "main": "platform/gateway/src/server.js",
+  "scripts": {
+    "start": "node platform/gateway/src/server.js",
+    "test": "node tests/sih/run-all-tests.js",
+    "test:sih": "node tests/sih/run-all-tests.js",
+    "test:fleet": "node tests/run-all-agents.js --concurrency=10",
+    "test:ui": "node tests/sih/ui/composer-ui.test.js && node tests/ui/model-selector.test.js && node tests/ui/agent-numbering.test.js",
+    "benchmark": "node scripts/benchmark/run-model-benchmark.js",
+    "fleet:start": "node scripts/run-fleet.js",
+    "supervisor": "node scripts/supervisor.js"
+  },
+  "keywords": [
+    "super-ai",
+    "sovereign-ai",
+    "industrial-agents",
+    "air-gapped",
+    "autonomous-planning",
+    "local-llm"
+  ],
+  "author": "Smart India Hackathon Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  }
+}
