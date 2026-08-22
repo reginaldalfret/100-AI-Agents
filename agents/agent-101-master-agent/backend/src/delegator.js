@@ -148,8 +148,10 @@ export async function delegate(
       {
         task,
         context,
+        model_override: context?.model_override || null,
         parameters: {
-          source: "agent-101-master"
+          source: "agent-101-master",
+          model: context?.model_override || null
         },
         output_format: "structured"
       }
@@ -167,7 +169,11 @@ export async function delegate(
       const fallbackResult = await executeAgentInProcess(agentId, {
         task,
         context,
-        parameters: { source: "agent-101-master" },
+        model_override: context?.model_override || null,
+        parameters: { 
+          source: "agent-101-master",
+          model: context?.model_override || null 
+        },
         output_format: "structured"
       });
 

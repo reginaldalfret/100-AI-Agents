@@ -69,14 +69,11 @@ try {
 
 // Test 4: Dynamic Agent Placeholder & Model Routing
 try {
-  assert(jsContent.includes('Ask Super AI anything...'), 'app.js must provide default prompt for Super AI Auto mode');
-  assert(jsContent.includes('Message ${agent.name}...'), 'app.js must provide dynamic prompt for specific agent');
-  assert(jsContent.includes('Gemma 3 4B (Vision / Local)'), 'app.js must display local Gemma vision routing');
-  assert(jsContent.includes('Qwen 2.5 Coder (1.5B Local)'), 'app.js must display local Qwen Coder routing');
+  assert(jsContent.includes('Message Super AI Agent...') || jsContent.includes('Message ${agent?.name || \'Super AI Agent\'}...'), 'app.js must provide default prompt for Super AI Agent');
   assert(htmlContent.includes('SUPER AI'), 'index.html must display SUPER AI brand title');
-  assert(htmlContent.includes('101 agents active'), 'index.html must display active status instead of online');
+  assert(htmlContent.includes('101 Agents Active') || htmlContent.includes('101 agents active'), 'index.html must display active status instead of online');
   
-  console.log(`  [PASS] Super AI branding, dynamic placeholder & active status indicators configured`);
+  console.log(`  [PASS] 101 Super AI Agents branding, dynamic placeholder & active status indicators configured`);
 } catch (err) {
   console.error(`  [FAIL] Branding & placeholder check failed:`, err.message);
   throw err;

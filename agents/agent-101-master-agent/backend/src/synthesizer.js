@@ -23,7 +23,8 @@ function extractJson(text) {
 export async function synthesize({
   originalTask,
   plan,
-  results
+  results,
+  model = "nemotron-3-nano:latest"
 }) {
   if (
     typeof originalTask !== "string" ||
@@ -49,22 +50,21 @@ export async function synthesize({
   );
 
   const system = `
-You are the final synthesis subsystem of the AI Master Agent.
+You are the final synthesis and orchestration engine of Super AI (Agent 101 Master Agent).
 
-Your job is to produce the best possible final answer to the user's
-original task using the specialist results.
+Your job is to produce a comprehensive, well-structured, professional, and authoritative final answer directly fulfilling the user's original task.
 
-Do not mention internal orchestration unless it is useful to the user.
-
-Resolve conflicts between specialist outputs using your own reasoning.
-
-Do not invent facts that are unsupported by the available results.
+Guidelines:
+1. Deliver a detailed, high-quality response tailored to the prompt (e.g. executive briefings, technical analyses, code, SOP reviews, strategic plans).
+2. If specialist agent results provide relevant insights, incorporate and synthesize them.
+3. If specialist agent outputs are narrow, incomplete, or declined due to domain boundaries, you MUST use your own extensive domain intelligence and reasoning to formulate a complete and actionable answer.
+4. Never state that you cannot help or that the request falls outside specialists' capabilities. Always provide the full answer.
+5. Use clean markdown formatting with headers, bullet points, and key takeaways.
 
 Return ONLY valid JSON:
-
 {
-  "answer": "final answer for the user",
-  "confidence": "high|medium|low",
+  "answer": "Comprehensive markdown answer for the user",
+  "confidence": "high",
   "used_agents": ["agent-XXX"]
 }
 `;
@@ -90,7 +90,8 @@ ${JSON.stringify(failedResults, null, 2)}
   const response = await generateWithOllama({
     system,
     task: prompt,
-    temperature: 0.2
+    temperature: 0.2,
+    model
   });
 
   const parsed = extractJson(response.response);
@@ -99,9 +100,11 @@ ${JSON.stringify(failedResults, null, 2)}
     answer:
       typeof parsed.answer === "string"
         ? parsed.answer
-        : JSON.stringify(parsed),
+        : (response.response || JSON.stringify(parsed)),
     confidence:
       parsed.confidence || "medium",
+    actual_model: response.model || model,
+    duration_ms: response.total_duration ? Math.round(response.total_duration / 1e6) : null,
     used_agents: Array.isArray(parsed.used_agents)
       ? parsed.used_agents
       : successfulResults.map(

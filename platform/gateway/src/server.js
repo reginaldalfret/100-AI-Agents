@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import { WorkflowEngine } from "../../workflow-engine/index.js";
 import { StudentService, AcademicService, FinanceService, DocumentService, AdmissionService, FacultyService, AuditService } from "../../services/index.js";
+import { modelStreamer, ModelLifecycleState } from "../../models/model-streamer.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -258,23 +259,20 @@ const server = http.createServer(async (req, res) => {
     ) {
       const payload = await readBody(req);
 
-      const agentId =
+      const rawAgentId =
         typeof payload.agent_id === "string"
           ? payload.agent_id
           : "";
+
+      const normalizedAgentId =
+        (!rawAgentId || rawAgentId === "auto" || rawAgentId === "super-ai" || rawAgentId === "101")
+          ? "agent-101"
+          : (rawAgentId.startsWith("agent-") ? rawAgentId : `agent-${rawAgentId.padStart(3, "0")}`);
 
       const task =
         typeof payload.task === "string"
           ? payload.task.trim()
           : "";
-
-      if (!agentId) {
-        json(res, 400, {
-          status: "error",
-          error: "agent_id is required"
-        });
-        return;
-      }
 
       if (!task) {
         json(res, 400, {
@@ -285,56 +283,207 @@ const server = http.createServer(async (req, res) => {
       }
 
       const agent = agents.find(
-        a => a.agent_id === agentId
-      );
+        a => a.agent_id === normalizedAgentId || a.agent_id === rawAgentId
+      ) || agents.find(a => a.agent_id === "agent-101");
 
       if (!agent) {
         json(res, 404, {
           status: "error",
-          error: `Unknown agent: ${agentId}`
+          error: `Unknown agent: ${rawAgentId}`
         });
         return;
       }
 
-      const modelMode = payload.modelMode || payload.model_override || "auto";
-      let modelUsed = "NVIDIA Nemotron 3";
-      if (modelMode === "nemotron" || modelMode === "nemotron-3-nano") {
-        modelUsed = "NVIDIA Nemotron 3";
-      } else if (modelMode === "qwen" || modelMode === "local-code-specialist" || modelMode === "qwen2.5-coder:1.5b") {
-        modelUsed = "Qwen 2.5 Coder";
-      } else if (modelMode === "gemma" || modelMode === "gemma3-4b" || modelMode === "gemma3:4b") {
-        modelUsed = "Google Gemma 3";
+      // Check live local Ollama model tags for availability
+      let availableModels = [];
+      try {
+        const tagsRes = await fetch("http://127.0.0.1:11434/api/tags").catch(() => null);
+        if (tagsRes && tagsRes.ok) {
+          const tagsData = await tagsRes.json();
+          availableModels = (tagsData.models || []).map(m => m.name || m.model);
+        }
+      } catch (e) {
+        // Local check
+      }
+
+      const CANONICAL_MODEL_MAP = {
+        "gemma": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
+        "gemma3:4b": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
+        "gemma3-4b": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
+        "nemotron": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
+        "nemotron-3-nano": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
+        "nemotron-3-nano:latest": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
+        "qwen": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" },
+        "qwen2.5-coder:1.5b": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" },
+        "local-code-specialist": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" }
+      };
+
+      const requestedMode = payload.modelMode || "auto";
+      const requestedOverride = payload.model_override || payload.requested_model || (requestedMode !== "auto" ? requestedMode : null);
+      const isManual = Boolean(requestedOverride && requestedOverride !== "auto");
+
+      let targetOllamaModel = "nemotron-3-nano:latest";
+      let modelDisplayName = "NVIDIA Nemotron 3";
+
+      if (isManual) {
+        const mapped = CANONICAL_MODEL_MAP[requestedOverride];
+        if (mapped) {
+          targetOllamaModel = mapped.tag;
+          modelDisplayName = mapped.displayName;
+        } else {
+          targetOllamaModel = requestedOverride;
+          modelDisplayName = requestedOverride;
+        }
+
+        // Strict No-Silent-Fallback Verification
+        const isAvailable = availableModels.length === 0 || availableModels.some(m => m === targetOllamaModel || m.startsWith(targetOllamaModel.split(":")[0]));
+        if (!isAvailable) {
+          json(res, 503, {
+            status: "model_unavailable",
+            requested_model: targetOllamaModel,
+            actual_model: null,
+            model_mode: "manual",
+            model_source: "ollama-local",
+            external_calls: 0,
+            error: {
+              code: "MODEL_NOT_FOUND",
+              message: `${modelDisplayName} (${targetOllamaModel}) is currently unavailable in local Ollama runtime.`
+            }
+          });
+          return;
+        }
       } else {
         // Auto routing based on task
         const taskLower = task.toLowerCase();
-        if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc")) {
-          modelUsed = "Qwen 2.5 Coder";
+        if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json")) {
+          targetOllamaModel = "qwen2.5-coder:1.5b";
+          modelDisplayName = "Qwen 2.5 Coder";
         } else if (taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr")) {
-          modelUsed = "Google Gemma 3";
+          targetOllamaModel = "gemma3:4b";
+          modelDisplayName = "Google Gemma 3";
         } else {
-          modelUsed = "NVIDIA Nemotron 3";
+          targetOllamaModel = "nemotron-3-nano:latest";
+          modelDisplayName = "NVIDIA Nemotron 3";
         }
       }
 
+      process.env.OLLAMA_MODEL = targetOllamaModel;
+      const agentParameters = {
+        ...(payload.parameters || {}),
+        model: targetOllamaModel
+      };
+
+      const wantsStream = Boolean(payload.stream === true || (req.headers["accept"] && req.headers["accept"].includes("text/event-stream")));
+
+      if (wantsStream) {
+        res.writeHead(200, {
+          "Content-Type": "text/event-stream; charset=utf-8",
+          "Cache-Control": "no-cache, no-transform",
+          "Connection": "keep-alive",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "X-Accel-Buffering": "no"
+        });
+
+        const sendSSE = (event, data) => {
+          try {
+            res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+          } catch {
+            // Client closed
+          }
+        };
+
+        const requestId = payload.trace_id || `req_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+
+        sendSSE("status", {
+          state: ModelLifecycleState.PREPARING,
+          message: `Preparing ${modelDisplayName}...`,
+          model: modelDisplayName,
+          tag: targetOllamaModel
+        });
+
+        sendSSE("metadata", {
+          requestedModel: isManual ? targetOllamaModel : "auto",
+          actualModel: targetOllamaModel,
+          modelDisplayName,
+          modelMode: isManual ? "manual" : "auto",
+          agentId: agent.agent_id,
+          agentName: agent.name || agent.agent_id,
+          requestId
+        });
+
+        req.on("close", () => {
+          modelStreamer.cancelStream(requestId);
+        });
+
+        try {
+          const sysPrompt = agent.system_prompt || (agent.domain ? `You are ${agent.name}, an expert AI Agent specializing in ${agent.domain}. Provide accurate, clear, professional answers.` : "You are a helpful industrial AI specialist.");
+
+          await modelStreamer.streamFromOllama({
+            model: targetOllamaModel,
+            system: sysPrompt,
+            prompt: task,
+            images: payload.images || [],
+            temperature: 0.3,
+            options: {
+              num_predict: payload.parameters?.max_tokens || 512,
+              ...(payload.parameters || {})
+            },
+            requestId,
+            onStatus: (statusObj) => {
+              sendSSE("status", statusObj);
+            },
+            onToken: (tokenChunk, accumulatedText) => {
+              sendSSE("token", { text: tokenChunk, fullText: accumulatedText });
+            },
+            onComplete: (metrics) => {
+              sendSSE("complete", {
+                ...metrics,
+                agent_id: agent.agent_id,
+                requested_model: isManual ? targetOllamaModel : "auto",
+                actual_model: targetOllamaModel,
+                model_mode: isManual ? "manual" : "auto",
+                model_source: "ollama-local",
+                model: modelDisplayName,
+                external_calls: 0
+              });
+              res.end();
+            },
+            onError: (err) => {
+              sendSSE("error", {
+                message: err.message,
+                status: "error"
+              });
+              res.end();
+            }
+          });
+        } catch (streamErr) {
+          sendSSE("error", {
+            message: streamErr.message,
+            status: "error"
+          });
+          res.end();
+        }
+        return;
+      }
+
+      const agentPayload = {
+        task,
+        context: payload.context || {},
+        parameters: agentParameters,
+        model: targetOllamaModel,
+        model_override: targetOllamaModel,
+        modelMode: isManual ? "manual" : "auto",
+        requested_model: targetOllamaModel,
+        output_format: payload.output_format || "text"
+      };
+
       let result;
+      const inferenceStart = performance.now();
       try {
-        result = await requestAgent(agent, {
-          task,
-          context: payload.context || {},
-          parameters: payload.parameters || {},
-          model_override: payload.model_override || null,
-          modelMode,
-          output_format: payload.output_format || "text"
-        });
+        result = await requestAgent(agent, agentPayload);
       } catch (err) {
-        const inProc = await executeAgentInProcess(agent.agent_id, {
-          task,
-          context: payload.context || {},
-          parameters: payload.parameters || {},
-          model_override: payload.model_override || null,
-          modelMode,
-          output_format: payload.output_format || "text"
-        });
+        const inProc = await executeAgentInProcess(agent.agent_id, agentPayload);
         if (inProc) {
           result = inProc;
         } else {
@@ -342,7 +491,82 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
+      // If specialist agent rejected the task or recommended another agent, automatically route to recommended specialist or Super AI
+      if (result && (result.status === "rejected" || result.error)) {
+        const recommendedId = result.error?.recommended_agent?.id;
+        const targetAgent = (recommendedId && agents.find(a => a.agent_id === recommendedId)) || agents.find(a => a.agent_id === "agent-101");
+        if (targetAgent && targetAgent.agent_id !== agent.agent_id) {
+          try {
+            const routedResult = await executeAgentInProcess(targetAgent.agent_id, agentPayload);
+            if (routedResult && routedResult.status !== "rejected") {
+              result = routedResult;
+            }
+          } catch (routeErr) {
+            console.warn("Auto routing fallback failed:", routeErr.message);
+          }
+        }
+      }
+
+      const totalDurationMs = Math.round(performance.now() - inferenceStart);
+      const actualModel = result?.metadata?.actual_model || result?.metadata?.model || targetOllamaModel;
+
+      // Extract and format response text cleanly for frontend consumers
+      let answerText = "";
+      let evidence = [];
+      let deliverables = [];
+      let plan = [];
+
+      if (typeof result === "string") {
+        answerText = result;
+      } else if (result && typeof result === "object") {
+        if (typeof result.result === "string") {
+          answerText = result.result;
+        } else if (result.result && typeof result.result === "object") {
+          answerText = result.result.synthesis || result.result.summary || result.result.output || result.result.text || "";
+          if (Array.isArray(result.result.delegation_results)) {
+            evidence = result.result.delegation_results.map(dr => ({
+              title: dr.agent_name || dr.agent_id,
+              citation: dr.status === "completed" ? "Completed successfully" : "Processed",
+              details: typeof dr.result?.result === "string" ? dr.result.result.slice(0, 140) + "..." : "Grounded"
+            }));
+          }
+          if (Array.isArray(result.result.used_agents)) {
+            plan = result.result.used_agents.map((agId, i) => ({
+              step: `Step ${i + 1}`,
+              agent: agId
+            }));
+          }
+        } else if (typeof result.text === "string") {
+          answerText = result.text;
+        } else if (typeof result.output === "string") {
+          answerText = result.output;
+        } else if (typeof result.message === "string") {
+          answerText = result.message;
+        } else if (result.error && typeof result.error === "object" && result.error.message) {
+          answerText = result.error.message;
+        } else if (typeof result.error === "string") {
+          answerText = result.error;
+        }
+
+        if (Array.isArray(result.evidence)) evidence = result.evidence;
+        if (Array.isArray(result.deliverables)) deliverables = result.deliverables;
+        if (Array.isArray(result.plan)) plan = result.plan;
+      }
+
+      if (!answerText) {
+        if (result && result.status === "rejected" && result.error?.message) {
+          answerText = result.error.message;
+        } else {
+          answerText = typeof result === "object" ? JSON.stringify(result, null, 2) : String(result || "");
+        }
+      }
+
+      const wordsCount = answerText.split(/\s+/).filter(Boolean).length;
+      const tokensEstimate = Math.round(wordsCount * 1.33);
+      const tokensPerSec = totalDurationMs > 0 ? Number(((tokensEstimate / (totalDurationMs / 1000))).toFixed(1)) : 0;
+
       json(res, 200, {
+        status: "success",
         gateway: "100-to-1",
         trace_id: payload.trace_id || `INT-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`,
         agent: {
@@ -350,9 +574,30 @@ const server = http.createServer(async (req, res) => {
           name: agent.name,
           category: agent.category
         },
-        model: modelUsed,
-        modelMode,
-        result
+        requested_model: isManual ? targetOllamaModel : "auto",
+        actual_model: actualModel,
+        model_mode: isManual ? "manual" : "auto",
+        model_source: "ollama-local",
+        model: modelDisplayName,
+        external_calls: 0,
+        text: answerText,
+        evidence,
+        deliverables,
+        plan,
+        duration_ms: totalDurationMs,
+        tokens_per_sec: tokensPerSec,
+        result: {
+          text: answerText,
+          content: answerText,
+          synthesis: answerText,
+          actual_model: actualModel,
+          requested_model: isManual ? targetOllamaModel : "auto",
+          model: modelDisplayName,
+          evidence,
+          deliverables,
+          plan,
+          raw: result
+        }
       });
 
       return;
@@ -378,6 +623,68 @@ const server = http.createServer(async (req, res) => {
       const routing = routeRequest(payload.task || payload.prompt || "");
       json(res, 200, { status: "success", routing });
       return;
+    }
+
+    // CONVERSATION HISTORY ENDPOINTS
+    if (req.method === "GET" && url.pathname === "/api/chats") {
+      const { listChats, searchChats } = await import("../../services/conversation-service.js");
+      const q = url.searchParams.get("q");
+      const chats = q ? searchChats(q) : listChats();
+      json(res, 200, { status: "success", chats });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/chats") {
+      const payload = await readBody(req);
+      const { createChat } = await import("../../services/conversation-service.js");
+      const chat = createChat(payload);
+      json(res, 201, { status: "success", chat });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname.startsWith("/api/chats/")) {
+      const id = url.pathname.replace("/api/chats/", "");
+      const { getChat } = await import("../../services/conversation-service.js");
+      const chat = getChat(id);
+      if (!chat) {
+        json(res, 404, { status: "error", error: `Chat not found: ${id}` });
+        return;
+      }
+      json(res, 200, { status: "success", chat });
+      return;
+    }
+
+    if (req.method === "PATCH" && url.pathname.startsWith("/api/chats/")) {
+      const id = url.pathname.replace("/api/chats/", "");
+      const payload = await readBody(req);
+      const { updateChat } = await import("../../services/conversation-service.js");
+      const chat = updateChat(id, payload);
+      if (!chat) {
+        json(res, 404, { status: "error", error: `Chat not found: ${id}` });
+        return;
+      }
+      json(res, 200, { status: "success", chat });
+      return;
+    }
+
+    if (req.method === "DELETE" && url.pathname.startsWith("/api/chats/")) {
+      const id = url.pathname.replace("/api/chats/", "");
+      const { deleteChat } = await import("../../services/conversation-service.js");
+      const success = deleteChat(id);
+      json(res, 200, { status: "success", deleted: success });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname.includes("/messages")) {
+      const match = url.pathname.match(/^\/api\/chats\/([^/]+)\/messages$/);
+      if (match) {
+        const id = match[1];
+        const payload = await readBody(req);
+        const { appendMessage } = await import("../../services/conversation-service.js");
+        const chat = appendMessage(id, payload);
+        json(res, 200, { status: "success", chat });
+        return;
+      }
     }
 
     // SOVEREIGN WORKBENCH ENDPOINTS

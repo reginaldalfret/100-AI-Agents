@@ -7,9 +7,9 @@
     {
       "day": 1,
       "agent_id": "agent-001",
-      "name": "AI Writing Agent",
+      "name": "Writing AI Agent",
       "slug": "writing-agent",
-      "category": "foundation",
+      "category": "Writing & Communication",
       "status": "ready",
       "github_repo": "",
       "vercel_project": "",
@@ -30,14 +30,24 @@
       "workflow_roles": [
         "admission-verification",
         "graduation-clearance"
+      ],
+      "displayName": "Writing AI Agent",
+      "displayNumber": "001",
+      "domain": "Writing & Communication",
+      "description": "Creates clear articles, essays, letters, reports, and written content.",
+      "examples": [
+        "Write a professional article about renewable energy",
+        "Draft an announcement letter for our team",
+        "Improve and polish this draft for clarity",
+        "Write a persuasive proposal introduction"
       ]
     },
     {
       "day": 2,
       "agent_id": "agent-002",
-      "name": "AI Email Agent",
+      "name": "Email AI Agent",
       "slug": "email-agent",
-      "category": "foundation",
+      "category": "Writing & Communication",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -63,21 +73,31 @@
         "attendance-intervention",
         "course-override",
         "graduation-clearance"
+      ],
+      "displayName": "Email AI Agent",
+      "displayNumber": "002",
+      "domain": "Writing & Communication",
+      "description": "Drafts professional emails, announcements, replies, and newsletters.",
+      "examples": [
+        "Research the current trends in cloud computing",
+        "Compare three leading web development frameworks",
+        "Find and summarize the key facts about quantum computing",
+        "Provide a comprehensive topic overview"
       ]
     },
     {
       "day": 3,
       "agent_id": "agent-003",
-      "name": "AI Study Agent",
+      "name": "Study AI Agent",
       "slug": "study-agent",
-      "category": "foundation",
+      "category": "Education & Learning",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8103",
       "health_url": "http://127.0.0.1:8103/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8103,
       "educational_name": "Curriculum & Academic Study Plan Agent",
@@ -93,21 +113,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "course-override"
+      ],
+      "displayName": "Study AI Agent",
+      "displayNumber": "003",
+      "domain": "Education & Learning",
+      "description": "Generates flashcards, practice problems, and active recall study guides.",
+      "examples": [
+        "Write a REST API handler in Node.js",
+        "Create an algorithm to find duplicates in an array",
+        "Implement a binary search function with tests",
+        "Write a script to automate file conversions"
       ]
     },
     {
       "day": 4,
       "agent_id": "agent-004",
-      "name": "AI Quiz Agent",
+      "name": "Quiz AI Agent",
       "slug": "quiz-agent",
-      "category": "foundation",
+      "category": "Education & Learning",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8104",
       "health_url": "http://127.0.0.1:8104/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8104,
       "educational_name": "Academic Examination & Assessment Validation Agent",
@@ -121,21 +151,31 @@
       ],
       "workflow_roles": [
         "graduation-clearance"
+      ],
+      "displayName": "Quiz AI Agent",
+      "displayNumber": "004",
+      "domain": "Education & Learning",
+      "description": "Creates interactive quizzes, tests, and knowledge check questionnaires.",
+      "examples": [
+        "Debug this null pointer exception in JavaScript",
+        "Find why this async loop is hanging",
+        "Fix the memory leak in this event handler",
+        "Analyze this error log and suggest a resolution"
       ]
     },
     {
       "day": 5,
       "agent_id": "agent-005",
-      "name": "AI Summarization Agent",
+      "name": "Summarization AI Agent",
       "slug": "summarization-agent",
-      "category": "foundation",
+      "category": "Writing & Communication",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8105",
       "health_url": "http://127.0.0.1:8105/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8105,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -149,21 +189,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Summarization AI Agent",
+      "displayNumber": "005",
+      "domain": "Writing & Communication",
+      "description": "Condenses long articles, reports, and transcripts into concise summaries.",
+      "examples": [
+        "Analyze this sales dataset for seasonal trends",
+        "Calculate the average growth rate and standard deviation",
+        "Find outliers in this performance metrics table",
+        "Summarize statistical distributions from this data"
       ]
     },
     {
       "day": 6,
       "agent_id": "agent-006",
-      "name": "AI Grammar Agent",
+      "name": "Grammar AI Agent",
       "slug": "grammar-agent",
-      "category": "foundation",
+      "category": "Writing & Communication",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8106",
       "health_url": "http://127.0.0.1:8106/api/health",
-      "model": "nemotron-3-nano",
+      "model": "gemma3:4b",
       "backend": "http://127.0.0.1:11434",
       "port": 8106,
       "educational_name": "Academic Performance & Course Records Agent",
@@ -179,21 +229,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "graduation-clearance"
+      ],
+      "displayName": "Grammar AI Agent",
+      "displayNumber": "006",
+      "domain": "Writing & Communication",
+      "description": "Checks grammar, syntax, punctuation, style, and tone accuracy.",
+      "examples": [
+        "Review and format this project specification document",
+        "Extract key metadata and headings from this document",
+        "Convert this document outline into structured sections",
+        "Check document consistency and layout"
       ]
     },
     {
       "day": 7,
       "agent_id": "agent-007",
-      "name": "AI Translation Agent",
+      "name": "Translation AI Agent",
       "slug": "translation-agent",
-      "category": "foundation",
+      "category": "Writing & Communication",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8107",
       "health_url": "http://127.0.0.1:8107/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8107,
       "educational_name": "Multilingual Student Translation & Accessibility Agent",
@@ -207,14 +267,24 @@
       "workflow_roles": [
         "admission-verification",
         "student-service"
+      ],
+      "displayName": "Translation AI Agent",
+      "displayNumber": "007",
+      "domain": "Writing & Communication",
+      "description": "Translates text across multiple languages with context preservation.",
+      "examples": [
+        "Write an Excel formula for conditional commission calculation",
+        "Format this CSV table with proper data types",
+        "Generate a quarterly budget spreadsheet model",
+        "Create a VLOOKUP / XLOOKUP formula for product inventory"
       ]
     },
     {
       "day": 8,
       "agent_id": "agent-008",
-      "name": "AI Idea Generation Agent",
+      "name": "Idea Generation AI Agent",
       "slug": "idea-generation-agent",
-      "category": "foundation",
+      "category": "Design & Creative",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -236,21 +306,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "student-service"
+      ],
+      "displayName": "Idea Generation AI Agent",
+      "displayNumber": "008",
+      "domain": "Design & Creative",
+      "description": "Brainstorms creative concepts, product angles, and innovative solutions.",
+      "examples": [
+        "Create a 5-slide pitch deck outline for our product",
+        "Draft speaker notes for an executive briefing",
+        "Structure a technical architecture presentation",
+        "Organize key slide takeaways for stakeholders"
       ]
     },
     {
       "day": 9,
       "agent_id": "agent-009",
-      "name": "AI Storytelling Agent",
+      "name": "Storytelling AI Agent",
       "slug": "storytelling-agent",
-      "category": "foundation",
+      "category": "Design & Creative",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8109",
       "health_url": "http://127.0.0.1:8109/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8109,
       "educational_name": "Campus Announcement & Student Engagement Agent",
@@ -265,21 +345,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "student-service"
+      ],
+      "displayName": "Storytelling AI Agent",
+      "displayNumber": "009",
+      "domain": "Design & Creative",
+      "description": "Crafts engaging narrative arcs, scenarios, case studies, and storytelling.",
+      "examples": [
+        "Create a responsive navigation bar with CSS flexbox",
+        "Build an accessible modal dialog in vanilla JavaScript",
+        "Style a dark liquid glass dashboard card",
+        "Design an animated landing page hero section"
       ]
     },
     {
       "day": 10,
       "agent_id": "agent-010",
-      "name": "AI Goal Planning Agent",
+      "name": "Goal Planning AI Agent",
       "slug": "goal-planning-agent",
-      "category": "foundation",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8110",
       "health_url": "http://127.0.0.1:8110/api/health",
-      "model": "nemotron-3-nano",
+      "model": "gemma3:4b",
       "backend": "http://127.0.0.1:11434",
       "port": 8110,
       "educational_name": "Academic Performance & Course Records Agent",
@@ -295,21 +385,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "graduation-clearance"
+      ],
+      "displayName": "Goal Planning AI Agent",
+      "displayNumber": "010",
+      "domain": "Automation & Productivity",
+      "description": "Breaks objectives into SMART goals, milestones, and daily tracking.",
+      "examples": [
+        "Design an intuitive onboarding flow for a mobile app",
+        "Audit this form layout for accessibility and usability",
+        "Create a modern color palette with dark mode tokens",
+        "Draft wireframe specifications for a search interface"
       ]
     },
     {
       "day": 11,
       "agent_id": "agent-011",
-      "name": "AI Note-Taking Agent",
+      "name": "Note Taking AI Agent",
       "slug": "note-taking-agent",
-      "category": "foundation",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8111",
       "health_url": "http://127.0.0.1:8111/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8111,
       "educational_name": "Academic Performance & Course Records Agent",
@@ -325,21 +425,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "graduation-clearance"
+      ],
+      "displayName": "Note Taking AI Agent",
+      "displayNumber": "011",
+      "domain": "Automation & Productivity",
+      "description": "Organizes unstructured notes into clean Cornell and outline structures.",
+      "examples": [
+        "Design a normalized schema for an e-commerce platform",
+        "Write an optimized indexing strategy for user lookups",
+        "Create a database migration script for PostgreSQL",
+        "Design a Redis caching schema for session data"
       ]
     },
     {
       "day": 12,
       "agent_id": "agent-012",
-      "name": "AI Task Management Agent",
+      "name": "Task Management AI Agent",
       "slug": "task-management-agent",
-      "category": "foundation",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8112",
       "health_url": "http://127.0.0.1:8112/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8112,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -353,21 +463,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Task Management AI Agent",
+      "displayNumber": "012",
+      "domain": "Automation & Productivity",
+      "description": "Prioritizes daily to-do lists, backlog items, and urgency matrices.",
+      "examples": [
+        "Design an OpenAPI 3.0 specification for authentication",
+        "Create a RESTful endpoint design for file uploads",
+        "Draft a WebSocket event schema for live notifications",
+        "Write an API contract for payment processing"
       ]
     },
     {
       "day": 13,
       "agent_id": "agent-013",
-      "name": "AI Resume Agent",
+      "name": "Resume AI Agent",
       "slug": "resume-agent",
-      "category": "foundation",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8113",
       "health_url": "http://127.0.0.1:8113/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8113,
       "educational_name": "Student Support & Inquiries Agent",
@@ -381,14 +501,24 @@
       ],
       "workflow_roles": [
         "student-service"
+      ],
+      "displayName": "Resume AI Agent",
+      "displayNumber": "013",
+      "domain": "Business & Management",
+      "description": "Tailors resumes, optimizes bullet points for ATS, and writes cover letters.",
+      "examples": [
+        "Write Jest unit tests for this authentication service",
+        "Create test edge cases for boundary value testing",
+        "Generate mock API data fixtures for frontend tests",
+        "Draft an end-to-end integration test plan"
       ]
     },
     {
       "day": 14,
       "agent_id": "agent-014",
-      "name": "AI Job Matching Agent",
+      "name": "Job Matching AI Agent",
       "slug": "job-matching-agent",
-      "category": "foundation",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -409,21 +539,31 @@
       ],
       "workflow_roles": [
         "student-service"
+      ],
+      "displayName": "Job Matching AI Agent",
+      "displayNumber": "014",
+      "domain": "Business & Management",
+      "description": "Analyzes job requirements and aligns skillsets for career placement.",
+      "examples": [
+        "Audit this authentication handler for security flaws",
+        "Check this SQL query builder for injection vulnerabilities",
+        "Review CORS and Content Security Policy headers",
+        "Provide recommendations for securing JWT tokens"
       ]
     },
     {
       "day": 15,
       "agent_id": "agent-015",
-      "name": "AI Interview Agent",
+      "name": "Interview AI Agent",
       "slug": "interview-agent",
-      "category": "foundation",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8115",
       "health_url": "http://127.0.0.1:8115/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8115,
       "educational_name": "Applicant Interview & Screening Assessment Agent",
@@ -437,14 +577,24 @@
       ],
       "workflow_roles": [
         "admission-verification"
+      ],
+      "displayName": "Interview AI Agent",
+      "displayNumber": "015",
+      "domain": "Business & Management",
+      "description": "Conducts mock interviews, behavioral questions, and feedback coaching.",
+      "examples": [
+        "Write a multi-stage Dockerfile for a Node.js service",
+        "Create a GitHub Actions workflow for testing and build",
+        "Write a Docker Compose file with database and redis",
+        "Configure health checks and restart policies"
       ]
     },
     {
       "day": 16,
       "agent_id": "agent-016",
-      "name": "AI Communication Agent",
+      "name": "Communication AI Agent",
       "slug": "communication-agent",
-      "category": "foundation",
+      "category": "Writing & Communication",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -466,21 +616,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "student-service"
+      ],
+      "displayName": "Communication AI Agent",
+      "displayNumber": "016",
+      "domain": "Writing & Communication",
+      "description": "Polishes interpersonal messages, negotiation dialogue, and memos.",
+      "examples": [
+        "Design a scalable multi-zone cloud architecture",
+        "Configure object storage bucket lifecycle rules",
+        "Draft a cloud migration checklist for on-premise apps",
+        "Optimize serverless compute configurations"
       ]
     },
     {
       "day": 17,
       "agent_id": "agent-017",
-      "name": "AI SWOT Analysis Agent",
+      "name": "SWOT Analysis AI Agent",
       "slug": "swot-analysis-agent",
-      "category": "foundation",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8117",
       "health_url": "http://127.0.0.1:8117/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8117,
       "educational_name": "Institutional Operations Intelligence & Assessment Agent",
@@ -495,21 +655,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "SWOT Analysis AI Agent",
+      "displayNumber": "017",
+      "domain": "Business & Management",
+      "description": "Conducts Strengths, Weaknesses, Opportunities, and Threats evaluations.",
+      "examples": [
+        "Write a script to automate daily report generation",
+        "Create a cron job schedule for log rotation",
+        "Automate batch file renaming and organization",
+        "Build an automated data validation pipeline"
       ]
     },
     {
       "day": 18,
       "agent_id": "agent-018",
-      "name": "AI Career Advisor Agent",
+      "name": "Career Advisor AI Agent",
       "slug": "career-advisor-agent",
-      "category": "foundation",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8118",
       "health_url": "http://127.0.0.1:8118/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8118,
       "educational_name": "Student Academic & Career Advisory Agent",
@@ -525,21 +695,31 @@
       "workflow_roles": [
         "course-override",
         "graduation-clearance"
+      ],
+      "displayName": "Career Advisor AI Agent",
+      "displayNumber": "018",
+      "domain": "Business & Management",
+      "description": "Provides career roadmaps, promotion strategy, and skill gap plans.",
+      "examples": [
+        "Explain how to resolve this Git rebase conflict",
+        "Suggest a Git branching strategy for release management",
+        "Write a script to clean up stale local Git branches",
+        "Create a template for semantic pull request messages"
       ]
     },
     {
       "day": 19,
       "agent_id": "agent-019",
-      "name": "AI Decision-Making Agent",
+      "name": "Decision Making AI Agent",
       "slug": "decision-making-agent",
-      "category": "foundation",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8119",
       "health_url": "http://127.0.0.1:8119/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8119,
       "educational_name": "Institutional Operations Intelligence & Assessment Agent",
@@ -554,21 +734,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Decision Making AI Agent",
+      "displayNumber": "019",
+      "domain": "Business & Management",
+      "description": "Applies decision trees, pros/cons weighting, and trade-off matrices.",
+      "examples": [
+        "Write a Bash script to monitor disk space and alert",
+        "Create a systemd service unit file for a Node.js daemon",
+        "Explain the permissions for chmod 750 vs 755",
+        "Diagnose high CPU usage using top and htop"
       ]
     },
     {
       "day": 20,
       "agent_id": "agent-020",
-      "name": "AI Brainstorming Agent",
+      "name": "Brainstorming AI Agent",
       "slug": "brainstorming-agent",
-      "category": "foundation",
+      "category": "Design & Creative",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8120",
       "health_url": "http://127.0.0.1:8120/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8120,
       "educational_name": "Institutional Operations Intelligence & Assessment Agent",
@@ -583,14 +773,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Brainstorming AI Agent",
+      "displayNumber": "020",
+      "domain": "Design & Creative",
+      "description": "Facilitates divergent thinking, mind maps, and lateral brainstorms.",
+      "examples": [
+        "Write a PowerShell script to monitor TCP ports",
+        "Register a Windows scheduled task via PowerShell",
+        "Query active processes and memory usage in Windows",
+        "Configure environment variables persistently via script"
       ]
     },
     {
       "day": 21,
       "agent_id": "agent-021",
-      "name": "AI Web Research Agent",
+      "name": "Web Research AI Agent",
       "slug": "web-research-agent",
-      "category": "research",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -611,14 +811,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Web Research AI Agent",
+      "displayNumber": "021",
+      "domain": "Research & Knowledge",
+      "description": "Searches on-premise knowledge bases and synthesizes topical findings.",
+      "examples": [
+        "Explain DNS propagation and TTL settings",
+        "Diagnose why a local port is unreachable",
+        "Design a subnet IP allocation plan",
+        "Configure reverse proxy routing rules"
       ]
     },
     {
       "day": 22,
       "agent_id": "agent-022",
-      "name": "AI News Research Agent",
+      "name": "News Research AI Agent",
       "slug": "news-research-agent",
-      "category": "research",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -639,21 +849,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "News Research AI Agent",
+      "displayNumber": "022",
+      "domain": "Research & Knowledge",
+      "description": "Curates and summarizes industry developments and news feeds.",
+      "examples": [
+        "Draft a server maintenance and patching checklist",
+        "Analyze server resource bottleneck trends",
+        "Configure log archiving and retention policies",
+        "Create an incident response runbook for server outages"
       ]
     },
     {
       "day": 23,
       "agent_id": "agent-023",
-      "name": "AI Research Paper Agent",
+      "name": "Research Paper AI Agent",
       "slug": "research-paper-agent",
-      "category": "research",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8123",
       "health_url": "http://127.0.0.1:8123/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8123,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -667,21 +887,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Research Paper AI Agent",
+      "displayNumber": "023",
+      "domain": "Research & Knowledge",
+      "description": "Analyzes scientific papers, methodologies, citations, and abstracts.",
+      "examples": [
+        "Solve this system of linear equations",
+        "Calculate the derivative and integral of this function",
+        "Explain matrix multiplication step-by-step",
+        "Compute modular arithmetic for cryptographic keys"
       ]
     },
     {
       "day": 24,
       "agent_id": "agent-024",
-      "name": "AI Literature Review Agent",
+      "name": "Literature Review AI Agent",
       "slug": "literature-review-agent",
-      "category": "research",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8124",
       "health_url": "http://127.0.0.1:8124/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8124,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -695,14 +925,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Literature Review AI Agent",
+      "displayNumber": "024",
+      "domain": "Research & Knowledge",
+      "description": "Synthesizes multi-source academic literature and thematic trends.",
+      "examples": [
+        "Perform a t-test comparison between two cohorts",
+        "Explain confidence intervals and p-values",
+        "Calculate variance, standard deviation, and IQR",
+        "Analyze correlation coefficients between variables"
       ]
     },
     {
       "day": 25,
       "agent_id": "agent-025",
-      "name": "AI Book Research Agent",
+      "name": "Book Research AI Agent",
       "slug": "book-research-agent",
-      "category": "research",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -723,14 +963,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Book Research AI Agent",
+      "displayNumber": "025",
+      "domain": "Research & Knowledge",
+      "description": "Extracts key chapter takeaways, book outlines, and bibliographies.",
+      "examples": [
+        "Explain how to handle imbalanced training datasets",
+        "Select the best classification model for tabular data",
+        "Write code for feature scaling and normalization",
+        "Calculate Precision, Recall, and F1-Score"
       ]
     },
     {
       "day": 26,
       "agent_id": "agent-026",
-      "name": "AI Company Research Agent",
+      "name": "Company Research AI Agent",
       "slug": "company-research-agent",
-      "category": "research",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -752,21 +1002,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Company Research AI Agent",
+      "displayNumber": "026",
+      "domain": "Business & Management",
+      "description": "Profiles organizations, leadership structures, and business offerings.",
+      "examples": [
+        "Design a CNN architecture for image classification",
+        "Explain transformer attention mechanisms simply",
+        "Optimize learning rate schedules with Cosine Annealing",
+        "Prevent overfitting with dropout and weight decay"
       ]
     },
     {
       "day": 27,
       "agent_id": "agent-027",
-      "name": "AI Competitor Research Agent",
+      "name": "Competitor Research AI Agent",
       "slug": "competitor-research-agent",
-      "category": "research",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8127",
       "health_url": "http://127.0.0.1:8127/api/health",
-      "model": "nemotron-3-nano",
+      "model": "gemma3:4b",
       "backend": "http://127.0.0.1:11434",
       "port": 8127,
       "educational_name": "Institutional Operations Intelligence & Assessment Agent",
@@ -781,14 +1041,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Competitor Research AI Agent",
+      "displayNumber": "027",
+      "domain": "Business & Management",
+      "description": "Analyzes market competitors, positioning, and feature matrices.",
+      "examples": [
+        "Explain edge detection using Sobel and Canny filters",
+        "Design an object detection pipeline with YOLO",
+        "Write an OpenCV script to crop and resize images",
+        "Analyze visual bounding boxes in technical drawings"
       ]
     },
     {
       "day": 28,
       "agent_id": "agent-028",
-      "name": "AI Market Research Agent",
+      "name": "Market Research AI Agent",
       "slug": "market-research-agent",
-      "category": "research",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -810,21 +1080,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Market Research AI Agent",
+      "displayNumber": "028",
+      "domain": "Business & Management",
+      "description": "Evaluates target demographics, TAM/SAM sizing, and market forces.",
+      "examples": [
+        "Build a text classification pipeline for sentiment",
+        "Extract Named Entities (NER) from unstructured text",
+        "Explain vector embeddings and cosine similarity",
+        "Tokenize text and generate n-grams"
       ]
     },
     {
       "day": 29,
       "agent_id": "agent-029",
-      "name": "AI Startup Research Agent",
+      "name": "Startup Research AI Agent",
       "slug": "startup-research-agent",
-      "category": "research",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8129",
       "health_url": "http://127.0.0.1:8129/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8129,
       "educational_name": "Institutional Operations Intelligence & Assessment Agent",
@@ -839,21 +1119,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Startup Research AI Agent",
+      "displayNumber": "029",
+      "domain": "Business & Management",
+      "description": "Assesses startup pitch viability, business models, and launch risks.",
+      "examples": [
+        "Design a data warehouse schema with star schema",
+        "Optimize Parquet file partitioning strategies",
+        "Build a streaming data pipeline architecture",
+        "Handle schema evolution in data lakes"
       ]
     },
     {
       "day": 30,
       "agent_id": "agent-030",
-      "name": "AI Investment Research Agent",
+      "name": "Investment Research AI Agent",
       "slug": "investment-research-agent",
-      "category": "research",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8130",
       "health_url": "http://127.0.0.1:8130/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8130,
       "educational_name": "Institutional Operations Intelligence & Assessment Agent",
@@ -868,21 +1158,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Investment Research AI Agent",
+      "displayNumber": "030",
+      "domain": "Business & Management",
+      "description": "Evaluates investment criteria, valuation multiples, and ROI metrics.",
+      "examples": [
+        "Write a Python ETL script to parse JSON into SQL",
+        "Transform and clean dirty address records",
+        "Implement incremental data loading logic",
+        "Build a batch data validation and transformation step"
       ]
     },
     {
       "day": 31,
       "agent_id": "agent-031",
-      "name": "AI Product Research Agent",
+      "name": "Product Research AI Agent",
       "slug": "product-research-agent",
-      "category": "research",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8131",
       "health_url": "http://127.0.0.1:8131/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8131,
       "educational_name": "Institutional Operations Intelligence & Assessment Agent",
@@ -897,21 +1197,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Product Research AI Agent",
+      "displayNumber": "031",
+      "domain": "Business & Management",
+      "description": "Analyzes product specifications, user reviews, and product tradeoffs.",
+      "examples": [
+        "Write a SQL query using window functions for ranking",
+        "Optimize a slow query with multiple table JOINs",
+        "Create a recursive CTE to traverse hierarchical data",
+        "Write a query to calculate month-over-month growth"
       ]
     },
     {
       "day": 32,
       "agent_id": "agent-032",
-      "name": "AI Travel Research Agent",
+      "name": "Travel Research AI Agent",
       "slug": "travel-research-agent",
-      "category": "research",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8132",
       "health_url": "http://127.0.0.1:8132/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8132,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -925,21 +1235,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Travel Research AI Agent",
+      "displayNumber": "032",
+      "domain": "Automation & Productivity",
+      "description": "Plans travel itineraries, logistical schedules, and travel checklists.",
+      "examples": [
+        "Write a Python script to parse and clean CSV files",
+        "Implement an async web scraper using aiohttp",
+        "Build a custom Python context manager and decorator",
+        "Optimize memory usage in large Python list processing"
       ]
     },
     {
       "day": 33,
       "agent_id": "agent-033",
-      "name": "AI Restaurant Research Agent",
+      "name": "Restaurant Research AI Agent",
       "slug": "restaurant-research-agent",
-      "category": "research",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8133",
       "health_url": "http://127.0.0.1:8133/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8133,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -953,21 +1273,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Restaurant Research AI Agent",
+      "displayNumber": "033",
+      "domain": "Automation & Productivity",
+      "description": "Recommends catering, menus, dietary options, and dining venues.",
+      "examples": [
+        "Implement a debounce function in JavaScript",
+        "Handle multiple async Promises with Promise.allSettled",
+        "Write an ES Module utility library",
+        "Manipulate DOM elements efficiently without reflows"
       ]
     },
     {
       "day": 34,
       "agent_id": "agent-034",
-      "name": "AI Course Research Agent",
+      "name": "Course Research AI Agent",
       "slug": "course-research-agent",
-      "category": "research",
+      "category": "Education & Learning",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8134",
       "health_url": "http://127.0.0.1:8134/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8134,
       "educational_name": "Course Catalog & Prerequisite Validation Agent",
@@ -983,21 +1313,31 @@
       "workflow_roles": [
         "course-override",
         "graduation-clearance"
+      ],
+      "displayName": "Course Research AI Agent",
+      "displayNumber": "034",
+      "domain": "Education & Learning",
+      "description": "Curates training courses, syllabi, learning roadmaps, and curricula.",
+      "examples": [
+        "Write generic utility types for deep partial updates",
+        "Type a complex API response with discriminated unions",
+        "Configure strict tsconfig.json for modern projects",
+        "Fix TypeScript type inference errors in generics"
       ]
     },
     {
       "day": 35,
       "agent_id": "agent-035",
-      "name": "AI College Research Agent",
+      "name": "College Research AI Agent",
       "slug": "college-research-agent",
-      "category": "research",
+      "category": "Education & Learning",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8135",
       "health_url": "http://127.0.0.1:8135/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8135,
       "educational_name": "Course Catalog & Prerequisite Validation Agent",
@@ -1013,21 +1353,31 @@
       "workflow_roles": [
         "course-override",
         "graduation-clearance"
+      ],
+      "displayName": "College Research AI Agent",
+      "displayNumber": "035",
+      "domain": "Education & Learning",
+      "description": "Researches academic programs, admission requirements, and prerequisites.",
+      "examples": [
+        "Write a Spring Boot REST controller with validation",
+        "Use Java Streams API to filter and group objects",
+        "Implement the Singleton and Factory design patterns in Java",
+        "Handle multithreading with ExecutorService"
       ]
     },
     {
       "day": 36,
       "agent_id": "agent-036",
-      "name": "AI GitHub Research Agent",
+      "name": "GitHub Research AI Agent",
       "slug": "github-research-agent",
-      "category": "research",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8136",
       "health_url": "http://127.0.0.1:8136/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8136,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -1041,21 +1391,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "GitHub Research AI Agent",
+      "displayNumber": "036",
+      "domain": "Coding & Development",
+      "description": "Analyzes open-source repositories, dependencies, stars, and code licenses.",
+      "examples": [
+        "Write a memory-safe C++ class using smart pointers",
+        "Implement an efficient custom vector container",
+        "Explain move semantics and rvalue references",
+        "Write a multi-threaded worker pool in modern C++"
       ]
     },
     {
       "day": 37,
       "agent_id": "agent-037",
-      "name": "AI Document Research Agent",
+      "name": "Document Research AI Agent",
       "slug": "document-research-agent",
-      "category": "research",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8137",
       "health_url": "http://127.0.0.1:8137/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8137,
       "educational_name": "Institutional Document Research & Policy Lookup Agent",
@@ -1070,21 +1430,31 @@
       "workflow_roles": [
         "admission-verification",
         "graduation-clearance"
+      ],
+      "displayName": "Document Research AI Agent",
+      "displayNumber": "037",
+      "domain": "Research & Knowledge",
+      "description": "Searches through PDF/Word archives for targeted clauses and sections.",
+      "examples": [
+        "Write an ASP.NET Core API controller with dependency injection",
+        "Use LINQ to group and aggregate complex objects",
+        "Implement asynchronous Task patterns with cancellation",
+        "Design an Entity Framework Core repository pattern"
       ]
     },
     {
       "day": 38,
       "agent_id": "agent-038",
-      "name": "AI Fact-Checking Agent",
+      "name": "Fact Checking AI Agent",
       "slug": "fact-checking-agent",
-      "category": "research",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8138",
       "health_url": "http://127.0.0.1:8138/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8138,
       "educational_name": "Institutional Data Verification & Fact-Checking Agent",
@@ -1100,21 +1470,31 @@
       "workflow_roles": [
         "admission-verification",
         "scholarship-eligibility"
+      ],
+      "displayName": "Fact Checking AI Agent",
+      "displayNumber": "038",
+      "domain": "Research & Knowledge",
+      "description": "Cross-references claims against verified local documents and evidence.",
+      "examples": [
+        "Write a high-concurrency worker pool in Go",
+        "Build an HTTP server with custom middleware in Go",
+        "Handle JSON parsing with custom struct tags",
+        "Implement graceful shutdown for a Go microservice"
       ]
     },
     {
       "day": 39,
       "agent_id": "agent-039",
-      "name": "AI Source Verification Agent",
+      "name": "Source Verification AI Agent",
       "slug": "source-verification-agent",
-      "category": "research",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8139",
       "health_url": "http://127.0.0.1:8139/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8139,
       "educational_name": "Institutional Data Verification & Fact-Checking Agent",
@@ -1130,21 +1510,31 @@
       "workflow_roles": [
         "admission-verification",
         "scholarship-eligibility"
+      ],
+      "displayName": "Source Verification AI Agent",
+      "displayNumber": "039",
+      "domain": "Research & Knowledge",
+      "description": "Validates provenance, author authority, and source reliability.",
+      "examples": [
+        "Write a Rust function demonstrating ownership and borrowing",
+        "Implement custom Traits and generics in Rust",
+        "Handle errors gracefully using Result and Option",
+        "Build a high-speed CLI tool using Clap in Rust"
       ]
     },
     {
       "day": 40,
       "agent_id": "agent-040",
-      "name": "AI Research Assistant Agent",
+      "name": "Research Assistant AI Agent",
       "slug": "research-assistant-agent",
-      "category": "research",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8140",
       "health_url": "http://127.0.0.1:8140/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8140,
       "educational_name": "Student Verification & Profile Intake Agent",
@@ -1163,21 +1553,31 @@
         "attendance-intervention",
         "course-override",
         "graduation-clearance"
+      ],
+      "displayName": "Research Assistant AI Agent",
+      "displayNumber": "040",
+      "domain": "Research & Knowledge",
+      "description": "Coordinates end-to-end background investigations and briefing packs.",
+      "examples": [
+        "Build a Jetpack Compose UI component with state",
+        "Configure ViewModel and LiveData in Kotlin",
+        "Implement background work using WorkManager",
+        "Handle Android permissions and device storage"
       ]
     },
     {
       "day": 41,
       "agent_id": "agent-041",
-      "name": "AI Email Management Agent",
+      "name": "Email Management AI Agent",
       "slug": "email-management-agent",
-      "category": "productivity",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8141",
       "health_url": "http://127.0.0.1:8141/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8141,
       "educational_name": "Official Institutional Notice & Email Communication Agent",
@@ -1196,21 +1596,31 @@
         "attendance-intervention",
         "course-override",
         "graduation-clearance"
+      ],
+      "displayName": "Email Management AI Agent",
+      "displayNumber": "041",
+      "domain": "Automation & Productivity",
+      "description": "Organizes inbox rules, auto-triage filters, and canned responses.",
+      "examples": [
+        "Create a responsive SwiftUI list view with navigation",
+        "Implement async/await network calls in Swift",
+        "Configure CoreData persistence in an iOS app",
+        "Handle iOS dark mode and dynamic type sizing"
       ]
     },
     {
       "day": 42,
       "agent_id": "agent-042",
-      "name": "AI Calendar Management Agent",
+      "name": "Calendar Management AI Agent",
       "slug": "calendar-management-agent",
-      "category": "productivity",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8142",
       "health_url": "http://127.0.0.1:8142/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8142,
       "educational_name": "Academic Scheduling & Committee Meeting Assistant Agent",
@@ -1225,21 +1635,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "course-override"
+      ],
+      "displayName": "Calendar Management AI Agent",
+      "displayNumber": "042",
+      "domain": "Automation & Productivity",
+      "description": "Resolves scheduling conflicts and coordinates meeting agendas.",
+      "examples": [
+        "Build a cross-platform login screen in React Native",
+        "Configure push notifications across iOS and Android",
+        "Optimize mobile app startup time and bundle size",
+        "Handle offline data synchronization in mobile apps"
       ]
     },
     {
       "day": 43,
       "agent_id": "agent-043",
-      "name": "AI Task Automation Agent",
+      "name": "Task Automation AI Agent",
       "slug": "task-automation-agent",
-      "category": "productivity",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8143",
       "health_url": "http://127.0.0.1:8143/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8143,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -1253,21 +1673,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Task Automation AI Agent",
+      "displayNumber": "043",
+      "domain": "Automation & Productivity",
+      "description": "Automates repetitive workflows, recurring cron jobs, and pipelines.",
+      "examples": [
+        "Write a custom useDebounce and useFetch hook",
+        "Build a state machine using useReducer and Context",
+        "Optimize unnecessary React re-renders with useMemo",
+        "Create an accessible tabs component in React"
       ]
     },
     {
       "day": 44,
       "agent_id": "agent-044",
-      "name": "AI File Organization Agent",
+      "name": "File Organization AI Agent",
       "slug": "file-organization-agent",
-      "category": "productivity",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8144",
       "health_url": "http://127.0.0.1:8144/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8144,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -1281,21 +1711,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "File Organization AI Agent",
+      "displayNumber": "044",
+      "domain": "Automation & Productivity",
+      "description": "Organizes folder structures, naming conventions, and file archiving.",
+      "examples": [
+        "Structure Server Components vs Client Components in Next.js",
+        "Implement Server Actions for form submissions",
+        "Configure dynamic routing and metadata for SEO",
+        "Optimize image and font loading in Next.js"
       ]
     },
     {
       "day": 45,
       "agent_id": "agent-045",
-      "name": "AI PDF Processing Agent",
+      "name": "PDF Processing AI Agent",
       "slug": "pdf-processing-agent",
-      "category": "productivity",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8145",
       "health_url": "http://127.0.0.1:8145/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8145,
       "educational_name": "Institutional PDF & Transcript Processing Agent",
@@ -1312,21 +1752,31 @@
         "admission-verification",
         "scholarship-eligibility",
         "graduation-clearance"
+      ],
+      "displayName": "PDF Processing AI Agent",
+      "displayNumber": "045",
+      "domain": "Automation & Productivity",
+      "description": "Parses PDF layouts, extracts form fields, tables, and text streams.",
+      "examples": [
+        "Write an Express router with request validation middleware",
+        "Handle large file uploads using Node.js streams",
+        "Implement JWT authentication and refresh token rotation",
+        "Manage child processes and cluster workers"
       ]
     },
     {
       "day": 46,
       "agent_id": "agent-046",
-      "name": "AI Invoice Processing Agent",
+      "name": "Invoice Processing AI Agent",
       "slug": "invoice-processing-agent",
-      "category": "productivity",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8146",
       "health_url": "http://127.0.0.1:8146/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8146,
       "educational_name": "Institutional Fee Invoice & Receipt Verification Agent",
@@ -1341,21 +1791,31 @@
       "workflow_roles": [
         "scholarship-eligibility",
         "graduation-clearance"
+      ],
+      "displayName": "Invoice Processing AI Agent",
+      "displayNumber": "046",
+      "domain": "Business & Management",
+      "description": "Extracts invoice line items, dates, vendor details, and totals.",
+      "examples": [
+        "Design a scalable microservices architecture",
+        "Implement rate limiting and request throttling",
+        "Structure a clean repository pattern for backend services",
+        "Handle distributed transactions with idempotency keys"
       ]
     },
     {
       "day": 47,
       "agent_id": "agent-047",
-      "name": "AI Spreadsheet Agent",
+      "name": "Spreadsheet AI Agent",
       "slug": "spreadsheet-agent",
-      "category": "productivity",
+      "category": "Data & Analytics",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8147",
       "health_url": "http://127.0.0.1:8147/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8147,
       "educational_name": "Institutional Operations Intelligence & Assessment Agent",
@@ -1370,21 +1830,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Spreadsheet AI Agent",
+      "displayNumber": "047",
+      "domain": "Data & Analytics",
+      "description": "Creates Excel/CSV formulas, models calculations, and cleans tables.",
+      "examples": [
+        "Build a responsive dashboard layout with CSS Grid",
+        "Implement client-side search filtering with instant results",
+        "Optimize Core Web Vitals and frontend asset loading",
+        "Create smooth micro-interactions and transitions"
       ]
     },
     {
       "day": 48,
       "agent_id": "agent-048",
-      "name": "AI Data Analysis Agent",
+      "name": "Data Analysis AI Agent",
       "slug": "data-analysis-agent",
-      "category": "productivity",
+      "category": "Data & Analytics",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8148",
       "health_url": "http://127.0.0.1:8148/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8148,
       "educational_name": "Institutional Academic & Attendance Analytics Agent",
@@ -1400,21 +1870,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "graduation-clearance"
+      ],
+      "displayName": "Data Analysis AI Agent",
+      "displayNumber": "048",
+      "domain": "Data & Analytics",
+      "description": "Analyzes datasets, identifies trends, correlations, and key insights.",
+      "examples": [
+        "Build an end-to-end user authentication feature",
+        "Connect a PostgreSQL database to a React frontend via REST API",
+        "Implement full-stack error handling and toast notifications",
+        "Design full-stack data validation with Zod"
       ]
     },
     {
       "day": 49,
       "agent_id": "agent-049",
-      "name": "AI Report Generation Agent",
+      "name": "Report Generation AI Agent",
       "slug": "report-generation-agent",
-      "category": "productivity",
+      "category": "Data & Analytics",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8149",
       "health_url": "http://127.0.0.1:8149/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8149,
       "educational_name": "Institutional Performance & Accreditation Reporting Agent",
@@ -1430,14 +1910,24 @@
       "workflow_roles": [
         "graduation-clearance",
         "attendance-intervention"
+      ],
+      "displayName": "Report Generation AI Agent",
+      "displayNumber": "049",
+      "domain": "Data & Analytics",
+      "description": "Generates formatted business, technical, and operational reports.",
+      "examples": [
+        "Configure Vite for fast local development and production builds",
+        "Set up ESLint and Prettier for strict TypeScript rules",
+        "Create custom npm scripts for testing and linting",
+        "Debug a module resolution error in package.json"
       ]
     },
     {
       "day": 50,
       "agent_id": "agent-050",
-      "name": "AI Presentation Agent",
+      "name": "Presentation AI Agent",
       "slug": "presentation-agent",
-      "category": "productivity",
+      "category": "Design & Creative",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1459,14 +1949,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Presentation AI Agent",
+      "displayNumber": "050",
+      "domain": "Design & Creative",
+      "description": "Structures presentation slide decks, visual outlines, and speaking notes.",
+      "examples": [
+        "Review this code diff for edge cases and clean code standards",
+        "Identify potential performance regressions in this PR",
+        "Check code maintainability against SOLID principles",
+        "Suggest cleaner refactoring for this nested function"
       ]
     },
     {
       "day": 51,
       "agent_id": "agent-051",
-      "name": "AI Image Analysis Agent",
+      "name": "Image Analysis AI Agent",
       "slug": "image-analysis-agent",
-      "category": "productivity",
+      "category": "Specialized AI",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1489,14 +1989,24 @@
       "workflow_roles": [
         "admission-verification",
         "scholarship-eligibility"
+      ],
+      "displayName": "Image Analysis AI Agent",
+      "displayNumber": "051",
+      "domain": "Specialized AI",
+      "description": "Analyzes photos, technical drawings, defects, and visual features.",
+      "examples": [
+        "Write a 5-minute quickstart README for this library",
+        "Document code functions with clear JSDoc comments",
+        "Create an architecture guide for new contributors",
+        "Write a changelog for a major software release"
       ]
     },
     {
       "day": 52,
       "agent_id": "agent-052",
-      "name": "AI Video Analysis Agent",
+      "name": "Video Analysis AI Agent",
       "slug": "video-analysis-agent",
-      "category": "productivity",
+      "category": "Specialized AI",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1518,14 +2028,24 @@
       "workflow_roles": [
         "admission-verification",
         "scholarship-eligibility"
+      ],
+      "displayName": "Video Analysis AI Agent",
+      "displayNumber": "052",
+      "domain": "Specialized AI",
+      "description": "Analyzes video scenes, timestamps, and activity summaries.",
+      "examples": [
+        "Write a clear user guide for this software dashboard",
+        "Author a technical whitepaper on air-gapped security",
+        "Draft an engineering design document for a new feature",
+        "Write step-by-step troubleshooting instructions"
       ]
     },
     {
       "day": 53,
       "agent_id": "agent-053",
-      "name": "AI Meeting Assistant Agent",
+      "name": "Meeting Assistant AI Agent",
       "slug": "meeting-assistant-agent",
-      "category": "productivity",
+      "category": "Writing & Communication",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1547,14 +2067,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "course-override"
+      ],
+      "displayName": "Meeting Assistant AI Agent",
+      "displayNumber": "053",
+      "domain": "Writing & Communication",
+      "description": "Prepares meeting agendas, transcribes key points, and action items.",
+      "examples": [
+        "Summarize this 10-page report into 5 key bullet points",
+        "Extract executive takeaways from this technical document",
+        "Provide a 1-paragraph summary of this article",
+        "Condense meeting notes into action items"
       ]
     },
     {
       "day": 54,
       "agent_id": "agent-054",
-      "name": "AI Voice Assistant Agent",
+      "name": "Voice Assistant AI Agent",
       "slug": "voice-assistant-agent",
-      "category": "productivity",
+      "category": "Specialized AI",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1576,14 +2106,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "student-service"
+      ],
+      "displayName": "Voice Assistant AI Agent",
+      "displayNumber": "054",
+      "domain": "Specialized AI",
+      "description": "Formats voice assistant responses for natural speech flow and SSML.",
+      "examples": [
+        "Translate this text into Spanish accurately",
+        "Localize these UI button labels for French users",
+        "Translate technical documentation into German",
+        "Check translated text for cultural nuances"
       ]
     },
     {
       "day": 55,
       "agent_id": "agent-055",
-      "name": "AI Code Review Agent",
+      "name": "Code Review AI Agent",
       "slug": "code-review-agent",
-      "category": "productivity",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1606,14 +2146,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "graduation-clearance"
+      ],
+      "displayName": "Code Review AI Agent",
+      "displayNumber": "055",
+      "domain": "Coding & Development",
+      "description": "Reviews pull requests, analyzes code quality, security, and cleanliness.",
+      "examples": [
+        "Draft a professional follow-up email after an interview",
+        "Write an announcement email for a product launch",
+        "Compose a polite request for project deadline extension",
+        "Draft a weekly team status update email"
       ]
     },
     {
       "day": 56,
       "agent_id": "agent-056",
-      "name": "AI Debugging Agent",
+      "name": "Debugging AI Agent",
       "slug": "debugging-agent",
-      "category": "productivity",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1636,14 +2186,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "graduation-clearance"
+      ],
+      "displayName": "Debugging AI Agent",
+      "displayNumber": "056",
+      "domain": "Coding & Development",
+      "description": "Identifies bugs, analyzes error stack traces, and provides fixes.",
+      "examples": [
+        "Create a structured agenda for a 30-minute sprint planning meeting",
+        "Extract decision points and action items from these notes",
+        "Draft a meeting recap email for attendees",
+        "Prepare discussion questions for a product roadmap sync"
       ]
     },
     {
       "day": 57,
       "agent_id": "agent-057",
-      "name": "AI Test Generation Agent",
+      "name": "Test Generation AI Agent",
       "slug": "test-generation-agent",
-      "category": "productivity",
+      "category": "Specialized AI",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1666,14 +2226,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "graduation-clearance"
+      ],
+      "displayName": "Test Generation AI Agent",
+      "displayNumber": "057",
+      "domain": "Specialized AI",
+      "description": "Generates unit tests, integration test suites, and mock fixtures.",
+      "examples": [
+        "Create a 4-week project roadmap for MVP launch",
+        "Break down a feature into daily milestone tasks",
+        "Plan resource allocation for a 3-engineer team",
+        "Identify critical path dependencies for project delivery"
       ]
     },
     {
       "day": 58,
       "agent_id": "agent-058",
-      "name": "AI Documentation Agent",
+      "name": "Documentation AI Agent",
       "slug": "documentation-agent",
-      "category": "productivity",
+      "category": "Writing & Communication",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1695,14 +2265,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "student-service"
+      ],
+      "displayName": "Documentation AI Agent",
+      "displayNumber": "058",
+      "domain": "Writing & Communication",
+      "description": "Writes comprehensive software documentation, READMEs, and wikis.",
+      "examples": [
+        "Create a weekly project status report template",
+        "Identify project risks and mitigation strategies",
+        "Track milestone progress against estimated deadlines",
+        "Organize a project retrospective summary"
       ]
     },
     {
       "day": 59,
       "agent_id": "agent-059",
-      "name": "AI Workflow Automation Agent",
+      "name": "Workflow Automation AI Agent",
       "slug": "workflow-automation-agent",
-      "category": "productivity",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1723,14 +2303,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Workflow Automation AI Agent",
+      "displayNumber": "059",
+      "domain": "Automation & Productivity",
+      "description": "Builds multi-step automated workflows, approvals, and event triggers.",
+      "examples": [
+        "Prioritize this task list using the Eisenhower Matrix",
+        "Break down this complex user story into subtasks",
+        "Estimate story points and complexity for these backlog items",
+        "Organize today's priority action items"
       ]
     },
     {
       "day": 60,
       "agent_id": "agent-060",
-      "name": "AI Personal Assistant Agent",
+      "name": "Personal Assistant AI Agent",
       "slug": "personal-assistant-agent",
-      "category": "productivity",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1756,14 +2346,24 @@
         "attendance-intervention",
         "course-override",
         "graduation-clearance"
+      ],
+      "displayName": "Personal Assistant AI Agent",
+      "displayNumber": "060",
+      "domain": "Automation & Productivity",
+      "description": "Coordinates schedules, drafts reminders, and manages daily tasks.",
+      "examples": [
+        "Find key academic papers on reinforcement learning",
+        "Summarize the methodology of this research study",
+        "Cross-reference facts across two different reports",
+        "Organize bibliography citations in APA format"
       ]
     },
     {
       "day": 61,
       "agent_id": "agent-061",
-      "name": "AI Code Generation Agent",
+      "name": "Code Generation AI Agent",
       "slug": "code-generation-agent",
-      "category": "developer",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1784,14 +2384,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Code Generation AI Agent",
+      "displayNumber": "061",
+      "domain": "Coding & Development",
+      "description": "Writes clean code, implements algorithms, and solves software tasks.",
+      "examples": [
+        "Build a structured FAQ section for a new service",
+        "Create a technical glossary for engineering terms",
+        "Organize internal knowledge articles by topic",
+        "Index standard operating procedures for quick lookup"
       ]
     },
     {
       "day": 62,
       "agent_id": "agent-062",
-      "name": "AI Software Architecture Agent",
+      "name": "Software Architecture AI Agent",
       "slug": "software-architecture-agent",
-      "category": "developer",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1812,14 +2422,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Software Architecture AI Agent",
+      "displayNumber": "062",
+      "domain": "Coding & Development",
+      "description": "Architects scalable microservices, system layers, and data flows.",
+      "examples": [
+        "Formulate advanced search queries for specific patents",
+        "Filter and rank relevant articles on renewable energy",
+        "Extract key statistics from indexed search results",
+        "Find relevant documentation clauses for an error code"
       ]
     },
     {
       "day": 63,
       "agent_id": "agent-063",
-      "name": "AI Codebase Analysis Agent",
+      "name": "Codebase Analysis AI Agent",
       "slug": "codebase-analysis-agent",
-      "category": "developer",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1840,21 +2460,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Codebase Analysis AI Agent",
+      "displayNumber": "063",
+      "domain": "Coding & Development",
+      "description": "Analyzes codebase structure, module coupling, and dead code.",
+      "examples": [
+        "Extract all contact details and addresses from this document",
+        "Parse dates, invoice numbers, and totals into JSON",
+        "Extract tabular data from raw plain text",
+        "Identify key stakeholder names and organizations in a transcript"
       ]
     },
     {
       "day": 64,
       "agent_id": "agent-064",
-      "name": "AI Bug Hunting Agent",
+      "name": "Bug Hunting AI Agent",
       "slug": "bug-hunting-agent",
-      "category": "developer",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8164",
       "health_url": "http://127.0.0.1:8164/api/health",
-      "model": "nemotron-3-nano",
+      "model": "gemma3:4b",
       "backend": "http://127.0.0.1:11434",
       "port": 8164,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -1868,21 +2498,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Bug Hunting AI Agent",
+      "displayNumber": "064",
+      "domain": "Coding & Development",
+      "description": "Performs deep static analysis to find edge case software defects.",
+      "examples": [
+        "Extract all text and tables from this multi-page PDF",
+        "Identify form fields and values inside this PDF",
+        "Summarize the executive summary page of this PDF",
+        "Extract financial table data from an annual report PDF"
       ]
     },
     {
       "day": 65,
       "agent_id": "agent-065",
-      "name": "AI Performance Optimization Agent",
+      "name": "Performance Optimization AI Agent",
       "slug": "performance-optimization-agent",
-      "category": "developer",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8165",
       "health_url": "http://127.0.0.1:8165/api/health",
-      "model": "nemotron-3-nano",
+      "model": "gemma3:4b",
       "backend": "http://127.0.0.1:11434",
       "port": 8165,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -1896,21 +2536,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Performance Optimization AI Agent",
+      "displayNumber": "065",
+      "domain": "Coding & Development",
+      "description": "Profiles CPU/memory bottlenecks, load times, and caching.",
+      "examples": [
+        "Read and transcribe text from this scanned document photo",
+        "Extract numbers and labels from this scanned invoice",
+        "Transcribe handwritten notes into digital text",
+        "Recognize text within an engineering schematic image"
       ]
     },
     {
       "day": 66,
       "agent_id": "agent-066",
-      "name": "AI Security Audit Agent",
+      "name": "Security Audit AI Agent",
       "slug": "security-audit-agent",
-      "category": "developer",
+      "category": "Security & Systems",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8166",
       "health_url": "http://127.0.0.1:8166/api/health",
-      "model": "nemotron-3-nano",
+      "model": "gemma3:4b",
       "backend": "http://127.0.0.1:11434",
       "port": 8166,
       "educational_name": "Institutional Administrative Operations Agent",
@@ -1924,21 +2574,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Security Audit AI Agent",
+      "displayNumber": "066",
+      "domain": "Security & Systems",
+      "description": "Audits source code and systems for vulnerabilities and OWASP compliance.",
+      "examples": [
+        "Describe the key objects and layout in this image",
+        "Identify surface defects or anomalies in this photo",
+        "Analyze the color contrast and visual composition",
+        "Extract diagram flows from this whiteboard photo"
       ]
     },
     {
       "day": 67,
       "agent_id": "agent-067",
-      "name": "AI Test Engineer Agent",
+      "name": "Test Engineer AI Agent",
       "slug": "test-engineer-agent",
-      "category": "developer",
+      "category": "Specialized AI",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8167",
       "health_url": "http://127.0.0.1:8167/api/health",
-      "model": "nemotron-3-nano",
+      "model": "gemma3:4b",
       "backend": "http://127.0.0.1:11434",
       "port": 8167,
       "educational_name": "Academic Performance & Course Records Agent",
@@ -1954,14 +2614,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "graduation-clearance"
+      ],
+      "displayName": "Test Engineer AI Agent",
+      "displayNumber": "067",
+      "domain": "Specialized AI",
+      "description": "Designs end-to-end regression suites, test plans, and assertions.",
+      "examples": [
+        "Summarize key events and timestamps in this video log",
+        "Detect scene transitions and visual changes",
+        "Analyze activity sequences across security video frames",
+        "Extract key informational frames from a tutorial video"
       ]
     },
     {
       "day": 68,
       "agent_id": "agent-068",
-      "name": "AI Dependency Analysis Agent",
+      "name": "Dependency Analysis AI Agent",
       "slug": "dependency-analysis-agent",
-      "category": "developer",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -1982,14 +2652,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Dependency Analysis AI Agent",
+      "displayNumber": "068",
+      "domain": "Coding & Development",
+      "description": "Audits package dependencies, vulnerabilities, and upgrade paths.",
+      "examples": [
+        "Transcribe speech from this audio recording",
+        "Analyze audio quality and background noise levels",
+        "Identify speakers in a multi-party conversation audio",
+        "Extract key discussion points from a podcast audio"
       ]
     },
     {
       "day": 69,
       "agent_id": "agent-069",
-      "name": "AI API Documentation Agent",
+      "name": "API Documentation AI Agent",
       "slug": "api-documentation-agent",
-      "category": "developer",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2010,14 +2690,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "API Documentation AI Agent",
+      "displayNumber": "069",
+      "domain": "Coding & Development",
+      "description": "Generates OpenAPI specifications, endpoint contracts, and API docs.",
+      "examples": [
+        "Format voice assistant responses for natural speech flow",
+        "Write an SSML script with pauses and emphasis",
+        "Design conversational voice dialogue turns",
+        "Optimize text pronunciation guides for TTS"
       ]
     },
     {
       "day": 70,
       "agent_id": "agent-070",
-      "name": "AI Code Refactoring Agent",
+      "name": "Code Refactoring AI Agent",
       "slug": "code-refactoring-agent",
-      "category": "developer",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2038,14 +2728,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Code Refactoring AI Agent",
+      "displayNumber": "070",
+      "domain": "Coding & Development",
+      "description": "Refactors complex code into clean, modular, and maintainable patterns.",
+      "examples": [
+        "Design an interactive customer support chatbot flow",
+        "Write friendly fallback responses for unrecognized user intents",
+        "Create branching dialogue trees for booking appointments",
+        "Draft conversational prompts for a virtual assistant"
       ]
     },
     {
       "day": 71,
       "agent_id": "agent-071",
-      "name": "AI Database Agent",
+      "name": "Database AI Agent",
       "slug": "database-agent",
-      "category": "developer",
+      "category": "Data & Analytics",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2070,14 +2770,24 @@
         "scholarship-eligibility",
         "course-override",
         "graduation-clearance"
+      ],
+      "displayName": "Database AI Agent",
+      "displayNumber": "071",
+      "domain": "Data & Analytics",
+      "description": "Designs database schemas, SQL queries, indexes, and migrations.",
+      "examples": [
+        "Write a helpful response to an upset customer regarding a delay",
+        "Draft step-by-step instructions to help a user reset their password",
+        "Create canned responses for common support ticket categories",
+        "Handle a product return inquiry professionally"
       ]
     },
     {
       "day": 72,
       "agent_id": "agent-072",
-      "name": "AI DevOps Agent",
+      "name": "DevOps AI Agent",
       "slug": "devops-agent",
-      "category": "developer",
+      "category": "Security & Systems",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2098,14 +2808,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "DevOps AI Agent",
+      "displayNumber": "072",
+      "domain": "Security & Systems",
+      "description": "Configures Docker containers, deployment scripts, and infrastructure.",
+      "examples": [
+        "Write a Product Requirements Document (PRD) for a new feature",
+        "Define user personas and pain points for a SaaS tool",
+        "Create an evaluation rubric for feature prioritization",
+        "Draft user stories with acceptance criteria"
       ]
     },
     {
       "day": 73,
       "agent_id": "agent-073",
-      "name": "AI Docker Agent",
+      "name": "Docker AI Agent",
       "slug": "docker-agent",
-      "category": "developer",
+      "category": "Security & Systems",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2126,21 +2846,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Docker AI Agent",
+      "displayNumber": "073",
+      "domain": "Security & Systems",
+      "description": "Authors multi-stage Dockerfiles, compose files, and container configs.",
+      "examples": [
+        "Perform a SWOT analysis for expanding into a new market",
+        "Compare unit economics and revenue models",
+        "Analyze market competition and differentiation factors",
+        "Evaluate business process bottlenecks and efficiency gains"
       ]
     },
     {
       "day": 74,
       "agent_id": "agent-074",
-      "name": "AI CI/CD Agent",
+      "name": "CI/CD AI Agent",
       "slug": "ci-cd-agent",
-      "category": "developer",
+      "category": "Security & Systems",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8174",
       "health_url": "http://127.0.0.1:8174/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8174,
       "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
@@ -2154,14 +2884,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "CI/CD AI Agent",
+      "displayNumber": "074",
+      "domain": "Security & Systems",
+      "description": "Configures GitHub Actions, automated test runs, and build pipelines.",
+      "examples": [
+        "Calculate Return on Investment (ROI) and payback period",
+        "Analyze profit margins from an income statement",
+        "Draft a cash flow forecast for the next quarter",
+        "Explain EBITDA and operating leverage formulas"
       ]
     },
     {
       "day": 75,
       "agent_id": "agent-075",
-      "name": "AI Full-Stack Developer Agent",
+      "name": "Full-Stack Developer AI Agent",
       "slug": "full-stack-developer-agent",
-      "category": "developer",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2182,14 +2922,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Full-Stack Developer AI Agent",
+      "displayNumber": "075",
+      "domain": "Coding & Development",
+      "description": "Builds full-stack features connecting frontend UI to backend APIs.",
+      "examples": [
+        "Create a 3-stage marketing funnel strategy for our SaaS launch",
+        "Write compelling value proposition headlines",
+        "Draft promotional copy for an upcoming product feature",
+        "Plan a multi-channel digital marketing campaign"
       ]
     },
     {
       "day": 76,
       "agent_id": "agent-076",
-      "name": "AI Sales Agent",
+      "name": "Sales AI Agent",
       "slug": "sales-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2211,14 +2961,24 @@
       ],
       "workflow_roles": [
         "admission-verification"
+      ],
+      "displayName": "Sales AI Agent",
+      "displayNumber": "076",
+      "domain": "Business & Management",
+      "description": "Drafts sales pitches, outbound outreach, and objection handling.",
+      "examples": [
+        "Suggest target keywords and search intent for a blog post",
+        "Write SEO-friendly title tags and meta descriptions",
+        "Audit this page structure for heading hierarchy and keywords",
+        "Provide internal linking recommendations to improve ranking"
       ]
     },
     {
       "day": 77,
       "agent_id": "agent-077",
-      "name": "AI Lead Generation Agent",
+      "name": "Lead Generation AI Agent",
       "slug": "lead-generation-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2240,14 +3000,24 @@
       ],
       "workflow_roles": [
         "admission-verification"
+      ],
+      "displayName": "Lead Generation AI Agent",
+      "displayNumber": "077",
+      "domain": "Business & Management",
+      "description": "Identifies ideal prospect profiles, lead criteria, and qualification.",
+      "examples": [
+        "Write an engaging Twitter/X thread summarizing our launch",
+        "Create a LinkedIn post highlighting a technical milestone",
+        "Draft a weekly social media content calendar",
+        "Generate relevant hashtags and hook lines"
       ]
     },
     {
       "day": 78,
       "agent_id": "agent-078",
-      "name": "AI Lead Qualification Agent",
+      "name": "Lead Qualification AI Agent",
       "slug": "lead-qualification-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2268,14 +3038,24 @@
       ],
       "workflow_roles": [
         "student-service"
+      ],
+      "displayName": "Lead Qualification AI Agent",
+      "displayNumber": "078",
+      "domain": "Business & Management",
+      "description": "Scores leads using BANT and MEDDIC qualification frameworks.",
+      "examples": [
+        "Write a persuasive product description with feature bullets",
+        "Suggest optimizations to reduce shopping cart abandonment",
+        "Structure an e-commerce catalog category taxonomy",
+        "Draft response templates for customer product reviews"
       ]
     },
     {
       "day": 79,
       "agent_id": "agent-079",
-      "name": "AI Customer Support Agent",
+      "name": "Customer Support AI Agent",
       "slug": "customer-support-agent",
-      "category": "business",
+      "category": "Writing & Communication",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2296,14 +3076,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Customer Support AI Agent",
+      "displayNumber": "079",
+      "domain": "Writing & Communication",
+      "description": "Drafts empathetic customer service replies and troubleshooting steps.",
+      "examples": [
+        "Write a job description for a Senior Frontend Engineer",
+        "Create a 30-60-90 day employee onboarding checklist",
+        "Draft a remote work and flexible hours policy",
+        "Design a structured employee performance review template"
       ]
     },
     {
       "day": 80,
       "agent_id": "agent-080",
-      "name": "AI Marketing Agent",
+      "name": "Marketing AI Agent",
       "slug": "marketing-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2325,14 +3115,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "student-service"
+      ],
+      "displayName": "Marketing AI Agent",
+      "displayNumber": "080",
+      "domain": "Business & Management",
+      "description": "Plans marketing campaigns, value propositions, copywriting, and funnels.",
+      "examples": [
+        "Optimize these resume bullet points using the STAR method",
+        "Tailor my resume for a Software Engineer position",
+        "Write a personalized cover letter for this job posting",
+        "Review my resume for formatting and action verbs"
       ]
     },
     {
       "day": 81,
       "agent_id": "agent-081",
-      "name": "AI Social Media Agent",
+      "name": "Social Media AI Agent",
       "slug": "social-media-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2354,14 +3154,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "student-service"
+      ],
+      "displayName": "Social Media AI Agent",
+      "displayNumber": "081",
+      "domain": "Business & Management",
+      "description": "Creates engaging social posts, hashtags, threads, and content calendars.",
+      "examples": [
+        "Ask me 5 behavioral interview questions using the STAR framework",
+        "Conduct a mock technical interview for a full-stack role",
+        "Provide feedback on my answer to 'Tell me about a time you failed'",
+        "Prepare questions to ask the interviewer at the end"
       ]
     },
     {
       "day": 82,
       "agent_id": "agent-082",
-      "name": "AI SEO Agent",
+      "name": "SEO AI Agent",
       "slug": "seo-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2383,14 +3193,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "SEO AI Agent",
+      "displayNumber": "082",
+      "domain": "Business & Management",
+      "description": "Optimizes search engine rankings, keywords, meta tags, and structure.",
+      "examples": [
+        "Design a 6-week curriculum roadmap to learn Python from scratch",
+        "Create a 10-question multiple-choice quiz on web security",
+        "Draft a step-by-step lesson plan on database normalization",
+        "Explain a complex computer science concept with analogies"
       ]
     },
     {
       "day": 83,
       "agent_id": "agent-083",
-      "name": "AI Content Marketing Agent",
+      "name": "Content Marketing AI Agent",
       "slug": "content-marketing-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2412,14 +3232,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "student-service"
+      ],
+      "displayName": "Content Marketing AI Agent",
+      "displayNumber": "083",
+      "domain": "Business & Management",
+      "description": "Plans content strategy, blog pillars, and distribution channels.",
+      "examples": [
+        "Create 10 active recall flashcards from these study notes",
+        "Generate 5 practice problems with step-by-step solutions",
+        "Structure these lecture notes using the Cornell Note-Taking method",
+        "Summarize key exam formulas and definitions"
       ]
     },
     {
       "day": 84,
       "agent_id": "agent-084",
-      "name": "AI Business Analyst Agent",
+      "name": "Business Analyst AI Agent",
       "slug": "business-analyst-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2441,14 +3271,24 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "Business Analyst AI Agent",
+      "displayNumber": "084",
+      "domain": "Business & Management",
+      "description": "Analyzes business workflows, KPIs, and process optimization.",
+      "examples": [
+        "Provide feedback on my elevator pitch for clarity and impact",
+        "Suggest opening hook ideas for a keynote speech",
+        "Give tips to improve speech pacing and eliminate filler words",
+        "Structure answers for live Q&A sessions"
       ]
     },
     {
       "day": 85,
       "agent_id": "agent-085",
-      "name": "AI Financial Analysis Agent",
+      "name": "Financial Analysis AI Agent",
       "slug": "financial-analysis-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2470,14 +3310,24 @@
       ],
       "workflow_roles": [
         "scholarship-eligibility"
+      ],
+      "displayName": "Financial Analysis AI Agent",
+      "displayNumber": "085",
+      "domain": "Business & Management",
+      "description": "Analyzes financial statements, margins, ROI, budgets, and cash flows.",
+      "examples": [
+        "Explain the differences between MIT, Apache 2.0, and GPL licenses",
+        "Highlight key obligations in this software license agreement",
+        "Draft a plain-language Terms of Service overview",
+        "Review a Non-Disclosure Agreement (NDA) clause structure"
       ]
     },
     {
       "day": 86,
       "agent_id": "agent-086",
-      "name": "AI Accounting Assistant Agent",
+      "name": "Accounting Assistant AI Agent",
       "slug": "accounting-assistant-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2499,14 +3349,24 @@
       "workflow_roles": [
         "scholarship-eligibility",
         "graduation-clearance"
+      ],
+      "displayName": "Accounting Assistant AI Agent",
+      "displayNumber": "086",
+      "domain": "Business & Management",
+      "description": "Assists with bookkeeping ledger categorization, reconciliation, and VAT.",
+      "examples": [
+        "Provide a SOC 2 Type II audit readiness checklist",
+        "Explain GDPR user data deletion compliance requirements",
+        "Audit this data retention policy against ISO 27001 norms",
+        "Draft a compliance report template for security controls"
       ]
     },
     {
       "day": 87,
       "agent_id": "agent-087",
-      "name": "AI E-Commerce Agent",
+      "name": "E-Commerce AI Agent",
       "slug": "e-commerce-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2528,14 +3388,24 @@
       "workflow_roles": [
         "scholarship-eligibility",
         "graduation-clearance"
+      ],
+      "displayName": "E-Commerce AI Agent",
+      "displayNumber": "087",
+      "domain": "Business & Management",
+      "description": "Optimizes product listings, descriptions, cart conversions, and reviews.",
+      "examples": [
+        "Perform a threat model analysis for a web application",
+        "Explain how to remediate OWASP Top 10 vulnerabilities",
+        "Draft an incident response plan for a suspected data breach",
+        "Provide security hardening guidelines for Linux servers"
       ]
     },
     {
       "day": 88,
       "agent_id": "agent-088",
-      "name": "AI Supply Chain Agent",
+      "name": "Supply Chain AI Agent",
       "slug": "supply-chain-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2557,14 +3427,24 @@
       "workflow_roles": [
         "scholarship-eligibility",
         "graduation-clearance"
+      ],
+      "displayName": "Supply Chain AI Agent",
+      "displayNumber": "088",
+      "domain": "Business & Management",
+      "description": "Analyzes inventory reorder points, logistics, and supplier lead times.",
+      "examples": [
+        "Draft a comprehensive Privacy Policy for a web platform",
+        "Design a data anonymization and masking strategy",
+        "Explain cookie consent banner compliance requirements",
+        "Audit personal data storage for minimization principles"
       ]
     },
     {
       "day": 89,
       "agent_id": "agent-089",
-      "name": "AI HR & Recruitment Agent",
+      "name": "HR & Recruitment AI Agent",
       "slug": "hr-and-recruitment-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2587,21 +3467,31 @@
       "workflow_roles": [
         "course-override",
         "scholarship-eligibility"
+      ],
+      "displayName": "HR & Recruitment AI Agent",
+      "displayNumber": "089",
+      "domain": "Business & Management",
+      "description": "Drafts job descriptions, onboarding plans, and workplace policies.",
+      "examples": [
+        "Design Prometheus alert rules for high error rates",
+        "Configure uptime monitoring and status page checks",
+        "Define SLI and SLO thresholds for an API service",
+        "Draft a runbook for investigating elevated latency alerts"
       ]
     },
     {
       "day": 90,
       "agent_id": "agent-090",
-      "name": "AI Project Manager Agent",
+      "name": "Project Manager AI Agent",
       "slug": "project-manager-agent",
-      "category": "business",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8190",
       "health_url": "http://127.0.0.1:8190/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8190,
       "educational_name": "Institutional Operations & Faculty Process Agent",
@@ -2615,21 +3505,31 @@
       ],
       "workflow_roles": [
         "attendance-intervention"
+      ],
+      "displayName": "Project Manager AI Agent",
+      "displayNumber": "090",
+      "domain": "Business & Management",
+      "description": "Tracks deliverables, manages timelines, risks, and project status reports.",
+      "examples": [
+        "Analyze this code profile to find the CPU hotspot",
+        "Design a load testing plan with k6 or Apache Bench",
+        "Suggest caching strategies to reduce database load",
+        "Optimize Node.js event loop lag under heavy traffic"
       ]
     },
     {
       "day": 91,
       "agent_id": "agent-091",
-      "name": "AI Autonomous Research Agent",
+      "name": "Autonomous Research AI Agent",
       "slug": "autonomous-research-agent",
-      "category": "advanced",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8191",
       "health_url": "http://127.0.0.1:8191/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8191,
       "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
@@ -2643,14 +3543,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Autonomous Research AI Agent",
+      "displayNumber": "091",
+      "domain": "Research & Knowledge",
+      "description": "Executes deep multi-step autonomous research and structured synthesis.",
+      "examples": [
+        "Optimize this O(n^2) algorithm to O(n log n)",
+        "Reduce frontend bundle size by tree-shaking dependencies",
+        "Optimize memory allocation in a high-throughput loop",
+        "Refactor recursive function with dynamic programming memoization"
       ]
     },
     {
       "day": 92,
       "agent_id": "agent-092",
-      "name": "AI Browser Automation Agent",
+      "name": "Browser Automation AI Agent",
       "slug": "browser-automation-agent",
-      "category": "advanced",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2671,21 +3581,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Browser Automation AI Agent",
+      "displayNumber": "092",
+      "domain": "Automation & Productivity",
+      "description": "Designs browser automation scripts, DOM selectors, and scraping.",
+      "examples": [
+        "Design a multi-step document approval workflow",
+        "Create a trigger-based automation for incoming files",
+        "Map a customer onboarding workflow with decision nodes",
+        "Build an automated escalation path for critical alerts"
       ]
     },
     {
       "day": 93,
       "agent_id": "agent-093",
-      "name": "AI RAG Knowledge Agent",
+      "name": "RAG Knowledge AI Agent",
       "slug": "rag-knowledge-agent",
-      "category": "advanced",
+      "category": "Research & Knowledge",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8193",
       "health_url": "http://127.0.0.1:8193/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8193,
       "educational_name": "Document Intelligence & Knowledge Extraction Agent",
@@ -2700,21 +3620,31 @@
       "workflow_roles": [
         "admission-verification",
         "scholarship-eligibility"
+      ],
+      "displayName": "RAG Knowledge AI Agent",
+      "displayNumber": "093",
+      "domain": "Research & Knowledge",
+      "description": "Indexes document embeddings and performs high-precision semantic search.",
+      "examples": [
+        "Write a webhook receiver with signature validation in Node.js",
+        "Connect a payment provider webhook to our database",
+        "Design a connector for syncing data between two local APIs",
+        "Transform payload formats between different REST services"
       ]
     },
     {
       "day": 94,
       "agent_id": "agent-094",
-      "name": "AI Multi-Agent Debate Agent",
+      "name": "Multi-Agent Debate AI Agent",
       "slug": "multi-agent-debate-agent",
-      "category": "advanced",
+      "category": "Specialized AI",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8194",
       "health_url": "http://127.0.0.1:8194/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8194,
       "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
@@ -2728,21 +3658,31 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Multi-Agent Debate AI Agent",
+      "displayNumber": "094",
+      "domain": "Specialized AI",
+      "description": "Orchestrates multi-perspective agent debate and consensus synthesis.",
+      "examples": [
+        "Write an automated smoke test suite for our core API endpoints",
+        "Design a regression test matrix covering edge cases",
+        "Build an automated testing script in JavaScript",
+        "Create test assertions for air-gapped zero-egress compliance"
       ]
     },
     {
       "day": 95,
       "agent_id": "agent-095",
-      "name": "AI Business Operations Agent",
+      "name": "Business Operations AI Agent",
       "slug": "business-operations-agent",
-      "category": "advanced",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8195",
       "health_url": "http://127.0.0.1:8195/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8195,
       "educational_name": "Automated Workflow Pipeline & Task Handler Agent",
@@ -2756,14 +3696,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Business Operations AI Agent",
+      "displayNumber": "095",
+      "domain": "Business & Management",
+      "description": "Models standard operating procedures, SLAs, and organizational throughput.",
+      "examples": [
+        "Suggest the best chart type to visualize multi-year growth",
+        "Write Chart.js configuration for a multi-line trend graph",
+        "Design an interactive metrics dashboard wireframe",
+        "Create a heatmap visualization for server utilization"
       ]
     },
     {
       "day": 96,
       "agent_id": "agent-096",
-      "name": "AI Autonomous Coding Agent",
+      "name": "Autonomous Coding AI Agent",
       "slug": "autonomous-coding-agent",
-      "category": "advanced",
+      "category": "Coding & Development",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2784,14 +3734,24 @@
       ],
       "workflow_roles": [
         "administrative-request"
+      ],
+      "displayName": "Autonomous Coding AI Agent",
+      "displayNumber": "096",
+      "domain": "Coding & Development",
+      "description": "Plans, writes, and self-tests end-to-end software modules autonomously.",
+      "examples": [
+        "Generate a structured executive report from this dataset",
+        "Format a monthly operational performance report",
+        "Create a summary report with key metrics and charts",
+        "Draft an audit report with findings and recommendations"
       ]
     },
     {
       "day": 97,
       "agent_id": "agent-097",
-      "name": "AI AI-Research Scientist Agent",
+      "name": "AI Research Scientist AI Agent",
       "slug": "ai-research-scientist-agent",
-      "category": "advanced",
+      "category": "Specialized AI",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2813,21 +3773,31 @@
       "workflow_roles": [
         "attendance-intervention",
         "administrative-request"
+      ],
+      "displayName": "AI Research Scientist AI Agent",
+      "displayNumber": "097",
+      "domain": "Specialized AI",
+      "description": "Evaluates machine learning architectures, loss functions, and benchmarks.",
+      "examples": [
+        "Write clear, concise push notification copy for an alert",
+        "Format in-app toast messages for success, warning, and error",
+        "Design an urgent alert template for critical system events",
+        "Draft reminder notification templates for user actions"
       ]
     },
     {
       "day": 98,
       "agent_id": "agent-098",
-      "name": "AI Startup Builder Agent",
+      "name": "Startup Builder AI Agent",
       "slug": "startup-builder-agent",
-      "category": "advanced",
+      "category": "Business & Management",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
       "vercel_url": "",
       "api_url": "http://127.0.0.1:8198",
       "health_url": "http://127.0.0.1:8198/api/health",
-      "model": "nemotron-3-nano",
+      "model": "qwen2.5-coder:1.5b",
       "backend": "http://127.0.0.1:11434",
       "port": 8198,
       "educational_name": "Admission Program Onboarding Agent",
@@ -2840,14 +3810,24 @@
       ],
       "workflow_roles": [
         "admission-verification"
+      ],
+      "displayName": "Startup Builder AI Agent",
+      "displayNumber": "098",
+      "domain": "Business & Management",
+      "description": "Coordinates product ideation, tech stacks, and rapid go-to-market execution.",
+      "examples": [
+        "Design an organized folder taxonomy for project assets",
+        "Write a script to batch rename and organize downloads by date",
+        "Create an automated archive and backup script",
+        "Detect and clean up duplicate files in a directory"
       ]
     },
     {
       "day": 99,
       "agent_id": "agent-099",
-      "name": "AI Multi-Agent Coordinator Agent",
+      "name": "Multi-Agent Coordinator AI Agent",
       "slug": "multi-agent-coordinator-agent",
-      "category": "advanced",
+      "category": "Specialized AI",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2869,14 +3849,24 @@
       "workflow_roles": [
         "scholarship-eligibility",
         "graduation-clearance"
+      ],
+      "displayName": "Multi-Agent Coordinator AI Agent",
+      "displayNumber": "099",
+      "domain": "Specialized AI",
+      "description": "Coordinates inter-agent message passing and workflow handoffs.",
+      "examples": [
+        "Organize my schedule and prioritize top 3 tasks for today",
+        "Draft a reminder and action item summary for tomorrow",
+        "Help me draft a quick reply to an urgent inquiry",
+        "Coordinate steps to prepare for an upcoming presentation"
       ]
     },
     {
       "day": 100,
       "agent_id": "agent-100",
-      "name": "AI Agent Orchestrator Agent",
+      "name": "General Assistant AI Agent",
       "slug": "agent-orchestrator-agent",
-      "category": "advanced",
+      "category": "Automation & Productivity",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2902,14 +3892,24 @@
         "attendance-intervention",
         "course-override",
         "graduation-clearance"
+      ],
+      "displayName": "General Assistant AI Agent",
+      "displayNumber": "100",
+      "domain": "Automation & Productivity",
+      "description": "Provides versatile assistance across tasks, inquiries, and workflows.",
+      "examples": [
+        "Help me brainstorm ideas for a new software project",
+        "Explain how this technology works in simple terms",
+        "Review this draft and provide suggestions for improvement",
+        "Help me organize and structure my thoughts on this problem"
       ]
     },
     {
       "day": 101,
       "agent_id": "agent-101",
-      "name": "AI Master Agent",
+      "name": "Super AI Agent",
       "slug": "master-agent",
-      "category": "master",
+      "category": "Orchestrator",
       "status": "planned",
       "github_repo": "",
       "vercel_project": "",
@@ -2945,6 +3945,16 @@
         "attendance-intervention",
         "course-override",
         "graduation-clearance"
+      ],
+      "displayName": "Super AI Agent",
+      "displayNumber": "101",
+      "domain": "Orchestrator",
+      "description": "The master AI agent that coordinates the specialist AI agents to solve complex tasks.",
+      "examples": [
+        "Build me a complete full-stack web application with database and tests",
+        "Perform end-to-end investigation, analyze data, and prepare deliverables",
+        "Coordinate research, coding, documentation, and testing for this project",
+        "Analyze this complex problem using multiple specialized AI agents"
       ]
     }
   ]
