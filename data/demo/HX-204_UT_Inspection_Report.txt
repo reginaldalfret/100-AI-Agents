@@ -1,0 +1,27 @@
+MANGALORE REFINERY AND PETROCHEMICALS LIMITED (MRPL)
+STATIC EQUIPMENT INSPECTION & NDT THICKNESS REPORT
+Report Ref: MRPL/INSP/2026/HX-204-UT
+Inspection Date: 2026-08-15 | Unit: Crude Distillation Unit (CDU-1)
+Equipment ID: HX-204 (Crude Pre-Heat Exchanger Shell)
+Material Specification: IS 2062 Grade B Carbon Steel
+Design Pressure: 15.5 kg/cm2g | Operating Temp: 185°C
+
+SUMMARY OF NDT ULTRASONIC THICKNESS MEASUREMENTS (mm):
+Location         Nominal (mm)  Min Required (mm)  Measured Min (mm)  Status
+Shell Course 1   14.00         9.50               11.20              Acceptable
+Shell Course 2   12.00         8.20                9.80              Acceptable
+Shell Course 3   10.00         6.80                5.90              CRITICAL - BELOW MIN
+Shell Course 4    8.00         5.40                7.10              Acceptable
+Channel Head     16.00        11.00               13.40              Acceptable
+
+VISUAL & NDT OBSERVATIONS:
+1. Localized severe wall thinning on Shell Course 3 (180° to 270° azimuth).
+2. Minimum measured thickness of 5.90 mm breaches statutory retirement limit (6.80 mm).
+3. Severe Corrosion Under Insulation (CUI) detected around lower nozzle N3 neck.
+4. Calculated Corrosion Rate: 0.42 mm/year against design baseline of 0.15 mm/year.
+
+FIELD INSPECTOR RECOMMENDATION:
+Immediate de-inventory and shell flush weld insert patch required as per OISD-STD-129 and API-653 prior to next turnaround cycle.
+
+Inspector: K. R. Sharma (Level-II API-653 #4492)
+Reviewed by: V. N. Hegde (Chief Inspection Engineer)
