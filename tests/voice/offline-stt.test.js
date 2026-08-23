@@ -6,11 +6,11 @@ test('1. Offline STT Architecture: Rejects empty or corrupt audio input', async 
   const engine = new OfflineSTTEngine();
   await assert.rejects(
     async () => engine.transcribe(''),
-    /STT_EMPTY_AUDIO/
+    /AUDIO_EMPTY/
   );
   await assert.rejects(
     async () => engine.transcribe(Buffer.from('tiny')),
-    /STT_AUDIO_TOO_SMALL/
+    /AUDIO_TOO_SMALL/
   );
 });
 

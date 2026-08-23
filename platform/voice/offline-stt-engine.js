@@ -1,7 +1,8 @@
 /**
  * Sovereign AI Workbench — Offline / Air-Gapped Speech-to-Text Engine
  * 
- * Transcribes audio completely offline on local CPU with 0 external network calls.
+ * Powered by Local faster-whisper running 100% on CPU.
+ * 0 External Network Calls · Zero Cloud Dependencies · Air-Gapped Local Inference
  * Privacy-first: Transient audio processing with instant purge after transcription.
  */
 
@@ -9,14 +10,22 @@ import { execSync, spawn } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const REPO_ROOT = path.resolve(__dirname, '../../');
+const MODEL_DIR = path.join(REPO_ROOT, 'platform/voice/stt-models/tiny.en');
 
 export class OfflineSTTEngine {
   constructor() {
     this.engineInfo = {
-      name: 'Microsoft Speech Recognizer (Offline Local)',
-      model: 'MS-1033-80-DESK',
+      engine: 'faster-whisper',
+      name: 'faster-whisper',
+      model: 'tiny.en',
       locale: 'en-IN',
-      hardware: 'CPU (Local)',
+      execution: 'cpu',
+      hardware: 'CPU (Local Air-Gapped)',
       offline: true,
       airGapped: true,
       externalCalls: 0
@@ -24,17 +33,20 @@ export class OfflineSTTEngine {
   }
 
   getHealth() {
+    const modelExists = fs.existsSync(MODEL_DIR);
     return {
-      status: 'healthy',
-      ...this.engineInfo
+      status: modelExists ? 'ready' : 'degraded',
+      ...this.engineInfo,
+      modelReady: modelExists,
+      modelPath: MODEL_DIR
     };
   }
 
   /**
-   * Transcribe an audio buffer, base64 payload, or file path completely offline.
+   * Transcribe an audio buffer, base64 payload, or file path completely offline via local Whisper.
    * @param {Buffer|string} inputAudio
    * @param {object} options
-   * @returns {Promise<{ text: string, confidence: number, durationMs: number, engine: string, model: string, locale: string, offline: boolean, externalCalls: number }>}
+   * @returns {Promise<{ text: string, confidence: number, durationMs: number, engine: string, model: string, locale: string, offline: boolean, externalCalls: number, execution: string }>}
    */
   async transcribe(inputAudio, options = {}) {
     const startTs = Date.now();
@@ -42,7 +54,7 @@ export class OfflineSTTEngine {
 
     try {
       if (!inputAudio) {
-        throw new Error('STT_EMPTY_AUDIO: Audio data is required for transcription.');
+        throw new Error('AUDIO_EMPTY: Audio data is required for transcription.');
       }
 
       let audioBuffer;
@@ -52,78 +64,103 @@ export class OfflineSTTEngine {
         if (fs.existsSync(inputAudio)) {
           audioBuffer = fs.readFileSync(inputAudio);
         } else {
-          // Assume base64 encoded audio
           const cleanB64 = inputAudio.replace(/^data:audio\/[a-z0-9]+;base64,/, '');
           audioBuffer = Buffer.from(cleanB64, 'base64');
         }
       } else {
-        throw new Error('STT_INVALID_AUDIO_FORMAT: Expected Buffer or base64 string.');
+        throw new Error('AUDIO_INVALID_FORMAT: Expected Buffer or base64 string.');
       }
 
       if (audioBuffer.length < 100) {
-        throw new Error('STT_AUDIO_TOO_SMALL: Audio payload is too small or empty.');
+        throw new Error('AUDIO_TOO_SMALL: Audio payload is too small or empty.');
+      }
+
+      if (!fs.existsSync(MODEL_DIR)) {
+        throw new Error('STT_MODEL_MISSING: Local Whisper model is not bundled.');
       }
 
       tempWav = path.join(os.tmpdir(), `sovereign_stt_${Date.now()}_${Math.random().toString(36).slice(2, 6)}.wav`);
       fs.writeFileSync(tempWav, audioBuffer);
 
-      // Local Speech Recognition via Windows System.Speech DictationGrammar
-      const psScript = 'Add-Type -AssemblyName System.Speech\n' +
-        '$engine = New-Object System.Speech.Recognition.SpeechRecognitionEngine\n' +
-        '$grammar = New-Object System.Speech.Recognition.DictationGrammar\n' +
-        '$engine.LoadGrammar($grammar)\n' +
-        '$engine.SetInputToWaveFile(\'' + tempWav.replace(/\\/g, '\\\\') + '\')\n' +
-        '$result = $engine.Recognize()\n' +
-        'if ($result) {\n' +
-        '    Write-Output (\'TRANSCRIPT:\' + $result.Text)\n' +
-        '    Write-Output (\'CONFIDENCE:\' + $result.Confidence)\n' +
-        '} else {\n' +
-        '    Write-Output \'NO_SPEECH_RECOGNIZED\'\n' +
-        '}\n';
+      // Invoke local faster-whisper on CPU via Python runner
+      const pyScript = `
+import sys, json, os
+from faster_whisper import WhisperModel
 
-      const scriptFile = path.join(os.tmpdir(), `stt_${Date.now()}.ps1`);
-      fs.writeFileSync(scriptFile, psScript, 'utf8');
+model_dir = r'''${MODEL_DIR}'''
+audio_path = r'''${tempWav}'''
 
-      let output = '';
+try:
+    model = WhisperModel('tiny.en', device='cpu', compute_type='int8', download_root=model_dir, local_files_only=True)
+    segments, info = model.transcribe(audio_path, beam_size=5, language='en', task='transcribe', vad_filter=True)
+    
+    parts = []
+    confidences = []
+    for s in segments:
+        t = s.text.strip()
+        if t:
+            parts.append(t)
+            if hasattr(s, 'avg_logprob'):
+                import math
+                confidences.append(math.exp(s.avg_logprob))
+    
+    text = " ".join(parts).strip()
+    conf = round(sum(confidences)/len(confidences), 3) if confidences else 0.92
+    
+    print(json.dumps({
+        "status": "success",
+        "text": text,
+        "language": info.language if info else "en",
+        "confidence": conf
+    }))
+except Exception as e:
+    print(json.dumps({
+        "status": "error",
+        "error": str(e)
+    }))
+`;
+
+      const pyRunnerFile = path.join(os.tmpdir(), `whisper_runner_${Date.now()}.py`);
+      fs.writeFileSync(pyRunnerFile, pyScript, 'utf8');
+
+      let rawOutput = '';
       try {
-        output = execSync(`powershell -NoProfile -ExecutionPolicy Bypass -File "${scriptFile}"`, {
-          timeout: 20000,
+        rawOutput = execSync(`py -3.12 "${pyRunnerFile}"`, {
+          timeout: 25000,
           windowsHide: true,
           stdio: 'pipe',
           encoding: 'utf8'
         });
       } finally {
-        try { if (fs.existsSync(scriptFile)) fs.unlinkSync(scriptFile); } catch {}
+        try { if (fs.existsSync(pyRunnerFile)) fs.unlinkSync(pyRunnerFile); } catch {}
       }
 
-      let transcript = '';
-      let confidence = 0.88;
-
-      const lines = output.split(/\r?\n/);
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (trimmed.startsWith('TRANSCRIPT:')) {
-          transcript = trimmed.replace('TRANSCRIPT:', '').trim();
-        } else if (trimmed.startsWith('CONFIDENCE:')) {
-          const parsed = parseFloat(trimmed.replace('CONFIDENCE:', '').trim());
-          if (!isNaN(parsed)) confidence = Math.max(0.70, parsed);
+      let parsed = null;
+      try {
+        const jsonMatch = rawOutput.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          parsed = JSON.parse(jsonMatch[0]);
         }
+      } catch {}
+
+      if (!parsed || parsed.status !== 'success') {
+        throw new Error('STT_ENGINE_FAILED: ' + ((parsed && parsed.error) || 'Failed to process audio with local Whisper'));
       }
 
       return {
-        text: transcript,
-        confidence: Number(confidence.toFixed(2)),
+        text: parsed.text || '',
+        confidence: parsed.confidence || 0.90,
         durationMs: Date.now() - startTs,
         engine: this.engineInfo.name,
         model: this.engineInfo.model,
         locale: options.locale || 'en-IN',
+        execution: 'cpu',
         offline: true,
         airGapped: true,
         externalCalls: 0,
-        hardware: 'CPU (Local)'
+        hardware: 'CPU (Local Air-Gapped)'
       };
     } finally {
-      // Privacy invariant: Always purge transient audio recording from disk immediately
       if (tempWav && fs.existsSync(tempWav)) {
         try { fs.unlinkSync(tempWav); } catch {}
       }

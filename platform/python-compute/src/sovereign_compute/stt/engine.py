@@ -1,23 +1,55 @@
 """
-Sovereign AI Workbench — Local Offline Speech-to-Text Engine
-Runs completely offline on local CPU with 0 external network calls.
+Sovereign AI Workbench — Local Offline Speech-to-Text Engine (faster-whisper)
+Runs 100% offline on local CPU using pre-bundled local Whisper weights.
+0 External Network Calls · Zero Cloud Dependencies · Local Air-Gapped Inference
 """
 
 import os
-import subprocess
 import time
 import base64
 import tempfile
+from pathlib import Path
 
-def get_stt_health():
+# Path to pre-bundled local Whisper model
+PROJECT_ROOT = Path(__file__).resolve().parents[5]
+MODEL_DIR = os.path.join(str(PROJECT_ROOT), "platform", "voice", "stt-models", "tiny.en")
+
+# Global singleton model cache
+_cached_model = None
+
+def get_whisper_model():
+    global _cached_model
+    if _cached_model is not None:
+        return _cached_model
+    try:
+        from faster_whisper import WhisperModel
+        if not os.path.exists(MODEL_DIR):
+            return None
+        _cached_model = WhisperModel(
+            "tiny.en",
+            device="cpu",
+            compute_type="int8",
+            download_root=MODEL_DIR,
+            local_files_only=True
+        )
+        return _cached_model
+    except Exception as e:
+        print(f"[WHISPER_LOAD_WARN] Failed to load local Whisper: {e}")
+        return None
+
+def get_stt_health() -> dict:
+    model_exists = os.path.exists(MODEL_DIR)
     return {
-        "status": "healthy",
-        "engine": "Microsoft Speech Recognizer (Offline Local)",
-        "model": "MS-1033-80-DESK",
-        "locale": "en-IN",
+        "status": "ready" if model_exists else "degraded",
+        "engine": "faster-whisper",
+        "model": "tiny.en",
+        "execution": "cpu",
+        "hardware": "CPU (Local Air-Gapped)",
         "offline": True,
+        "air_gapped": True,
         "external_calls": 0,
-        "hardware": "CPU (Local)"
+        "model_path": MODEL_DIR,
+        "model_ready": model_exists
     }
 
 def transcribe_audio(audio_path: str = None, audio_base64: str = None, locale: str = "en-IN") -> dict:
@@ -25,80 +57,86 @@ def transcribe_audio(audio_path: str = None, audio_base64: str = None, locale: s
     temp_file = None
 
     try:
-        if audio_base64:
-            # Decode base64 audio to temp WAV file
-            temp_file = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
-            audio_bytes = base64.b64decode(audio_base64)
-            temp_file.write(audio_bytes)
-            temp_file.close()
-            target_path = temp_file.name
-        elif audio_path and os.path.exists(audio_path):
-            target_path = audio_path
-        else:
+        if not audio_base64 and (not audio_path or not os.path.exists(audio_path)):
             return {
                 "text": "",
                 "confidence": 0.0,
                 "duration_ms": 0,
-                "error": "AUDIO_FILE_NOT_FOUND"
+                "error": "AUDIO_EMPTY: No audio provided for transcription.",
+                "offline": True,
+                "external_calls": 0
             }
 
-        # Transcribe locally via Windows Speech Recognition Engine (0 external calls)
-        ps_script = f"""
-Add-Type -AssemblyName System.Speech
-$engine = New-Object System.Speech.Recognition.SpeechRecognitionEngine
-$grammar = New-Object System.Speech.Recognition.DictationGrammar
-$engine.LoadGrammar($grammar)
+        # Write transient audio to temporary file
+        if audio_base64:
+            clean_b64 = audio_base64
+            if "," in clean_b64:
+                clean_b64 = clean_b64.split(",", 1)[1]
+            audio_bytes = base64.b64decode(clean_b64)
+            
+            if len(audio_bytes) < 100:
+                return {
+                    "text": "",
+                    "confidence": 0.0,
+                    "duration_ms": 0,
+                    "error": "AUDIO_TOO_SMALL: Audio payload is too small.",
+                    "offline": True,
+                    "external_calls": 0
+                }
 
-$engine.SetInputToWaveFile('{target_path.replace(os.sep, "/")}')
-$result = $engine.Recognize()
+            temp_file = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
+            temp_file.write(audio_bytes)
+            temp_file.close()
+            target_path = temp_file.name
+        else:
+            target_path = audio_path
 
-if ($result) {{
-    Write-Output ("TRANSCRIPT:" + $result.Text)
-    Write-Output ("CONFIDENCE:" + $result.Confidence)
-}} else {{
-    Write-Output "NO_SPEECH_RECOGNIZED"
-}}
-"""
-        ps_file = tempfile.NamedTemporaryFile(suffix=".ps1", mode="w", encoding="utf-8", delete=False)
-        ps_file.write(ps_script)
-        ps_file.close()
+        model = get_whisper_model()
+        if model is None:
+            return {
+                "text": "",
+                "confidence": 0.0,
+                "duration_ms": int((time.time() - start_ts) * 1000),
+                "error": "STT_MODEL_MISSING: Local Whisper model is not bundled.",
+                "offline": True,
+                "external_calls": 0
+            }
 
-        result = subprocess.run(
-            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", ps_file.name],
-            capture_output=True,
-            text=True,
-            timeout=15
+        segments, info = model.transcribe(
+            target_path,
+            beam_size=5,
+            language="en",
+            task="transcribe",
+            vad_filter=True,
+            vad_parameters=dict(min_silence_duration_ms=400)
         )
 
-        try:
-            os.unlink(ps_file.name)
-        except Exception:
-            pass
+        transcript_parts = []
+        confidences = []
+        for segment in segments:
+            text = segment.text.strip()
+            if text:
+                transcript_parts.append(text)
+                if hasattr(segment, 'avg_logprob'):
+                    import math
+                    confidences.append(math.exp(segment.avg_logprob))
 
-        transcript = ""
-        confidence = 0.85
-
-        for line in result.stdout.splitlines():
-            line = line.strip()
-            if line.startswith("TRANSCRIPT:"):
-                transcript = line.replace("TRANSCRIPT:", "").strip()
-            elif line.startswith("CONFIDENCE:"):
-                try:
-                    confidence = float(line.replace("CONFIDENCE:", "").strip())
-                except Exception:
-                    pass
+        full_transcript = " ".join(transcript_parts).strip()
+        avg_confidence = round(sum(confidences) / len(confidences), 3) if confidences else 0.90
 
         elapsed_ms = int((time.time() - start_ts) * 1000)
 
         return {
-            "text": transcript,
+            "text": full_transcript,
             "language": "en",
             "locale": locale,
-            "confidence": round(confidence, 3),
+            "confidence": avg_confidence,
             "duration_ms": elapsed_ms,
-            "engine": "Microsoft Speech Recognizer (Offline Local)",
-            "model": "MS-1033-80-DESK",
+            "engine": "faster-whisper",
+            "model": "tiny.en",
+            "execution": "cpu",
             "offline": True,
+            "air_gapped": True,
             "external_calls": 0,
             "hardware": "CPU (Local)"
         }
@@ -108,7 +146,7 @@ if ($result) {{
             "text": "",
             "confidence": 0.0,
             "duration_ms": int((time.time() - start_ts) * 1000),
-            "error": str(e),
+            "error": f"STT_ENGINE_FAILED: {str(e)}",
             "offline": True,
             "external_calls": 0
         }
