@@ -12,6 +12,7 @@ import { documentExtractor } from "../../multimodal/index.js";
 import { validateAttachmentIntegrity } from "../../multimodal/attachment-integrity.js";
 import { ingestDocument, queryRAG, IngestionNamespace } from "../../rag/index.js";
 import { voiceService } from "../../voice/index.js";
+import { pythonClient } from "../../compute/python-client.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -244,12 +245,32 @@ const server = http.createServer(async (req, res) => {
         platform: "SA-S03 Educational Intelligent Workflow Management",
         gateway: "healthy",
         ollama: "healthy",
+        compute: pythonClient.circuit.state === "OPEN" ? "degraded_fallback" : "healthy",
         fleet: "healthy",
         agents: {
           total: agents.length,
           healthy: agents.length
         },
         workflows: "healthy",
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/compute/status") {
+      json(res, 200, {
+        status: "success",
+        compute: pythonClient.getStatus(),
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/compute/health") {
+      const health = await pythonClient.checkHealth();
+      json(res, 200, {
+        status: "success",
+        health,
         timestamp: new Date().toISOString()
       });
       return;
