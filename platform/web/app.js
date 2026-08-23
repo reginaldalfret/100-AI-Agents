@@ -2156,12 +2156,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.switchAgentAndRetainPrompt = function(targetAgentId, promptText) {
-        selectAgent(targetAgentId, true);
+        // Switch active agent preserving current chat view
+        selectAgent(targetAgentId, false);
+        
+        // Restore original prompt in composer
         if (elements.chatInput && promptText) {
             elements.chatInput.value = promptText;
             elements.chatInput.focus();
             elements.chatInput.dispatchEvent(new Event('input'));
+            updateSendButtonState();
         }
+
+        const agentName = state.selectedAgent?.name || targetAgentId;
+        const num = state.selectedAgent?.displayNumber || targetAgentId.replace(/\D/g, '');
+        appendSystemEvent(`Switched active specialist to [${num}] ${agentName}`);
     };
 
     function showEmptyState(agent) {
@@ -2718,6 +2726,35 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'msg-row ai';
         
+        if (msg.status === 'out_of_scope' || msg.scopeDecision) {
+            const scopeDec = msg.scopeDecision || {};
+            const rec = scopeDec.recommendedAgent || (scopeDec.recommendedAgents && scopeDec.recommendedAgents[0]) || { id: 'agent-002', displayNumber: '002', displayName: 'Email AI Agent' };
+            const targetId = rec.id || `agent-${rec.displayNumber || rec.id}`;
+            const promptToRetain = scopeDec.originalPrompt || scopeDec.userPrompt || '';
+            const recName = rec.displayName || rec.name || 'Specialist AI Agent';
+
+            div.innerHTML = `
+                <div class="msg-bubble" style="background:transparent;border:none;padding:0;box-shadow:none;">
+                    <div class="scope-redirect-card">
+                        <div class="scope-redirect-header">
+                            <span class="sparkle">✦</span>
+                            <span>Outside My Specialization</span>
+                        </div>
+                        <div class="scope-redirect-body">
+                            ${formatResponse(msg.content || scopeDec.politeMessage || 'This request is outside my specialization.')}
+                        </div>
+                        <div class="scope-redirect-action">
+                            <button class="btn-switch-agent" aria-label="Switch to ${escapeHtml(recName)}" onclick="window.switchAgentAndRetainPrompt('${escapeHtml(targetId)}', '${escapeHtml(promptToRetain).replace(/'/g, "\\'")}')">
+                                <span>↗ Switch to ${escapeHtml(recName)}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            elements.chatMessages.appendChild(div);
+            return;
+        }
+
         if (msg.isUnavailable) {
             div.innerHTML = `
                 <div class="msg-bubble" style="border-left: 3px solid var(--neon-red); background: rgba(239, 68, 68, 0.08);">
@@ -3442,38 +3479,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (eventType === 'scope_redirect') {
                             isScopeRedirect = true;
                             if (statusPill && statusPill.parentNode) statusPill.remove();
-                            const recs = parsed.recommendedAgents || [];
-                            const promptToRetain = parsed.userPrompt || text || '';
-                            const recsHtml = recs.map(rec => `
-                                <div class="recommended-agent-pill">
-                                    <div class="rec-agent-info">
-                                        <div class="rec-agent-number">${escapeHtml(rec.displayNumber || rec.id.replace(/\D/g, ''))}</div>
-                                        <div>
-                                            <div class="rec-agent-name">${escapeHtml(rec.displayName || rec.name)}</div>
-                                            <div class="rec-agent-category">${escapeHtml(rec.category || rec.reason || 'Specialist')}</div>
-                                        </div>
-                                    </div>
-                                    <button class="btn-switch-agent" onclick="window.switchAgentAndRetainPrompt('${escapeHtml(rec.id)}', '${escapeHtml(promptToRetain).replace(/'/g, "\\'")}')">
-                                        <span>Switch to ${escapeHtml(rec.displayName || rec.name)}</span> →
-                                    </button>
-                                </div>
-                            `).join('');
+                            const rec = parsed.recommendedAgent || (parsed.recommendedAgents && parsed.recommendedAgents[0]) || { id: 'agent-002', displayNumber: '002', displayName: 'Email AI Agent' };
+                            const targetId = rec.id || `agent-${rec.displayNumber || rec.id}`;
+                            const promptToRetain = parsed.originalPrompt || parsed.userPrompt || text || '';
+                            const recName = rec.displayName || rec.name || 'Specialist AI Agent';
 
                             textTarget.innerHTML = `
-                                <div class="scope-recommendation-card">
-                                    <div class="scope-rec-header">
+                                <div class="scope-redirect-card">
+                                    <div class="scope-redirect-header">
                                         <span class="sparkle">✦</span>
-                                        <span>Recommended Specialist</span>
+                                        <span>Outside My Specialization</span>
                                     </div>
-                                    <div class="scope-rec-message">
-                                        ${formatResponse(parsed.politeMessage || 'This task is better suited to another specialist agent.')}
+                                    <div class="scope-redirect-body">
+                                        ${formatResponse(parsed.politeMessage || 'This request is outside my specialization.')}
                                     </div>
-                                    <div class="scope-rec-cards">
-                                        ${recsHtml}
-                                    </div>
-                                    <div class="scope-rec-actions-footer">
-                                        <button class="btn-ask-super-agent" onclick="window.switchAgentAndRetainPrompt('agent-101', '${escapeHtml(promptToRetain).replace(/'/g, "\\'")}')">
-                                            Ask Super AI Agent (Master Orchestrator)
+                                    <div class="scope-redirect-action">
+                                        <button class="btn-switch-agent" aria-label="Switch to ${escapeHtml(recName)}" onclick="window.switchAgentAndRetainPrompt('${escapeHtml(targetId)}', '${escapeHtml(promptToRetain).replace(/'/g, "\\'")}')">
+                                            <span>↗ Switch to ${escapeHtml(recName)}</span>
                                         </button>
                                     </div>
                                 </div>
