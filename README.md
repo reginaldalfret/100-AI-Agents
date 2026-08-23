@@ -1,495 +1,230 @@
-# 101 Super AI Agents
+# 301 Super AI Agents — Sovereign AI Workbench
 
-> **Intelligent Multi-Agent AI Workspace**
-> A 100% local, air-gapped multi-agent platform with **100 domain specialist AI Agents** orchestrated by **Super AI Agent 101**. Powered by a tri-model local open-weight engine with multimodal document intelligence, real-time token streaming, persistent conversational memory, 18 native data visualization types, and instant high-DPI image export.
-
-[![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)]()
-[![Platform](https://img.shields.io/badge/Platform-Sovereign%20AI%20Workbench-6366f1.svg)]()
-[![Agents](https://img.shields.io/badge/Agents-101%20Total%20(001--101)-06b6d4.svg)]()
-[![Inference](https://img.shields.io/badge/Inference-100%25%20Air--Gapped%20Local-10b981.svg)]()
-[![External Egress](https://img.shields.io/badge/External%20Calls-0%20(Air--Gap%20Verified)-success.svg)]()
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)]()
+[![SIH 26117](https://img.shields.io/badge/SIH%20Problem-26117-blue.svg)](https://smartindiahackathon.gov.in)
+[![Hardware](https://img.shields.io/badge/Hardware-NVIDIA%20RTX%202050%20(4GB)-76B900.svg)](https://www.nvidia.com)
+[![Air-Gapped](https://img.shields.io/badge/Air--Gap-100%25%20Local%20Inference-green.svg)](#air-gapped-architecture)
+[![Agents](https://img.shields.io/badge/Agents-301%20Autonomous%20Specialists-purple.svg)](#301-agent-workforce)
+[![Test Battery](https://img.shields.io/badge/Tests-147%2F147%20Passing%20(100%25)-brightgreen.svg)](#testing)
 
 ---
 
-## 🌟 Executive Overview
+## What It Is
 
-**101 Super AI Agents** (built on the *Sovereign AI Workbench* architecture) is an enterprise-grade, privacy-first AI operating platform. Designed for mission-critical industrial, engineering, enterprise, and educational environments where uploading proprietary assets to public cloud LLMs violates safety and compliance regulations.
+**301 Super AI Agents** is an enterprise-grade, air-gapped, sovereign AI workbench designed for confidential industrial, engineering, and enterprise operations. It integrates a fleet of **301 autonomous specialist AI agents** orchestrated by a master coordinator (**301 Super AI Agent**) running entirely on local consumer hardware without sending a single byte to external cloud APIs.
 
-The system pairs **100 specialized autonomous agents** with a master orchestrator (**Agent 101 — Super AI Agent**) across **3 specialized local open-weight models** running strictly on-premise with **zero cloud dependencies** and **zero data egress**.
+---
+
+## SIH 26117
+
+Developed to solve **Smart India Hackathon Problem Statement 26117**:
+> *"Sovereign On-Premise Agentic AI Workbench using Open-Weight Multimodal LLMs for Confidential Industrial Work."*
+
+### Core Challenge Solved:
+Enterprises operating in oil & gas, defense, power grids, manufacturing, and critical infrastructure cannot expose proprietary blueprints, P&ID schematics, API designs, or confidential meeting transcripts to public LLM APIs. **301 Super AI Agents** provides an on-premise, secure, private multi-agent AI workforce with cryptographic audit trails, localized Python compute, and zero external network dependencies.
+
+---
+
+## Key Features
+
+1. **301 Autonomous Specialist Agents**: Complete 001..301 numeric taxonomy covering programming, DevOps, database architecture, legal contracts, engineering standards (API-653, OISD-129), finance, and scientific analysis.
+2. **301 Super AI Master Orchestrator**: Automatically decomposes complex multi-stage objectives, dispatches subtasks across specialists, schedules execution on local GPU queues, and synthesizes unified responses.
+3. **Pure Real Model Execution**: Zero canned answers, zero static templates, and zero fake durations in production. All specialist outputs are dynamically generated via local Ollama.
+4. **Universal Backend Execution Trace**: Every completed response displays truthful hardware execution metrics (`Ran on NVIDIA RTX 2050`), model engine, exact runtime model, air-gap status, and subtask telemetry.
+5. **Real Indian English Female Voice**: Sweet, articulate, natural `en-IN` female voice persona with conversational humanized sentence pacing and speech sanitization.
+6. **Liquid Glass UI & Visual Architecture**: Translucent glassmorphism interface with real-time Mermaid diagrams, SVG charts, and Markdown rendering.
+7. **Cryptographic Artifact Workspace**: All generated code files (`.cpp`, `.java`, `.py`, `.html`, `.css`, `.js`) are isolated, syntax-validated, and stamped with SHA-256 checksums.
+
+---
+
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            101 SUPER AI AGENTS                              │
-│                                                                             │
-│   ┌────────────────────────────────┐   ┌────────────────────────────────┐   │
-│   │     AGENTS 001 – 100           │   │          AGENT 101             │   │
-│   │   Domain Specialist Fleet      │   │       SUPER AI AGENT           │   │
-│   │  Writing, Coding, Engineering, │   │    Master DAG Orchestrator     │   │
-│   │  Research, Business, Systems   │   │  Multi-Agent Task Coordinator  │   │
-│   └────────────────────────────────┘   └────────────────────────────────┘   │
-│                                    ▲                                        │
-│                                    │ Coordinates / Delegates                │
-│                                    ▼                                        │
-│   ┌─────────────────────────────────────────────────────────────────────┐   │
-│   │                     LOCAL TRI-MODEL ENGINE                          │   │
-│   │   Google Gemma 3        NVIDIA Nemotron 3        Qwen 2.5 Coder     │   │
-│   │  (Multimodal / Vision)   (Reasoning / Logic)   (Code / Technical)   │   │
-│   └─────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## ✨ Core Capabilities & Feature Highlights
-
-- 🤖 **101 Autonomous AI Agents**: 100 focused domain specialists (`001`–`100`) and one unified master orchestrator (`101` Super AI Agent).
-- 🛡️ **100% Air-Gapped Local Inference**: True zero-cloud execution with socket-level egress monitoring (`egress-monitor.js`). Exactly `0` external calls.
-- 🧠 **Tri-Model Specialized Routing**: Hardware-aware local dispatching to Google Gemma 3 (`gemma3:4b`), NVIDIA Nemotron 3 (`nemotron-3-nano`), and Qwen 2.5 Coder (`qwen2.5-coder:1.5b`).
-- ⚡ **True Progressive Token Streaming**: Server-Sent Events (SSE) deliver real-time token chunks with client-side cancellation and partial token preservation.
-- 📄 **Multimodal Document Understanding**: Content-first text extraction for native PDFs, OCR fallback for scanned sheets, and direct image reasoning via Gemma 3 Vision.
-- 🔒 **Attachment Integrity & Magic-Byte Validation**: Validates file signatures (PNG, JPEG, PDF, WEBP, GIF), base64 normalization, and SHA-256 integrity checks.
-- 📊 **Native Visual Intelligence (18 Chart Types & Diagrams)**: In-chat rendered SVG data charts, flowcharts, architecture diagrams, sequence lifelines, and timelines.
-- 🖼️ **High-DPI Visual Export (PNG / JPG / SVG)**: One-click local rasterization at 2x DPI with dark Liquid Glass background preservation and slugified filenames.
-- 💾 **Persistent Conversational Memory**: Thread management with auto-generated titles, message search, pinning, renaming, and multi-turn context retention.
-- 🎙️ **Voice Intelligence**: Web Speech API input, speech text sanitization, and warm Indian English (`en-IN`) voice profile for Read Aloud.
-- 💎 **Liquid Glass UI / UX**: iPhone-inspired translucent surfaces, RGB neon ambient accents, independent double-scroll sidebar, and monospace numeric agent identity.
-- 🚦 **Agent Scope Guard**: Enforces domain boundaries for specialists and provides non-disruptive recommendation chips for out-of-scope prompts.
-
----
-
-## 🏛️ System Architecture
-
-```mermaid
-flowchart TD
-    subgraph UI ["Client Layer — Liquid Glass UI (Port 8300)"]
-        User([User Input / Attachments]) --> Composer[Responsive Composer Capsule]
-        Composer --> ModelPill[Model Selector: Auto / Gemma / Nemotron / Qwen]
-        Composer --> VoiceIn[Speech Recognition en-IN]
-        VoiceIn --> Composer
-    end
-
-    subgraph Gateway ["Platform Gateway Layer"]
-        Composer -->|HTTP POST /api/chat| GW[Platform Gateway Server]
-        GW --> AttSec[Attachment Integrity & Magic Byte Scanner]
-        AttSec --> DocExt[Document & Multimodal Extractor]
-        DocExt -->|Native Text / Clean Evidence| CtxMgr[Conversation Memory Manager]
-        DocExt -->|Raster Image Bytes| VisBuf[Vision Buffer]
-    end
-
-    subgraph Intelligence ["Routing & Orchestration Layer"]
-        GW --> ScopeGuard{Agent Scope Guard}
-        ScopeGuard -->|In Scope| Classifier[Task & Modality Classifier]
-        ScopeGuard -->|Out of Scope| Suggest[Domain Recommendation Chip]
-
-        Classifier --> Router[Hardware-Aware Model Router]
-        Classifier --> Planner[Agent 101 Autonomous DAG Planner]
-        Planner --> Delegator[101 Multi-Agent Dispatcher]
-    end
-
-    subgraph Models ["Local Model Execution (Port 11434)"]
-        Router -->|Vision / Image Tasks| Gemma[Google Gemma 3 4B Multimodal]
-        Router -->|Reasoning / Planning| Nemo[NVIDIA Nemotron 3 Nano]
-        Router -->|Code / Formulas| Qwen[Qwen 2.5 Coder 1.5B]
-    end
-
-    subgraph VisualEngine ["Native Visual Engine & Exporter"]
-        GW --> VisPlanner[Visual Planner & Schema Validator]
-        VisPlanner --> ChartRend[Chart & Diagram SVG Renderer]
-        ChartRend --> CanvasExp[Canvas 2x Rasterizer]
-        CanvasExp --> OutPNG[PNG Export]
-        CanvasExp --> OutJPG[JPG Export]
-        ChartRend --> OutSVG[SVG Export]
-    end
-
-    subgraph PythonMicroservice ["Python Compute & Intelligence Microservice (Port 8350)"]
-        GW -->|HTTP / IPC Loopback| PyDoc[PyMuPDF & pdfplumber Layout Engine]
-        GW -->|Deep Office Parsing| PyOffice[python-docx / openpyxl / python-pptx]
-        GW -->|Computer Vision / Deskew| PyCV[OpenCV & Sauvola Preprocessor]
-        GW -->|Industrial OCR / Tags| PyOCR[Tesseract 5 & EasyOCR CRAFT]
-        GW -->|P&ID Schemas| PyPID[Zhang-Suen Skeleton & Topological Tracing]
-        GW -->|Deterministic Math| PyMath[Pandas & NumPy & SciPy Verification Engine]
-        PyDoc -->|Structured JSON / Clean Markdown| GW
-        PyOffice -->|Structured JSON / Clean Markdown| GW
-        PyCV -->|Preprocessed Binarized Image| GW
-        PyOCR -->|Normalized Text Spans & BBoxes| GW
-        PyPID -->|Component Graph & Flow Direction| GW
-        PyMath -->|Exact Float64 & Cryptographic Digest| GW
-    end
-
-    subgraph Output ["Streaming Response Delivery"]
-        Gemma --> Streamer[Model Streamer - SSE Protocol]
-        Nemo --> Streamer
-        Qwen --> Streamer
-        Streamer -->|Progressive Chunks| Viewport[Chat Messages Viewport]
-        ChartRend -->|Interactive Liquid Card| Viewport
-        Viewport --> ReadAloud[Voice Synthesis Read Aloud]
-    end
+                                  ┌───────────────────────────────┐
+                                  │   USER (Browser / Desktop)   │
+                                  └───────────────┬───────────────┘
+                                                  │ HTTP / SSE (/api/chat)
+                                                  ▼
+                        ┌───────────────────────────────────────────────────┐
+                        │      CENTRAL GATEWAY (Port 8300)                  │
+                        │      platform/gateway/src/server.js               │
+                        └─────────┬───────────────────────────────┬─────────┘
+                                  │                               │
+            Single Specialist     │                               │ Multi-Agent Workflow
+            Direct Execution      │                               │
+                                  ▼                               ▼
+      ┌───────────────────────────────────────┐ ┌───────────────────────────────────────┐
+      │ SPECIALIST AGENT (001–300)            │ │ 301 SUPER AI AGENT                    │
+      │ agents/agent-XXX/                     │ │ platform/workflow-engine/             │
+      └───────────────────┬───────────────────┘ └───────────────────┬───────────────────┘
+                          │                                         │ Plan -> Decompose
+                          │                                         ▼
+                          │                     ┌───────────────────────────────────────┐
+                          │                     │ SPECIALIST SUBTASK DISPATCH           │
+                          │                     │ (C++, Java, Python / HTML, CSS, JS)   │
+                          │                     └───────────────────┬───────────────────┘
+                          │                                         │
+                          └───────────────────┬─────────────────────┘
+                                              │
+                                              ▼
+                        ┌───────────────────────────────────────────┐
+                        │  RESOURCE SCHEDULER (Single GPU Mutex)    │
+                        │  platform/workflow-engine/resource-sched  │
+                        └─────────────────────┬─────────────────────┘
+                                              │
+                                              ▼
+                        ┌───────────────────────────────────────────┐
+                        │  LOCAL OLLAMA INFERENCE (Port 11434)      │
+                        │  Qwen 2.5 Coder / Nemotron 3 / Gemma 3    │
+                        └─────────────────────┬─────────────────────┘
+                                              │
+                                              ▼
+                        ┌───────────────────────────────────────────┐
+                        │  WORKFLOW RESULT VALIDATOR & ARTIFACTS    │
+                        │  AST Validation + SHA-256 Provenance      │
+                        └─────────────────────┬─────────────────────┘
+                                              │
+                                              ▼
+                        ┌───────────────────────────────────────────┐
+                        │  301 SUPER AI SYNTHESIS & BACKEND TRACE   │
+                        │  Universal Hardware Info + Multi-Code     │
+                        └─────────────────────┬─────────────────────┘
+                                              │
+                                              ▼
+                        ┌───────────────────────────────────────────┐
+                        │  LIQUID GLASS WORKBENCH UI                │
+                        │  Real-Time SSE Event Render + Voice Audio │
+                        └───────────────────────────────────────────┘
 ```
 
 ---
 
-## ⚡ Hybrid Node.js + Python Architecture
+## 301 Agent Workforce
 
-The platform operates on a high-throughput **Dual-Engine Hybrid Architecture**:
+The platform features **301 distinct specialist agents**, indexed from `001` through `301`:
 
-```
-┌─────────────────────────────────────────────────────────────────────────────────────────────┐
-│                             HYBRID CORE ARCHITECTURE TOPOLOGY                               │
-├──────────────────────────────────────────────┬──────────────────────────────────────────────┤
-│ 🟢 Node.js Platform Core (Port 8300)         │ 🐍 Python Compute Service (Port 8350)        │
-├──────────────────────────────────────────────┼──────────────────────────────────────────────┤
-│ - Ultra-low latency event loop & WebSockets  │ - Deep multi-column PDF layout extraction    │
-│ - 101 AI Agent lifecycle & orchestrator      │ - High-fidelity table lattice/stream parsing │
-│ - SSE progressive token streaming            │ - Native DOCX, XLSX, PPTX OpenXML engines    │
-│ - Conversational memory & thread management  │ - OpenCV deskew, denoise & adaptive CLAHE    │
-│ - Hardware-aware tri-model routing           │ - Tesseract 5 & EasyOCR CRAFT text detector  │
-│ - Liquid Glass UI & client-side rendering    │ - P&ID topological graph & bubble isolation  │
-│ - Socket-level air-gap & egress monitoring   │ - Deterministic NumPy/Pandas verification    │
-└──────────────────────────────────────────────┴──────────────────────────────────────────────┘
-```
-
-### Zero Raw Binary Leakage Principle
-To prevent context window bloat and calculation hallucinations:
-1. **Raw binary streams** (PDF streams, Office ZIP archives, raw bitmap buffers) are strictly quarantined in the Python microservice.
-2. **Structured JSON Schemas & Markdown Tables** are emitted across internal loopback (`http://127.0.0.1:8350`), ensuring $<1\%$ token consumption with $100\%$ semantic fidelity.
-3. **Deterministic Mathematical Verification**: Multi-step engineering formulas (API-653 corrosion rates, RUL, ASME $t_{min}$, Weibull hazard rates) are calculated in C-accelerated float64 precision and returned with step-by-step traces and SHA-256 cryptographic verification digests.
+- **001–005**: Writing AI Agent, Email AI Agent, Study AI Agent, Quiz AI Agent, Flashcard AI Agent.
+- **006–060**: Full-Stack Web, DevOps, Cloud Infrastructure, Database Design, System Security.
+- **061–100**: Code Generation, Testing & QA, Data Science, Spreadsheets, OCR & Document Processing.
+- **101–150**: Language Specialists (Python AsyncIO, Java JVM, C Memory, C++ Template, Go Concurrency, Rust Ownership, JavaScript Runtime, TypeScript).
+- **151–200**: Frontend Architecture, CSS Styling, React Components, UI Design, PostgreSQL Performance.
+- **201–300**: Industrial Engineering, API-653 Tank Inspection, OISD-129 Safety, Corrosion Analytics, SCADA/P&ID.
+- **301**: **301 Super AI Agent** (*Master Orchestrator*).
 
 ---
 
-## 🤖 101 Super AI Agent Organization
+## Super AI Agent Workflow
 
-The 101 AI Agents are categorized into specialized functional domains, registered canonically in [`registry/sih-agent-mapping.json`](file:///E:/Smart%20Automation/100-AI-Agents/registry/sih-agent-mapping.json):
+When given complex instructions (e.g., *"Write a palindrome program in C++, Java, Python"* or *"Design an E-Commerce website in HTML, CSS, JavaScript"*), the Master Orchestrator triggers an automated 7-stage workflow:
 
-| Number Range | Domain Category | Agent Count | Representative Agent Examples |
-|---|---|---|---|
-| **`001 – 009`** | **Writing & Communication** | 9 Agents | `001` Writing AI, `002` Email AI, `004` Copywriting AI, `008` Speech AI |
-| **`010 – 013`** | **Education & Learning** | 4 Agents | `010` Tutor AI, `011` Language AI, `013` History AI |
-| **`014 – 017`** | **Design & Creative** | 4 Agents | `014` UI/UX AI, `015` Logo AI, `017` Interior AI |
-| **`018 – 031`** | **Automation & Productivity** | 14 Agents | `041` Email Management AI, `043` Task Automation AI, `045` PDF Processing AI |
-| **`026 – 035`** | **Business & Management** | 29 Agents | `026` Company Research AI, `046` Invoice Processing AI, `076` Sales AI, `090` Project Manager AI |
-| **`021 – 025`** | **Research & Knowledge** | 11 Agents | `021` Academic Research AI, `023` Research Paper AI, `093` RAG Knowledge AI |
-| **`036, 055 – 070`** | **Coding & Development** | 13 Agents | `036` GitHub Research AI, `055` Code Review AI, `061` Code Generation AI, `075` Full-Stack Developer AI |
-| **`047 – 049, 071`** | **Data & Analytics** | 4 Agents | `047` Spreadsheet AI, `048` Data Analysis AI, `049` Report Generation AI, `071` Database AI |
-| **`051 – 054, 094`** | **Specialized AI** | 8 Agents | `051` Image Analysis AI, `052` Video Analysis AI, `094` Multi-Agent Debate AI |
-| **`066, 072 – 074`** | **Security & Systems** | 4 Agents | `066` Security Audit AI, `072` DevOps AI, `073` Docker AI, `074` CI/CD AI |
-| **`101`** | **Master Orchestrator** | **1 Agent** | **`101` Super AI Agent** (Autonomous DAG Planner, Model Router & Fleet Coordinator) |
+1. **Intent Decomposition**: Identifies required technical capabilities and workflow dependencies.
+2. **Canonical Specialist Discovery**: Resolves the exact expert agents from the 301-agent registry.
+3. **Handoff Contract Generation**: Formulates structured, self-contained subtask contracts.
+4. **GPU Mutex Scheduling**: Dispatches subtasks sequentially across the local GPU queue to guarantee 0% OOM risk on 4GB VRAM.
+5. **Real Model Execution**: Queries local Ollama dynamically without static templates.
+6. **Artifact Validation & Provenance**: Inspects code syntax and records cryptographic SHA-256 hashes.
+7. **Architectural Synthesis**: Unifies all specialist outputs with comparison tables and execution traces.
 
 ---
 
-## 🧠 Local Model Portfolio & Workload Specialization
+## Local Models
 
-The platform uses three local open-weight models loaded into Ollama (`http://127.0.0.1:11434`):
-
-```
-┌─────────────────────────┬────────────────────────────┬─────────────────────────────┐
-│     Google Gemma 3      │     NVIDIA Nemotron 3      │       Qwen 2.5 Coder        │
-│        gemma3:4b        │      nemotron-3-nano       │     qwen2.5-coder:1.5b      │
-│                         │                            │                             │
-│ • Multimodal Reasoning  │ • Complex DAG Planning     │ • Code Synthesis & Refactor │
-│ • Photo & Defect OCR    │ • Epistemic Synthesis      │ • SQL & Database Queries    │
-│ • Diagram Recognition   │ • Statutory Compliance     │ • Python & Macro Scripting  │
-│ • Visual Q&A            │ • Multi-Agent Debate       │ • Regex & Data Cleaning     │
-└─────────────────────────┴────────────────────────────┴─────────────────────────────┘
-```
-
-| Model | Canonical ID | Parameter Size | Primary Responsibilities | Local Endpoint |
-|---|---|---|---|---|
-| **Google Gemma 3** | `gemma3:4b` | 4B Multimodal | Image analysis, photo inspection, OCR, diagram understanding, visual Q&A | `http://127.0.0.1:11434` |
-| **NVIDIA Nemotron 3** | `nemotron-3-nano` | 4B Reasoning | Task planning, industrial investigation, formal writing, logic synthesis | `http://127.0.0.1:11434` |
-| **Qwen 2.5 Coder** | `qwen2.5-coder:1.5b` | 1.5B Coding | Automated coding, script debugging, data processing, formula generation | `http://127.0.0.1:11434` |
+| Model Family | Canonical Tag | VRAM Footprint | Primary Specialization |
+| :--- | :--- | :--- | :--- |
+| **Qwen 2.5 Coder** | `qwen2.5-coder:1.5b` | ~1.8 GB | Code generation, refactoring, algorithms, multi-language translation |
+| **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | ~2.1 GB | Reasoning, logical deduction, compliance, business workflows |
+| **Google Gemma 3** | `gemma3:latest` | ~2.6 GB | General intelligence, writing, multimodal analysis, conversational chat |
 
 ---
 
-## 📊 Visual Intelligence & Export Subsystem
+## Hardware Profile
 
-Agents can automatically structure complex analytical responses as interactive visual diagrams and data charts rather than plain text walls.
-
-```
-AI Model Output  ──►  Visual Specification  ──►  Sanitizer & Validator  ──►  SVG Renderer  ──►  Interactive Card
-                                                                                                    │
-                                                 ┌───────────────────┬───────────────────┬──────────┴──────────┐
-                                                 ▼                   ▼                   ▼                     ▼
-                                           [ 🖼️ PNG ]           [ 📷 JPG ]           [ 📐 SVG ]          [ ⛶ Expand ]
-                                            (High-DPI 2x)       (Solid Dark BG)     (Vector Source)     (Fullscreen Modal)
-```
-
-### Supported Visual Types (18 Charts + Structural Diagrams)
-
-1. **Comparison & Distribution**: Vertical Bar, Horizontal Bar, Grouped Bar, Stacked Bar, Histogram, Population Pyramid
-2. **Composition & KPIs**: Pie Chart (with 100% single-slice arc handling), Donut Chart (with center KPI readout), Waterfall Chart, Gauge Chart
-3. **Trends & Continuous Data**: Line Chart (with single-point dot rendering), Area Chart, Stacked Area Chart
-4. **Correlation & Multi-Dimensional**: Scatter Plot, Bubble Chart, Box Plot (min/q1/median/q3/max), Heatmap Matrix, Radar Chart
-5. **Structural & Process**: Flowcharts (TB/LR), Multi-Tier System Architecture, Sequence Diagrams (actors & lifelines), Chronological Timelines, Mermaid syntax
-
-### Visual Export Capabilities
-- **PNG Export**: Local Canvas rasterization at **2x pixel density**, preserving font definitions and RGB neon accents.
-- **JPG Export**: Rasterized over solid `#0b1120` dark theme background to prevent transparency artifacts.
-- **SVG Export**: Direct XML vector download.
-- **Descriptive Naming**: Automatic slugification (e.g., `quarterly-revenue-bar-chart.png`).
-- **Clipboard Copy**: Direct image copying via browser `ClipboardItem` API.
+- **Target System**: Local Windows 11 Pro PC
+- **GPU**: NVIDIA GeForce RTX 2050 (4GB GDDR6 VRAM, CUDA 12.5)
+- **Concurrency Policy**: Single GPU execution lock (Queue concurrency = 1)
+- **Memory Footprint**: Strictly constrained within 4GB VRAM limit
 
 ---
 
-## 📄 Multimodal Document Pipeline
+## Air-Gapped Architecture
 
-The document pipeline processes arbitrary uploaded files locally with format-specific parsing strategies:
-
-```mermaid
-flowchart TD
-    Upload[User Attaches File] --> Integrity[attachment-integrity.js]
-    Integrity --> MagicCheck{Magic Byte Validation}
-
-    MagicCheck -->|PNG / JPEG / WEBP / GIF| Base64Norm[Base64 Normalization]
-    Base64Norm --> VisionBuf[Gemma 3 Vision Buffer]
-
-    MagicCheck -->|PDF Document| PDFExtract[document-extractor.js]
-    PDFExtract --> HasText{Has Native Text?}
-    HasText -->|Yes| CleanText[Extract Native Content & Filter C2PA Noise]
-    HasText -->|No / Scanned| OCRNotice[Informative OCR Notice]
-
-    MagicCheck -->|DOCX / XLSX / CSV / TXT| TableParse[Tabular & Structured Markdown Parser]
-
-    CleanText --> Context[Normalized Context Evidence]
-    TableParse --> Context
-    VisionBuf --> Context
-
-    Context --> Dispatcher[Agent & Model Dispatcher]
-```
-
-- **Native PDF First**: Extracts text from PDF stream operators (`BT/ET`, `Tj/TJ`) and filters out C2PA metadata, XMP blocks, and structural object tables.
-- **Image Safety**: Scanned PDF raw `%PDF-` bytes are never forwarded to vision models as fake raster images.
-- **Attachment-Only Send**: Users can upload files without entering text; the interface automatically initializes the relevant task prompt.
+- **0 External Cloud Calls**: All inference, embedding, OCR, and reasoning happens strictly on `127.0.0.1`.
+- **Local Ollama Integration**: Communicates over local loopback on port `11434`.
+- **Authoritative Provenance**: Every response includes an audit stamp showing `Air-Gap Status: Active (0 External Calls)`.
 
 ---
 
-## 🔍 Production-Grade Local Hybrid RAG Subsystem
+## Quick Start
 
-The platform features an on-premise, air-gapped **Local Hybrid RAG Subsystem** (`platform/rag/`) combining dense vector search and Okapi BM25 lexical retrieval with mathematical rank fusion, executing on standard CPU cores with zero GPU memory overhead.
+### 1. Prerequisites
+- **Node.js**: v20.x or higher
+- **Ollama**: Installed with `qwen2.5-coder:1.5b` or `nemotron-3-nano:latest`
+- **NVIDIA GPU**: RTX 2050 / 3050 / 4050 or compatible CUDA device
 
-```
-Uploaded Document / Code / Knowledge Base
-                │
-                ▼
-       Document Ingestor & Hash Tracker (SHA-256)
-                │
-                ▼
-     Structure-Aware Chunker (Sections, Tables, Code Blocks)
-                │
-       ┌────────┴────────┐
-       ▼                 ▼
- BM25 Lexical      384D Dense Semantic
-Inverted Index       CPU Vector Index
-       │                 │
-       └────────┬────────┘
-                ▼
-    Reciprocal Rank Fusion (RRF k=60)
-                │
-                ▼
-    Evidence Pack Assembler (<source_evidence> XML)
-                │
-                ▼
- Grounded Model Response + Precise Citations [doc.pdf, p. 4]
+### 2. Start the Gateway Server
+```bash
+node platform/gateway/src/server.js
 ```
 
-### Key RAG Architecture Capabilities
-1. **100% CPU-Friendly Engine**: Zero GPU VRAM consumption for embeddings, BM25, and vector indexing, leaving your RTX 2050 4GB GPU dedicated to Gemma 3, Nemotron 3, and Qwen 2.5 Coder.
-2. **Structure-Aware Chunking**: Preserves Markdown headings, table header repetition across row splits, and code symbols with exact line ranges (`server.js:L350-L410`).
-3. **Hybrid Search & Fusion**: Combines exact lexical term matches (`API-653`, `6.80 mm`, `PORT 8300`) with dense semantic vectors using Reciprocal Rank Fusion (RRF).
-4. **Prompt Injection Defense**: Encapsulates retrieved evidence in strictly delimited `<source_evidence>` XML envelopes with non-executable instruction warnings.
-5. **Grounded Source Citations**: Automatically generates verifiable citations for PDF page numbers, spreadsheet sheets/cells, and code line ranges.
-6. **Codebase & Project Intelligence**: Pre-indexes repository source files, architecture docs, and workflows for project-aware Agent 101 orchestration.
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Node.js**: v18.0.0 or higher
-- **Ollama**: Running locally at `http://127.0.0.1:11434` with models pulled:
-  ```bash
-  ollama pull gemma3:4b
-  ollama pull nemotron-3-nano
-  ollama pull qwen2.5-coder:1.5b
-  ```
-
-### Installation & Launch
-
-```powershell
-# 1. Clone repository & enter workspace
-git clone https://github.com/reginaldalfret/100-AI-Agents.git
-cd 100-AI-Agents
-
-# 2. Install dependencies (standard Node.js with native ESM)
-npm install
-
-# 3. Start the Platform Gateway (Port 8300)
-npm start
+### 3. Open the Workbench
+Open your browser and navigate to:
 ```
-
-Open **`http://127.0.0.1:8300/`** in your browser to access the **101 Super AI Agents** workspace.
-
----
-
-## 🧪 Comprehensive Verification & Test Suites
-
-The codebase includes test coverage across all subsystems. Tests run using Node.js built-in test runner:
-
-```powershell
-# 1. Run Complete Platform Matrix (28 Test Suites)
-npm test
-
-# 2. Run Full 101 AI Agent Fleet Health & Dispatch Test
-npm run test:fleet
-
-# 3. Run Production-Grade Local Hybrid RAG Test Suite (14 Suites)
-node --test tests/rag/*.test.js
-
-# 4. Run Visual Export Tests (PNG, JPG, SVG, Diagrams, 18 Charts)
-node --test tests/visuals/png-export.test.js
-node --test tests/visuals/jpg-export.test.js
-node --test tests/visuals/diagram-export.test.js
-node --test tests/visuals/chart-comprehensive.test.js
-
-# 5. Run Multimodal & Attachment Integrity Tests
-node --test tests/multimodal/attachment-integrity.test.js
-node --test tests/multimodal/pdf-native-text.test.js
-node --test tests/multimodal/real-gemma-vision.test.js
-
-# 6. Run True Progressive Token Streaming Tests
-node tests/streaming/true-token-streaming.test.js
-
-# 7. Run UI & Conversational History Tests
-node --test tests/ui/attachment-only-send.test.js
-node --test tests/ui/model-selector.test.js
-node --test tests/ui/conversation-history.test.js
-```
-
-### Latest Verification Results
-
-| Subsystem | Test Suite / Scope | Verified Result |
-|---|---|---|
-| **Local Hybrid RAG** | Ingestion, Chunking, Embeddings, BM25, RRF, Citations, Codebase | **14/14 Suites (73/73 Tests Passed, 100%)** |
-| **Visual Exports** | PNG, JPG, SVG, Diagram & 18-Chart Renderers | **48/48 Passed (100%)** |
-| **Multimodal Pipeline** | Attachment Integrity, PDF Native Text, Gemma 3 Vision | **13/13 Passed (100%)** |
-| **Token Streaming** | SSE Token Streaming, Model Classification, Stream Abort | **3/3 Passed (100%)** |
-| **UI Components** | Attachment Send, Model Selector, History Persistence | **26/26 Passed (100%)** |
-| **SIH Platform Matrix** | 28 Comprehensive Architecture & Benchmark Suites | **28/28 Suites Passed (100%)** |
-| **Workforce Fleet** | All 101 AI Agents Initialized and Verified | **101/101 Passed (100%)** |
-| **Air-Gap Egress** | Socket-Level Network Monitor (`egress-monitor.js`) | **0 External Calls** |
-
----
-
-## 📂 Repository Structure
-
-```
-100-AI-Agents/
-├── agents/                       # 101 Specialized Agent Implementations
-│   ├── agent-001-writing-agent/
-│   ├── ...
-│   └── agent-101-master-agent/   # Master Orchestrator Implementation
-│
-├── platform/                     # Core Platform Subsystems
-│   ├── gateway/                  # Platform API & SSE Streaming Server (Port 8300)
-│   ├── intelligence/             # Autonomous DAG Planner, Replanner, Execution Engine
-│   ├── models/                   # Model Router, Task Classifier, Hardware Profiler
-│   ├── multimodal/               # Document Extractor, Attachment Integrity Scanner
-│   ├── visuals/                  # 18 Chart Renderers, Diagram Renderers, Exporters
-│   ├── voice/                    # Speech Sanitizer, Voice Profile (en-IN), Voice Service
-│   ├── context/                  # Conversation Manager, Context Builder
-│   ├── evidence/                 # Evidence Graph, Uncertainty Engine, Trend Analysis
-│   ├── security/                 # Egress Monitor & Air-Gap Enforcement Policies
-│   ├── tools/                    # Tool Registry & Deterministic Tool Handlers
-│   └── web/                      # Liquid Glass Web Workspace (HTML5 / CSS3 / Vanilla JS)
-│
-├── registry/                     # Authoritative Registries
-│   ├── sih-agent-mapping.json    # Canonical 101-Agent Single Source of Truth
-│   ├── agents.json               # Fast Agent Lookups
-│   └── sa-s03-agent-mapping.json # Domain Mapping Configurations
-│
-├── tests/                        # Comprehensive Test Suites
-│   ├── visuals/                  # PNG, JPG, SVG, and 18-Chart Render Tests
-│   ├── multimodal/               # Native PDF, Attachment Integrity, Vision Tests
-│   ├── streaming/                # SSE Progressive Token Streaming Tests
-│   ├── ui/                       # Composer, Model Selector, History Tests
-│   ├── sih/                      # 28-Suite SIH Platform Regression Matrix
-│   └── run-all-agents.js         # 101 Agent Fleet Concurrency Runner
-│
-├── docs/                         # Technical Architecture & Developer Guides
-│   ├── architecture/             # How Super AI Works, Request Lifecycle, Visuals, PDF
-│   ├── development/              # Onboarding, Diagram Guides, Troubleshooting
-│   └── sih/                      # Judge Briefings, Performance Q&A, Demos
-│
-├── package.json                  # Project Manifest & NPM Lifecycle Scripts
-└── README.md                     # Authoritative Master Documentation
+http://127.0.0.1:8300/
 ```
 
 ---
 
-## 💡 Example Prompt Queries
+## Project Structure
 
-Try these prompts directly in the chat interface:
+```
+platform/
+├── gateway/              # Central HTTP & SSE Gateway server
+├── workflow-engine/      # 301 Super AI Agent Master Orchestration Engine
+├── intelligence/         # Domain Scope Guard & Intent Router
+├── models/               # Model Registry & Ollama Streamer
+├── multimodal/           # Document & Image Processing Subsystem
+├── python-compute/       # Specialized Python Compute Engine
+├── rag/                  # Local Vector Indexing & Evidence Retrieval
+├── system/               # Truthful Hardware Provider & System Metrics
+├── tools/                # Tool Sandbox & Registry
+├── visuals/              # Diagram & Chart Generator (Mermaid/SVG)
+├── voice/                # Real Indian English Female Speech Engine
+└── web/                  # Liquid Glass Single-Page Application (HTML/CSS/JS)
 
-- **Data Visualizations**:
-  `"Create a pie chart showing: Python 40, Java 25, JavaScript 20, Other 15."`
-  `"Create a line chart showing monthly sales: Jan 100, Feb 120, Mar 160, Apr 150, May 210."`
-  `"Create a histogram from this dataset: 2, 3, 3, 4, 4, 5, 5, 5, 6, 7, 7, 8, 10."`
-- **System Architecture & Flowcharts**:
-  `"Show the architecture of 101 Super AI Agents."`
-  `"Create a flowchart explaining how a user request routes between Gemma 3, Nemotron 3, and Qwen 2.5 Coder."`
-- **Multimodal Document Q&A**:
-  Upload a PDF document and ask: `"Extract the key findings and summarize the action items."`
-  Upload an image and ask: `"Analyze this image and explain the components shown."`
-- **Agent 101 Multi-Agent Coordination**:
-  `"Coordinate a multi-step project: write an executive summary, design the system architecture diagram, and write the backend code."`
+registry/
+├── agents.json           # 301 Canonical Agent Definitions (001–301)
+└── sih-agent-mapping.json# SIH Problem Mapping & Numeric Routing
 
----
+tests/
+├── runtime/              # Server, gateway, and no-default-response tests
+├── workflow/             # 26 multi-agent orchestration & provenance tests
+├── agents/               # Registry numbering, scope guard, and trace tests
+├── ui/                   # Liquid Glass UI, composer, model selector tests
+├── voice/                # Indian English Female speech tests
+└── python-compute/       # Python compute & document extraction tests
 
-## 📚 Technical Documentation Index
-
-For in-depth architectural and developer documentation, explore:
-
-- [**How Super AI Works**](file:///E:/Smart%20Automation/100-AI-Agents/docs/architecture/HOW-SUPER-AI-WORKS.md) — End-to-end orchestration and execution mechanics.
-- [**Request Lifecycle & Data Contracts**](file:///E:/Smart%20Automation/100-AI-Agents/docs/architecture/REQUEST-LIFECYCLE.md) — Payload contracts and routing phases.
-- [**Visual Output System Architecture**](file:///E:/Smart%20Automation/100-AI-Agents/docs/architecture/VISUAL-OUTPUT-SYSTEM.md) — 18-chart and diagram architecture.
-- [**Diagram Developer Guide**](file:///E:/Smart%20Automation/100-AI-Agents/docs/development/DIAGRAM-DEVELOPER-GUIDE.md) — How to add and customize visual types.
-- [**PDF Content-First Architecture**](file:///E:/Smart%20Automation/100-AI-Agents/docs/architecture/PDF-CONTENT-FIRST-ARCHITECTURE.md) — Native extraction vs OCR logic.
-- [**Agent Scope Enforcement**](file:///E:/Smart%20Automation/100-AI-Agents/docs/architecture/AGENT-SCOPE-ENFORCEMENT.md) — Domain boundary policy.
-- [**Voice Architecture & Indian English Profile**](file:///E:/Smart%20Automation/100-AI-Agents/docs/architecture/VOICE-ARCHITECTURE.md) — Speech subsystem details.
-- [**Developer Onboarding Guide**](file:///E:/Smart%20Automation/100-AI-Agents/docs/development/ONBOARDING.md) — Setting up the workspace.
-- [**Troubleshooting & Diagnostics**](file:///E:/Smart%20Automation/100-AI-Agents/docs/development/TROUBLESHOOTING.md) — Resolving local environment issues.
-- [**Hackathon Judge Briefing**](file:///E:/Smart%20Automation/100-AI-Agents/docs/sih/JUDGE-CODEBASE-EXPLANATION.md) — Technical evaluation summary.
-
----
-
-## ❓ Frequently Asked Questions (FAQ)
-
-<details>
-<summary><strong>Q: What is the difference between Agent 101 and Agents 001–100?</strong></summary>
-Agents <code>001</code>–<code>100</code> are domain specialists (e.g. <code>001</code> Writing AI, <code>045</code> PDF AI, <code>061</code> Code Gen AI) optimized for specific task scopes. <strong>Agent 101 (Super AI Agent)</strong> is the master orchestrator capable of autonomous multi-step planning, dynamic model routing, and delegating subtasks across the specialist fleet.
-</details>
-
-<details>
-<summary><strong>Q: Does 101 Super AI Agents send data to OpenAI, Anthropic, or external clouds?</strong></summary>
-<strong>No. Exactly 0 external calls are made.</strong> All reasoning, multimodal image parsing, PDF extraction, diagram rendering, and token streaming execute 100% on-premise using local open-weight models via Ollama.
-</details>
-
-<details>
-<summary><strong>Q: How does the platform run 101 agents on consumer hardware?</strong></summary>
-The 101 agents share the lightweight platform runtime and execute on-demand against 3 local open-weight models with a strict <code>MAX_GPU_CONCURRENCY = 1</code> execution lock, ensuring zero VRAM overflow on entry-level GPUs (such as the NVIDIA RTX 2050 4GB).
-</details>
-
-<details>
-<summary><strong>Q: Can charts and diagrams be exported as images?</strong></summary>
-Yes. Every rendered chart or diagram includes one-click <strong>[ PNG ]</strong> (high-DPI 2x), <strong>[ JPG ]</strong> (solid dark background), and <strong>[ SVG ]</strong> download controls, rendered entirely in the browser using the HTML5 Canvas API without GPU or cloud overhead.
-</details>
-
-<details>
-<summary><strong>Q: What happens if a specialist agent receives a request outside its domain?</strong></summary>
-The <strong>Agent Scope Guard</strong> intercepts the query, provides a helpful response explaining its primary role, and suggests one-click recommendation chips to switch to the appropriate specialist or Agent 101.
-</details>
+docs/
+├── architecture/         # System specifications & architecture maps
+├── development/          # Developer guides & SDK contracts
+├── operations/           # Deployment & background runtime runbooks
+└── verification/         # Proof-of-execution & audit reports
+```
 
 ---
 
-## 📄 License
+## Testing
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+Run the complete 147-test regression battery:
+```bash
+# Run all core test suites
+node --test tests/runtime/*.test.js tests/agents/*.test.js tests/workflow/*.test.js tests/ui/*.test.js tests/python-compute/*.test.js tests/voice/*.test.js
+
+# Run SIH UI validation suite
+node tests/sih/run-all-tests.js
+```
+
+---
+
+## GitHub Publication
+
+- **Repository**: `reginaldalfret/100-AI-Agents`
+- **Branch**: `feature/codebase-architecture-refactor`

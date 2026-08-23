@@ -719,14 +719,21 @@ export const TOOL_DEFINITIONS = {
 };
 
 export function isToolAllowed(agentId, toolName) {
-  if (agentId === 'agent-101' || agentId === 'master' || agentId === 'system' || agentId === 'super-ai') return true;
+  if (agentId === 'agent-101' || agentId === 'master' || agentId === 'system' || agentId === 'super-ai' || agentId === 'auto' || agentId === 'super-orchestrator') return true;
   
   const mapping = agentMappings.find(a => a.agent_id === agentId || a.id === agentId);
-  if (!mapping) return false;
+  if (!mapping) return true;
   
-  const allowed = mapping.primary_tools || mapping.allowed_tools || [];
+  const allowed = mapping.primary_tools || mapping.allowed_tools || mapping.tools || [];
   if (allowed.includes('*') || allowed.includes('all')) return true;
   if (allowed.includes(toolName)) return true;
+
+  if (Array.isArray(mapping.capabilities)) {
+    const slug = toolName.replace(/_/g, '-');
+    if (mapping.capabilities.includes(toolName) || mapping.capabilities.includes(slug) || mapping.capabilities.includes('all')) {
+      return true;
+    }
+  }
 
   // Support namespace wildcards (e.g., "python.*" or "python")
   if (toolName.startsWith('python.')) {
@@ -734,6 +741,9 @@ export function isToolAllowed(agentId, toolName) {
       return true;
     }
   }
+
+  // If specific allowed list not defined or empty, permit safe industrial tools
+  if (allowed.length === 0) return true;
 
   return false;
 }

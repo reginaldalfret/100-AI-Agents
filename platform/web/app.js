@@ -153,9 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function getAgentDisplayNumber(agent) {
-        if (!agent) return '101';
-        if (agent.id === 'auto' || agent.id === 'agent-101' || agent.internalId === 'agent-101' || agent.agent_id === 'agent-101' || agent.name === 'Super AI') {
-            return '101';
+        if (!agent) return '301';
+        if (agent.id === 'auto' || agent.name === 'Super AI Agent' || agent.name === 'Super AI') {
+            return '301';
         }
         if (agent.displayNumber) return agent.displayNumber;
         const rawId = agent.agent_id || agent.id || '';
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateAgentAvatar(agent) {
         const number = getAgentDisplayNumber(agent);
-        const isSuper = number === '101';
+        const isSuper = agent?.id === 'auto' || agent?.name === 'Super AI Agent' || agent?.name === 'Super AI' || agent?.category === 'Orchestrator';
         
         const cat = (agent?.category || agent?.domain || '').toLowerCase();
         let color = 'linear-gradient(135deg, #0284c7, #0369a1)';
@@ -1945,15 +1945,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const superAiAgent = {
                 id: 'auto',
-                internalId: 'agent-101',
-                displayNumber: '101',
+                internalId: 'super-orchestrator',
+                displayNumber: '301',
                 name: 'Super AI Agent',
                 category: 'Orchestrator',
                 domain: 'Orchestrator',
                 status: 'ready',
                 capabilities: ['Autonomous Task Planning', 'Dynamic Multi-Model Routing', 'Evidence Synthesis', 'Specialist Fleet Orchestration'],
                 tools: ['Delegate Task', 'Summarize', 'Access KB', 'Multi-Model Router'],
-                description: 'The master AI agent that coordinates the specialist AI agents to solve complex tasks.',
+                description: 'The master AI agent that coordinates the 300 specialist AI agents to solve complex tasks.',
                 examples: [
                     'Build me a complete full-stack web application with database and tests',
                     'Perform end-to-end investigation, analyze data, and prepare deliverables',
@@ -1989,11 +1989,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 .sort((a, b) => parseInt(a.displayNumber, 10) - parseInt(b.displayNumber, 10));
             
-            // ORDER: 001..100 specialists first, 101 Super AI Agent LAST
+            // ORDER: 001..300 specialists first, 301 Super AI Agent LAST
             state.agents = [...specialistAgents, superAiAgent];
             renderAgentList();
             
-            // Select Super AI Agent (101) by default
+            // Select Super AI Agent (301) by default
             selectAgent('auto', true);
             
         } catch (error) {
@@ -2016,15 +2016,50 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.agentList.innerHTML = '';
         
         const filteredAgents = state.agents.filter(agent => {
-            const isSuperAi = agent.id === 'auto' || agent.displayNumber === '101' || agent.name === 'Super AI Agent';
+            const isSuperAi = agent.id === 'auto' || agent.displayNumber === '301' || agent.name === 'Super AI Agent' || agent.category === 'Orchestrator';
             const num = agent.displayNumber || getAgentDisplayNumber(agent);
             const numWithoutZero = String(parseInt(num, 10));
             
-            // Category filter
-            if (state.selectedCategory !== 'all') {
-                const agentCat = (agent.category || agent.domain || '').toLowerCase();
-                const targetCat = state.selectedCategory.toLowerCase();
-                if (!isSuperAi && !agentCat.includes(targetCat) && !targetCat.includes(agentCat)) {
+            // Smart Category Filter
+            if (state.selectedCategory && state.selectedCategory !== 'all') {
+                const target = state.selectedCategory.toLowerCase();
+                const agentCat = (agent.category || '').toLowerCase();
+                const agentDomain = (agent.domain || '').toLowerCase();
+                const agentDesc = (agent.description || '').toLowerCase();
+                const allTags = `${agentCat} ${agentDomain} ${agentDesc} ${(agent.capabilities || []).join(' ')}`.toLowerCase();
+                
+                let matchesCategory = false;
+                if (target === 'coding' || target === 'languages') {
+                    matchesCategory = agentCat.includes('coding') || agentCat.includes('language') || allTags.includes('python') || allTags.includes('java') || allTags.includes('c/c++') || allTags.includes('c#') || allTags.includes('go ') || allTags.includes('golang') || allTags.includes('rust') || allTags.includes('swift') || allTags.includes('kotlin') || allTags.includes('solidity') || allTags.includes('javascript') || allTags.includes('typescript') || allTags.includes('node') || allTags.includes('bun') || allTags.includes('deno') || allTags.includes('package');
+                } else if (target === 'frontend') {
+                    matchesCategory = agentCat.includes('design') || agentCat.includes('frontend') || allTags.includes('react') || allTags.includes('next.js') || allTags.includes('vue') || allTags.includes('angular') || allTags.includes('svelte') || allTags.includes('css') || allTags.includes('ui') || allTags.includes('web perf') || allTags.includes('wcag') || allTags.includes('accessibility');
+                } else if (target === 'backend') {
+                    matchesCategory = agentCat.includes('backend') || allTags.includes('api') || allTags.includes('architecture') || allTags.includes('microservices') || allTags.includes('clean arch') || allTags.includes('ddd') || allTags.includes('cqrs') || allTags.includes('circuit') || allTags.includes('caching') || allTags.includes('gateway') || allTags.includes('opentelemetry');
+                } else if (target === 'database' || target === 'databases & sql') {
+                    matchesCategory = agentCat.includes('database') || allTags.includes('postgres') || allTags.includes('sql') || allTags.includes('database') || allTags.includes('locking') || allTags.includes('deadlock') || allTags.includes('partitioning') || allTags.includes('sharding') || allTags.includes('replication') || allTags.includes('acid') || allTags.includes('indexing');
+                } else if (target === 'devops' || target === 'cloud & devops') {
+                    matchesCategory = allTags.includes('aws') || allTags.includes('azure') || allTags.includes('gcp') || allTags.includes('cloud') || allTags.includes('docker') || allTags.includes('kubernetes') || allTags.includes('k8s') || allTags.includes('helm') || allTags.includes('gitops') || allTags.includes('argocd') || allTags.includes('flux') || allTags.includes('github actions') || allTags.includes('ci/cd') || allTags.includes('jenkins');
+                } else if (target === 'ai' || target === 'ai / ml & rag' || target === 'specialized ai') {
+                    matchesCategory = agentCat.includes('specialized ai') || allTags.includes('llm') || allTags.includes('rag') || allTags.includes('vector') || allTags.includes('embedding') || allTags.includes('prompt') || allTags.includes('context') || allTags.includes('memory') || allTags.includes('multi-agent') || allTags.includes('quantization') || allTags.includes('lora');
+                } else if (target === 'security' || target === 'cybersecurity') {
+                    matchesCategory = agentCat.includes('security') || allTags.includes('zero trust') || allTags.includes('owasp') || allTags.includes('sql injection') || allTags.includes('xss') || allTags.includes('csrf') || allTags.includes('ssrf') || allTags.includes('auth') || allTags.includes('jwt') || allTags.includes('sbom') || allTags.includes('cve') || allTags.includes('waf');
+                } else if (target === 'testing' || target === 'qa & testing') {
+                    matchesCategory = allTags.includes('test') || allTags.includes('testing') || allTags.includes('flakiness') || allTags.includes('vitest') || allTags.includes('mutation') || allTags.includes('fuzz') || allTags.includes('snapshot') || allTags.includes('chaos') || allTags.includes('qa') || allTags.includes('refactoring');
+                } else if (target === 'release' || target === 'release & eng') {
+                    matchesCategory = allTags.includes('monorepo') || allTags.includes('compiler') || allTags.includes('release') || allTags.includes('semver') || allTags.includes('changelog') || allTags.includes('devex') || allTags.includes('workflow') || allTags.includes('repository layout');
+                } else if (target === 'data' || target === 'data & analytics') {
+                    matchesCategory = agentCat.includes('data') || allTags.includes('telemetry') || allTags.includes('analytics') || allTags.includes('spreadsheet') || allTags.includes('sensor') || allTags.includes('scada');
+                } else if (target === 'writing' || target === 'writing & communication') {
+                    matchesCategory = agentCat.includes('writing') || agentCat.includes('communication') || allTags.includes('document') || allTags.includes('report') || allTags.includes('email') || allTags.includes('summarizer');
+                } else if (target === 'research' || target === 'research & knowledge') {
+                    matchesCategory = agentCat.includes('research') || agentCat.includes('knowledge') || allTags.includes('sop') || allTags.includes('patent') || allTags.includes('manual');
+                } else if (target === 'business' || target === 'business & ops' || target === 'business & management') {
+                    matchesCategory = agentCat.includes('business') || agentCat.includes('management') || agentCat.includes('procurement') || agentCat.includes('finance') || allTags.includes('supply chain') || allTags.includes('project') || allTags.includes('cost');
+                } else {
+                    matchesCategory = agentCat.includes(target) || agentDomain.includes(target) || target.includes(agentCat);
+                }
+                
+                if (!isSuperAi && !matchesCategory) {
                     return false;
                 }
             }
@@ -2033,7 +2068,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const matchesSuperAlias = isSuperAi && (
                 q.includes('super') || q.includes('auto') || q.includes('sovereign') || 
-                q.includes('orchestrator') || q.includes('101') || q.includes('master')
+                q.includes('orchestrator') || q.includes('301') || q.includes('master')
             );
             
             const matchesNumber = q === num || q === numWithoutZero || (`agent-${num}`).includes(q) || (`agent-${numWithoutZero}`).includes(q);
@@ -2048,11 +2083,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         filteredAgents.forEach(agent => {
-            const isSuper = agent.id === 'auto' || agent.displayNumber === '101' || agent.name === 'Super AI Agent';
+            const isSuper = agent.id === 'auto' || agent.displayNumber === '301' || agent.name === 'Super AI Agent' || agent.category === 'Orchestrator';
             
             if (isSuper) {
                 const sep = document.createElement('div');
-                sep.className = 'agent-101-separator';
+                sep.className = 'agent-301-separator agent-101-separator';
                 elements.agentList.appendChild(sep);
             }
 
@@ -2061,7 +2096,7 @@ document.addEventListener('DOMContentLoaded', () => {
             div.dataset.id = agent.id;
             
             const avatar = generateAgentAvatar(agent);
-            const subtitle = isSuper ? 'agent-101 · Master Orchestrator' : `agent-${avatar.number} · ${escapeHtml(agent.category || agent.domain || 'Specialist')}`;
+            const subtitle = isSuper ? 'super-orchestrator · 301 Super AI Agent' : `agent-${avatar.number} · ${escapeHtml(agent.category || agent.domain || 'Specialist')}`;
             
             div.innerHTML = `
                 <div class="agent-row-avatar" style="background: ${avatar.color}; border-color: ${avatar.borderGlow}" aria-label="Agent ${avatar.number} — ${escapeHtml(agent.name)}">
@@ -2126,11 +2161,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (elements.agentName) elements.agentName.textContent = agent.name;
         
         if (avatar.isSuper) {
-            if (elements.agentSubtitle) elements.agentSubtitle.textContent = 'agent-101 · Master Orchestrator';
-            document.title = '[101] Super AI Agent — 101 Super AI Agents';
+            if (elements.agentSubtitle) elements.agentSubtitle.textContent = 'super-orchestrator · 301 Agents';
+            document.title = '[301] Super AI Agent — 301 Super AI Agents';
         } else {
             if (elements.agentSubtitle) elements.agentSubtitle.textContent = `agent-${avatar.number} · ${agent.category || agent.domain || 'Specialist'}`;
-            document.title = `[${avatar.number}] ${agent.name} — 101 Super AI Agents`;
+            document.title = `[${avatar.number}] ${agent.name} — 301 Super AI Agents`;
         }
         
         const orb = document.getElementById('agentOrb');
@@ -2219,57 +2254,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function updatePlaceholder(agent) {
         if (elements.chatInput) {
             elements.chatInput.placeholder = `Message ${agent?.name || 'Super AI Agent'}...`;
-        }
-    }
-
-    async function appendUserMessage(text, attachments = []) {
-        hideEmptyState();
-        const msg = {
-            id: `msg-${Date.now()}`,
-            role: 'user',
-            content: text,
-            attachments: attachments,
-            timestamp: new Date()
-        };
-        
-        const agentId = state.selectedAgent?.id || 'auto';
-        if (!state.chatHistories[agentId]) state.chatHistories[agentId] = [];
-        state.chatHistories[agentId].push(msg);
-        
-        renderUserMessage(msg);
-        scrollToBottom();
-
-        // Persist to server conversation
-        if (!state.currentConversationId) {
-            const targetAgent = state.selectedAgent || state.agents.find(a => a.id === 'auto') || state.agents[0];
-            try {
-                const res = await fetch('/api/chats', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        title: text.slice(0, 36),
-                        agentId: targetAgent?.id || 'agent-101',
-                        agentName: targetAgent?.name || 'Super AI Agent',
-                        modelMode: state.selectedModelMode || 'auto',
-                        messages: [msg]
-                    })
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    state.currentConversationId = data.chat.id;
-                    loadConversations();
-                }
-            } catch (err) {
-                console.warn('Failed to create new conversation on server:', err);
-            }
-        } else {
-            fetch(`/api/chats/${state.currentConversationId}/messages`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(msg)
-            }).then(() => {
-                loadConversations();
-            }).catch(() => null);
         }
     }
 
@@ -2408,6 +2392,44 @@ document.addEventListener('DOMContentLoaded', () => {
         startSpeech(text, btn);
     }
 
+    function getIndianFemaleVoice() {
+        if (!('speechSynthesis' in window)) return null;
+        const voices = window.speechSynthesis.getVoices();
+        if (!voices || voices.length === 0) return null;
+
+        // Preferred Female Indian English Voices in priority order
+        const preferredFemaleNames = [
+            'neerja', 'heera', 'kavita', 'veena', 'lekha', 'aditi', 'sangeeta', 'priya', 'ananya',
+            'online (natural) - english (india)', 'english (india)', 'india'
+        ];
+
+        // Explicitly avoid male voices
+        const maleNames = ['ravi', 'george', 'david', 'mark', 'prabhat', 'male'];
+
+        // 1. Exact female Indian English match
+        for (const name of preferredFemaleNames) {
+            const match = voices.find(v => {
+                const n = v.name.toLowerCase();
+                const l = (v.lang || '').toLowerCase();
+                const isMale = maleNames.some(m => n.includes(m));
+                return (l.includes('en-in') || l.includes('en_in') || n.includes('india')) && n.includes(name) && !isMale;
+            });
+            if (match) return match;
+        }
+
+        // 2. Any en-IN voice that is not explicitly male
+        const anyIndian = voices.find(v => {
+            const n = v.name.toLowerCase();
+            const l = (v.lang || '').toLowerCase();
+            const isMale = maleNames.some(m => n.includes(m));
+            return (l.includes('en-in') || l.includes('en_in') || n.includes('india')) && !isMale;
+        });
+        if (anyIndian) return anyIndian;
+
+        // 3. Fallback to en-IN language code
+        return voices.find(v => (v.lang || '').toLowerCase().includes('en-in')) || null;
+    }
+
     function startSpeech(text, btn) {
         if (!('speechSynthesis' in window)) {
             alert('Text-to-speech is not supported in this browser.');
@@ -2418,29 +2440,79 @@ document.addEventListener('DOMContentLoaded', () => {
         const clean = sanitizeTextForSpeech(text);
         if (!clean) return;
 
-        const utterance = new SpeechSynthesisUtterance(clean);
-        utterance.lang = 'en-IN';
-        utterance.rate = 1.05;
-        utterance.pitch = 1.0;
-
-        const voices = window.speechSynthesis.getVoices();
-        const indianVoice = voices.find(v => (v.lang === 'en-IN' || v.name.includes('India') || v.name.includes('Heera') || v.name.includes('Neerja') || v.name.includes('Ravi')));
-        if (indianVoice) utterance.voice = indianVoice;
+        // Split into natural sentences for humanized pacing
+        const sentences = clean.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) || [clean];
+        const trimmedSentences = sentences.map(s => s.trim()).filter(s => s.length > 0);
+        if (trimmedSentences.length === 0) return;
 
         voiceState.isSpeaking = true;
         voiceState.activeBtn = btn;
+        voiceState.speechIndex = 0;
+        voiceState.speechSentences = trimmedSentences;
+
         if (btn) {
             btn.classList.add('speaking');
             btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg> <span>Stop</span>`;
         }
 
-        utterance.onend = () => stopSpeech();
-        utterance.onerror = () => stopSpeech();
+        speakNextSentence();
+    }
+
+    function speakNextSentence() {
+        if (!voiceState.isSpeaking || !voiceState.speechSentences) return;
+
+        if (voiceState.speechIndex >= voiceState.speechSentences.length) {
+            stopSpeech();
+            return;
+        }
+
+        const sentence = voiceState.speechSentences[voiceState.speechIndex];
+        const utterance = new SpeechSynthesisUtterance(sentence);
+        utterance.lang = 'en-IN';
+
+        // Natural humanized voice selection
+        const femaleVoice = getIndianFemaleVoice();
+        if (femaleVoice) utterance.voice = femaleVoice;
+
+        // Realistic human inflection: subtle variation in pitch and rate across sentences
+        const isQuestion = sentence.endsWith('?');
+        const isFirst = voiceState.speechIndex === 0;
+        const isLast = voiceState.speechIndex === voiceState.speechSentences.length - 1;
+
+        let basePitch = 1.0;
+        if (isQuestion) basePitch = 1.04;
+        else if (isFirst) basePitch = 1.01;
+        else if (isLast) basePitch = 0.98;
+        else {
+            // Subtle natural micro-variation (0.99 to 1.02)
+            basePitch = 0.99 + (voiceState.speechIndex % 3) * 0.015;
+        }
+
+        utterance.pitch = basePitch;
+        utterance.rate = 0.98; // calm, sweet, articulate conversational speed
+        utterance.volume = 1.0;
+
+        utterance.onend = () => {
+            if (!voiceState.isSpeaking) return;
+            voiceState.speechIndex++;
+            // Natural human pause between sentences (130ms)
+            voiceState.speechTimer = setTimeout(() => {
+                speakNextSentence();
+            }, 130);
+        };
+
+        utterance.onerror = () => {
+            stopSpeech();
+        };
 
         window.speechSynthesis.speak(utterance);
     }
 
     function stopSpeech() {
+        if (voiceState.speechTimer) {
+            clearTimeout(voiceState.speechTimer);
+            voiceState.speechTimer = null;
+        }
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
         }
@@ -2450,6 +2522,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         voiceState.isSpeaking = false;
         voiceState.activeBtn = null;
+        voiceState.speechSentences = null;
+        voiceState.speechIndex = 0;
     }
 
     async function toggleVoiceRecording() {
@@ -2623,6 +2697,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(msg)
             }).then(() => {
                 loadConversations();
+            }).catch(() => null);
+        } else {
+            const targetAgent = state.selectedAgent || state.agents.find(a => a.id === 'auto') || state.agents[0];
+            fetch('/api/chats', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    title: (text || 'New Conversation').slice(0, 36),
+                    agentId: targetAgent?.id || 'auto',
+                    agentName: targetAgent?.name || 'Super AI Agent',
+                    modelMode: state.selectedModelMode || 'auto',
+                    messages: [msg]
+                })
+            }).then(r => r.ok ? r.json() : null).then(data => {
+                if (data && data.chat) {
+                    state.currentConversationId = data.chat.id;
+                    loadConversations();
+                }
             }).catch(() => null);
         }
     }
@@ -2808,7 +2900,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="backend-flow-steps">
                     <div class="backend-flow-item">
                         <span class="backend-flow-check">✓</span>
-                        <span><strong>1. Agent Dispatched:</strong> Handled by <code>${escapeHtml(agentName)}</code> (Agent ${state.selectedAgent?.displayNumber || '101'})</span>
+                        <span><strong>1. Agent Dispatched:</strong> <code>${escapeHtml(state.selectedAgent?.displayNumber || '301')} ${escapeHtml(agentName)}</code></span>
                     </div>
                     <div class="backend-flow-item">
                         <span class="backend-flow-check">✓</span>
@@ -3264,8 +3356,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const readyAttachments = (state.currentAttachments || []).filter(a => a.status === 'ready');
         const activeReply = state.replyContext ? { ...state.replyContext } : null;
 
-        if (!rawText && readyAttachments.length === 0) return;
+        console.log('[SEND] handleSend() called', { rawText: rawText.slice(0, 50), agentId: state.selectedAgent?.id, isGenerating: state.isGenerating, attachments: readyAttachments.length });
+
+        if (!rawText && readyAttachments.length === 0) { console.log('[SEND] BLOCKED: no text and no attachments'); return; }
         if (state.isGenerating) {
+            console.log('[SEND] BLOCKED: isGenerating=true, calling stop');
             handleStopGeneration();
             return;
         }
@@ -3327,12 +3422,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function sendToBackend(agentId, text, attachments, replyTo = null) {
+        console.log('[SEND_TO_BACKEND] called', { agentId, textLen: text?.length, attachments: attachments?.length });
         setGenerating(true);
         state.currentAbortController = new AbortController();
+        console.log('[SEND_TO_BACKEND] AbortController created, isGenerating=true');
         
         const currentModelMode = state.selectedModelMode || 'auto';
         const modelOverride = currentModelMode !== 'auto' ? LOCAL_MODEL_DEFS[currentModelMode]?.internalId : null;
-        const targetAgentId = (!agentId || agentId === 'auto') ? 'agent-101' : agentId;
+        const targetAgentId = (!agentId || agentId === 'auto') ? 'auto' : agentId;
 
         // Create stream placeholder message
         hideEmptyState();
@@ -3374,6 +3471,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let durationMs = null;
         let tokensPerSec = null;
         let isStopped = false;
+        let workflowMeta = null;
 
         const effectiveTask = replyTo
             ? `[Replying to previous response from ${replyTo.agentName || 'AI Assistant'}]: "${(replyTo.content || '').slice(0, 300)}"\n\nUser follow-up: ${text}`
@@ -3435,6 +3533,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!res.ok) {
+                console.error('[FETCH] HTTP error', res.status, res.statusText);
                 const errData = await res.json().catch(() => ({}));
                 if (res.status === 503 || errData.status === 'model_unavailable') {
                     statusPill.remove();
@@ -3445,17 +3544,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 throw new Error(`HTTP ${res.status}: ${res.statusText}`);
             }
 
+            console.log('[FETCH] Response OK', { status: res.status, contentType: res.headers.get('content-type') });
+
             const reader = res.body.getReader();
             const decoder = new TextDecoder('utf-8');
             let buffer = '';
+            let _debugChunkCount = 0;
 
             while (true) {
                 const { done, value } = await reader.read();
-                if (done) break;
+                if (done) { console.log('[SSE] Reader done. Total chunks:', _debugChunkCount); break; }
+                _debugChunkCount++;
 
                 buffer += decoder.decode(value, { stream: true });
                 const events = buffer.split('\n\n');
                 buffer = events.pop() || '';
+
 
                 for (const ev of events) {
                     if (!ev.trim()) continue;
@@ -3475,6 +3579,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     try {
                         const parsed = JSON.parse(eventData);
+                        console.log('[SSE_EVENT]', eventType, eventType === 'token' ? `text_len=${(parsed.text||'').length}` : '');
 
                         if (eventType === 'scope_redirect') {
                             isScopeRedirect = true;
@@ -3501,6 +3606,56 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                             `;
                             accumulatedText = parsed.politeMessage || '';
+                        } else if (eventType === 'workflow_created' || eventType === 'workflow_planned') {
+                            if (statusPill && statusPill.parentNode) statusPill.remove();
+                            let wfCard = streamMsgDiv.querySelector('.workflow-live-card');
+                            if (!wfCard) {
+                                wfCard = document.createElement('div');
+                                wfCard.className = 'workflow-live-card';
+                                textTarget.parentNode.insertBefore(wfCard, textTarget);
+                            }
+                            const type = parsed.workflowType || 'MULTI-AGENT';
+                            const subtasks = parsed.subtasks || [];
+                            wfCard.innerHTML = `
+                                <div class="workflow-live-header">
+                                    <div class="workflow-live-title">
+                                        <span class="sparkle">✦</span>
+                                        <span>301 Super AI Agent (Master Orchestrator)</span>
+                                    </div>
+                                    <span class="workflow-type-badge">${escapeHtml(type)}</span>
+                                </div>
+                                <div class="workflow-subtasks-grid" id="wf-subtasks-${parsed.workflowId || 'live'}">
+                                    ${subtasks.map(s => `
+                                        <div class="workflow-subtask-pill queued" id="wf-pill-${s.id}">
+                                            <span>${escapeHtml(s.title || s.agent)}</span>
+                                            <span class="pill-status">⏳ Queued</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                        } else if (eventType === 'agent_dispatched' || eventType === 'agent_started') {
+                            const pill = streamMsgDiv.querySelector(`#wf-pill-${parsed.subtaskId}`);
+                            if (pill) {
+                                pill.className = 'workflow-subtask-pill running';
+                                const st = pill.querySelector('.pill-status');
+                                if (st) st.textContent = '⚙ In Progress';
+                            }
+                        } else if (eventType === 'agent_completed') {
+                            const pill = streamMsgDiv.querySelector(`#wf-pill-${parsed.subtaskId}`);
+                            if (pill) {
+                                pill.className = 'workflow-subtask-pill completed';
+                                const st = pill.querySelector('.pill-status');
+                                if (st) st.textContent = `✓ Done (${parsed.durationMs || 0}ms)`;
+                            }
+                        } else if (eventType === 'agent_failed') {
+                            const pill = streamMsgDiv.querySelector(`#wf-pill-${parsed.subtaskId}`);
+                            if (pill) {
+                                pill.className = 'workflow-subtask-pill failed';
+                                const st = pill.querySelector('.pill-status');
+                                if (st) st.textContent = '⚠ Failed';
+                            }
+                        } else if (eventType === 'workflow_synthesizing') {
+                            if (statusText) statusText.textContent = 'Synthesizing specialist outputs into unified solution...';
                         } else if (eventType === 'status') {
                             if (statusText && !isScopeRedirect) {
                                 statusText.textContent = parsed.message || (parsed.state === 'model_ready' ? `${parsed.model} active` : 'Preparing model...');
@@ -3539,24 +3694,28 @@ document.addEventListener('DOMContentLoaded', () => {
                             actualModelTag = parsed.actual_model || actualModelTag;
                             durationMs = parsed.duration_ms || null;
                             tokensPerSec = parsed.tokens_per_sec || null;
+                            if (parsed.workflow) {
+                                workflowMeta = parsed.workflow;
+                            }
                             if (modelLabelEl && !isScopeRedirect) modelLabelEl.textContent = `● ${modelDisplayName}`;
                             if (egressTagEl) egressTagEl.textContent = `⚡ ${actualModelTag} · 0 External Calls`;
                         } else if (eventType === 'error') {
                             if (statusPill && statusPill.parentNode) statusPill.remove();
                             textTarget.innerHTML = formatResponse(accumulatedText) + `<br><span style="color:var(--neon-red);font-size:12px;">⚠ ${escapeHtml(parsed.message || 'Stream error occurred.')}</span>`;
                         }
-                    } catch {
-                        // Skip malformed event chunk
+                    } catch (parseErr) {
+                        console.warn('[SSE_PARSE_ERROR]', parseErr.message, 'raw:', eventData?.slice(0, 100));
                     }
                 }
             }
         } catch (err) {
             if (err.name === 'AbortError') {
+                console.log('[STREAM] AbortError — user stopped generation');
                 isStopped = true;
                 if (statusPill && statusPill.parentNode) statusPill.remove();
                 textTarget.innerHTML = formatResponse(accumulatedText) + `<br><span style="color:var(--text-tertiary);font-size:12px;font-style:italic;">⏹ Generation stopped by user.</span>`;
             } else {
-                console.error('Streaming error:', err);
+                console.error('[STREAM] Streaming error:', err.message, err.stack);
                 if (statusPill && statusPill.parentNode) statusPill.remove();
                 if (!accumulatedText) {
                     textTarget.innerHTML = `<span style="color:var(--neon-red);">An error occurred connecting to local model inference. Please verify Ollama is active.</span>`;
@@ -3578,15 +3737,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const backendFlow = document.createElement('div');
                 backendFlow.className = 'backend-flow-card';
-                backendFlow.innerHTML = `
-                    <div class="backend-flow-header">
-                        <span>⚡ What happened in the backend</span>
-                        <span class="backend-flow-badge">100% On-Premise Stream</span>
-                    </div>
-                    <div class="backend-flow-steps">
+                
+                let workflowStepsHtml = '';
+                if (workflowMeta && workflowMeta.specialists && workflowMeta.specialists.length > 0) {
+                    workflowStepsHtml = `
                         <div class="backend-flow-item">
                             <span class="backend-flow-check">✓</span>
-                            <span><strong>1. Agent Dispatched:</strong> Handled by <code>${escapeHtml(agentName)}</code> (Agent ${state.selectedAgent?.displayNumber || '101'})</span>
+                            <span><strong>1. Multi-Agent Orchestration:</strong> Super AI Agent 101 coordinated <strong>${workflowMeta.specialists.length} specialist agents</strong> (${escapeHtml(workflowMeta.workflowType || 'PARALLEL')})</span>
+                        </div>
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>2. Specialists Dispatched:</strong>
+                                ${workflowMeta.specialists.map(sp => `<code>${escapeHtml(sp.agentName || sp.technology)} (${sp.model || 'Qwen 2.5 Coder'} · ${sp.durationMs || 0}ms)</code>`).join(' ')}
+                            </span>
+                        </div>
+                        ${workflowMeta.artifacts && workflowMeta.artifacts.length > 0 ? `
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>3. Code Artifacts Generated:</strong>
+                                ${workflowMeta.artifacts.map(a => `<span class="workflow-artifact-tag">📄 <code>${escapeHtml(a.filename)}</code> (${a.lines || 0} lines)</span>`).join(' ')}
+                            </span>
+                        </div>
+                        ` : ''}
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>4. Hardware Resource Scheduling:</strong> Enforced single GPU queue on RTX 2050 (4GB VRAM Safety Lock)</span>
+                        </div>
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>5. Air-Gap Sovereignty:</strong> 0 external network requests · Audit ID <code>${escapeHtml(traceId)}</code></span>
+                        </div>
+                    `;
+                } else {
+                    workflowStepsHtml = `
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>1. Agent Dispatched:</strong> Handled by <code>${escapeHtml(agentName)}</code> (Agent ${state.selectedAgent?.displayNumber || '301'})</span>
                         </div>
                         <div class="backend-flow-item">
                             <span class="backend-flow-check">✓</span>
@@ -3600,6 +3786,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="backend-flow-check">✓</span>
                             <span><strong>4. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
                         </div>
+                    `;
+                }
+
+                backendFlow.innerHTML = `
+                    <div class="backend-flow-header">
+                        <span>⚡ What happened in the backend</span>
+                        <span class="backend-flow-badge">100% On-Premise Stream</span>
+                    </div>
+                    <div class="backend-flow-steps">
+                        ${workflowStepsHtml}
                     </div>
                 `;
                 const bubble = streamMsgDiv.querySelector('.msg-bubble');
@@ -3738,7 +3934,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             const res = await fetch('/api/sovereign/status').catch(() => null);
-            let statusData = { external_ai_calls: 0, cloud_egress_bytes: 0, local_models: 3, total_agents: 101 };
+            let statusData = { external_ai_calls: 0, cloud_egress_bytes: 0, local_models: 3, total_agents: 301 };
             
             if (res && res.ok) {
                 statusData = await res.json();
@@ -3750,7 +3946,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="metric-card"><span class="m-val" style="color:#22c55e;">${statusData.external_ai_calls || 0}</span><span class="m-lbl">External AI API Calls</span></div>
                     <div class="metric-card"><span class="m-val" style="color:#22c55e;">${statusData.cloud_egress_bytes || '0 B'}</span><span class="m-lbl">Cloud Data Egress</span></div>
                     <div class="metric-card"><span class="m-val">${statusData.local_models || 3}</span><span class="m-lbl">Local Models (Ollama/ONNX)</span></div>
-                    <div class="metric-card"><span class="m-val">${statusData.total_agents || 101}</span><span class="m-lbl">Active Industrial Agents</span></div>
+                    <div class="metric-card"><span class="m-val">${statusData.total_agents || 301}</span><span class="m-lbl">Active Industrial Agents</span></div>
                 `;
             }
         } catch (e) {

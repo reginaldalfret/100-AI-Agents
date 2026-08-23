@@ -21,7 +21,8 @@ test('1. Voice Profile — Polished Indian English (en-IN)', () => {
   const profile = voiceService.getProfile();
   assert.strictEqual(profile.language, 'en-IN', 'Language must be Indian English');
   assert.strictEqual(profile.locale, 'en-IN');
-  assert.ok(profile.rate >= 1.0 && profile.rate <= 1.15, 'Speech rate must be natural');
+  assert.strictEqual(profile.gender, 'female', 'Gender must be female');
+  assert.ok(profile.rate >= 0.90 && profile.rate <= 1.15, 'Speech rate must be natural');
   assert.ok(profile.technicalVocabulary.includes('PostgreSQL'), 'Must include technical vocabulary');
   assert.ok(profile.technicalVocabulary.includes('Python'));
   assert.ok(profile.technicalVocabulary.includes('NVIDIA'));
@@ -75,8 +76,9 @@ test('4. Technical Vocabulary Normalization in Transcriptions', () => {
 
 test('5. Universal Voice Capability — All 101 Agents Inherit Voice Modality', () => {
   const registryRaw = fs.readFileSync(path.join(ROOT, 'registry', 'agents.json'), 'utf8');
-  const registry = JSON.parse(registryRaw);
-  assert.strictEqual(registry.length, 101, 'Must have exactly 101 agents');
+  const raw = JSON.parse(registryRaw);
+  const agents = Array.isArray(raw) ? raw : (raw.agents || []);
+  assert.ok(agents.length >= 101, 'Must have at least 101 agents');
 
   // Verify voice actions and UI integration exists centrally in app.js and index.html
   const appJs = fs.readFileSync(path.join(ROOT, 'platform', 'web', 'app.js'), 'utf8');

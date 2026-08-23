@@ -68,7 +68,7 @@ const DOMAIN_PROFILES = {
     primaryAgents: ['agent-061', 'agent-075', 'agent-055'],
     specialtyDesc: 'software development, backend APIs, microservices, algorithms, and code generation',
     patterns: [
-      /\b(write a rest api|build a rest api|create an api|build backend|express handler|fastapi route|crud endpoint|node\.js server|flask endpoint|spring boot|implement algorithm|fix this bug in python|build an app)\b/i
+      /\b(write\s+(a\s+)?(node\.js\s+|python\s+|fastapi\s+|express\s+)?rest\s*api|build\s+(a\s+)?rest\s*api|create\s+(an?\s+)?api|build\s+backend|express\s+handler|fastapi\s+route|crud\s+endpoint|node\.js\s+server|flask\s+endpoint|spring\s+boot|implement\s+algorithm|fix\s+this\s+bug|build\s+an?\s+app)\b/i
     ]
   },
   database: {

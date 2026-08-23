@@ -746,7 +746,8 @@ html, body {
   transform: translateY(-1px);
 }
 
-/* Agent 101 Master Separator */
+/* Super AI Master Separator */
+.agent-301-separator,
 .agent-101-separator {
   margin: 12px 6px 6px 6px;
   border: none;
@@ -758,6 +759,7 @@ html, body {
   height: 1px;
 }
 
+.agent-301-separator::after,
 .agent-101-separator::after {
   content: 'MASTER ORCHESTRATOR';
   position: absolute;
@@ -2195,6 +2197,114 @@ html, body {
   cursor: not-allowed;
   opacity: 0.35;
   box-shadow: none;
+}
+
+/* ==========================================================================
+   SUPER AI AGENT (101) WORKFLOW & MULTI-AGENT ORCHESTRATION CARD
+   ========================================================================== */
+.workflow-live-card {
+  margin: 10px 0 16px 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(6, 182, 212, 0.35);
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37), inset 0 0 12px rgba(6, 182, 212, 0.1);
+  transition: all 0.3s ease;
+}
+
+.workflow-live-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.workflow-live-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--neon-cyan);
+}
+
+.workflow-type-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(6, 182, 212, 0.15);
+  color: var(--neon-cyan);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.workflow-subtasks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.workflow-subtask-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  transition: all 0.2s ease;
+}
+
+.workflow-subtask-pill.queued {
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-tertiary);
+}
+
+.workflow-subtask-pill.running {
+  border-color: var(--neon-cyan);
+  background: rgba(6, 182, 212, 0.1);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+}
+
+.workflow-subtask-pill.completed {
+  border-color: var(--neon-green);
+  background: rgba(34, 197, 94, 0.08);
+  color: var(--neon-green);
+}
+
+.workflow-subtask-pill.failed {
+  border-color: var(--neon-red);
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--neon-red);
+}
+
+.workflow-artifacts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.workflow-artifact-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  font-size: 11px;
+  color: #c084fc;
 }
 
 .composer-toolbar {
