@@ -2316,6 +2316,60 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePlaceholder(state.selectedAgent);
     }
 
+    async function downloadResponseExport(content, title, format, btnEl) {
+        if (!content) return;
+        const origHtml = btnEl ? btnEl.innerHTML : '';
+        if (btnEl) {
+            btnEl.disabled = true;
+            btnEl.innerHTML = `<span class="spinner-tiny" style="display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:4px;"></span> <span>Exporting...</span>`;
+        }
+
+        try {
+            const resp = await fetch('/api/export', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content,
+                    title: title || state.currentConversation?.title || state.selectedAgent?.name || 'AI Response',
+                    format
+                })
+            });
+
+            if (!resp.ok) {
+                const err = await resp.json().catch(() => ({ error: 'Export failed' }));
+                showToast(`⚠ ${err.error || 'Could not export this response.'}`);
+                return;
+            }
+
+            const disposition = resp.headers.get('content-disposition');
+            let filename = `${(title || 'response').toLowerCase().replace(/[^a-z0-9]/g, '-')}.${format === 'excel' ? 'xlsx' : format}`;
+            if (disposition && disposition.includes('filename=')) {
+                const match = disposition.match(/filename="?([^"]+)"?/);
+                if (match && match[1]) filename = match[1];
+            }
+
+            const blob = await resp.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+
+            showToast(`✓ Downloaded ${filename}`);
+        } catch (err) {
+            console.error('[ExportResponse]', err);
+            showToast('⚠ Could not export this response.');
+        } finally {
+            if (btnEl) {
+                btnEl.disabled = false;
+                btnEl.innerHTML = origHtml;
+            }
+        }
+    }
+
     function createActionsRow(cleanContent, agentName, modelName, msgId) {
         const row = document.createElement('div');
         row.className = 'msg-actions-row';
@@ -2346,9 +2400,30 @@ document.addEventListener('DOMContentLoaded', () => {
         readAloudBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> <span>Read Aloud</span>`;
         readAloudBtn.addEventListener('click', () => toggleSpeech(cleanContent, readAloudBtn));
 
+        const pdfBtn = document.createElement('button');
+        pdfBtn.className = 'btn-msg-action btn-export-pdf';
+        pdfBtn.title = 'Download response as formatted PDF';
+        pdfBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg> <span>PDF</span>`;
+        pdfBtn.addEventListener('click', () => downloadResponseExport(cleanContent, agentName, 'pdf', pdfBtn));
+
+        const xlsxBtn = document.createElement('button');
+        xlsxBtn.className = 'btn-msg-action btn-export-xlsx';
+        xlsxBtn.title = 'Download structured response as Excel spreadsheet (.xlsx)';
+        xlsxBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg> <span>Excel</span>`;
+        xlsxBtn.addEventListener('click', () => downloadResponseExport(cleanContent, agentName, 'xlsx', xlsxBtn));
+
+        const csvBtn = document.createElement('button');
+        csvBtn.className = 'btn-msg-action btn-export-csv';
+        csvBtn.title = 'Download structured data as CSV (.csv)';
+        csvBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> <span>CSV</span>`;
+        csvBtn.addEventListener('click', () => downloadResponseExport(cleanContent, agentName, 'csv', csvBtn));
+
         row.appendChild(copyBtn);
         row.appendChild(answerBtn);
         row.appendChild(readAloudBtn);
+        row.appendChild(pdfBtn);
+        row.appendChild(xlsxBtn);
+        row.appendChild(csvBtn);
         return row;
     }
 

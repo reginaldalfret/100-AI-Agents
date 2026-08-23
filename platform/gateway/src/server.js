@@ -1629,6 +1629,42 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (
+      req.method === "POST" &&
+      (url.pathname === "/api/export" ||
+        (url.pathname.startsWith("/api/messages/") && url.pathname.endsWith("/export")))
+    ) {
+      const payload = await readBody(req);
+      const { globalResponseExportEngine } = await import("../../exports/response-export-engine.js");
+
+      try {
+        const exported = await globalResponseExportEngine.exportResponse({
+          content: payload.content || payload.text || "",
+          title: payload.title || payload.subject || "AI Response",
+          format: payload.format || url.searchParams.get("format") || "pdf",
+          conversationId: payload.conversationId,
+          messageId: payload.messageId
+        });
+
+        res.writeHead(200, {
+          "Content-Type": exported.mimeType,
+          "Content-Disposition": `attachment; filename="${exported.filename}"`,
+          "Content-Length": exported.sizeBytes,
+          "X-Artifact-Id": exported.artifactId,
+          "X-SHA256": exported.sha256,
+          "X-Air-Gap": "100% Offline Local"
+        });
+        res.end(exported.buffer);
+        return;
+      } catch (err) {
+        json(res, 400, {
+          status: "error",
+          error: err.message || "Failed to export response"
+        });
+        return;
+      }
+    }
+
+    if (
       req.method === "GET" &&
       url.pathname === "/api/info"
     ) {
