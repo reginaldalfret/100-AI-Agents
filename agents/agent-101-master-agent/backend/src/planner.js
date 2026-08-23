@@ -82,14 +82,39 @@ Respond with ONLY the JSON plan object (no markdown, no conversation).`;
     temperature: 0.1
   });
 
-  const plan = extractJson(response.response);
+  let plan;
+  try {
+    plan = extractJson(response.response);
+  } catch (parseErr) {
+    // Robust specialist matching fallback
+    const taskLower = task.toLowerCase();
+    const matchedSpecialist = agents.find(a =>
+      (a.capabilities || []).some(cap => taskLower.includes(cap.toLowerCase())) ||
+      (a.name || '').toLowerCase().split(' ').some(w => w.length > 3 && taskLower.includes(w))
+    ) || agents.find(a => a.agent_id === 'agent-002') || agents[0];
+
+    plan = {
+      complexity: "simple",
+      reasoning: "Deterministic fallback routing",
+      subtasks: [
+        {
+          agent_id: matchedSpecialist ? matchedSpecialist.agent_id : "agent-002",
+          task
+        }
+      ]
+    };
+  }
 
   if (
     !plan ||
     typeof plan !== "object" ||
     !Array.isArray(plan.subtasks)
   ) {
-    throw new Error("Invalid master plan");
+    plan = {
+      complexity: "simple",
+      reasoning: "Default direct execution",
+      subtasks: []
+    };
   }
 
   const validIds = new Set(

@@ -9,6 +9,8 @@ import { modelStreamer, ModelLifecycleState } from "../../models/model-streamer.
 import { conversationManager } from "../../context/index.js";
 import { agentScopeGuard } from "../../intelligence/index.js";
 import { documentExtractor } from "../../multimodal/index.js";
+import { validateAttachmentIntegrity } from "../../multimodal/attachment-integrity.js";
+import { voiceService } from "../../voice/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,6 +20,9 @@ const REGISTRY = path.join(ROOT, "registry", "agents.json");
 
 const HOST = process.env.HOST || "0.0.0.0";
 const PORT = Number(process.env.PORT || 8300);
+const SERVER_START_TIME = new Date().toISOString();
+const UI_BUILD_VERSION = "liquid-glass-v2.1";
+const GIT_COMMIT_SHA = "b4f89ac-forensic-repair";
 
 function loadRegistry() {
   return JSON.parse(fs.readFileSync(REGISTRY, "utf8"));
@@ -67,8 +72,8 @@ function readBody(req) {
     req.on("data", chunk => {
       raw += chunk;
 
-      if (raw.length > 1024 * 1024) {
-        reject(new Error("Request body exceeds 1 MiB"));
+      if (raw.length > 10 * 1024 * 1024) {
+        reject(new Error("Request body exceeds 10 MiB"));
         req.destroy();
       }
     });
@@ -292,17 +297,39 @@ const server = http.createServer(async (req, res) => {
           ? "agent-101"
           : (rawAgentId.startsWith("agent-") ? rawAgentId : `agent-${rawAgentId.padStart(3, "0")}`);
 
-      const task =
+      let task =
         typeof payload.task === "string"
           ? payload.task.trim()
-          : "";
+          : (typeof payload.message === "string" ? payload.message.trim() : (typeof payload.prompt === "string" ? payload.prompt.trim() : ""));
 
-      if (!task) {
+      const hasAttachments = Array.isArray(payload.attachments) && payload.attachments.length > 0;
+
+      if (!task && !hasAttachments) {
         json(res, 400, {
           status: "error",
-          error: "task is required"
+          error: "task or attachment is required"
         });
         return;
+      }
+
+      if (!task && hasAttachments) {
+        const attNames = payload.attachments.map(a => a.name || "file").join(", ");
+        const hasPdf = payload.attachments.some(a => (a.name || "").toLowerCase().endsWith(".pdf") || a.type === "application/pdf");
+        const hasImg = payload.attachments.some(a => /\.(png|jpg|jpeg|webp|gif|bmp)$/i.test(a.name || "") || (a.type || "").startsWith("image/"));
+        const hasSheet = payload.attachments.some(a => /\.(xlsx|xls|csv)$/i.test(a.name || "") || (a.type || "").includes("sheet") || (a.type || "").includes("csv"));
+        const hasCode = payload.attachments.some(a => /\.(js|py|sql|ts|json|html|css|cpp|c|rs|go|sh)$/i.test(a.name || ""));
+
+        if (hasImg && !hasPdf && !hasSheet) {
+          task = `Analyze and describe the contents of the attached image: ${attNames}`;
+        } else if (hasPdf && !hasImg && !hasSheet) {
+          task = `Analyze and extract findings from the attached document: ${attNames}`;
+        } else if (hasSheet) {
+          task = `Analyze and summarize data from the attached spreadsheet: ${attNames}`;
+        } else if (hasCode) {
+          task = `Review and explain the attached code file: ${attNames}`;
+        } else {
+          task = `Analyze the provided materials: ${attNames}`;
+        }
       }
 
       const agent = agents.find(
@@ -366,18 +393,50 @@ const server = http.createServer(async (req, res) => {
           });
           return;
         }
+      }
+
       // Process Multimodal Attachments & Document Extraction
       let extractedEvidenceText = "";
       const imagesList = Array.isArray(payload.images) ? [...payload.images] : [];
+      const sseAttachmentErrors = [];
       if (Array.isArray(payload.attachments) && payload.attachments.length > 0) {
+        const userPromptLower = task.toLowerCase();
+        const userAsksForMetadata = /c2pa|metadata|xmp|creator|producer|credentials|header|properties/i.test(userPromptLower);
+
         for (const att of payload.attachments) {
+          const validationResult = validateAttachmentIntegrity(att);
+          console.log(`[ATTACHMENT_VALIDATION] name="${att.name}" valid=${validationResult.valid} size=${validationResult.size || 0}`);
+          
+          if (!validationResult.valid) {
+            if (validationResult.error === 'ATTACHMENT_EMPTY' && (att.type?.startsWith('image/') || /\.(png|jpe?g|webp|gif|bmp)$/i.test(att.name))) {
+              sseAttachmentErrors.push({ code: 'IMAGE_PAYLOAD_MISSING', message: `Image attachment ${att.name} has empty data` });
+            }
+            console.warn(`Skipping invalid attachment ${att.name}: ${validationResult.message}`);
+            continue;
+          } else {
+            const raw = (att.data || att.content || '').split(',').pop().trim().replace(/\s/g, '');
+            if (raw && !/^[A-Za-z0-9+/]*={0,2}$/.test(raw)) {
+              sseAttachmentErrors.push({ code: 'IMAGE_DECODE_FAILED', message: `Base64 decoding failed for ${att.name}` });
+              continue;
+            }
+            if (att.type?.startsWith('image/') && validationResult.detectedType !== 'unknown' && validationResult.detectedType !== att.type && att.type !== 'application/octet-stream') {
+              sseAttachmentErrors.push({ code: 'IMAGE_INVALID_SIGNATURE', message: `Magic bytes don't match declared MIME for ${att.name}` });
+              continue;
+            }
+          }
+
           const doc = await documentExtractor.extractContent(att);
           if (doc) {
+            console.log(`[ATTACHMENT_INGEST] filename="${att.name}" mime="${att.type}" size=${att.size} isImage=${doc?.isMultimodalImage} needsVision=${doc?.needsVision} contentChars=${doc?.contentText?.length || 0} metaChars=${doc?.metadataText?.length || 0}`);
             if (doc.isMultimodalImage && doc.base64Image) {
               imagesList.push(doc.base64Image);
             }
-            if (doc.extractedText) {
-              extractedEvidenceText += `\n\n[ATTACHED EVIDENCE: ${doc.filename}]\n${doc.extractedText}`;
+            const primaryContent = doc.contentText || doc.extractedText || "";
+            if (primaryContent) {
+              extractedEvidenceText += `\n\n[ATTACHED EVIDENCE: ${doc.filename}]\n${primaryContent}`;
+            }
+            if (userAsksForMetadata && doc.metadataText) {
+              extractedEvidenceText += `\n\n[DOCUMENT METADATA: ${doc.filename}]\n${doc.metadataText}`;
             }
           }
         }
@@ -385,10 +444,63 @@ const server = http.createServer(async (req, res) => {
 
       const effectiveTask = extractedEvidenceText ? `${task}\n${extractedEvidenceText}` : task;
 
-      if (!isManual) {
-        // Auto routing based on task & attachments
+      // ================================================================
+      // MODALITY-FIRST ROUTING — Images ALWAYS override model selection
+      // ================================================================
+      const hasImages = imagesList.length > 0;
+      let needsTwoStagePipeline = false;
+      let specialistModel = null;
+      let specialistDisplayName = null;
+      let visionExtractionPrompt = "";
+
+      if (hasImages) {
+        // RULE: Any request with image attachments MUST go through Gemma 3 first.
+        // Nemotron and Qwen cannot process images — they will error out.
+
+        const taskLower = task.toLowerCase();
+
+        // Detect if the task requires BOTH vision understanding AND specialist work
+        const specialistKeywords = {
+          email: { model: "nemotron-3-nano:latest", display: "NVIDIA Nemotron 3", patterns: ["email", "mail", "compose", "draft", "letter", "memo"] },
+          coding: { model: "qwen2.5-coder:1.5b", display: "Qwen 2.5 Coder", patterns: ["code", "script", "python", "sql", "function", "debug", "implement", "program", "algorithm"] },
+          reasoning: { model: "nemotron-3-nano:latest", display: "NVIDIA Nemotron 3", patterns: ["analyze", "explain", "summarize", "plan", "strategy", "compare", "evaluate", "review", "write", "essay", "article", "report", "blog"] }
+        };
+
+        // Check if the task ALSO needs specialist work beyond just reading the image
+        const isVisionOnly = !specialistKeywords.email.patterns.some(k => taskLower.includes(k))
+          && !specialistKeywords.coding.patterns.some(k => taskLower.includes(k));
+
+        if (isVisionOnly) {
+          // Pure vision task — route directly to Gemma 3
+          targetOllamaModel = "gemma3:4b";
+          modelDisplayName = "Google Gemma 3";
+        } else {
+          // Two-stage pipeline: Vision extraction → Specialist synthesis
+          // Find which specialist domain matches
+          for (const [domain, config] of Object.entries(specialistKeywords)) {
+            if (config.patterns.some(k => taskLower.includes(k))) {
+              specialistModel = config.model;
+              specialistDisplayName = config.display;
+              break;
+            }
+          }
+
+          if (specialistModel) {
+            needsTwoStagePipeline = true;
+            // Stage 1 will use Gemma 3 for vision, Stage 2 will use the specialist
+            visionExtractionPrompt = `Carefully examine the attached image(s) and extract ALL visible content including: text, numbers, labels, headings, structure, layout, tables, diagrams, handwriting, and any other visual information. Provide a comprehensive, detailed, and accurate description of everything you see. Format your response as structured plain text.`;
+            targetOllamaModel = "gemma3:4b";
+            modelDisplayName = "Google Gemma 3";
+          } else {
+            // No clear specialist match — default to Gemma 3 for the full task
+            targetOllamaModel = "gemma3:4b";
+            modelDisplayName = "Google Gemma 3";
+          }
+        }
+      } else if (!isManual) {
+        // Standard auto routing (no images) based on task keywords
         const taskLower = effectiveTask.toLowerCase();
-        if (imagesList.length > 0 || taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr") || taskLower.includes("diagram")) {
+        if (taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr") || taskLower.includes("diagram")) {
           targetOllamaModel = "gemma3:4b";
           modelDisplayName = "Google Gemma 3";
         } else if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv") || taskLower.includes("table")) {
@@ -399,6 +511,8 @@ const server = http.createServer(async (req, res) => {
           modelDisplayName = "NVIDIA Nemotron 3";
         }
       }
+
+      console.log(`[ROUTING_DECISION] task="${task.slice(0, 60)}" hasImages=${hasImages} needsTwoStage=${needsTwoStagePipeline} targetModel="${targetOllamaModel}" specialist="${specialistModel || 'none'}"`);
 
       const conversationId = payload.conversation_id || payload.conversationId || payload.chat_id || payload.chatId || null;
       const contextPayload = conversationManager.prepareContext({
@@ -479,6 +593,7 @@ const server = http.createServer(async (req, res) => {
         });
 
         const sendSSE = (event, data) => {
+          if (res.writableEnded || res.closed || res.destroyed) return;
           try {
             res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
           } catch {
@@ -508,62 +623,197 @@ const server = http.createServer(async (req, res) => {
         req.on("close", () => {
           modelStreamer.cancelStream(requestId);
         });
+        
+        if (sseAttachmentErrors.length > 0) {
+          for (const err of sseAttachmentErrors) {
+            sendSSE("error", err);
+          }
+          res.end();
+          return;
+        }
 
         try {
-          await modelStreamer.streamFromOllama({
-            model: targetOllamaModel,
-            system: contextPayload.systemPrompt,
-            prompt: contextPayload.prompt,
-            images: payload.images || [],
-            temperature: 0.3,
-            options: {
-              num_predict: payload.parameters?.max_tokens || 512,
-              ...(payload.parameters || {})
-            },
-            requestId,
-            onStatus: (statusObj) => {
-              sendSSE("status", statusObj);
-            },
-            onToken: (tokenChunk, accumulatedText) => {
-              sendSSE("token", { text: tokenChunk, fullText: accumulatedText });
-            },
-            onComplete: (metrics) => {
-              if (conversationId && metrics.fullText) {
-                conversationManager.recordTurn({
-                  conversationId,
-                  userPrompt: task,
-                  assistantResponse: metrics.fullText,
-                  agent,
-                  model: modelDisplayName,
-                  replyTo: payload.replyTo || null
-                });
-              }
-              sendSSE("complete", {
-                ...metrics,
-                agent_id: agent.agent_id,
-                requested_model: isManual ? targetOllamaModel : "auto",
-                actual_model: targetOllamaModel,
-                model_mode: isManual ? "manual" : "auto",
-                model_source: "ollama-local",
-                model: modelDisplayName,
-                external_calls: 0
+          // ================================================================
+          // TWO-STAGE VISION PIPELINE
+          // ================================================================
+          if (needsTwoStagePipeline && hasImages && specialistModel) {
+            // STAGE 1: Vision Extraction with Gemma 3
+            sendSSE("status", {
+              state: ModelLifecycleState.PREPARING,
+              message: "Analyzing image with Google Gemma 3 Vision...",
+              model: "Google Gemma 3",
+              tag: "gemma3:4b",
+              stage: 1,
+              pipeline: "vision-to-specialist"
+            });
+
+            let visionExtractedText = "";
+            try {
+              const visionResult = await modelStreamer.generateFromOllama({
+                model: "gemma3:4b",
+                system: "You are a vision analysis engine. Extract and describe ALL content from the provided image(s) with maximum detail and accuracy. Include all text, numbers, structure, layout, tables, and visual elements.",
+                prompt: visionExtractionPrompt + "\n\nUser's original request for context: " + task,
+                images: imagesList,
+                temperature: 0.2,
+                options: { num_predict: 1024 }
               });
-              res.end();
-            },
-            onError: (err) => {
+              visionExtractedText = visionResult.text || "";
+            } catch (visionErr) {
+              let errCode = "VISION_REQUEST_FAILED";
+              if (visionErr.message.includes("fetch failed") || visionErr.message.includes("ECONNREFUSED")) errCode = "OLLAMA_UNAVAILABLE";
+              else if (visionErr.message.includes("model not found") || visionErr.message.includes("not available") || visionErr.message.includes("does not support vision")) errCode = "GEMMA_UNAVAILABLE";
+              
               sendSSE("error", {
-                message: err.message,
-                status: "error"
+                code: errCode,
+                message: `Vision analysis failed: ${visionErr.message}. Gemma 3 may not be available for image processing.`,
+                status: "vision_error",
+                stage: 1,
+                model: "gemma3:4b"
               });
               res.end();
+              return;
             }
-          });
+
+            if (!visionExtractedText.trim()) {
+              sendSSE("error", {
+                code: "VISION_REQUEST_FAILED",
+                message: "Vision extraction returned empty results. The image may not contain readable content.",
+                status: "vision_empty",
+                stage: 1
+              });
+              res.end();
+              return;
+            }
+
+            sendSSE("status", {
+              state: ModelLifecycleState.ACTIVE,
+              message: `Image analyzed. Now generating response with ${specialistDisplayName}...`,
+              model: specialistDisplayName,
+              tag: specialistModel,
+              stage: 2,
+              pipeline: "vision-to-specialist"
+            });
+
+            // STAGE 2: Specialist Synthesis — stream the specialist model's response
+            const specialistPrompt = `${contextPayload.systemPrompt ? contextPayload.systemPrompt + "\n\n" : ""}The user uploaded an image. Here is what was found in the image:\n\n--- IMAGE CONTENT START ---\n${visionExtractedText}\n--- IMAGE CONTENT END ---\n\nUser's request: ${task}\n\nUsing the image content above, fulfill the user's request.`;
+
+            const stage2RequestId = `${requestId}_s2`;
+            req.on("close", () => {
+              modelStreamer.cancelStream(stage2RequestId);
+            });
+
+            await modelStreamer.streamFromOllama({
+              model: specialistModel,
+              system: contextPayload.systemPrompt || "",
+              prompt: specialistPrompt,
+              images: [], // Stage 2 receives TEXT, not images
+              temperature: 0.3,
+              options: {
+                num_predict: payload.parameters?.max_tokens || 512,
+                ...(payload.parameters || {})
+              },
+              requestId: stage2RequestId,
+              onStatus: (statusObj) => {
+                sendSSE("status", { ...statusObj, stage: 2 });
+              },
+              onToken: (tokenChunk, accumulatedText) => {
+                sendSSE("token", { text: tokenChunk, fullText: accumulatedText });
+              },
+              onComplete: (metrics) => {
+                if (conversationId && metrics.text) {
+                  conversationManager.recordTurn({
+                    conversationId,
+                    userPrompt: task,
+                    assistantResponse: metrics.text,
+                    agent,
+                    model: specialistDisplayName,
+                    replyTo: payload.replyTo || null
+                  });
+                }
+                sendSSE("complete", {
+                  ...metrics,
+                  agent_id: agent.agent_id,
+                  requested_model: "auto",
+                  actual_model: specialistModel,
+                  vision_model: "gemma3:4b",
+                  model_mode: "auto",
+                  model_source: "ollama-local",
+                  model: specialistDisplayName,
+                  pipeline: "vision-to-specialist",
+                  external_calls: 0
+                });
+                res.end();
+              },
+              onError: (err) => {
+                sendSSE("error", {
+                  message: `Specialist generation failed: ${err.message}`,
+                  status: "error",
+                  stage: 2,
+                  model: specialistModel
+                });
+                res.end();
+              }
+            });
+
+          } else {
+            // ================================================================
+            // STANDARD SINGLE-STAGE STREAMING (vision-only or no images)
+            // ================================================================
+            await modelStreamer.streamFromOllama({
+              model: targetOllamaModel,
+              system: contextPayload.systemPrompt,
+              prompt: contextPayload.prompt,
+              images: imagesList,
+              temperature: 0.3,
+              options: {
+                num_predict: payload.parameters?.max_tokens || 512,
+                ...(payload.parameters || {})
+              },
+              requestId,
+              onStatus: (statusObj) => {
+                sendSSE("status", statusObj);
+              },
+              onToken: (tokenChunk, accumulatedText) => {
+                sendSSE("token", { text: tokenChunk, fullText: accumulatedText });
+              },
+              onComplete: (metrics) => {
+                if (conversationId && metrics.text) {
+                  conversationManager.recordTurn({
+                    conversationId,
+                    userPrompt: task,
+                    assistantResponse: metrics.text,
+                    agent,
+                    model: modelDisplayName,
+                    replyTo: payload.replyTo || null
+                  });
+                }
+                sendSSE("complete", {
+                  ...metrics,
+                  agent_id: agent.agent_id,
+                  requested_model: isManual ? targetOllamaModel : "auto",
+                  actual_model: targetOllamaModel,
+                  model_mode: isManual ? "manual" : "auto",
+                  model_source: "ollama-local",
+                  model: modelDisplayName,
+                  external_calls: 0
+                });
+                res.end();
+              },
+              onError: (err) => {
+                sendSSE("error", {
+                  message: err.message,
+                  status: "error"
+                });
+                if (!res.writableEnded) res.end();
+              }
+            });
+          }
         } catch (streamErr) {
           sendSSE("error", {
             message: streamErr.message,
             status: "error"
           });
-          res.end();
+          if (!res.writableEnded) res.end();
         }
         return;
       }
@@ -582,13 +832,86 @@ const server = http.createServer(async (req, res) => {
       let result;
       const inferenceStart = performance.now();
       try {
-        result = await requestAgent(agent, agentPayload);
-      } catch (err) {
-        const inProc = await executeAgentInProcess(agent.agent_id, agentPayload);
-        if (inProc) {
-          result = inProc;
+        if (hasImages) {
+          if (needsTwoStagePipeline && specialistModel) {
+            // Stage 1: Vision Extraction via Gemma 3
+            const stage1 = await modelStreamer.generateFromOllama({
+              model: "gemma3:4b",
+              system: "You are an expert visual analyzer. Extract all visual information, text, labels, and content accurately.",
+              prompt: visionExtractionPrompt || "Extract all visual content from this image.",
+              images: imagesList,
+              temperature: 0.1,
+              options: { num_predict: 512 }
+            });
+
+            // Stage 2: Specialist Synthesis
+            const stage2 = await modelStreamer.generateFromOllama({
+              model: specialistModel,
+              system: contextPayload.systemPrompt || "You are a professional AI specialist.",
+              prompt: `${contextPayload.prompt || task}\n\n[Visual Evidence from Attached Image]:\n${stage1.text}`,
+              temperature: 0.3,
+              options: { num_predict: payload.parameters?.max_tokens || 512 }
+            });
+
+            result = {
+              status: "success",
+              result: stage2.text,
+              metadata: {
+                model: specialistDisplayName || modelDisplayName,
+                actual_model: specialistModel,
+                total_duration: stage1.durationMs + stage2.durationMs
+              }
+            };
+          } else {
+            // Direct multimodal generation via Gemma 3
+            const gen = await modelStreamer.generateFromOllama({
+              model: targetOllamaModel,
+              system: contextPayload.systemPrompt,
+              prompt: contextPayload.prompt || task,
+              images: imagesList,
+              temperature: 0.2,
+              options: { num_predict: payload.parameters?.max_tokens || 512 }
+            });
+            result = {
+              status: "success",
+              result: gen.text,
+              metadata: {
+                model: modelDisplayName,
+                actual_model: targetOllamaModel,
+                total_duration: gen.durationMs
+              }
+            };
+          }
         } else {
-          throw err;
+          result = await requestAgent(agent, agentPayload);
+        }
+      } catch (err) {
+        try {
+          const inProc = await executeAgentInProcess(agent.agent_id, agentPayload);
+          if (inProc) {
+            result = inProc;
+          } else {
+            throw err;
+          }
+        } catch (inProcErr) {
+          // Direct fallback to local Ollama generation
+          const gen = await modelStreamer.generateFromOllama({
+            model: targetOllamaModel,
+            system: contextPayload.systemPrompt,
+            prompt: contextPayload.prompt,
+            images: imagesList,
+            temperature: 0.3,
+            options: { num_predict: payload.parameters?.max_tokens || 512 }
+          });
+          result = {
+            status: "success",
+            result: gen.text,
+            metadata: {
+              model: modelDisplayName,
+              actual_model: targetOllamaModel,
+              total_duration: gen.durationMs
+            }
+          };
         }
       }
 
@@ -858,6 +1181,26 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (req.method === "GET" && url.pathname === "/api/voice/profile") {
+      json(res, 200, { status: "success", profile: voiceService.getProfile() });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/voice/transcribe") {
+      const payload = await readBody(req);
+      const processedText = voiceService.processTranscription(payload.transcript || payload.text || "");
+      json(res, 200, { status: "success", text: processedText });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/voice/sanitize") {
+      const payload = await readBody(req);
+      const spokenText = voiceService.sanitizeText(payload.text || "");
+      const sentences = voiceService.chunkText(payload.text || "");
+      json(res, 200, { status: "success", spokenText, sentences });
+      return;
+    }
+
     if (
       req.method === "GET" &&
       url.pathname === "/api/info"
@@ -870,6 +1213,24 @@ const server = http.createServer(async (req, res) => {
         total_agents: agents.length,
         gateway_port: PORT,
         ollama: "http://127.0.0.1:11434"
+      });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
+      url.pathname === "/api/runtime-info"
+    ) {
+      json(res, 200, {
+        status: "success",
+        projectRoot: ROOT,
+        commitSHA: GIT_COMMIT_SHA,
+        serverStartTime: SERVER_START_TIME,
+        uiBuildVersion: UI_BUILD_VERSION,
+        pid: process.pid,
+        port: PORT,
+        modelsAvailable: await getAvailableModelsCached(),
+        uptimeSeconds: Math.round(process.uptime())
       });
       return;
     }

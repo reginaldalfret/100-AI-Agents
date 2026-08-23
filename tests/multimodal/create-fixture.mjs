@@ -1,0 +1,49 @@
+﻿import fs from 'node:fs';
+import path from 'node:path';
+
+const dir = path.resolve('tests/multimodal/fixtures');
+if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+
+const text = 'Write a professional email to my manager requesting a project review';
+
+const pdfLines = [
+  '%PDF-1.4',
+  '1 0 obj',
+  '<< /Type /Catalog /Pages 2 0 R >>',
+  'endobj',
+  '2 0 obj',
+  '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+  'endobj',
+  '3 0 obj',
+  '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>',
+  'endobj',
+  '4 0 obj',
+  '<< /Length 150 >>',
+  'stream',
+  'BT',
+  '/F1 14 Tf',
+  '72 700 Td',
+  '(' + text + ') Tj',
+  'ET',
+  'endstream',
+  'endobj',
+  '5 0 obj',
+  '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
+  'endobj',
+  '6 0 obj',
+  '<< /Type /Metadata /Subtype /XML /Length 320 >>',
+  'stream',
+  '<x:xmpmeta xmlns:x="adobe:ns:meta/"><rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"><rdf:Description rdf:about="" xmlns:c2pa="http://c2pa.org/manifest/1.0/"><c2pa:claim>urn:uuid:12345678-1234-5678-1234-567812345678</c2pa:claim><c2pa:assertions>c2pa.hash.sha256:abcdef0123456789</c2pa:assertions></rdf:Description></rdf:RDF></x:xmpmeta>',
+  'endstream',
+  'endobj',
+  'xref',
+  '0 7',
+  'trailer',
+  '<< /Size 7 /Root 1 0 R /Info << /Producer (Acme PDF Engine) /Creator (Test Generator) >> >>',
+  'startxref',
+  '790',
+  '%%EOF'
+];
+
+fs.writeFileSync(path.join(dir, 'project-review-request-fixed.pdf'), Buffer.from(pdfLines.join('\n')));
+console.log('Successfully created project-review-request-fixed.pdf');

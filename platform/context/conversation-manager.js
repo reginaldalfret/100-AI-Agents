@@ -136,7 +136,27 @@ export class ConversationManager {
     if (!conversationId) return;
     const cleanId = String(conversationId).replace(/[^a-zA-Z0-9_-]/g, '');
     const conv = this.getConversation(cleanId);
-    if (!conv) return;
+    if (!Array.isArray(conv.messages)) conv.messages = [];
+    const len = conv.messages.length;
+    const alreadyAppended = len >= 2 &&
+      conv.messages[len - 2].content === userPrompt &&
+      conv.messages[len - 1].content === assistantResponse;
+
+    if (!alreadyAppended) {
+      conv.messages.push({
+        id: `msg-u-${Date.now()}`,
+        role: 'user',
+        content: userPrompt,
+        timestamp: new Date().toISOString()
+      });
+      conv.messages.push({
+        id: `msg-a-${Date.now()}`,
+        role: 'assistant',
+        content: assistantResponse,
+        model: model,
+        timestamp: new Date().toISOString()
+      });
+    }
 
     // 1. Extract entities from user prompt and assistant response
     entityMemory.extractEntitiesFromText(cleanId, userPrompt, 'user');

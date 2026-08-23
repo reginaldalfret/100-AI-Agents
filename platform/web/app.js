@@ -59,6 +59,11 @@ document.addEventListener('DOMContentLoaded', () => {
         closeReplyBtn: getEl('closeReplyBtn'),
         sendBtn: getEl('sendBtn'),
         attachBtn: getEl('attachBtn'),
+        voiceInputBtn: getEl('voiceInputBtn'),
+        voiceRecordingBanner: getEl('voiceRecordingBanner'),
+        voiceStatusText: getEl('voiceStatusText'),
+        voiceWaveform: getEl('voiceWaveform'),
+        btnCancelRecording: getEl('btnCancelRecording'),
         
         // Model Selector
         modelSelectorWrapper: getEl('modelSelectorWrapper'),
@@ -242,26 +247,1417 @@ document.addEventListener('DOMContentLoaded', () => {
         return ['Analyze this document and extract key findings', 'Explain how this technology works in simple terms', 'Help me draft a clear, professional summary', 'Provide actionable next steps and recommendations'];
     }
 
+    // ============================================================
+    // CLIENT-SIDE NATIVE DIAGRAMMATIC RENDERER
+    // ============================================================
+    const ClientDiagramSanitizer = {
+        escapeHtml(str) {
+            if (typeof str !== 'string') return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        },
+        sanitizeLabel(label) {
+            if (typeof label !== 'string') return '';
+            let clean = label
+                .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+                .replace(/javascript\s*:/gi, '')
+                .replace(/data\s*:\s*text\/html/gi, '')
+                .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '')
+                .replace(/<[^>]*on\w+\s*=[^>]*>/gi, '')
+                .replace(/on\w+\s*=\s*['"][^'"]*['"]/gi, '')
+                .replace(/on\w+\s*=\s*[^\s>]+/gi, '')
+                .trim();
+            return this.escapeHtml(clean);
+        },
+        sanitizeId(id) {
+            if (typeof id !== 'string') return `node_${Math.random().toString(36).slice(2, 8)}`;
+            return id.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 64);
+        }
+    };
+
+    const ClientDiagramRenderer = {
+        renderFlowchart(spec) {
+            const title = ClientDiagramSanitizer.sanitizeLabel(spec.title || 'Process Flowchart');
+            const nodes = Array.isArray(spec.nodes) ? spec.nodes : [];
+            const edges = Array.isArray(spec.edges) ? spec.edges : [];
+            const direction = (spec.direction || 'TB').toUpperCase();
+
+            if (nodes.length === 0) return `<svg viewBox="0 0 400 60"><text x="200" y="35" fill="#94a3b8" text-anchor="middle">No nodes provided</text></svg>`;
+
+            const nodeW = 180, nodeH = 54, gapY = 48, gapX = 40;
+            const isTB = direction !== 'LR';
+            const nodePositions = new Map();
+
+            nodes.forEach((n, idx) => {
+                const x = isTB ? 200 : 40 + idx * (nodeW + gapX);
+                const y = isTB ? 50 + idx * (nodeH + gapY) : 90;
+                nodePositions.set(String(n.id), { x, y, node: n });
+            });
+
+            const totalW = isTB ? 400 : Math.max(480, 80 + nodes.length * (nodeW + gapX));
+            const totalH = isTB ? Math.max(150, 90 + nodes.length * (nodeH + gapY)) : 200;
+
+            let svg = `<svg viewBox="0 0 ${totalW} ${totalH}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">
+              <defs>
+                <linearGradient id="cfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="rgba(30,41,59,0.85)" /><stop offset="100%" stop-color="rgba(15,23,42,0.75)" />
+                </linearGradient>
+                <linearGradient id="ceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6366f1" /><stop offset="100%" stop-color="#06b6d4" />
+                </linearGradient>
+                <marker id="cArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#06b6d4" />
+                </marker>
+              </defs>`;
+
+            if (title) svg += `<text x="20" y="26" fill="#f1f5f9" font-size="13" font-weight="600">${title}</text>`;
+
+            edges.forEach(edge => {
+                const f = nodePositions.get(String(edge.from || edge.source));
+                const t = nodePositions.get(String(edge.to || edge.target));
+                if (f && t) {
+                    const startY = f.y + (isTB ? nodeH / 2 : 0);
+                    const endY = t.y - (isTB ? nodeH / 2 : 0);
+                    const edgeLabel = ClientDiagramSanitizer.sanitizeLabel(edge.label || '');
+                    if (isTB) {
+                        const midY = (startY + endY) / 2;
+                        svg += `<path d="M ${f.x} ${startY} C ${f.x} ${midY}, ${t.x} ${midY}, ${t.x} ${endY - 6}" fill="none" stroke="url(#ceGrad)" stroke-width="2" marker-end="url(#cArrow)" />`;
+                        if (edgeLabel) {
+                            svg += `<rect x="${(f.x + t.x) / 2 - 35}" y="${midY - 9}" width="70" height="16" rx="4" fill="rgba(15,23,42,0.85)" stroke="rgba(99,102,241,0.2)" stroke-width="0.8" />
+                            <text x="${(f.x + t.x) / 2}" y="${midY + 3}" fill="#94a3b8" font-size="9" text-anchor="middle">${edgeLabel}</text>`;
+                        }
+                    } else {
+                        svg += `<line x1="${f.x + nodeW / 2}" y1="${f.y}" x2="${t.x - nodeW / 2 - 6}" y2="${t.y}" stroke="url(#ceGrad)" stroke-width="2" marker-end="url(#cArrow)" />`;
+                    }
+                }
+            });
+
+            nodes.forEach((n, idx) => {
+                const pos = nodePositions.get(String(n.id));
+                if (!pos) return;
+                const label = ClientDiagramSanitizer.sanitizeLabel(n.label || n.id);
+                const sub = ClientDiagramSanitizer.sanitizeLabel(n.subLabel || n.subtitle || '');
+                const rectX = pos.x - nodeW / 2;
+                const rectY = pos.y - nodeH / 2;
+
+                svg += `
+                  <g transform="translate(${rectX}, ${rectY})">
+                    <rect x="0" y="0" width="${nodeW}" height="${nodeH}" rx="10" fill="url(#cfGrad)" stroke="rgba(99,102,241,0.35)" stroke-width="1.2" />
+                    <line x1="8" y1="0" x2="${nodeW - 8}" y2="0" stroke="#6366f1" stroke-width="1.5" opacity="0.8" />
+                    <rect x="8" y="${nodeH / 2 - 8}" width="16" height="16" rx="8" fill="rgba(99,102,241,0.2)" stroke="#8b5cf6" stroke-width="0.8" />
+                    <text x="16" y="${nodeH / 2 + 4}" fill="#f1f5f9" font-size="9" font-weight="700" text-anchor="middle">${idx + 1}</text>
+                    <text x="30" y="${sub ? nodeH / 2 - 2 : nodeH / 2 + 4}" fill="#f1f5f9" font-size="11" font-weight="600">${label}</text>
+                    ${sub ? `<text x="30" y="${nodeH / 2 + 11}" fill="#94a3b8" font-size="9">${sub}</text>` : ''}
+                  </g>
+                `;
+            });
+
+            svg += '</svg>';
+            return svg;
+        },
+
+        renderArchitecture(spec) {
+            const title = ClientDiagramSanitizer.sanitizeLabel(spec.title || 'System Architecture');
+            const nodes = Array.isArray(spec.nodes) ? spec.nodes : [];
+            const layersMap = new Map();
+            nodes.forEach(n => {
+                const l = n.layer || n.tier || 'Core Services';
+                if (!layersMap.has(l)) layersMap.set(l, []);
+                layersMap.get(l).push(n);
+            });
+
+            const layerNames = Array.from(layersMap.keys());
+            const layerH = 95, cardW = 160, cardH = 50, cardGap = 16;
+            let maxInLayer = 1;
+            layersMap.forEach(list => { if (list.length > maxInLayer) maxInLayer = list.length; });
+
+            const totalW = Math.max(600, 60 + maxInLayer * (cardW + cardGap));
+            const totalH = 70 + layerNames.length * layerH + 30;
+
+            let svg = `<svg viewBox="0 0 ${totalW} ${totalH}" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">
+              <defs>
+                <linearGradient id="cLayerBg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(17,24,39,0.6)" /><stop offset="100%" stop-color="rgba(15,23,42,0.4)" /></linearGradient>
+                <linearGradient id="cCardGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(30,41,59,0.85)" /><stop offset="100%" stop-color="rgba(15,23,42,0.75)" /></linearGradient>
+              </defs>
+              <text x="20" y="28" fill="#f1f5f9" font-size="14" font-weight="700">${title}</text>`;
+
+            layerNames.forEach((layerName, layerIdx) => {
+                const layerY = 55 + layerIdx * layerH;
+                const layerNodes = layersMap.get(layerName);
+                const lWidth = totalW - 40;
+
+                svg += `
+                  <g transform="translate(20, ${layerY})">
+                    <rect x="0" y="0" width="${lWidth}" height="${layerH - 12}" rx="12" fill="url(#cLayerBg)" stroke="rgba(99,102,241,0.2)" stroke-width="1" />
+                    <rect x="12" y="-7" width="${Math.max(100, layerName.length * 7 + 16)}" height="15" rx="3" fill="rgba(15,23,42,0.95)" stroke="rgba(99,102,241,0.3)" stroke-width="0.8" />
+                    <text x="20" y="4" fill="#06b6d4" font-size="9" font-weight="600" text-transform="uppercase">${ClientDiagramSanitizer.sanitizeLabel(layerName)}</text>
+                  </g>
+                `;
+
+                const totalCardsW = layerNodes.length * cardW + (layerNodes.length - 1) * cardGap;
+                const startX = 20 + (lWidth - totalCardsW) / 2;
+
+                layerNodes.forEach((node, nodeIdx) => {
+                    const cX = startX + nodeIdx * (cardW + cardGap);
+                    const cY = layerY + 16;
+                    const label = ClientDiagramSanitizer.sanitizeLabel(node.name || node.label || node.id);
+                    const role = ClientDiagramSanitizer.sanitizeLabel(node.role || node.subtitle || '');
+                    const badge = ClientDiagramSanitizer.sanitizeLabel(node.badge || '');
+
+                    svg += `
+                      <g transform="translate(${cX}, ${cY})">
+                        <rect x="0" y="0" width="${cardW}" height="${cardH}" rx="8" fill="url(#cCardGrad)" stroke="rgba(99,102,241,0.35)" stroke-width="1" />
+                        <line x1="6" y1="0" x2="${cardW - 6}" y2="0" stroke="#6366f1" stroke-width="1.5" opacity="0.8" />
+                        <text x="10" y="19" fill="#f1f5f9" font-size="11" font-weight="600">${label}</text>
+                        ${role ? `<text x="10" y="33" fill="#94a3b8" font-size="9">${role}</text>` : ''}
+                        ${badge ? `
+                          <rect x="${cardW - 54}" y="${cardH - 14}" width="48" height="11" rx="2" fill="rgba(99,102,241,0.2)" stroke="#8b5cf6" stroke-width="0.5" />
+                          <text x="${cardW - 30}" y="${cardH - 5}" fill="#8b5cf6" font-size="7.5" font-weight="600" text-anchor="middle">${badge}</text>
+                        ` : ''}
+                      </g>
+                    `;
+                });
+            });
+
+            svg += '</svg>';
+            return svg;
+        },
+
+        // ================================================================
+        // CHART RENDERER — 18 Chart Types with Pure SVG
+        // ================================================================
+        _CHART_COLORS: ['#06b6d4', '#8b5cf6', '#f43f5e', '#10b981', '#f59e0b', '#3b82f6', '#ec4899', '#14b8a6', '#f97316', '#a855f7', '#22d3ee', '#e879f9', '#34d399', '#fbbf24', '#fb7185'],
+
+        _normalizeChartData(spec) {
+            // Accept both { labels, series } and { data: [{label, value}] } formats
+            let labels = spec.labels || spec.x?.values || [];
+            let series = spec.series || [];
+            if ((!labels.length || !series.length) && Array.isArray(spec.data) && spec.data.length > 0) {
+                const d = spec.data;
+                if (d[0] && typeof d[0].label === 'string' && typeof d[0].value === 'number') {
+                    labels = d.map(i => i.label);
+                    series = [{ name: spec.seriesName || 'Value', values: d.map(i => i.value) }];
+                }
+            }
+            if (series.length === 0 && Array.isArray(spec.values)) {
+                series = [{ name: spec.seriesName || 'Value', values: spec.values }];
+            }
+            return { labels, series };
+        },
+
+        _svgAxis(padL, padT, plotW, plotH, labels, minVal, maxVal, xTitle, yTitle) {
+            const CC = this._CHART_COLORS;
+            let s = '';
+            // Y-axis
+            s += `<line x1="${padL}" y1="${padT}" x2="${padL}" y2="${padT + plotH}" stroke="rgba(148,163,184,0.3)" stroke-width="1"/>`;
+            // X-axis
+            s += `<line x1="${padL}" y1="${padT + plotH}" x2="${padL + plotW}" y2="${padT + plotH}" stroke="rgba(148,163,184,0.3)" stroke-width="1"/>`;
+            // Y gridlines + labels
+            const ySteps = 5;
+            const range = maxVal - minVal || 1;
+            for (let i = 0; i <= ySteps; i++) {
+                const y = padT + plotH - (i / ySteps) * plotH;
+                const val = minVal + (i / ySteps) * range;
+                s += `<line x1="${padL}" y1="${y}" x2="${padL + plotW}" y2="${y}" stroke="rgba(148,163,184,0.1)" stroke-width="0.5"/>`;
+                s += `<text x="${padL - 6}" y="${y + 3.5}" fill="#94a3b8" font-size="9" text-anchor="end">${Math.round(val * 10) / 10}</text>`;
+            }
+            // X labels
+            if (labels.length > 0) {
+                labels.forEach((lb, i) => {
+                    const x = padL + (i + 0.5) * (plotW / labels.length);
+                    const clean = ClientDiagramSanitizer.sanitizeLabel(String(lb));
+                    s += `<text x="${x}" y="${padT + plotH + 16}" fill="#94a3b8" font-size="9" text-anchor="middle">${clean.length > 12 ? clean.slice(0, 11) + '…' : clean}</text>`;
+                });
+            }
+            return s;
+        },
+
+        _svgLegend(series, startX, startY) {
+            const CC = this._CHART_COLORS;
+            let s = '';
+            series.forEach((sr, i) => {
+                const y = startY + i * 18;
+                s += `<rect x="${startX}" y="${y}" width="10" height="10" rx="2" fill="${CC[i % CC.length]}"/>`;
+                s += `<text x="${startX + 14}" y="${y + 9}" fill="#cbd5e1" font-size="9">${ClientDiagramSanitizer.sanitizeLabel(sr.name || `Series ${i + 1}`)}</text>`;
+            });
+            return s;
+        },
+
+        renderChart(spec) {
+            const type = (spec.type || 'bar_chart').toLowerCase().replace(/[\s-]/g, '_');
+            const CC = this._CHART_COLORS;
+            const title = ClientDiagramSanitizer.sanitizeLabel(spec.title || '');
+
+            // Dispatch to sub-renderers
+            switch (type) {
+                case 'pie_chart': case 'pie': return this._renderPie(spec, false);
+                case 'donut_chart': case 'donut': return this._renderPie(spec, true);
+                case 'bar_chart': case 'bar': return this._renderBar(spec);
+                case 'horizontal_bar_chart': case 'horizontal_bar': return this._renderHorizontalBar(spec);
+                case 'grouped_bar_chart': case 'grouped_bar': return this._renderGroupedBar(spec);
+                case 'stacked_bar_chart': case 'stacked_bar': return this._renderStackedBar(spec);
+                case 'line_chart': case 'line': return this._renderLine(spec, false);
+                case 'area_chart': case 'area': return this._renderLine(spec, true);
+                case 'stacked_area_chart': case 'stacked_area': return this._renderStackedArea(spec);
+                case 'scatter_plot': case 'scatter': return this._renderScatter(spec);
+                case 'bubble_chart': case 'bubble': return this._renderBubble(spec);
+                case 'histogram': return this._renderHistogram(spec);
+                case 'radar_chart': case 'radar': return this._renderRadar(spec);
+                case 'heatmap': return this._renderHeatmap(spec);
+                case 'box_plot': return this._renderBoxPlot(spec);
+                case 'waterfall_chart': case 'waterfall': return this._renderWaterfall(spec);
+                case 'gauge_chart': case 'gauge': return this._renderGauge(spec);
+                case 'population_pyramid': return this._renderPopulationPyramid(spec);
+                default: return this._renderBar(spec); // Fallback to bar
+            }
+        },
+
+        _renderPie(spec, isDonut) {
+            const CC = this._CHART_COLORS;
+            const { labels, series } = this._normalizeChartData(spec);
+            const values = series[0]?.values || [];
+            const total = values.reduce((a, b) => a + (b || 0), 0) || 1;
+            const cx = 180, cy = 180, outerR = 140, innerR = isDonut ? 84 : 0;
+            const legendX = 370;
+
+            let svg = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+
+            if (values.length === 1 || (values.length > 0 && values[0] / total > 0.999)) {
+                // Single slice or 100% — use full circle
+                svg += `<circle cx="${cx}" cy="${cy}" r="${outerR}" fill="${CC[0]}"/>`;
+                if (isDonut) svg += `<circle cx="${cx}" cy="${cy}" r="${innerR}" fill="rgba(15,23,42,0.95)"/>`;
+            } else {
+                let startAngle = -Math.PI / 2;
+                values.forEach((val, i) => {
+                    const sliceAngle = (val / total) * 2 * Math.PI;
+                    const endAngle = startAngle + sliceAngle;
+                    const x1 = cx + outerR * Math.cos(startAngle);
+                    const y1 = cy + outerR * Math.sin(startAngle);
+                    const x2 = cx + outerR * Math.cos(endAngle);
+                    const y2 = cy + outerR * Math.sin(endAngle);
+                    const largeArc = sliceAngle > Math.PI ? 1 : 0;
+                    let d = `M ${cx} ${cy} L ${x1} ${y1} A ${outerR} ${outerR} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+                    if (isDonut) {
+                        const ix1 = cx + innerR * Math.cos(startAngle);
+                        const iy1 = cy + innerR * Math.sin(startAngle);
+                        const ix2 = cx + innerR * Math.cos(endAngle);
+                        const iy2 = cy + innerR * Math.sin(endAngle);
+                        d = `M ${x1} ${y1} A ${outerR} ${outerR} 0 ${largeArc} 1 ${x2} ${y2} L ${ix2} ${iy2} A ${innerR} ${innerR} 0 ${largeArc} 0 ${ix1} ${iy1} Z`;
+                    }
+                    svg += `<path d="${d}" fill="${CC[i % CC.length]}" opacity="0.9"/>`;
+                    startAngle = endAngle;
+                });
+            }
+
+            if (isDonut && spec.centerText) {
+                svg += `<text x="${cx}" y="${cy - 6}" fill="#f1f5f9" font-size="22" font-weight="700" text-anchor="middle">${ClientDiagramSanitizer.sanitizeLabel(String(spec.centerText))}</text>`;
+                if (spec.centerSubtext) svg += `<text x="${cx}" y="${cy + 14}" fill="#94a3b8" font-size="10" text-anchor="middle">${ClientDiagramSanitizer.sanitizeLabel(spec.centerSubtext)}</text>`;
+            }
+
+            // Legend
+            labels.forEach((lb, i) => {
+                const y = 40 + i * 22;
+                const pct = Math.round((values[i] / total) * 100);
+                svg += `<rect x="${legendX}" y="${y}" width="10" height="10" rx="2" fill="${CC[i % CC.length]}"/>`;
+                svg += `<text x="${legendX + 16}" y="${y + 9}" fill="#cbd5e1" font-size="10">${ClientDiagramSanitizer.sanitizeLabel(String(lb))} (${pct}%)</text>`;
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderBar(spec) {
+            const CC = this._CHART_COLORS;
+            const { labels, series } = this._normalizeChartData(spec);
+            const padL = 55, padT = 30, plotW = 480, plotH = 280;
+            const allVals = series.flatMap(s => s.values || []);
+            const maxVal = Math.max(...allVals, 1);
+            const minVal = Math.min(0, ...allVals);
+
+            let svg = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            svg += this._svgAxis(padL, padT, plotW, plotH, labels, minVal, maxVal);
+
+            const barGroup = plotW / Math.max(labels.length, 1);
+            const barW = Math.min(barGroup * 0.6 / Math.max(series.length, 1), 40);
+            const range = maxVal - minVal || 1;
+
+            series.forEach((sr, si) => {
+                (sr.values || []).forEach((val, vi) => {
+                    const x = padL + vi * barGroup + (barGroup - barW * series.length) / 2 + si * barW;
+                    const barH = ((val - minVal) / range) * plotH;
+                    const y = padT + plotH - barH;
+                    svg += `<rect x="${x}" y="${y}" width="${barW - 1}" height="${barH}" rx="2" fill="${CC[si % CC.length]}" opacity="0.85"/>`;
+                });
+            });
+
+            if (series.length > 1) svg += this._svgLegend(series, padL + plotW - 120, 8);
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderHorizontalBar(spec) {
+            const CC = this._CHART_COLORS;
+            const { labels, series } = this._normalizeChartData(spec);
+            const padL = 90, padT = 20, plotW = 440, plotH = Math.max(200, labels.length * 30);
+            const allVals = series.flatMap(s => s.values || []);
+            const maxVal = Math.max(...allVals, 1);
+            const barH = Math.min(plotH / Math.max(labels.length, 1) * 0.7, 24);
+
+            let svg = `<svg viewBox="0 0 600 ${padT + plotH + 30}" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            labels.forEach((lb, i) => {
+                const y = padT + i * (plotH / labels.length) + (plotH / labels.length - barH) / 2;
+                const val = series[0]?.values?.[i] || 0;
+                const w = (val / maxVal) * plotW;
+                svg += `<text x="${padL - 6}" y="${y + barH / 2 + 3.5}" fill="#94a3b8" font-size="9" text-anchor="end">${ClientDiagramSanitizer.sanitizeLabel(String(lb))}</text>`;
+                svg += `<rect x="${padL}" y="${y}" width="${w}" height="${barH}" rx="3" fill="${CC[i % CC.length]}" opacity="0.85"/>`;
+                svg += `<text x="${padL + w + 6}" y="${y + barH / 2 + 3.5}" fill="#cbd5e1" font-size="9">${val}</text>`;
+            });
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderGroupedBar(spec) {
+            return this._renderBar(spec); // Already supports multi-series grouping
+        },
+
+        _renderStackedBar(spec) {
+            const CC = this._CHART_COLORS;
+            const { labels, series } = this._normalizeChartData(spec);
+            const padL = 55, padT = 30, plotW = 480, plotH = 280;
+            // Compute max stacked total
+            const stackTotals = labels.map((_, i) => series.reduce((sum, sr) => sum + ((sr.values || [])[i] || 0), 0));
+            const maxVal = Math.max(...stackTotals, 1);
+
+            let svg = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            svg += this._svgAxis(padL, padT, plotW, plotH, labels, 0, maxVal);
+
+            const barGroup = plotW / Math.max(labels.length, 1);
+            const barW = Math.min(barGroup * 0.6, 40);
+
+            labels.forEach((_, li) => {
+                let cumY = padT + plotH;
+                series.forEach((sr, si) => {
+                    const val = (sr.values || [])[li] || 0;
+                    const barH = (val / maxVal) * plotH;
+                    cumY -= barH;
+                    const x = padL + li * barGroup + (barGroup - barW) / 2;
+                    svg += `<rect x="${x}" y="${cumY}" width="${barW}" height="${barH}" fill="${CC[si % CC.length]}" opacity="0.85"/>`;
+                });
+            });
+
+            if (series.length > 1) svg += this._svgLegend(series, padL + plotW - 120, 8);
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderLine(spec, fillArea) {
+            const CC = this._CHART_COLORS;
+            const { labels, series } = this._normalizeChartData(spec);
+            const padL = 55, padT = 30, plotW = 480, plotH = 280;
+            const allVals = series.flatMap(s => s.values || []);
+            const maxVal = Math.max(...allVals, 1);
+            const minVal = Math.min(0, ...allVals);
+            const range = maxVal - minVal || 1;
+
+            let svg = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            svg += this._svgAxis(padL, padT, plotW, plotH, labels, minVal, maxVal);
+
+            series.forEach((sr, si) => {
+                const vals = sr.values || [];
+                const points = vals.map((v, i) => {
+                    const x = padL + (labels.length > 1 ? (i / (labels.length - 1)) * plotW : plotW / 2);
+                    const y = padT + plotH - ((v - minVal) / range) * plotH;
+                    return { x, y };
+                });
+
+                if (points.length === 0) return;
+
+                if (points.length === 1) {
+                    // Single point: render a dot
+                    svg += `<circle cx="${points[0].x}" cy="${points[0].y}" r="5" fill="${CC[si % CC.length]}"/>`;
+                    return;
+                }
+
+                const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+
+                if (fillArea) {
+                    const areaD = pathD + ` L ${points[points.length - 1].x} ${padT + plotH} L ${points[0].x} ${padT + plotH} Z`;
+                    svg += `<path d="${areaD}" fill="${CC[si % CC.length]}" opacity="0.15"/>`;
+                }
+                svg += `<path d="${pathD}" fill="none" stroke="${CC[si % CC.length]}" stroke-width="2.5" stroke-linejoin="round"/>`;
+                points.forEach(p => { svg += `<circle cx="${p.x}" cy="${p.y}" r="3" fill="${CC[si % CC.length]}"/>`; });
+            });
+
+            if (series.length > 1) svg += this._svgLegend(series, padL + plotW - 120, 8);
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderStackedArea(spec) {
+            const CC = this._CHART_COLORS;
+            const { labels, series } = this._normalizeChartData(spec);
+            const padL = 55, padT = 30, plotW = 480, plotH = 280;
+            const stackTotals = labels.map((_, i) => series.reduce((s, sr) => s + ((sr.values || [])[i] || 0), 0));
+            const maxVal = Math.max(...stackTotals, 1);
+
+            let svg = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            svg += this._svgAxis(padL, padT, plotW, plotH, labels, 0, maxVal);
+
+            // Render from last series to first (bottom-up stacking)
+            const cumulative = labels.map(() => 0);
+            for (let si = 0; si < series.length; si++) {
+                const vals = series[si].values || [];
+                const topPoints = labels.map((_, i) => {
+                    cumulative[i] += (vals[i] || 0);
+                    const x = padL + (labels.length > 1 ? (i / (labels.length - 1)) * plotW : plotW / 2);
+                    const y = padT + plotH - (cumulative[i] / maxVal) * plotH;
+                    return { x, y };
+                });
+                const bottomPoints = labels.map((_, i) => {
+                    const prevCum = cumulative[i] - (vals[i] || 0);
+                    const x = padL + (labels.length > 1 ? (i / (labels.length - 1)) * plotW : plotW / 2);
+                    const y = padT + plotH - (prevCum / maxVal) * plotH;
+                    return { x, y };
+                });
+                let d = topPoints.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`).join(' ');
+                d += ' ' + bottomPoints.reverse().map((p, i) => `${i === 0 ? 'L' : 'L'} ${p.x} ${p.y}`).join(' ') + ' Z';
+                svg += `<path d="${d}" fill="${CC[si % CC.length]}" opacity="0.6"/>`;
+            }
+
+            if (series.length > 1) svg += this._svgLegend(series, padL + plotW - 120, 8);
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderScatter(spec) {
+            const CC = this._CHART_COLORS;
+            const data = spec.data || [];
+            const padL = 55, padT = 30, plotW = 480, plotH = 280;
+            const xs = data.map(d => d.x || 0), ys = data.map(d => d.y || 0);
+            const minX = Math.min(...xs, 0), maxX = Math.max(...xs, 1);
+            const minY = Math.min(...ys, 0), maxY = Math.max(...ys, 1);
+            const rangeX = maxX - minX || 1, rangeY = maxY - minY || 1;
+
+            let svg = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            svg += this._svgAxis(padL, padT, plotW, plotH, [], minY, maxY);
+            // X axis labels
+            for (let i = 0; i <= 5; i++) {
+                const x = padL + (i / 5) * plotW;
+                const val = minX + (i / 5) * rangeX;
+                svg += `<text x="${x}" y="${padT + plotH + 16}" fill="#94a3b8" font-size="9" text-anchor="middle">${Math.round(val * 10) / 10}</text>`;
+            }
+
+            data.forEach((d, i) => {
+                const px = padL + ((d.x - minX) / rangeX) * plotW;
+                const py = padT + plotH - ((d.y - minY) / rangeY) * plotH;
+                svg += `<circle cx="${px}" cy="${py}" r="5" fill="${CC[i % CC.length]}" opacity="0.8"/>`;
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderBubble(spec) {
+            const CC = this._CHART_COLORS;
+            const data = spec.data || [];
+            const padL = 55, padT = 30, plotW = 480, plotH = 280;
+            const xs = data.map(d => d.x || 0), ys = data.map(d => d.y || 0), rs = data.map(d => d.r || d.size || 10);
+            const minX = Math.min(...xs, 0), maxX = Math.max(...xs, 1);
+            const minY = Math.min(...ys, 0), maxY = Math.max(...ys, 1);
+            const maxR = Math.max(...rs, 1);
+            const rangeX = maxX - minX || 1, rangeY = maxY - minY || 1;
+
+            let svg = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            svg += this._svgAxis(padL, padT, plotW, plotH, [], minY, maxY);
+
+            data.forEach((d, i) => {
+                const px = padL + ((d.x - minX) / rangeX) * plotW;
+                const py = padT + plotH - ((d.y - minY) / rangeY) * plotH;
+                const pr = Math.max(4, (d.r || d.size || 10) / maxR * 30);
+                svg += `<circle cx="${px}" cy="${py}" r="${pr}" fill="${CC[i % CC.length]}" opacity="0.6" stroke="${CC[i % CC.length]}" stroke-width="1"/>`;
+                if (d.label) svg += `<text x="${px}" y="${py - pr - 4}" fill="#cbd5e1" font-size="8" text-anchor="middle">${ClientDiagramSanitizer.sanitizeLabel(d.label)}</text>`;
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderHistogram(spec) {
+            const CC = this._CHART_COLORS;
+            const bins = spec.bins || spec.data || [];
+            const padL = 55, padT = 30, plotW = 480, plotH = 280;
+            const maxCount = Math.max(...bins.map(b => b.count || b.value || b.frequency || 0), 1);
+
+            let svg = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            svg += this._svgAxis(padL, padT, plotW, plotH, bins.map(b => b.label || `${b.min || ''}-${b.max || ''}`), 0, maxCount);
+
+            const binW = plotW / Math.max(bins.length, 1);
+            bins.forEach((b, i) => {
+                const count = b.count || b.value || b.frequency || 0;
+                const barH = (count / maxCount) * plotH;
+                svg += `<rect x="${padL + i * binW + 1}" y="${padT + plotH - barH}" width="${binW - 2}" height="${barH}" fill="${CC[0]}" opacity="0.75"/>`;
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderRadar(spec) {
+            const CC = this._CHART_COLORS;
+            const axes = spec.axes || spec.labels || [];
+            const series = spec.series || [{ name: 'Values', values: spec.values || [] }];
+            const cx = 300, cy = 200, maxR = 150;
+            const maxVal = spec.maxValue || Math.max(...series.flatMap(s => s.values || []), 1);
+            const n = axes.length;
+            if (n < 3) return `<svg viewBox="0 0 600 400"><text x="300" y="200" fill="#94a3b8" text-anchor="middle" font-size="12">Radar chart requires at least 3 axes</text></svg>`;
+
+            let svg = `<svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+
+            // Grid rings
+            for (let ring = 1; ring <= 5; ring++) {
+                const r = (ring / 5) * maxR;
+                let ringD = '';
+                for (let i = 0; i < n; i++) {
+                    const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+                    const x = cx + r * Math.cos(angle), y = cy + r * Math.sin(angle);
+                    ringD += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
+                }
+                ringD += 'Z';
+                svg += `<path d="${ringD}" fill="none" stroke="rgba(148,163,184,0.15)" stroke-width="0.5"/>`;
+            }
+
+            // Axis lines + labels
+            axes.forEach((ax, i) => {
+                const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+                const x = cx + maxR * Math.cos(angle), y = cy + maxR * Math.sin(angle);
+                svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(148,163,184,0.2)" stroke-width="0.5"/>`;
+                const lx = cx + (maxR + 16) * Math.cos(angle), ly = cy + (maxR + 16) * Math.sin(angle);
+                svg += `<text x="${lx}" y="${ly + 3}" fill="#94a3b8" font-size="9" text-anchor="middle">${ClientDiagramSanitizer.sanitizeLabel(String(ax))}</text>`;
+            });
+
+            // Data polygons
+            series.forEach((sr, si) => {
+                const vals = sr.values || [];
+                let d = '';
+                for (let i = 0; i < n; i++) {
+                    const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+                    const r = ((vals[i] || 0) / maxVal) * maxR;
+                    const x = cx + r * Math.cos(angle), y = cy + r * Math.sin(angle);
+                    d += `${i === 0 ? 'M' : 'L'} ${x} ${y} `;
+                }
+                d += 'Z';
+                svg += `<path d="${d}" fill="${CC[si % CC.length]}" opacity="0.2" stroke="${CC[si % CC.length]}" stroke-width="2"/>`;
+                for (let i = 0; i < n; i++) {
+                    const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+                    const r = ((vals[i] || 0) / maxVal) * maxR;
+                    svg += `<circle cx="${cx + r * Math.cos(angle)}" cy="${cy + r * Math.sin(angle)}" r="3" fill="${CC[si % CC.length]}"/>`;
+                }
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderHeatmap(spec) {
+            const CC = this._CHART_COLORS;
+            const matrix = spec.matrix || [];
+            const xLabels = spec.xLabels || spec.columns || [];
+            const yLabels = spec.yLabels || spec.rows || [];
+            const rows = matrix.length, cols = matrix[0]?.length || 0;
+            if (rows === 0 || cols === 0) return `<svg viewBox="0 0 600 400"><text x="300" y="200" fill="#94a3b8" text-anchor="middle" font-size="12">No heatmap data</text></svg>`;
+
+            const padL = 70, padT = 30;
+            const cellW = Math.min(40, (520 - padL) / cols), cellH = Math.min(30, 340 / rows);
+            const allVals = matrix.flat().filter(v => typeof v === 'number');
+            const minVal = Math.min(...allVals), maxVal = Math.max(...allVals);
+            const range = maxVal - minVal || 1;
+
+            let svg = `<svg viewBox="0 0 ${padL + cols * cellW + 20} ${padT + rows * cellH + 30}" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+
+            matrix.forEach((row, ri) => {
+                if (yLabels[ri]) svg += `<text x="${padL - 6}" y="${padT + ri * cellH + cellH / 2 + 3}" fill="#94a3b8" font-size="9" text-anchor="end">${ClientDiagramSanitizer.sanitizeLabel(String(yLabels[ri]))}</text>`;
+                (row || []).forEach((val, ci) => {
+                    const intensity = (val - minVal) / range;
+                    const r = Math.round(6 + intensity * 180);
+                    const g = Math.round(182 - intensity * 130);
+                    const b = Math.round(212 - intensity * 40);
+                    svg += `<rect x="${padL + ci * cellW}" y="${padT + ri * cellH}" width="${cellW - 1}" height="${cellH - 1}" rx="2" fill="rgb(${r},${g},${b})" opacity="0.85"/>`;
+                    svg += `<text x="${padL + ci * cellW + cellW / 2}" y="${padT + ri * cellH + cellH / 2 + 3}" fill="#f1f5f9" font-size="8" text-anchor="middle">${Math.round(val * 10) / 10}</text>`;
+                });
+            });
+
+            xLabels.forEach((lb, ci) => {
+                svg += `<text x="${padL + ci * cellW + cellW / 2}" y="${padT + rows * cellH + 14}" fill="#94a3b8" font-size="8" text-anchor="middle">${ClientDiagramSanitizer.sanitizeLabel(String(lb))}</text>`;
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderBoxPlot(spec) {
+            const CC = this._CHART_COLORS;
+            const data = spec.data || [];
+            const padL = 55, padT = 30, plotW = 480, plotH = 280;
+            const allVals = data.flatMap(d => [d.min, d.q1, d.median, d.q3, d.max].filter(v => v != null));
+            const minVal = Math.min(...allVals, 0), maxVal = Math.max(...allVals, 1);
+            const range = maxVal - minVal || 1;
+
+            let svg = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            svg += this._svgAxis(padL, padT, plotW, plotH, data.map(d => d.label || ''), minVal, maxVal);
+
+            const groupW = plotW / Math.max(data.length, 1);
+            const boxW = Math.min(groupW * 0.5, 40);
+
+            data.forEach((d, i) => {
+                const cx = padL + i * groupW + groupW / 2;
+                const yMin = padT + plotH - ((d.min - minVal) / range) * plotH;
+                const yQ1 = padT + plotH - ((d.q1 - minVal) / range) * plotH;
+                const yMed = padT + plotH - ((d.median - minVal) / range) * plotH;
+                const yQ3 = padT + plotH - ((d.q3 - minVal) / range) * plotH;
+                const yMax = padT + plotH - ((d.max - minVal) / range) * plotH;
+
+                // Whisker
+                svg += `<line x1="${cx}" y1="${yMax}" x2="${cx}" y2="${yQ3}" stroke="${CC[i % CC.length]}" stroke-width="1.5"/>`;
+                svg += `<line x1="${cx}" y1="${yQ1}" x2="${cx}" y2="${yMin}" stroke="${CC[i % CC.length]}" stroke-width="1.5"/>`;
+                // Caps
+                svg += `<line x1="${cx - boxW / 4}" y1="${yMax}" x2="${cx + boxW / 4}" y2="${yMax}" stroke="${CC[i % CC.length]}" stroke-width="1.5"/>`;
+                svg += `<line x1="${cx - boxW / 4}" y1="${yMin}" x2="${cx + boxW / 4}" y2="${yMin}" stroke="${CC[i % CC.length]}" stroke-width="1.5"/>`;
+                // Box (Q1 to Q3)
+                svg += `<rect x="${cx - boxW / 2}" y="${yQ3}" width="${boxW}" height="${yQ1 - yQ3}" fill="${CC[i % CC.length]}" opacity="0.3" stroke="${CC[i % CC.length]}" stroke-width="1.5" rx="2"/>`;
+                // Median line
+                svg += `<line x1="${cx - boxW / 2}" y1="${yMed}" x2="${cx + boxW / 2}" y2="${yMed}" stroke="#f1f5f9" stroke-width="2"/>`;
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderWaterfall(spec) {
+            const CC = this._CHART_COLORS;
+            const data = spec.data || [];
+            const padL = 55, padT = 30, plotW = 480, plotH = 280;
+            let cumulative = 0;
+            const bars = data.map(d => {
+                const type = d.type || (d.value >= 0 ? 'increase' : 'decrease');
+                if (type === 'total') {
+                    const bar = { label: d.label, start: 0, end: cumulative, type };
+                    return bar;
+                }
+                const start = cumulative;
+                cumulative += d.value;
+                return { label: d.label, start, end: cumulative, type };
+            });
+            const allVals = bars.flatMap(b => [b.start, b.end]);
+            const minVal = Math.min(0, ...allVals), maxVal = Math.max(...allVals, 1);
+            const range = maxVal - minVal || 1;
+
+            let svg = `<svg viewBox="0 0 600 380" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            svg += this._svgAxis(padL, padT, plotW, plotH, data.map(d => d.label || ''), minVal, maxVal);
+
+            const barW = Math.min(plotW / Math.max(data.length, 1) * 0.6, 40);
+            const groupW = plotW / Math.max(data.length, 1);
+
+            bars.forEach((b, i) => {
+                const yStart = padT + plotH - ((b.start - minVal) / range) * plotH;
+                const yEnd = padT + plotH - ((b.end - minVal) / range) * plotH;
+                const y = Math.min(yStart, yEnd);
+                const h = Math.abs(yEnd - yStart) || 1;
+                const x = padL + i * groupW + (groupW - barW) / 2;
+                const color = b.type === 'total' ? '#3b82f6' : (b.type === 'decrease' ? '#f43f5e' : '#10b981');
+                svg += `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="2" fill="${color}" opacity="0.8"/>`;
+                // Connector line
+                if (i < bars.length - 1) {
+                    const nextX = padL + (i + 1) * groupW + (groupW - barW) / 2;
+                    svg += `<line x1="${x + barW}" y1="${yEnd}" x2="${nextX}" y2="${yEnd}" stroke="rgba(148,163,184,0.3)" stroke-width="1" stroke-dasharray="3,3"/>`;
+                }
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderGauge(spec) {
+            const value = spec.value || 0;
+            const min = spec.min || 0, max = spec.max || 100;
+            const range = max - min || 1;
+            const pct = Math.max(0, Math.min(1, (value - min) / range));
+            const cx = 300, cy = 250, outerR = 160, innerR = 120;
+
+            let svg = `<svg viewBox="0 0 600 320" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+
+            // Background arc (180°)
+            const bgStartAngle = Math.PI, bgEndAngle = 0;
+            const bgX1 = cx + outerR * Math.cos(bgStartAngle), bgY1 = cy + outerR * Math.sin(bgStartAngle);
+            const bgX2 = cx + outerR * Math.cos(bgEndAngle), bgY2 = cy + outerR * Math.sin(bgEndAngle);
+            svg += `<path d="M ${bgX1} ${bgY1} A ${outerR} ${outerR} 0 0 1 ${bgX2} ${bgY2}" fill="none" stroke="rgba(148,163,184,0.15)" stroke-width="${outerR - innerR}"/>`;
+
+            // Value arc
+            const valueAngle = Math.PI - pct * Math.PI;
+            const vX = cx + outerR * Math.cos(valueAngle), vY = cy + outerR * Math.sin(valueAngle);
+            const largeArc = pct > 0.5 ? 1 : 0;
+            const arcColor = pct < 0.33 ? '#10b981' : (pct < 0.66 ? '#f59e0b' : '#f43f5e');
+            svg += `<path d="M ${bgX1} ${bgY1} A ${outerR} ${outerR} 0 ${largeArc} 1 ${vX} ${vY}" fill="none" stroke="${arcColor}" stroke-width="${outerR - innerR}" stroke-linecap="round"/>`;
+
+            // Needle
+            const needleAngle = Math.PI - pct * Math.PI;
+            const nx = cx + (innerR - 10) * Math.cos(needleAngle), ny = cy + (innerR - 10) * Math.sin(needleAngle);
+            svg += `<line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="#f1f5f9" stroke-width="3" stroke-linecap="round"/>`;
+            svg += `<circle cx="${cx}" cy="${cy}" r="8" fill="rgba(30,41,59,0.9)" stroke="${arcColor}" stroke-width="2"/>`;
+
+            // Value text
+            svg += `<text x="${cx}" y="${cy - 30}" fill="#f1f5f9" font-size="32" font-weight="700" text-anchor="middle">${Math.round(value * 10) / 10}</text>`;
+            if (spec.unit) svg += `<text x="${cx}" y="${cy - 10}" fill="#94a3b8" font-size="12" text-anchor="middle">${ClientDiagramSanitizer.sanitizeLabel(spec.unit)}</text>`;
+            svg += `<text x="${cx - outerR}" y="${cy + 20}" fill="#94a3b8" font-size="10" text-anchor="middle">${min}</text>`;
+            svg += `<text x="${cx + outerR}" y="${cy + 20}" fill="#94a3b8" font-size="10" text-anchor="middle">${max}</text>`;
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        _renderPopulationPyramid(spec) {
+            const CC = this._CHART_COLORS;
+            const data = spec.data || [];
+            const padT = 25, midX = 300, maxW = 220;
+            const rowH = Math.min(28, 340 / Math.max(data.length, 1));
+            const totalH = padT + data.length * rowH + 30;
+            const allVals = data.flatMap(d => [d.left || 0, d.right || 0]);
+            const maxVal = Math.max(...allVals, 1);
+
+            let svg = `<svg viewBox="0 0 600 ${totalH}" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+
+            // Column headers
+            svg += `<text x="${midX - maxW / 2}" y="16" fill="${CC[3]}" font-size="10" text-anchor="middle">${ClientDiagramSanitizer.sanitizeLabel(spec.leftLabel || 'Left')}</text>`;
+            svg += `<text x="${midX + maxW / 2}" y="16" fill="${CC[0]}" font-size="10" text-anchor="middle">${ClientDiagramSanitizer.sanitizeLabel(spec.rightLabel || 'Right')}</text>`;
+
+            data.forEach((d, i) => {
+                const y = padT + i * rowH;
+                const leftW = ((d.left || 0) / maxVal) * maxW;
+                const rightW = ((d.right || 0) / maxVal) * maxW;
+                // Left bar (extends left from center)
+                svg += `<rect x="${midX - leftW - 2}" y="${y}" width="${leftW}" height="${rowH - 3}" rx="2" fill="${CC[3]}" opacity="0.7"/>`;
+                // Right bar (extends right from center)
+                svg += `<rect x="${midX + 2}" y="${y}" width="${rightW}" height="${rowH - 3}" rx="2" fill="${CC[0]}" opacity="0.7"/>`;
+                // Label
+                svg += `<text x="${midX}" y="${y + rowH / 2 + 1}" fill="#f1f5f9" font-size="9" text-anchor="middle">${ClientDiagramSanitizer.sanitizeLabel(String(d.label || ''))}</text>`;
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        // ================================================================
+        // SEQUENCE DIAGRAM RENDERER
+        // ================================================================
+        renderSequence(spec) {
+            const actors = spec.actors || spec.participants || [];
+            const messages = spec.messages || [];
+            const actorW = 100, actorGap = 40, actorH = 36;
+            const msgGap = 40, padT = 20;
+            const totalW = Math.max(500, actors.length * (actorW + actorGap));
+            const totalH = padT + actorH + messages.length * msgGap + actorH + 40;
+            const actorPositions = {};
+            actors.forEach((a, i) => { actorPositions[typeof a === 'string' ? a : (a.id || a.name)] = padT + actorW / 2 + i * (actorW + actorGap) + 30; });
+
+            let svg = `<svg viewBox="0 0 ${totalW} ${totalH}" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">
+              <defs><marker id="seqArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#06b6d4"/></marker></defs>`;
+
+            // Actor boxes + lifelines
+            actors.forEach((a, i) => {
+                const name = typeof a === 'string' ? a : (a.name || a.id);
+                const x = actorPositions[typeof a === 'string' ? a : (a.id || a.name)];
+                svg += `<rect x="${x - actorW / 2}" y="${padT}" width="${actorW}" height="${actorH}" rx="6" fill="rgba(30,41,59,0.85)" stroke="rgba(99,102,241,0.4)" stroke-width="1"/>`;
+                svg += `<text x="${x}" y="${padT + actorH / 2 + 4}" fill="#f1f5f9" font-size="10" font-weight="600" text-anchor="middle">${ClientDiagramSanitizer.sanitizeLabel(name)}</text>`;
+                svg += `<line x1="${x}" y1="${padT + actorH}" x2="${x}" y2="${totalH - actorH - 10}" stroke="rgba(148,163,184,0.3)" stroke-width="1" stroke-dasharray="5,4"/>`;
+            });
+
+            // Messages
+            messages.forEach((m, i) => {
+                const y = padT + actorH + 30 + i * msgGap;
+                const fromX = actorPositions[m.from || m.source] || 60;
+                const toX = actorPositions[m.to || m.target] || 200;
+                const label = ClientDiagramSanitizer.sanitizeLabel(m.label || m.message || m.text || '');
+                const isReturn = m.type === 'return' || m.style === 'dashed';
+                svg += `<line x1="${fromX}" y1="${y}" x2="${toX - (fromX < toX ? 6 : -6)}" y2="${y}" stroke="${isReturn ? '#8b5cf6' : '#06b6d4'}" stroke-width="1.5" ${isReturn ? 'stroke-dasharray="5,3"' : ''} marker-end="url(#seqArrow)"/>`;
+                svg += `<text x="${(fromX + toX) / 2}" y="${y - 6}" fill="#cbd5e1" font-size="9" text-anchor="middle">${label}</text>`;
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        // ================================================================
+        // TIMELINE RENDERER
+        // ================================================================
+        renderTimeline(spec) {
+            const events = spec.events || spec.milestones || spec.data || [];
+            const CC = this._CHART_COLORS;
+            const padL = 100, axisX = 30, eventH = 60;
+            const totalH = Math.max(200, events.length * eventH + 60);
+
+            let svg = `<svg viewBox="0 0 500 ${totalH}" xmlns="http://www.w3.org/2000/svg" style="font-family:Inter,system-ui,sans-serif;">`;
+            // Axis line
+            svg += `<line x1="${axisX}" y1="30" x2="${axisX}" y2="${totalH - 20}" stroke="rgba(99,102,241,0.4)" stroke-width="2"/>`;
+
+            events.forEach((ev, i) => {
+                const y = 50 + i * eventH;
+                const label = ClientDiagramSanitizer.sanitizeLabel(ev.label || ev.title || ev.event || '');
+                const date = ClientDiagramSanitizer.sanitizeLabel(ev.date || ev.time || ev.period || '');
+                svg += `<circle cx="${axisX}" cy="${y}" r="6" fill="${CC[i % CC.length]}" stroke="rgba(15,23,42,0.95)" stroke-width="2"/>`;
+                svg += `<line x1="${axisX + 8}" y1="${y}" x2="${padL - 8}" y2="${y}" stroke="rgba(148,163,184,0.2)" stroke-width="1"/>`;
+                svg += `<rect x="${padL}" y="${y - 16}" width="${360}" height="${32}" rx="8" fill="rgba(30,41,59,0.7)" stroke="rgba(99,102,241,0.2)" stroke-width="0.8"/>`;
+                svg += `<text x="${padL + 12}" y="${y + 1}" fill="#f1f5f9" font-size="11" font-weight="500">${label}</text>`;
+                if (date) svg += `<text x="${padL + 12}" y="${y + 13}" fill="#94a3b8" font-size="8">${date}</text>`;
+            });
+
+            svg += `</svg>`;
+            return svg;
+        },
+
+        renderMermaid(code) {
+            const lines = code.trim().split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('%%'));
+            const header = (lines[0] || '').toLowerCase();
+
+            if (header.startsWith('graph') || header.startsWith('flowchart')) {
+                const direction = header.split(/\s+/)[1] || 'TB';
+                const nodes = [], edges = [];
+                const nodeMap = new Map();
+
+                const getNode = (rawId, rawLabel) => {
+                    const id = rawId.trim();
+                    if (!nodeMap.has(id)) {
+                        const n = { id, label: rawLabel ? rawLabel.trim() : id };
+                        nodeMap.set(id, n);
+                        nodes.push(n);
+                    } else if (rawLabel) {
+                        nodeMap.get(id).label = rawLabel.trim();
+                    }
+                    return nodeMap.get(id);
+                };
+
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i];
+                    const edgeMatch = line.match(/^([a-zA-Z0-9_-]+)(?:\[(.*?)\])?\s*(-->|---|==>|\.-+->) *(?:\|(.*?)\|)?\s*([a-zA-Z0-9_-]+)(?:\[(.*?)\])?/);
+                    if (edgeMatch) {
+                        const [, fId, fL, arr, eL, tId, tL] = edgeMatch;
+                        getNode(fId, fL);
+                        getNode(tId, tL);
+                        edges.push({ from: fId, to: tId, label: eL || '' });
+                        continue;
+                    }
+                    const single = line.match(/^([a-zA-Z0-9_-]+)(?:\[(.*?)\]|\((.*?)\)|\{(.*?)\})/);
+                    if (single) getNode(single[1], single[2] || single[3] || single[4]);
+                }
+                return this.renderFlowchart({ title: 'Workflow Diagram', direction, nodes, edges });
+            }
+
+            // Mermaid PIE chart support
+            if (header.startsWith('pie')) {
+                const showData = header.includes('showdata');
+                const titleMatch = code.match(/title\s+(.+)/i);
+                const slices = [];
+                lines.forEach(l => {
+                    const m = l.match(/^\s*"([^"]+)"\s*:\s*([\d.]+)/);
+                    if (m) slices.push({ label: m[1], value: parseFloat(m[2]) });
+                });
+                if (slices.length > 0) {
+                    return this._renderPie({
+                        title: titleMatch ? titleMatch[1] : 'Pie Chart',
+                        data: slices
+                    }, false);
+                }
+            }
+
+            // Mermaid SEQUENCE DIAGRAM support
+            if (header.startsWith('sequencediagram')) {
+                const actors = [], actorSet = new Set(), messages = [];
+                lines.slice(1).forEach(l => {
+                    const participantM = l.match(/^participant\s+(\S+)(?:\s+as\s+(.+))?/i);
+                    if (participantM) {
+                        const id = participantM[1];
+                        if (!actorSet.has(id)) { actorSet.add(id); actors.push({ id, name: participantM[2] || id }); }
+                        return;
+                    }
+                    const msgM = l.match(/^(\S+)\s*(->>|-->>|->|-->)\s*(\S+)\s*:\s*(.+)/);
+                    if (msgM) {
+                        const [, from, arrow, to, text] = msgM;
+                        if (!actorSet.has(from)) { actorSet.add(from); actors.push({ id: from, name: from }); }
+                        if (!actorSet.has(to)) { actorSet.add(to); actors.push({ id: to, name: to }); }
+                        messages.push({ from, to, label: text, type: arrow.includes('--') ? 'return' : 'call' });
+                    }
+                });
+                if (actors.length > 0) {
+                    return this.renderSequence({ actors, messages });
+                }
+            }
+
+            // Fallback generic box
+            return `<svg viewBox="0 0 420 70" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="416" height="66" rx="8" fill="rgba(30,41,59,0.7)" stroke="rgba(99,102,241,0.3)" />
+              <text x="210" y="32" fill="#f1f5f9" font-size="12" font-weight="600" text-anchor="middle">Mermaid Diagram (${ClientDiagramSanitizer.sanitizeLabel(header)})</text>
+              <text x="210" y="48" fill="#94a3b8" font-size="10" text-anchor="middle">${lines.length} statement(s) parsed</text>
+            </svg>`;
+        },
+
+        renderCard(specOrCode, options = {}) {
+            const cardId = options.cardId || `diag_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+            try {
+                let svg = '';
+                let type = 'flowchart';
+                let rawSource = '';
+
+                if (typeof specOrCode === 'string') {
+                    rawSource = specOrCode.trim();
+                    type = 'mermaid';
+                    svg = this.renderMermaid(rawSource);
+                } else if (typeof specOrCode === 'object' && specOrCode !== null) {
+                    rawSource = JSON.stringify(specOrCode, null, 2);
+                    type = (specOrCode.type || 'flowchart').toLowerCase().replace(/[\s-]/g, '_');
+
+                    // Chart type routing
+                    const chartTypes = ['pie_chart', 'pie', 'donut_chart', 'donut', 'bar_chart', 'bar',
+                        'horizontal_bar_chart', 'horizontal_bar', 'grouped_bar_chart', 'grouped_bar',
+                        'stacked_bar_chart', 'stacked_bar', 'line_chart', 'line', 'area_chart', 'area',
+                        'stacked_area_chart', 'stacked_area', 'scatter_plot', 'scatter', 'bubble_chart', 'bubble',
+                        'histogram', 'radar_chart', 'radar', 'heatmap', 'box_plot', 'waterfall_chart', 'waterfall',
+                        'gauge_chart', 'gauge', 'population_pyramid'];
+
+                    if (chartTypes.includes(type) || specOrCode.series || specOrCode.data || specOrCode.matrix) {
+                        svg = this.renderChart(specOrCode);
+                    } else if (type === 'architecture') {
+                        svg = this.renderArchitecture(specOrCode);
+                    } else if (type === 'sequence' || type === 'sequence_diagram') {
+                        svg = this.renderSequence(specOrCode);
+                    } else if (type === 'timeline') {
+                        svg = this.renderTimeline(specOrCode);
+                    } else {
+                        svg = this.renderFlowchart(specOrCode);
+                    }
+                }
+
+                const title = ClientDiagramSanitizer.sanitizeLabel(options.title || specOrCode?.title || 'Visual Diagram');
+                const displayType = type.replace(/_/g, ' ').toUpperCase();
+
+                return `
+                  <div class="liquid-diagram-card" id="${cardId}" role="region" aria-label="${title}" data-visual-title="${encodeURIComponent(title)}" data-visual-type="${encodeURIComponent(type)}">
+                    <div class="diagram-card-header">
+                      <div class="diagram-card-title">
+                        <span class="diagram-sparkle">✦</span>
+                        <span>${title}</span>
+                        <span class="diagram-type-pill">${displayType}</span>
+                      </div>
+                      <div class="diagram-card-actions">
+                        <button class="diag-btn" title="Export PNG" onclick="window.exportDiagramRaster && window.exportDiagramRaster('${cardId}','png')">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                          <span>PNG</span>
+                        </button>
+                        <button class="diag-btn" title="Export JPG" onclick="window.exportDiagramRaster && window.exportDiagramRaster('${cardId}','jpg')">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                          <span>JPG</span>
+                        </button>
+                        <button class="diag-btn" title="Export SVG" onclick="window.exportDiagramSvg && window.exportDiagramSvg('${cardId}')">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                          <span>SVG</span>
+                        </button>
+                        <button class="diag-btn" title="Copy Diagram Source" onclick="window.copyDiagramSource && window.copyDiagramSource('${cardId}')">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                          <span>Source</span>
+                        </button>
+                        <button class="diag-btn primary" title="Expand Fullscreen" onclick="window.expandDiagram && window.expandDiagram('${cardId}')">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                          <span>Expand</span>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="diagram-svg-viewport">
+                      ${svg}
+                    </div>
+                    <div class="diagram-raw-source" style="display:none;" data-source="${encodeURIComponent(rawSource)}"></div>
+                  </div>
+                `;
+            } catch (err) {
+                return `
+                  <div class="liquid-diagram-card" id="${cardId}">
+                    <div class="diagram-card-header"><span style="color:#ef4444;">⚠ Diagram Rendering Notice</span></div>
+                    <div style="padding:12px 18px;font-size:12px;color:#94a3b8;">The diagram could not be rendered (${ClientDiagramSanitizer.sanitizeLabel(err.message)}).</div>
+                  </div>
+                `;
+            }
+        }
+    };
+
+    window.DiagramRenderer = ClientDiagramRenderer;
+
+    // Window Interaction Handlers
+    window.copyDiagramSource = function(cardId) {
+        const card = document.getElementById(cardId);
+        if (!card) return;
+        const rawEl = card.querySelector('.diagram-raw-source');
+        if (rawEl) {
+            const src = decodeURIComponent(rawEl.getAttribute('data-source') || '');
+            navigator.clipboard.writeText(src).then(() => {
+                showToast('✓ Diagram source copied to clipboard');
+            }).catch(() => null);
+        }
+    };
+
+    // ================================================================
+    // DIAGRAM EXPORT ENGINE — PNG / JPG / SVG (100% Local, Zero Cloud)
+    // ================================================================
+
+    const EXPORT_SCALE = 2;              // High-DPI 2x
+    const JPEG_QUALITY = 0.93;           // High quality
+    const JPG_BG_COLOR = '#0b1120';      // Liquid Glass dark background
+
+    /**
+     * Generate a descriptive, slugified filename.
+     */
+    function generateExportFilename(title, visualType, format) {
+        let ext = (format || 'png').toLowerCase().trim();
+        if (ext === 'jpeg') ext = 'jpg';
+        if (!['png', 'jpg', 'svg'].includes(ext)) ext = 'png';
+
+        let slug = (title || '').toLowerCase()
+            .replace(/[''""]/g, '')
+            .replace(/[^a-z0-9\s-]/g, ' ')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+
+        let typeSlug = (visualType || '').toLowerCase()
+            .replace(/_/g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+
+        if (slug && typeSlug) {
+            if (slug.includes(typeSlug) || slug.includes(typeSlug.replace('-chart', ''))) {
+                return `${slug}.${ext}`;
+            }
+            return `${slug}-${typeSlug}.${ext}`;
+        }
+        if (slug) return `${slug}.${ext}`;
+        if (typeSlug) return `${typeSlug}.${ext}`;
+        return `visual-export.${ext}`;
+    }
+
+    /**
+     * Get visual metadata from a card element.
+     */
+    function getCardMeta(cardId) {
+        const card = document.getElementById(cardId);
+        if (!card) return { card: null, title: '', type: '' };
+        const title = decodeURIComponent(card.getAttribute('data-visual-title') || '') || 'Visual Diagram';
+        const type = decodeURIComponent(card.getAttribute('data-visual-type') || '') || 'diagram';
+        return { card, title, type };
+    }
+
+    /**
+     * Core SVG → Raster (PNG/JPG) export via Canvas API.
+     * Handles high-DPI, JPG background fill, and dynamic sizing.
+     */
+    window.exportDiagramRaster = async function(cardId, format) {
+        const { card, title, type } = getCardMeta(cardId);
+        if (!card) return;
+
+        const svgEl = card.querySelector('.diagram-svg-viewport svg');
+        if (!svgEl) {
+            showToast('⚠ No visual to export');
+            return;
+        }
+
+        const btn = card.querySelector(`[title="Export ${format.toUpperCase()}"]`);
+        const originalLabel = btn ? btn.querySelector('span')?.textContent : '';
+        if (btn) btn.querySelector('span').textContent = 'Preparing…';
+
+        try {
+            // Serialize SVG with inline styles
+            const clonedSvg = svgEl.cloneNode(true);
+
+            // Ensure SVG has explicit dimensions from viewBox
+            const vb = clonedSvg.getAttribute('viewBox');
+            let svgW = 600, svgH = 400;
+            if (vb) {
+                const parts = vb.split(/[\s,]+/).map(Number);
+                if (parts.length >= 4) { svgW = parts[2]; svgH = parts[3]; }
+            }
+
+            // Set explicit width/height for Image rendering
+            clonedSvg.setAttribute('width', svgW);
+            clonedSvg.setAttribute('height', svgH);
+            // Ensure xmlns
+            clonedSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+            // Inject base font-family inline if missing
+            if (!clonedSvg.getAttribute('style')?.includes('font-family')) {
+                clonedSvg.setAttribute('style', (clonedSvg.getAttribute('style') || '') + ';font-family:Inter,system-ui,-apple-system,sans-serif;');
+            }
+
+            const svgData = new XMLSerializer().serializeToString(clonedSvg);
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const svgUrl = URL.createObjectURL(svgBlob);
+
+            // Create high-DPI canvas
+            const canvas = document.createElement('canvas');
+            const scale = EXPORT_SCALE;
+            canvas.width = Math.round(svgW * scale);
+            canvas.height = Math.round(svgH * scale);
+            const ctx = canvas.getContext('2d');
+
+            // For JPG: fill solid background (JPEG has no transparency)
+            if (format === 'jpg' || format === 'jpeg') {
+                ctx.fillStyle = JPG_BG_COLOR;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // For PNG: fill with the same dark background to preserve visual styling
+            if (format === 'png') {
+                ctx.fillStyle = JPG_BG_COLOR;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // Load SVG into Image and draw
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+
+            await new Promise((resolve, reject) => {
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    URL.revokeObjectURL(svgUrl);
+                    resolve();
+                };
+                img.onerror = (e) => {
+                    URL.revokeObjectURL(svgUrl);
+                    reject(new Error('SVG image load failed'));
+                };
+                img.src = svgUrl;
+            });
+
+            // Convert canvas to Blob
+            const mimeType = (format === 'jpg' || format === 'jpeg') ? 'image/jpeg' : 'image/png';
+            const quality = (format === 'jpg' || format === 'jpeg') ? JPEG_QUALITY : undefined;
+
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, mimeType, quality));
+
+            if (!blob || blob.size === 0) {
+                throw new Error('Empty export blob');
+            }
+
+            // Download
+            const filename = generateExportFilename(title, type, format);
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.download = filename;
+            a.href = url;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+            showToast(`✓ ${format.toUpperCase()} exported: ${filename}`);
+        } catch (err) {
+            console.error('[ExportRaster]', err);
+            showToast(`⚠ Couldn't export as ${format.toUpperCase()}`);
+        } finally {
+            if (btn && originalLabel) btn.querySelector('span').textContent = originalLabel;
+        }
+    };
+
+    /**
+     * SVG export with descriptive filename.
+     */
+    window.exportDiagramSvg = function(cardId) {
+        const { card, title, type } = getCardMeta(cardId);
+        if (!card) return;
+        const svgEl = card.querySelector('.diagram-svg-viewport svg');
+        if (svgEl) {
+            const svgData = new XMLSerializer().serializeToString(svgEl);
+            const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const filename = generateExportFilename(title, type, 'svg');
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast(`✓ SVG exported: ${filename}`);
+        }
+    };
+
+    /**
+     * Copy to clipboard (PNG image).
+     */
+    window.copyDiagramImage = async function(cardId) {
+        const { card } = getCardMeta(cardId);
+        if (!card) return;
+        const svgEl = card.querySelector('.diagram-svg-viewport svg');
+        if (!svgEl) return;
+
+        try {
+            const clonedSvg = svgEl.cloneNode(true);
+            const vb = clonedSvg.getAttribute('viewBox');
+            let svgW = 600, svgH = 400;
+            if (vb) {
+                const parts = vb.split(/[\s,]+/).map(Number);
+                if (parts.length >= 4) { svgW = parts[2]; svgH = parts[3]; }
+            }
+            clonedSvg.setAttribute('width', svgW);
+            clonedSvg.setAttribute('height', svgH);
+            clonedSvg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+            const svgData = new XMLSerializer().serializeToString(clonedSvg);
+            const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const svgUrl = URL.createObjectURL(svgBlob);
+
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round(svgW * EXPORT_SCALE);
+            canvas.height = Math.round(svgH * EXPORT_SCALE);
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = JPG_BG_COLOR;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            await new Promise((resolve, reject) => {
+                img.onload = () => { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); URL.revokeObjectURL(svgUrl); resolve(); };
+                img.onerror = reject;
+                img.src = svgUrl;
+            });
+
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+            if (blob && navigator.clipboard && typeof ClipboardItem !== 'undefined') {
+                await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                showToast('✓ Image copied to clipboard');
+            } else {
+                showToast('⚠ Clipboard not supported in this browser');
+            }
+        } catch (err) {
+            console.error('[CopyImage]', err);
+            showToast('⚠ Could not copy image');
+        }
+    };
+
+    /**
+     * Fullscreen expand with export buttons.
+     */
+    window.expandDiagram = function(cardId) {
+        const { card, title, type } = getCardMeta(cardId);
+        if (!card) return;
+        const svgEl = card.querySelector('.diagram-svg-viewport svg');
+
+        if (svgEl) {
+            const modal = document.createElement('div');
+            modal.className = 'diagram-modal-overlay';
+            modal.innerHTML = `
+              <div class="diagram-modal-window">
+                <div class="diagram-card-header">
+                  <div class="diagram-card-title"><span>✦</span> <span>${ClientDiagramSanitizer.escapeHtml(title)}</span></div>
+                  <div class="diagram-card-actions">
+                    <button class="diag-btn" title="Export PNG" onclick="window.exportDiagramRaster && window.exportDiagramRaster('${cardId}','png')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      <span>PNG</span>
+                    </button>
+                    <button class="diag-btn" title="Export JPG" onclick="window.exportDiagramRaster && window.exportDiagramRaster('${cardId}','jpg')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      <span>JPG</span>
+                    </button>
+                    <button class="diag-btn" title="Export SVG" onclick="window.exportDiagramSvg && window.exportDiagramSvg('${cardId}')">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      <span>SVG</span>
+                    </button>
+                    <button class="btn-voice-cancel" onclick="this.closest('.diagram-modal-overlay').remove()">×</button>
+                  </div>
+                </div>
+                <div class="diagram-modal-body">
+                  ${svgEl.outerHTML}
+                </div>
+              </div>
+            `;
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) modal.remove();
+            });
+            document.body.appendChild(modal);
+        }
+    };
+
     function formatResponse(text) {
         if (!text) return '';
-        let formatted = escapeHtml(text);
-        
+
+        // Extract and render code / diagram blocks before escaping
+        const codeBlocks = [];
+        let placeholderText = text.replace(/```([\w-]*)\n?([\s\S]*?)```/g, (match, lang, code) => {
+            const idx = codeBlocks.length;
+            const l = (lang || '').toLowerCase().trim();
+            const cleanCode = code.trim();
+
+            if (l === 'mermaid' || (!l && /^(graph|flowchart|sequencediagram|pie)\b/i.test(cleanCode))) {
+                const cardHtml = ClientDiagramRenderer.renderCard(cleanCode, { title: 'Workflow Diagram' });
+                codeBlocks.push(cardHtml);
+                return `___CODE_BLOCK_${idx}___`;
+            }
+
+            if (l === 'diagram' || l === 'chart' || (l === 'json' && cleanCode.includes('"type"'))) {
+                try {
+                    const spec = JSON.parse(cleanCode);
+                    if (spec && typeof spec === 'object' && (spec.type || spec.nodes || spec.series)) {
+                        const cardHtml = ClientDiagramRenderer.renderCard(spec, { title: spec.title || 'Visual Diagram' });
+                        codeBlocks.push(cardHtml);
+                        return `___CODE_BLOCK_${idx}___`;
+                    }
+                } catch {}
+            }
+
+            const escapedCode = escapeHtml(code);
+            codeBlocks.push(`<pre><code>${escapedCode}</code></pre>`);
+            return `___CODE_BLOCK_${idx}___`;
+        });
+
+        let formatted = escapeHtml(placeholderText);
+
+        // Headers
+        formatted = formatted.replace(/^### (.*$)/gim, '<h4 style="margin:14px 0 6px 0;font-size:14px;color:var(--neon-cyan);">$1</h4>');
+        formatted = formatted.replace(/^## (.*$)/gim, '<h3 style="margin:18px 0 8px 0;font-size:15.5px;color:var(--text-primary);">$1</h3>');
+        formatted = formatted.replace(/^# (.*$)/gim, '<h2 style="margin:20px 0 10px 0;font-size:17px;color:var(--text-primary);">$1</h2>');
+
         // Bold
         formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        
-        // Code blocks
-        formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-        
+
         // Inline code
         formatted = formatted.replace(/`(.*?)`/g, '<code>$1</code>');
-        
+
         // Lists
         formatted = formatted.replace(/^[-*] (.*)$/gm, '<li>$1</li>');
         formatted = formatted.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-        
-        // Newlines
+
+        // Markdown Tables
+        formatted = formatted.replace(/(\|.+?\|\n\|[-:\s|]+?\|\n(?:\|.+?\|\n?)+)/g, (match) => {
+            const rows = match.trim().split('\n');
+            if (rows.length < 2) return match;
+            const headers = rows[0].split('|').map(c => c.trim()).filter(Boolean);
+            const bodyRows = rows.slice(2);
+            let tableHtml = '<table class="liquid-table" style="width:100%;border-collapse:collapse;margin:12px 0;font-size:12.5px;"><thead><tr>';
+            headers.forEach(h => { tableHtml += `<th style="border:1px solid rgba(99,102,241,0.25);padding:8px 12px;background:rgba(30,41,59,0.7);color:var(--neon-cyan);text-align:left;">${h}</th>`; });
+            tableHtml += '</tr></thead><tbody>';
+            bodyRows.forEach(r => {
+                const cells = r.split('|').map(c => c.trim()).filter(Boolean);
+                if (cells.length > 0) {
+                    tableHtml += '<tr>';
+                    cells.forEach(c => { tableHtml += `<td style="border:1px solid rgba(99,102,241,0.15);padding:7px 12px;background:rgba(15,23,42,0.4);">${c}</td>`; });
+                    tableHtml += '</tr>';
+                }
+            });
+            tableHtml += '</tbody></table>';
+            return tableHtml;
+        });
+
+        // Newlines (except around diagram cards or tables)
         formatted = formatted.replace(/\n/g, '<br>');
-        
+
+        // Restore code blocks & diagrams
+        codeBlocks.forEach((block, idx) => {
+            formatted = formatted.replace(`___CODE_BLOCK_${idx}___`, block);
+        });
+
         return formatted;
     }
 
@@ -952,9 +2348,222 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        const readAloudBtn = document.createElement('button');
+        readAloudBtn.className = 'btn-msg-action btn-read-aloud';
+        readAloudBtn.title = 'Read response aloud in natural Indian English';
+        readAloudBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> <span>Read Aloud</span>`;
+        readAloudBtn.addEventListener('click', () => toggleSpeech(cleanContent, readAloudBtn));
+
         row.appendChild(copyBtn);
         row.appendChild(answerBtn);
+        row.appendChild(readAloudBtn);
         return row;
+    }
+
+    // VOICE SUBSYSTEM (Indian English STT + TTS)
+    const voiceState = {
+        isRecording: false,
+        isSpeaking: false,
+        activeBtn: null,
+        recognition: null,
+        mediaStream: null,
+        audioContext: null,
+        analyser: null,
+        animFrame: null
+    };
+
+    function sanitizeTextForSpeech(raw) {
+        if (!raw) return '';
+        let text = raw.trim();
+        text = text.replace(/```[\s\S]*?```/g, " I have generated the code on screen for your review. ");
+        text = text.replace(/`([^`]+)`/g, '$1');
+        text = text.replace(/\|[\s\S]*?\|\n\|[-:\s|]+\|\n([\s\S]*?)(?=\n\n|$)/g, " The data table is displayed on screen. ");
+        text = text.replace(/⚡\s*[^\n]+/g, '');
+        text = text.replace(/●\s*[^\n]+/g, '');
+        text = text.replace(/\[ATTACHED EVIDENCE:[^\]]+\]/gi, '');
+        text = text.replace(/\b(AUDIT ID|TRACE ID|EXECUTION TRACE|0 EXTERNAL CALLS)\b[^\n]*/gi, '');
+        text = text.replace(/^#{1,6}\s+/gm, '');
+        text = text.replace(/\*\*([^*]+)\*\*/g, '$1');
+        text = text.replace(/\*([^*]+)\*/g, '$1');
+        text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+        text = text.replace(/^[\*\-•]\s+/gm, ' ');
+        text = text.replace(/^\d+\.\s+/gm, ' ');
+        text = text.replace(/[\r\n]+/g, ' ');
+        return text.replace(/\s{2,}/g, ' ').trim();
+    }
+
+    function toggleSpeech(text, btn) {
+        if (voiceState.isSpeaking) {
+            stopSpeech();
+            return;
+        }
+        startSpeech(text, btn);
+    }
+
+    function startSpeech(text, btn) {
+        if (!('speechSynthesis' in window)) {
+            alert('Text-to-speech is not supported in this browser.');
+            return;
+        }
+
+        stopSpeech();
+        const clean = sanitizeTextForSpeech(text);
+        if (!clean) return;
+
+        const utterance = new SpeechSynthesisUtterance(clean);
+        utterance.lang = 'en-IN';
+        utterance.rate = 1.05;
+        utterance.pitch = 1.0;
+
+        const voices = window.speechSynthesis.getVoices();
+        const indianVoice = voices.find(v => (v.lang === 'en-IN' || v.name.includes('India') || v.name.includes('Heera') || v.name.includes('Neerja') || v.name.includes('Ravi')));
+        if (indianVoice) utterance.voice = indianVoice;
+
+        voiceState.isSpeaking = true;
+        voiceState.activeBtn = btn;
+        if (btn) {
+            btn.classList.add('speaking');
+            btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg> <span>Stop</span>`;
+        }
+
+        utterance.onend = () => stopSpeech();
+        utterance.onerror = () => stopSpeech();
+
+        window.speechSynthesis.speak(utterance);
+    }
+
+    function stopSpeech() {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+        if (voiceState.activeBtn) {
+            voiceState.activeBtn.classList.remove('speaking');
+            voiceState.activeBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> <span>Read Aloud</span>`;
+        }
+        voiceState.isSpeaking = false;
+        voiceState.activeBtn = null;
+    }
+
+    async function toggleVoiceRecording() {
+        if (voiceState.isRecording) {
+            stopVoiceRecording(false);
+        } else {
+            startVoiceRecording();
+        }
+    }
+
+    async function startVoiceRecording() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert("Speech recognition is not supported in this browser environment. You can continue typing directly in the composer.");
+            return;
+        }
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            voiceState.mediaStream = stream;
+
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (AudioContextClass) {
+                voiceState.audioContext = new AudioContextClass();
+                const source = voiceState.audioContext.createMediaStreamSource(stream);
+                voiceState.analyser = voiceState.audioContext.createAnalyser();
+                voiceState.analyser.fftSize = 64;
+                source.connect(voiceState.analyser);
+                updateWaveformBars();
+            }
+
+            const rec = new SpeechRecognition();
+            rec.lang = 'en-IN';
+            rec.continuous = true;
+            rec.interimResults = true;
+
+            let finalTranscript = '';
+
+            rec.onresult = (event) => {
+                let interim = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript + ' ';
+                    } else {
+                        interim += event.results[i][0].transcript;
+                    }
+                }
+                const liveText = (finalTranscript + interim).trim();
+                if (liveText && elements.chatInput) {
+                    elements.chatInput.value = liveText;
+                    elements.chatInput.dispatchEvent(new Event('input'));
+                }
+            };
+
+            rec.onerror = (e) => {
+                console.warn('Speech recognition status:', e.error);
+                stopVoiceRecording(true);
+            };
+
+            rec.onend = () => {
+                if (voiceState.isRecording) {
+                    stopVoiceRecording(false);
+                }
+            };
+
+            rec.start();
+            voiceState.recognition = rec;
+            voiceState.isRecording = true;
+
+            if (elements.voiceInputBtn) elements.voiceInputBtn.classList.add('recording');
+            if (elements.voiceRecordingBanner) elements.voiceRecordingBanner.style.display = 'flex';
+            if (elements.voiceStatusText) elements.voiceStatusText.textContent = 'Listening (Indian English)...';
+        } catch (err) {
+            console.warn('Microphone access note:', err);
+            alert("Microphone access could not be acquired. Please ensure microphone permissions are allowed.");
+        }
+    }
+
+    function updateWaveformBars() {
+        if (!voiceState.isRecording || !voiceState.analyser) return;
+        const dataArray = new Uint8Array(voiceState.analyser.frequencyBinCount);
+        voiceState.analyser.getByteFrequencyData(dataArray);
+
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+        const avg = sum / dataArray.length;
+
+        const bars = document.querySelectorAll('.wave-bar');
+        bars.forEach((b, idx) => {
+            const val = dataArray[idx * 2] || avg;
+            const height = Math.max(4, Math.min(18, Math.round((val / 255) * 20)));
+            b.style.height = `${height}px`;
+        });
+
+        voiceState.animFrame = requestAnimationFrame(updateWaveformBars);
+    }
+
+    function stopVoiceRecording(cancelled = false) {
+        if (voiceState.animFrame) cancelAnimationFrame(voiceState.animFrame);
+        if (voiceState.recognition) {
+            try { voiceState.recognition.stop(); } catch {}
+            voiceState.recognition = null;
+        }
+        if (voiceState.mediaStream) {
+            voiceState.mediaStream.getTracks().forEach(t => t.stop());
+            voiceState.mediaStream = null;
+        }
+        if (voiceState.audioContext) {
+            try { voiceState.audioContext.close(); } catch {}
+            voiceState.audioContext = null;
+        }
+
+        voiceState.isRecording = false;
+        if (elements.voiceInputBtn) elements.voiceInputBtn.classList.remove('recording');
+        if (elements.voiceRecordingBanner) elements.voiceRecordingBanner.style.display = 'none';
+
+        if (cancelled && elements.chatInput) {
+            elements.chatInput.value = '';
+            elements.chatInput.dispatchEvent(new Event('input'));
+        } else if (elements.chatInput) {
+            elements.chatInput.focus();
+        }
     }
 
     function createUserActionsRow(cleanContent) {
@@ -974,6 +2583,42 @@ document.addEventListener('DOMContentLoaded', () => {
         return row;
     }
 
+    function appendUserMessage(text, attachments = [], replyTo = null) {
+        hideEmptyState();
+        const msg = {
+            id: `msg-${Date.now()}`,
+            role: 'user',
+            content: text || '',
+            attachments: (attachments || []).map(a => ({
+                id: a.id || `att-${Date.now()}`,
+                name: a.name,
+                size: a.size,
+                type: a.type,
+                status: a.status || 'ready'
+            })),
+            replyTo: replyTo ? { ...replyTo } : null,
+            timestamp: new Date()
+        };
+
+        const agentId = state.selectedAgent?.id || 'auto';
+        if (!state.chatHistories[agentId]) state.chatHistories[agentId] = [];
+        state.chatHistories[agentId].push(msg);
+
+        renderUserMessage(msg);
+        scrollToBottom();
+
+        // Persist to server conversation
+        if (state.currentConversationId) {
+            fetch(`/api/chats/${state.currentConversationId}/messages`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(msg)
+            }).then(() => {
+                loadConversations();
+            }).catch(() => null);
+        }
+    }
+
     function renderUserMessage(msg) {
         const div = document.createElement('div');
         div.className = 'msg-row user';
@@ -981,9 +2626,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let attachmentHtml = '';
         if (msg.attachments && msg.attachments.length > 0) {
             attachmentHtml = `
-                <div class="msg-attachments-container" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+                <div class="msg-attachments-container" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:${msg.content ? '8px' : '0'};">
                     ${msg.attachments.map(a => `
-                        <div class="attachment-pill" style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.15);padding:4px 8px;border-radius:6px;font-size:11.5px;color:#fff;">
+                        <div class="attachment-pill" style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.15);padding:5px 10px;border-radius:8px;font-size:12px;color:#fff;">
                             <span>📄 ${escapeHtml(a.name)}</span>
                         </div>
                     `).join('')}
@@ -1001,17 +2646,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }
+
+        let contentHtml = '';
+        if (msg.content && msg.content.trim().length > 0) {
+            contentHtml = `<div class="msg-text">${formatResponse(msg.content)}</div>`;
+        }
         
         div.innerHTML = `
             <div class="msg-bubble">
                 ${replyQuoteHtml}
                 ${attachmentHtml}
-                <div class="msg-text">${formatResponse(msg.content)}</div>
+                ${contentHtml}
             </div>
         `;
         
         const bubble = div.querySelector('.msg-bubble');
-        if (bubble && msg.content) {
+        if (bubble && msg.content && msg.content.trim().length > 0) {
             const userActions = createUserActionsRow(msg.content);
             bubble.appendChild(userActions);
         }
@@ -1262,32 +2912,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Attachment handling
+    // Attachment handling & lifecycle state management
     function handleFileSelected(e) {
         const files = Array.from(e.target.files);
         if (files.length === 0) return;
         
         files.forEach(f => {
-            state.currentAttachments.push({
+            const attObj = {
+                id: `att-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
                 name: f.name,
                 size: f.size,
-                type: f.type,
+                type: f.type || 'application/octet-stream',
+                status: 'processing',
+                data: null,
                 file: f
-            });
+            };
+            state.currentAttachments.push(attObj);
+
+            // Read base64 data asynchronously
+            const reader = new FileReader();
+            reader.onload = () => {
+                const result = reader.result;
+                let base64 = '';
+                if (typeof result === 'string') {
+                    base64 = result.includes(',') ? result.split(',')[1] : result;
+                }
+                attObj.data = base64;
+                attObj.status = 'ready';
+                renderAttachments();
+                updateSendButtonState();
+            };
+            reader.onerror = () => {
+                attObj.status = 'failed';
+                renderAttachments();
+                updateSendButtonState();
+            };
+            reader.readAsDataURL(f);
         });
         
         renderAttachments();
+        updateSendButtonState();
         e.target.value = '';
     }
 
     function removeAttachment(index) {
         state.currentAttachments.splice(index, 1);
         renderAttachments();
+        updateSendButtonState();
     }
 
     function renderAttachments() {
         elements.attachmentArea.innerHTML = '';
-        if (state.currentAttachments.length === 0) {
+        if (!state.currentAttachments || state.currentAttachments.length === 0) {
             elements.attachmentArea.style.display = 'none';
             return;
         }
@@ -1295,14 +2971,51 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.attachmentArea.style.display = 'flex';
         state.currentAttachments.forEach((att, idx) => {
             const tag = document.createElement('div');
-            tag.className = 'attachment-tag';
+            tag.className = `attachment-tag status-${att.status || 'ready'}`;
+            
+            let statusBadge = '';
+            if (att.status === 'processing') {
+                statusBadge = `<span class="att-status-badge processing" style="font-size:10.5px;color:var(--neon-amber);margin-left:4px;">↻ Processing...</span>`;
+            } else if (att.status === 'failed') {
+                statusBadge = `<span class="att-status-badge failed" style="font-size:10.5px;color:var(--neon-red);margin-left:4px;">⚠ Failed</span>`;
+            } else {
+                statusBadge = `<span class="att-status-badge ready" style="font-size:10.5px;color:var(--neon-green);margin-left:4px;">✓ Ready</span>`;
+            }
+
             tag.innerHTML = `
-                <span>📄 ${escapeHtml(att.name)}</span>
-                <span class="remove-btn" style="cursor:pointer;margin-left:6px;" data-idx="${idx}">×</span>
+                <div style="display:flex;align-items:center;gap:4px;">
+                    <span>📄 ${escapeHtml(att.name)}</span>
+                    ${statusBadge}
+                </div>
+                <span class="remove-btn" style="cursor:pointer;margin-left:8px;font-size:14px;color:var(--text-tertiary);" data-idx="${idx}">×</span>
             `;
             tag.querySelector('.remove-btn').addEventListener('click', () => removeAttachment(idx));
             elements.attachmentArea.appendChild(tag);
         });
+    }
+
+    function updateSendButtonState() {
+        if (!elements.sendBtn) return;
+        if (state.isGenerating) {
+            elements.sendBtn.disabled = false;
+            elements.sendBtn.classList.remove('ready');
+            elements.sendBtn.classList.add('stop-mode');
+            elements.sendBtn.setAttribute('aria-disabled', 'false');
+            return;
+        }
+
+        const textVal = (elements.chatInput?.value || '').trim();
+        const hasText = textVal.length > 0;
+        const readyAttachments = (state.currentAttachments || []).filter(a => a.status === 'ready');
+        const hasReadyAttachments = readyAttachments.length > 0;
+        const hasProcessing = (state.currentAttachments || []).some(a => a.status === 'processing');
+
+        // Can send if user typed text OR has at least one ready attachment, and no attachments are still processing
+        const canSend = (hasText || hasReadyAttachments) && !hasProcessing;
+
+        elements.sendBtn.disabled = !canSend;
+        elements.sendBtn.classList.toggle('ready', canSend);
+        elements.sendBtn.setAttribute('aria-disabled', String(!canSend));
     }
 
     // MODEL SELECTOR LOGIC
@@ -1510,30 +3223,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 6. COMPOSER SENDER & TRUE STREAMING HANDLER
     function handleSend() {
-        let text = elements.chatInput.value.trim();
-        const attachments = [...state.currentAttachments];
+        const rawText = (elements.chatInput?.value || '').trim();
+        const readyAttachments = (state.currentAttachments || []).filter(a => a.status === 'ready');
         const activeReply = state.replyContext ? { ...state.replyContext } : null;
 
-        if (!text && attachments.length === 0) return;
+        if (!rawText && readyAttachments.length === 0) return;
         if (state.isGenerating) {
             handleStopGeneration();
             return;
         }
 
-        if (!text && attachments.length > 0) {
-            text = `Analyze and extract findings from: ${attachments.map(a => a.name).join(', ')}`;
+        // Formulate backend task if raw text is empty
+        let backendTask = rawText;
+        if (!backendTask && readyAttachments.length > 0) {
+            const fileNames = readyAttachments.map(a => a.name).join(', ');
+            const hasPdf = readyAttachments.some(a => (a.name || '').toLowerCase().endsWith('.pdf') || a.type === 'application/pdf');
+            const hasImg = readyAttachments.some(a => /\.(png|jpg|jpeg|webp|gif|bmp)$/i.test(a.name || '') || (a.type || '').startsWith('image/'));
+            const hasSheet = readyAttachments.some(a => /\.(xlsx|xls|csv)$/i.test(a.name || ''));
+            const hasCode = readyAttachments.some(a => /\.(js|py|sql|ts|json|html|css|cpp|c|rs|go|sh)$/i.test(a.name || ''));
+
+            if (hasImg && !hasPdf && !hasSheet) {
+                backendTask = `Analyze and describe the contents of the attached image: ${fileNames}`;
+            } else if (hasPdf && !hasImg && !hasSheet) {
+                backendTask = `Analyze and extract findings from the attached document: ${fileNames}`;
+            } else if (hasSheet) {
+                backendTask = `Analyze and summarize data from the attached spreadsheet: ${fileNames}`;
+            } else if (hasCode) {
+                backendTask = `Review and explain the attached code file: ${fileNames}`;
+            } else {
+                backendTask = `Analyze the provided materials: ${fileNames}`;
+            }
         }
         
-        appendUserMessage(text, attachments, activeReply);
+        // Render user message bubble (with empty text if attachment-only)
+        appendUserMessage(rawText, readyAttachments, activeReply);
         
-        // Clear input & reply banner
+        // Auto-generate title from attachment name if conversation is new/default
+        if (state.currentConversationId && !rawText && readyAttachments.length > 0) {
+            let autoTitle = readyAttachments[0].name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ');
+            autoTitle = autoTitle.charAt(0).toUpperCase() + autoTitle.slice(1);
+            if (autoTitle.length > 30) autoTitle = autoTitle.slice(0, 30) + '...';
+            fetch(`/api/chats/${state.currentConversationId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title: autoTitle })
+            }).then(() => loadConversations()).catch(() => null);
+        }
+
+        // Clear input, attachments & reply banner
         elements.chatInput.value = '';
         elements.chatInput.style.height = 'auto';
         state.currentAttachments = [];
         renderAttachments();
+        updateSendButtonState();
         clearReplyContext();
         
-        sendToBackend(state.selectedAgent?.id || 'auto', text, attachments, activeReply);
+        sendToBackend(state.selectedAgent?.id || 'auto', backendTask, readyAttachments, activeReply, rawText ? 'text' : 'attachment');
     }
 
     function handleStopGeneration() {
@@ -1739,6 +3484,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 statusText.textContent = parsed.message || (parsed.state === 'model_ready' ? `${parsed.model} active` : 'Preparing model...');
                                 if (parsed.state === 'model_ready') {
                                     statusPill.className = 'stream-status-pill active';
+                                }
+                                // Update model display when pipeline transitions to Stage 2
+                                if (parsed.stage === 2 && parsed.model) {
+                                    modelDisplayName = parsed.model;
+                                    actualModelTag = parsed.tag || actualModelTag;
+                                    if (modelLabelEl) modelLabelEl.textContent = `● ${parsed.model}`;
+                                    if (egressTagEl) egressTagEl.textContent = `⚡ ${parsed.tag || actualModelTag} · Vision Pipeline`;
                                 }
                             }
                         } else if (eventType === 'metadata') {
@@ -2065,16 +3817,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const newHeight = Math.min(Math.max(this.scrollHeight, 52), 180);
         this.style.height = `${newHeight}px`;
         
-        const hasContent = this.value.trim().length > 0 || state.currentAttachments.length > 0;
-        elements.sendBtn.disabled = !hasContent || state.isGenerating;
-        elements.sendBtn.classList.toggle('ready', hasContent && !state.isGenerating);
+        updateSendButtonState();
     });
     
     // Keyboard shortcuts
     elements.chatInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            handleSend();
+            const textVal = (elements.chatInput.value || '').trim();
+            const hasReadyAtt = (state.currentAttachments || []).some(a => a.status === 'ready');
+            const hasProcessing = (state.currentAttachments || []).some(a => a.status === 'processing');
+            if ((textVal.length > 0 || hasReadyAtt) && !hasProcessing && !state.isGenerating) {
+                handleSend();
+            }
         }
     });
     
@@ -2087,7 +3842,13 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             if (elements.sidebarSearch) elements.sidebarSearch.focus();
         }
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'V' || e.key === 'v')) {
+            e.preventDefault();
+            toggleVoiceRecording();
+        }
         if (e.key === 'Escape') {
+            stopVoiceRecording(true);
+            stopSpeech();
             closeInspector();
             closeSidebar();
             closeDeleteModal();
@@ -2098,6 +3859,12 @@ document.addEventListener('DOMContentLoaded', () => {
     elements.sendBtn.addEventListener('click', handleSend);
     elements.attachBtn.addEventListener('click', () => elements.fileInput.click());
     elements.fileInput.addEventListener('change', handleFileSelected);
+    if (elements.voiceInputBtn) {
+        elements.voiceInputBtn.addEventListener('click', toggleVoiceRecording);
+    }
+    if (elements.btnCancelRecording) {
+        elements.btnCancelRecording.addEventListener('click', () => stopVoiceRecording(true));
+    }
     
     // Unified Search
     if (elements.sidebarSearch) {

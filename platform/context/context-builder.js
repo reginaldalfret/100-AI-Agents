@@ -32,6 +32,7 @@ export class ContextBuilder {
     if (summary) {
       enrichedSystemPrompt += `\n[Prior Discussion Summary: ${summary}]`;
     }
+    enrichedSystemPrompt += `\n[VISUAL CAPABILITY: When explaining workflows, system architectures, process sequences, or data breakdowns, you can include structured diagrams using markdown code blocks (e.g. \`\`\`mermaid or \`\`\`diagram) alongside your explanation.]`;
 
     // 2. Bound turns within context window
     const fitted = contextWindowManager.fitContext({

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "VOICE-001",
+    "domain": "study",
+    "transcript": "Please explain this topic in simple terms.",
+    "agent_id": "agent-003",
+    "agent_name": "Study AI Agent",
+    "expected_intent": "STUDY_EXPLANATION",
+    "expected_in_scope": true
+  },
+  {
+    "id": "VOICE-002",
+    "domain": "study",
+    "transcript": "Prepare a study plan for my semester examination.",
+    "agent_id": "agent-003",
+    "agent_name": "Study AI Agent",
+    "expected_intent": "SEMESTER_STUDY_PLAN",
+    "expected_in_scope": true
+  },
+  {
+    "id": "VOICE-003",
+    "domain": "multimodal",
+    "transcript": "Analyse this PDF and summarize the important points.",
+    "agent_id": "agent-101",
+    "agent_name": "Super AI Agent",
+    "expected_intent": "PDF_ANALYSIS",
+    "expected_in_scope": true
+  },
+  {
+    "id": "VOICE-004",
+    "domain": "coding",
+    "transcript": "Write a Python program to calculate the average.",
+    "agent_id": "agent-061",
+    "agent_name": "Code Generation AI Agent",
+    "expected_intent": "PYTHON_CODE_GENERATION",
+    "expected_in_scope": true
+  },
+  {
+    "id": "VOICE-005",
+    "domain": "epistemic",
+    "transcript": "Compare Gemma 3 and Nemotron 3.",
+    "agent_id": "agent-101",
+    "agent_name": "Super AI Agent",
+    "expected_intent": "MODEL_COMPARISON",
+    "expected_in_scope": true
+  },
+  {
+    "id": "VOICE-006",
+    "domain": "writing",
+    "transcript": "Create a presentation about renewable energy.",
+    "agent_id": "agent-001",
+    "agent_name": "Writing AI Agent",
+    "expected_intent": "PRESENTATION_OUTLINE",
+    "expected_in_scope": true
+  },
+  {
+    "id": "VOICE-007",
+    "domain": "scope_check",
+    "transcript": "Write a Node.js REST API.",
+    "agent_id": "agent-003",
+    "agent_name": "Study AI Agent",
+    "expected_intent": "CODING_TASK",
+    "expected_in_scope": false,
+    "recommended_agent": "Backend AI Agent"
+  }
+]
