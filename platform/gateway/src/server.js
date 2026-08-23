@@ -10,6 +10,7 @@ import { conversationManager } from "../../context/index.js";
 import { agentScopeGuard } from "../../intelligence/index.js";
 import { documentExtractor } from "../../multimodal/index.js";
 import { validateAttachmentIntegrity } from "../../multimodal/attachment-integrity.js";
+import { ingestDocument, queryRAG, IngestionNamespace } from "../../rag/index.js";
 import { voiceService } from "../../voice/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -433,7 +434,31 @@ const server = http.createServer(async (req, res) => {
             }
             const primaryContent = doc.contentText || doc.extractedText || "";
             if (primaryContent) {
-              extractedEvidenceText += `\n\n[ATTACHED EVIDENCE: ${doc.filename}]\n${primaryContent}`;
+              if (primaryContent.length > 3500) {
+                // Long document: Ingest into RAG and retrieve top-K relevant chunks with citations
+                try {
+                  const { document: indexedDoc } = await ingestDocument(primaryContent, doc.filename, {
+                    namespace: IngestionNamespace.ATTACHMENT,
+                    mimeType: att.type || 'text/plain'
+                  });
+                  const ragResult = await queryRAG(task, {
+                    documentId: indexedDoc.documentId,
+                    namespace: IngestionNamespace.ATTACHMENT,
+                    topK: 6,
+                    maxTokens: 2500
+                  });
+                  if (ragResult && ragResult.evidencePack) {
+                    extractedEvidenceText += `\n\n${ragResult.evidencePack}`;
+                  } else {
+                    extractedEvidenceText += `\n\n[ATTACHED EVIDENCE: ${doc.filename}]\n${primaryContent.slice(0, 3500)}...`;
+                  }
+                } catch (ragErr) {
+                  console.warn(`[RAG_ATTACHMENT_FALLBACK] ${ragErr.message}`);
+                  extractedEvidenceText += `\n\n[ATTACHED EVIDENCE: ${doc.filename}]\n${primaryContent.slice(0, 3500)}`;
+                }
+              } else {
+                extractedEvidenceText += `\n\n[ATTACHED EVIDENCE: ${doc.filename}]\n${primaryContent}`;
+              }
             }
             if (userAsksForMetadata && doc.metadataText) {
               extractedEvidenceText += `\n\n[DOCUMENT METADATA: ${doc.filename}]\n${doc.metadataText}`;

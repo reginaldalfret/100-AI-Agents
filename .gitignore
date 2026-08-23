@@ -25,6 +25,8 @@ data/context/*.json
 !data/context/.gitkeep
 data/conversations/*.json
 !data/conversations/.gitkeep
+data/rag/**
+!data/rag/.gitkeep
 archive/
 artifacts/
 temp/

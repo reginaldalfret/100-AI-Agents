@@ -62,13 +62,11 @@ export class ContextBuilder {
       });
     }
 
-    // Add current user prompt
+    // Add current user prompt (enriched with RAG evidence if available)
+    const ragEvidence = params.evidencePack || resolvedContext.evidencePack || '';
     let contextualCurrentPrompt = userPrompt;
-    // If references were resolved, add subtle grounding note for the model if not already present
-    if (resolvedReferences.length > 0 && activeTopic) {
-      const refDetails = resolvedReferences.map(r => `"${r.surface}" refers to "${r.target}"`).join(', ');
-      // We pass the clean user prompt in messages, while ensuring the multi-turn context gives the model full grounding
-      contextualCurrentPrompt = userPrompt;
+    if (ragEvidence) {
+      contextualCurrentPrompt = `${userPrompt}\n\n${ragEvidence}`;
     }
 
     messages.push({
@@ -86,9 +84,9 @@ export class ContextBuilder {
         return `${speaker}: ${m.content}`;
       }).join('\n\n');
 
-      consolidatedPrompt = `${priorConversationText}\n\nUser: ${userPrompt}\n\n${agent?.name || 'AI Assistant'}:`;
+      consolidatedPrompt = `${priorConversationText}\n\nUser: ${contextualCurrentPrompt}\n\n${agent?.name || 'AI Assistant'}:`;
     } else {
-      consolidatedPrompt = userPrompt;
+      consolidatedPrompt = contextualCurrentPrompt;
     }
 
     return {
