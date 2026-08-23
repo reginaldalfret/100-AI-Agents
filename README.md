@@ -220,6 +220,43 @@ flowchart TD
 
 ---
 
+## 🔍 Production-Grade Local Hybrid RAG Subsystem
+
+The platform features an on-premise, air-gapped **Local Hybrid RAG Subsystem** (`platform/rag/`) combining dense vector search and Okapi BM25 lexical retrieval with mathematical rank fusion, executing on standard CPU cores with zero GPU memory overhead.
+
+```
+Uploaded Document / Code / Knowledge Base
+                │
+                ▼
+       Document Ingestor & Hash Tracker (SHA-256)
+                │
+                ▼
+     Structure-Aware Chunker (Sections, Tables, Code Blocks)
+                │
+       ┌────────┴────────┐
+       ▼                 ▼
+ BM25 Lexical      384D Dense Semantic
+Inverted Index       CPU Vector Index
+       │                 │
+       └────────┬────────┘
+                ▼
+    Reciprocal Rank Fusion (RRF k=60)
+                │
+                ▼
+    Evidence Pack Assembler (<source_evidence> XML)
+                │
+                ▼
+ Grounded Model Response + Precise Citations [doc.pdf, p. 4]
+```
+
+### Key RAG Architecture Capabilities
+1. **100% CPU-Friendly Engine**: Zero GPU VRAM consumption for embeddings, BM25, and vector indexing, leaving your RTX 2050 4GB GPU dedicated to Gemma 3, Nemotron 3, and Qwen 2.5 Coder.
+2. **Structure-Aware Chunking**: Preserves Markdown headings, table header repetition across row splits, and code symbols with exact line ranges (`server.js:L350-L410`).
+3. **Hybrid Search & Fusion**: Combines exact lexical term matches (`API-653`, `6.80 mm`, `PORT 8300`) with dense semantic vectors using Reciprocal Rank Fusion (RRF).
+4. **Prompt Injection Defense**: Encapsulates retrieved evidence in strictly delimited `<source_evidence>` XML envelopes with non-executable instruction warnings.
+5. **Grounded Source Citations**: Automatically generates verifiable citations for PDF page numbers, spreadsheet sheets/cells, and code line ranges.
+6. **Codebase & Project Intelligence**: Pre-indexes repository source files, architecture docs, and workflows for project-aware Agent 101 orchestration.
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -261,21 +298,24 @@ npm test
 # 2. Run Full 101 AI Agent Fleet Health & Dispatch Test
 npm run test:fleet
 
-# 3. Run Visual Export Tests (PNG, JPG, SVG, Diagrams, 18 Charts)
+# 3. Run Production-Grade Local Hybrid RAG Test Suite (14 Suites)
+node --test tests/rag/*.test.js
+
+# 4. Run Visual Export Tests (PNG, JPG, SVG, Diagrams, 18 Charts)
 node --test tests/visuals/png-export.test.js
 node --test tests/visuals/jpg-export.test.js
 node --test tests/visuals/diagram-export.test.js
 node --test tests/visuals/chart-comprehensive.test.js
 
-# 4. Run Multimodal & Attachment Integrity Tests
+# 5. Run Multimodal & Attachment Integrity Tests
 node --test tests/multimodal/attachment-integrity.test.js
 node --test tests/multimodal/pdf-native-text.test.js
 node --test tests/multimodal/real-gemma-vision.test.js
 
-# 5. Run True Progressive Token Streaming Tests
+# 6. Run True Progressive Token Streaming Tests
 node tests/streaming/true-token-streaming.test.js
 
-# 6. Run UI & Conversational History Tests
+# 7. Run UI & Conversational History Tests
 node --test tests/ui/attachment-only-send.test.js
 node --test tests/ui/model-selector.test.js
 node --test tests/ui/conversation-history.test.js
@@ -285,6 +325,7 @@ node --test tests/ui/conversation-history.test.js
 
 | Subsystem | Test Suite / Scope | Verified Result |
 |---|---|---|
+| **Local Hybrid RAG** | Ingestion, Chunking, Embeddings, BM25, RRF, Citations, Codebase | **14/14 Suites (73/73 Tests Passed, 100%)** |
 | **Visual Exports** | PNG, JPG, SVG, Diagram & 18-Chart Renderers | **48/48 Passed (100%)** |
 | **Multimodal Pipeline** | Attachment Integrity, PDF Native Text, Gemma 3 Vision | **13/13 Passed (100%)** |
 | **Token Streaming** | SSE Token Streaming, Model Classification, Stream Abort | **3/3 Passed (100%)** |

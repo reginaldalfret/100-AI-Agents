@@ -13,6 +13,7 @@ import * as AuditService from "../services/audit-service.js";
 
 import { processScannedDocumentOCR, analyzeEngineeringDrawing, analyzeSitePhotograph } from "../multimodal/index.js";
 import { queryLocalKnowledgeBase } from "../knowledge/index.js";
+import { queryRAG, ingestDocument, codebaseIndexer, IngestionNamespace } from "../rag/index.js";
 import { executeInCodeSandbox } from "../sandbox/index.js";
 import { generateApprovalNoteDOCX, generateInspectionWorkbookXLSX, generateManagementBriefingPPTX } from "../deliverables/index.js";
 
@@ -433,7 +434,38 @@ export const TOOL_DEFINITIONS = {
     description: "Perform local on-premise semantic search across refinery SOPs and technical manuals",
     parameters: { query: "string" },
     handler: async ({ query, text, prompt }) => {
-      return queryLocalKnowledgeBase(query || text || prompt || "");
+      const q = query || text || prompt || "";
+      const ragRes = await queryRAG(q, { topK: 3, namespace: IngestionNamespace.GLOBAL });
+      if (ragRes && ragRes.totalMatches > 0) {
+        return {
+          query: q,
+          total_matches: ragRes.totalMatches,
+          citations: ragRes.citations,
+          evidence_pack: ragRes.evidencePack,
+          synthesized_guidance: ragRes.chunks[0]?.text || "",
+          is_air_gapped: true,
+          external_calls: 0
+        };
+      }
+      return queryLocalKnowledgeBase(q);
+    }
+  },
+  rag_search: {
+    name: "rag_search",
+    domain: "knowledge",
+    description: "Execute hybrid lexical + semantic search across local documents, standards, or uploads",
+    parameters: { query: "string", namespace: "string", top_k: "number" },
+    handler: async ({ query, namespace = "GLOBAL", top_k = 5, topK }) => {
+      return await queryRAG(query, { namespace, topK: top_k || topK || 5 });
+    }
+  },
+  rag_query_codebase: {
+    name: "rag_query_codebase",
+    domain: "knowledge",
+    description: "Search project source code, architecture documents, and configuration files with exact line citations",
+    parameters: { query: "string", top_k: "number" },
+    handler: async ({ query, top_k = 5, topK }) => {
+      return await codebaseIndexer.search(query, { topK: top_k || topK || 5 });
     }
   },
   calculate_step_by_step: {
