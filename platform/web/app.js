@@ -1965,7 +1965,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const specialistAgents = (data.agents || [])
                 .filter(a => {
                     const rawId = a.agent_id || a.id || '';
-                    return rawId !== 'agent-101' && a.id !== 'auto' && !String(a.name || '').toLowerCase().includes('super ai');
+                    return a.id !== 'auto' && a.name !== 'Super AI Agent';
                 })
                 .map(a => {
                     const num = parseInt((a.agent_id || a.id || '').replace(/\D/g, ''), 10);

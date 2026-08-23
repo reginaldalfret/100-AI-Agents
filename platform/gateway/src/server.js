@@ -13,6 +13,8 @@ import { validateAttachmentIntegrity } from "../../multimodal/attachment-integri
 import { ingestDocument, queryRAG, IngestionNamespace } from "../../rag/index.js";
 import { voiceService } from "../../voice/index.js";
 import { pythonClient } from "../../compute/python-client.js";
+import { superOrchestrator } from "../../orchestration/super-orchestrator.js";
+import { routingRegistry } from "../../intelligence/routing-registry.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1534,6 +1536,62 @@ const server = http.createServer(async (req, res) => {
     ) {
       json(res, 200, {
         auditLogs: AuditService.getAuditLogs()
+      });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
+      url.pathname === "/api/workforce/status"
+    ) {
+      const status = routingRegistry.getWorkforceStatus();
+      json(res, 200, {
+        status: "success",
+        ...status
+      });
+      return;
+    }
+
+    if (
+      req.method === "POST" &&
+      url.pathname === "/api/orchestrate"
+    ) {
+      const payload = await readBody(req);
+      const prompt = payload.prompt || payload.task || payload.goal || "";
+
+      if (!prompt) {
+        json(res, 400, {
+          status: "error",
+          error: "prompt or task is required for orchestration"
+        });
+        return;
+      }
+
+      if (payload.planOnly) {
+        const analysis = superOrchestrator.analyzeTask(prompt, payload.repoContext || {});
+        const specialists = superOrchestrator.selectSpecialists(analysis);
+        const dag = superOrchestrator.buildTaskDAG(specialists, analysis);
+
+        json(res, 200, {
+          status: "success",
+          mode: "plan_only",
+          analysis,
+          specialists,
+          dag
+        });
+        return;
+      }
+
+      const result = await superOrchestrator.orchestrate(prompt, {
+        repoContext: payload.repoContext || {},
+        dryRun: payload.dryRun ?? false,
+        maxConcurrency: payload.maxConcurrency || 5,
+        ...payload.options
+      });
+
+      json(res, 200, {
+        status: "success",
+        result
       });
       return;
     }

@@ -1,9 +1,12 @@
 /**
  * SA-S03 Platform — Intelligent Workforce Router
  * Evaluates semantic relevance, domain matching, tool availability, and task decomposition.
+ * Connected to Routing Registry across 301 agents and Super Orchestrator DAG engine.
  */
 
 import { parseIntent, IntentDomains } from "./intent-engine.js";
+import { routingRegistry, WorkforceDomain } from "./routing-registry.js";
+import { SuperOrchestrator, superOrchestrator } from "../orchestration/super-orchestrator.js";
 
 export const SPECIALIST_CATALOG = [
   {
@@ -63,11 +66,11 @@ export function computeRoutingScore(agent, intent) {
   if (agent.domain === intent.domain) score += 40;
 
   // Action match
-  if (intent.action && agent.capabilities.some(c => c.includes(intent.action))) score += 25;
+  if (intent.action && agent.capabilities?.some(c => c.includes(intent.action))) score += 25;
 
   // Tool availability match
   if (Array.isArray(intent.suggested_tools) && intent.suggested_tools.length > 0) {
-    const matchedTools = intent.suggested_tools.filter(t => (agent.tools || []).includes(t));
+    const matchedTools = intent.suggested_tools.filter(t => (agent.tools || agent.allowed_tools || []).includes(t));
     score += matchedTools.length * 15;
   }
 
@@ -82,48 +85,50 @@ export function computeRoutingScore(agent, intent) {
 export function routeRequest(prompt, options = {}) {
   const intent = parseIntent(prompt);
 
-  // If cross-domain multi-step task, route to Master Orchestrator (agent-101) with DAG plan
-  if (intent.is_cross_domain || intent.domain === IntentDomains.MULTI_DOMAIN) {
+  // If cross-domain multi-step task, route to Super Orchestrator with dynamic DAG plan
+  if (intent.is_cross_domain || intent.domain === IntentDomains.MULTI_DOMAIN || options.forceOrchestration) {
+    const analysis = superOrchestrator.analyzeTask(prompt, options.repoContext || {});
+    const specialists = superOrchestrator.selectSpecialists(analysis);
+    const dag = superOrchestrator.buildTaskDAG(specialists, analysis);
+
     return {
       mode: "multi_agent_dag",
       primary_agent: "agent-101",
       intent,
+      analysis,
+      specialists,
+      dag,
       plan: {
-        steps: [
-          {
-            step_id: "step_1_document_verification",
-            agent_id: "agent-045",
-            task: `Verify document authenticity and extract verified fields for ${intent.entities.student_id || "the student"}.`,
-            tools: ["get_document"],
-            dependencies: []
-          },
-          {
-            step_id: "step_2_academic_standing",
-            agent_id: "agent-006",
-            task: `Retrieve GPA, marks, and attendance records for ${intent.entities.student_id || "the student"}.`,
-            tools: ["get_marks", "get_attendance"],
-            dependencies: []
-          },
-          {
-            step_id: "step_3_scholarship_evaluation",
-            agent_id: "agent-085",
-            task: `Evaluate scholarship eligibility and financial ledger standing based on verified academic and document evidence.`,
-            tools: ["check_financial_eligibility", "get_fee_status"],
-            dependencies: ["step_1_document_verification", "step_2_academic_standing"]
-          },
-          {
-            step_id: "step_4_final_synthesis_and_hitl",
-            agent_id: "agent-101",
-            task: `Synthesize comprehensive decision, assemble evidence ledger, and flag for Human-In-The-Loop approval if required.`,
-            tools: ["record_decision"],
-            dependencies: ["step_3_scholarship_evaluation"]
-          }
-        ]
+        steps: dag.stages.flatMap(s => s.tasks.map(t => ({
+          step_id: t.task_id,
+          agent_id: t.agent_id,
+          task: t.name,
+          tools: [t.action],
+          dependencies: t.dependencies
+        })))
       }
     };
   }
 
-  // Single Agent Routing
+  // Technology lookup from 301-agent routing registry
+  const techAnalysis = superOrchestrator.analyzeTask(prompt, options.repoContext || {});
+  if (techAnalysis.technologies?.length > 0) {
+    const matchedTech = routingRegistry.findAgentsByTechnology(techAnalysis.technologies[0]);
+    if (matchedTech && matchedTech.primary) {
+      return {
+        mode: "single_agent",
+        primary_agent: matchedTech.primary.agent_id,
+        agent_name: matchedTech.primary.name,
+        role: matchedTech.role,
+        domain: matchedTech.domain,
+        confidence: 85,
+        intent,
+        recommended_tools: matchedTech.primary.allowed_tools || []
+      };
+    }
+  }
+
+  // Single Agent Routing from specialist catalog
   let bestAgent = null;
   let highestScore = -1;
 
@@ -146,13 +151,17 @@ export function routeRequest(prompt, options = {}) {
     };
   }
 
-  // Fallback to Master Orchestrator or general clarification
+  // Fallback to Master Orchestrator
   return {
     mode: "direct_master",
     primary_agent: "agent-101",
-    agent_name: "AI Master Agent",
+    agent_name: "Super AI Master Orchestrator",
     confidence: 20,
     intent,
     recommended_tools: []
   };
+}
+
+export function getWorkforceStatus() {
+  return routingRegistry.getWorkforceStatus();
 }

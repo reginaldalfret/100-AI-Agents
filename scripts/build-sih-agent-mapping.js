@@ -81,7 +81,7 @@ const SIH_AGENT_ROLES = {
   "agent-046": { role: "Industrial Invoice & Bill of Quantities Agent", domain: "Industrial Finance & Cost", tools: ["ocr_document", "read_excel", "calculate_step_by_step"] },
   "agent-047": { role: "Industrial Spreadsheet & Telemetry Analyst", domain: "Data Analytics & Telemetry", tools: ["read_excel", "write_excel", "calculate_step_by_step"] },
   "agent-048": { role: "Process Sensor & SCADA Data Analyst", domain: "Data Analytics & Telemetry", tools: ["read_excel", "calculate_step_by_step"] },
-  "agent-049": { role: "Technical Report & Deliverable Generator", domain: "Document Intelligence", tools: ["generate_docx", "generate_pdf"] },
+  "agent-049": { role: "Technical Report & Deliverable Generator", domain: "Document Intelligence", tools: ["generate_docx", "generate_pdf", "generate_xlsx", "generate_pptx"] },
   "agent-050": { role: "Plant KPI & Dashboard Visualizer", domain: "Data Analytics & Telemetry", tools: ["read_excel", "generate_pptx"] },
 
   "agent-051": { role: "Predictive Analytics & Maintenance Forecaster", domain: "Data Analytics & Telemetry", tools: ["read_excel", "calculate_step_by_step"] },
