@@ -29,6 +29,8 @@ def get_whisper_model():
             "tiny.en",
             device="cpu",
             compute_type="int8",
+            cpu_threads=2,
+            num_workers=1,
             download_root=MODEL_DIR,
             local_files_only=True
         )

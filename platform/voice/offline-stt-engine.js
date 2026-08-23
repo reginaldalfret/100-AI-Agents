@@ -85,13 +85,15 @@ export class OfflineSTTEngine {
       // Invoke local faster-whisper on CPU via Python runner
       const pyScript = `
 import sys, json, os
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
 from faster_whisper import WhisperModel
 
 model_dir = r'''${MODEL_DIR}'''
 audio_path = r'''${tempWav}'''
 
 try:
-    model = WhisperModel('tiny.en', device='cpu', compute_type='int8', download_root=model_dir, local_files_only=True)
+    model = WhisperModel('tiny.en', device='cpu', compute_type='int8', cpu_threads=2, num_workers=1, download_root=model_dir, local_files_only=True)
     segments, info = model.transcribe(audio_path, beam_size=5, language='en', task='transcribe', vad_filter=True)
     
     parts = []
