@@ -1,0 +1,52 @@
+{
+  "version": "2.0.0",
+  "platform": "101 Super AI Agents (Sovereign AI Workbench)",
+  "air_gapped": true,
+  "external_calls": 0,
+  "gpu": {
+    "model": "NVIDIA GeForce RTX 2050",
+    "vram_gb": 4,
+    "max_concurrent_models": 1
+  },
+  "services": {
+    "ollama": {
+      "name": "Ollama Local LLM / Vision Runtime",
+      "host": "127.0.0.1",
+      "port": 11434,
+      "health_endpoint": "/api/tags",
+      "startup_priority": 1,
+      "critical": true,
+      "models": [
+        "gemma3:4b",
+        "nemotron-3-nano:latest",
+        "qwen2.5-coder:1.5b"
+      ]
+    },
+    "python_compute": {
+      "name": "Python Specialized Compute Layer",
+      "host": "127.0.0.1",
+      "port": 8305,
+      "health_endpoint": "/health",
+      "startup_priority": 2,
+      "critical": true,
+      "capabilities": [
+        "documents",
+        "ocr",
+        "vision",
+        "analytics",
+        "calculations",
+        "embeddings",
+        "reranking"
+      ]
+    },
+    "node_gateway": {
+      "name": "Node.js Platform Gateway & Agent Orchestrator",
+      "host": "127.0.0.1",
+      "port": 8300,
+      "health_endpoint": "/api/health",
+      "startup_priority": 3,
+      "critical": true,
+      "agents_total": 101
+    }
+  }
+}

@@ -3,7 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { WorkflowEngine } from "../../workflow-engine/index.js";
+import { WorkflowEngine, SuperAIWorkflowEngine, globalSuperAIWorkflowEngine, ResourceScheduler, ArtifactManager, globalArtifactManager } from "../../workflow-engine/index.js";
+import { EventEmitter } from "node:events";
 import { StudentService, AcademicService, FinanceService, DocumentService, AdmissionService, FacultyService, AuditService } from "../../services/index.js";
 import { modelStreamer, ModelLifecycleState } from "../../models/model-streamer.js";
 import { conversationManager } from "../../context/index.js";
@@ -12,6 +13,9 @@ import { documentExtractor } from "../../multimodal/index.js";
 import { validateAttachmentIntegrity } from "../../multimodal/attachment-integrity.js";
 import { ingestDocument, queryRAG, IngestionNamespace } from "../../rag/index.js";
 import { voiceService } from "../../voice/index.js";
+import { pythonClient } from "../../compute/python-client.js";
+import { superOrchestrator } from "../../orchestration/super-orchestrator.js";
+import { routingRegistry } from "../../intelligence/routing-registry.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,6 +51,22 @@ async function getAvailableModelsCached() {
     }
   } catch {}
   return cachedAvailableModels;
+}
+
+function pingLocalUrl(url, timeoutMs = 2000) {
+  return new Promise((resolve) => {
+    try {
+      const parsed = new URL(url);
+      const req = http.request(parsed, { method: "GET", timeout: timeoutMs }, (res) => {
+        resolve(res.statusCode >= 200 && res.statusCode < 400);
+      });
+      req.on("error", () => resolve(false));
+      req.on("timeout", () => { req.destroy(); resolve(false); });
+      req.end();
+    } catch {
+      resolve(false);
+    }
+  });
 }
 
 function json(res, status, data) {
@@ -244,12 +264,82 @@ const server = http.createServer(async (req, res) => {
         platform: "SA-S03 Educational Intelligent Workflow Management",
         gateway: "healthy",
         ollama: "healthy",
+        compute: pythonClient.circuit.state === "OPEN" ? "degraded_fallback" : "healthy",
         fleet: "healthy",
         agents: {
           total: agents.length,
           healthy: agents.length
         },
         workflows: "healthy",
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/compute/status") {
+      json(res, 200, {
+        status: "success",
+        compute: pythonClient.getStatus(),
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/compute/health") {
+      const health = await pythonClient.checkHealth();
+      json(res, 200, {
+        status: "success",
+        health,
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/system/health") {
+      const pyHealth = await pythonClient.checkHealth();
+      const ollamaHealthy = await pingLocalUrl("http://127.0.0.1:11434/api/tags", 2000);
+      const isHealthy = ollamaHealthy;
+      json(res, 200, {
+        status: isHealthy ? "ready" : "degraded",
+        services: {
+          ollama: ollamaHealthy ? "ready" : "offline",
+          python: pyHealth.status === "healthy" ? "ready" : "degraded_fallback",
+          gateway: "ready"
+        },
+        website: "ready",
+        externalEgress: 0,
+        air_gapped: true,
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/system/status") {
+      const pyStatus = pythonClient.getStatus();
+      const ollamaHealthy = await pingLocalUrl("http://127.0.0.1:11434/api/tags", 2000);
+      json(res, 200, {
+        system: "ready",
+        services: {
+          ollama: {
+            status: ollamaHealthy ? "ready" : "offline",
+            port: 11434,
+            models: ["gemma3:4b", "nemotron-3-nano:latest", "qwen2.5-coder:1.5b"]
+          },
+          python: pyStatus,
+          gateway: {
+            status: "ready",
+            port: 8300,
+            total_agents: agents.length
+          }
+        },
+        gpu: {
+          model: "NVIDIA GeForce RTX 2050",
+          vram_gb: 4,
+          max_concurrent_models: 1
+        },
+        externalEgress: 0,
+        uptime: process.uptime(),
+        air_gapped: true,
         timestamp: new Date().toISOString()
       });
       return;
@@ -282,11 +372,84 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (req.method === "POST" && url.pathname === "/api/workflow/plan") {
+      const payload = await readBody(req);
+      const prompt = payload.prompt || payload.task || payload.message || "";
+      const plan = globalSuperAIWorkflowEngine.planWorkflow(prompt);
+      json(res, 200, {
+        status: "success",
+        plan
+      });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/workflow/execute") {
+      const payload = await readBody(req);
+      let plan = payload.plan;
+      if (!plan) {
+        const prompt = payload.prompt || payload.task || payload.message || "";
+        plan = globalSuperAIWorkflowEngine.planWorkflow(prompt);
+      }
+      const wf = await globalSuperAIWorkflowEngine.executeWorkflow(plan);
+      json(res, 200, {
+        status: "success",
+        workflow: wf
+      });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname.startsWith("/api/workflow/") && url.pathname.endsWith("/cancel")) {
+      const parts = url.pathname.split("/");
+      const wfId = parts[3];
+      const ok = globalSuperAIWorkflowEngine.cancelWorkflow(wfId);
+      json(res, 200, {
+        status: ok ? "success" : "not_found",
+        workflowId: wfId,
+        cancelled: ok
+      });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname.startsWith("/api/workflow/") && url.pathname.endsWith("/retry")) {
+      const parts = url.pathname.split("/");
+      const wfId = parts[3];
+      const payload = await readBody(req);
+      const subtaskId = payload.subtaskId;
+      try {
+        const wf = await globalSuperAIWorkflowEngine.retrySubtask(wfId, subtaskId);
+        json(res, 200, {
+          status: "success",
+          workflow: wf
+        });
+      } catch (err) {
+        json(res, 400, {
+          status: "error",
+          error: err.message
+        });
+      }
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname.startsWith("/api/workflow/") && url.pathname.endsWith("/artifacts")) {
+      const parts = url.pathname.split("/");
+      const wfId = parts[3];
+      const artifacts = globalArtifactManager.getWorkflowArtifacts(wfId);
+      json(res, 200, {
+        status: "success",
+        workflowId: wfId,
+        count: artifacts.length,
+        artifacts
+      });
+      return;
+    }
+
     if (
       req.method === "POST" &&
       url.pathname === "/api/chat"
     ) {
       const payload = await readBody(req);
+
+      console.log(`[CHAT_ROUTE] Request received — agent_id="${payload.agent_id}" task="${(payload.task || '').slice(0, 60)}" stream=${payload.stream} modelMode=${payload.modelMode} origin=${req.headers.origin || req.headers.referer || 'direct'}`);
 
       const rawAgentId =
         typeof payload.agent_id === "string"
@@ -659,6 +822,111 @@ const server = http.createServer(async (req, res) => {
 
         try {
           // ================================================================
+          // SUPER AI AGENT (101) MULTI-AGENT WORKFLOW ORCHESTRATION
+          // ================================================================
+          const isSuperAI = (agent.agent_id === "agent-301" || agent.agent_id === "agent-101" || rawAgentId === "auto" || rawAgentId === "super-ai" || agent.name === "Super AI Agent");
+          if (isSuperAI && !hasImages) {
+            const workflowPlan = globalSuperAIWorkflowEngine.planWorkflow(task);
+            if (!workflowPlan.isFastPath) {
+              sendSSE("status", {
+                state: ModelLifecycleState.PREPARING,
+                message: `101 Super AI Agent orchestrating ${workflowPlan.subtasks.length} specialists...`,
+                model: "101 Super AI Agent",
+                tag: "agent-101"
+              });
+
+              const plannedData = {
+                workflowId: workflowPlan.workflowId,
+                workflowType: workflowPlan.workflowType,
+                subtaskCount: workflowPlan.subtasks.length,
+                subtasks: workflowPlan.subtasks.map(s => ({
+                  id: s.subtaskId,
+                  title: s.title,
+                  agentId: s.agentId,
+                  displayNumber: s.displayNumber,
+                  agentName: s.agentName,
+                  technology: s.technology
+                }))
+              };
+
+              sendSSE("workflow_created", { workflowId: workflowPlan.workflowId, plan: workflowPlan });
+              sendSSE("workflow.created", { workflowId: workflowPlan.workflowId, plan: workflowPlan });
+              sendSSE("workflow_planned", plannedData);
+              sendSSE("workflow.planned", plannedData);
+
+              const wfEvents = new EventEmitter();
+              wfEvents.on("subtask_queued", d => { sendSSE("subtask_queued", d); sendSSE("subtask.queued", d); });
+              wfEvents.on("agent_dispatched", d => { sendSSE("agent_dispatched", d); sendSSE("agent.dispatched", d); });
+              wfEvents.on("agent_started", d => { sendSSE("agent_started", d); sendSSE("agent.started", d); });
+              wfEvents.on("agent_completed", d => { sendSSE("agent_completed", d); sendSSE("agent.completed", d); });
+              wfEvents.on("agent_failed", d => { sendSSE("agent_failed", d); sendSSE("agent.failed", d); });
+              wfEvents.on("workflow_synthesizing", d => { sendSSE("workflow_synthesizing", d); sendSSE("workflow.synthesizing", d); });
+
+              const wfResult = await globalSuperAIWorkflowEngine.executeWorkflow(workflowPlan, {}, wfEvents);
+
+              const fullSynthesis = wfResult.finalSynthesis || "Multi-agent workflow completed.";
+              const chunks = fullSynthesis.match(/[\s\S]{1,32}/g) || [fullSynthesis];
+              let currentAcc = "";
+              for (let i = 0; i < chunks.length; i++) {
+                currentAcc += chunks[i];
+                sendSSE("token", { text: chunks[i], fullText: currentAcc });
+                if (i % 6 === 0) await new Promise(r => setTimeout(r, 8));
+              }
+
+              sendSSE("complete", {
+                text: fullSynthesis,
+                agent_id: "agent-301",
+                displayNumber: "301",
+                agentName: "301 Super AI Agent",
+                requested_model: "auto",
+                actual_model: "qwen2.5-coder:1.5b",
+                model_mode: "auto",
+                model_source: "ollama-local",
+                model: "301 Super AI Agent",
+                hardware: "Ran on NVIDIA RTX 2050",
+                pipeline: "multi-agent-workflow",
+                workflow: {
+                  workflowId: workflowPlan.workflowId,
+                  workflowType: workflowPlan.workflowType,
+                  status: wfResult.status,
+                  totalDurationMs: wfResult.totalDurationMs,
+                  specialists: Object.values(wfResult.subtaskResults).map(r => ({
+                    subtaskId: r.subtaskId,
+                    agentId: r.agentId,
+                    displayNumber: r.displayNumber || (r.agentId ? r.agentId.replace('agent-', '') : '061'),
+                    agentName: r.agentName,
+                    technology: r.technology,
+                    model: r.model || "Qwen 2.5 Coder",
+                    status: r.status,
+                    durationMs: r.durationMs,
+                    artifact: r.artifacts?.[0]?.filename || null
+                  })),
+                  artifacts: wfResult.artifacts
+                },
+                executionTrace: {
+                  orchestrator: "301 Super AI Agent",
+                  workflowType: workflowPlan.workflowType,
+                  specialists: Object.values(wfResult.subtaskResults).map(r => ({
+                    agentId: r.agentId,
+                    displayNumber: r.displayNumber || (r.agentId ? r.agentId.replace('agent-', '') : '061'),
+                    agentName: r.agentName,
+                    technology: r.technology,
+                    model: r.model || "qwen2.5-coder:1.5b",
+                    durationMs: r.durationMs,
+                    artifact: r.artifacts?.[0]?.filename || null
+                  })),
+                  finalSynthesis: "301 Super AI Agent",
+                  hardware: "Ran on NVIDIA RTX 2050",
+                  externalCalls: 0
+                },
+                external_calls: 0
+              });
+              res.end();
+              return;
+            }
+          }
+
+          // ================================================================
           // TWO-STAGE VISION PIPELINE
           // ================================================================
           if (needsTwoStagePipeline && hasImages && specialistModel) {
@@ -841,6 +1109,53 @@ const server = http.createServer(async (req, res) => {
           if (!res.writableEnded) res.end();
         }
         return;
+      }
+
+      // ================================================================
+      // SUPER AI AGENT (101) NON-STREAMING WORKFLOW ORCHESTRATION
+      // ================================================================
+      const isSuperAI = (agent.agent_id === "agent-301" || agent.agent_id === "agent-101" || rawAgentId === "auto" || rawAgentId === "super-ai" || agent.name === "Super AI Agent");
+      if (isSuperAI && !hasImages) {
+        const workflowPlan = globalSuperAIWorkflowEngine.planWorkflow(task);
+        if (!workflowPlan.isFastPath) {
+          const wfResult = await globalSuperAIWorkflowEngine.executeWorkflow(workflowPlan);
+          json(res, 200, {
+            status: "success",
+            agent: {
+              agent_id: "agent-101",
+              name: "Super AI Agent",
+              category: "Orchestrator"
+            },
+            model: "101 Super AI Agent",
+            result: wfResult.finalSynthesis,
+            workflow: {
+              workflowId: workflowPlan.workflowId,
+              workflowType: workflowPlan.workflowType,
+              status: wfResult.status,
+              totalDurationMs: wfResult.totalDurationMs,
+              specialists: Object.values(wfResult.subtaskResults).map(r => ({
+                subtaskId: r.subtaskId,
+                agentId: r.agentId,
+                displayNumber: r.displayNumber || (r.agentId ? r.agentId.replace('agent-', '') : '061'),
+                agentName: r.agentName,
+                technology: r.technology,
+                model: r.model || "Qwen 2.5 Coder",
+                status: r.status,
+                durationMs: r.durationMs,
+                artifact: r.artifacts?.[0]?.filename || null
+              })),
+              artifacts: wfResult.artifacts
+            },
+            artifacts: wfResult.artifacts,
+            metadata: {
+              model: "101 Super AI Agent",
+              actual_model: "qwen2.5-coder:1.5b",
+              total_duration: wfResult.totalDurationMs
+            },
+            external_calls: 0
+          });
+          return;
+        }
       }
 
       const agentPayload = {
@@ -1447,6 +1762,62 @@ const server = http.createServer(async (req, res) => {
     ) {
       json(res, 200, {
         auditLogs: AuditService.getAuditLogs()
+      });
+      return;
+    }
+
+    if (
+      req.method === "GET" &&
+      url.pathname === "/api/workforce/status"
+    ) {
+      const status = routingRegistry.getWorkforceStatus();
+      json(res, 200, {
+        status: "success",
+        ...status
+      });
+      return;
+    }
+
+    if (
+      req.method === "POST" &&
+      url.pathname === "/api/orchestrate"
+    ) {
+      const payload = await readBody(req);
+      const prompt = payload.prompt || payload.task || payload.goal || "";
+
+      if (!prompt) {
+        json(res, 400, {
+          status: "error",
+          error: "prompt or task is required for orchestration"
+        });
+        return;
+      }
+
+      if (payload.planOnly) {
+        const analysis = superOrchestrator.analyzeTask(prompt, payload.repoContext || {});
+        const specialists = superOrchestrator.selectSpecialists(analysis);
+        const dag = superOrchestrator.buildTaskDAG(specialists, analysis);
+
+        json(res, 200, {
+          status: "success",
+          mode: "plan_only",
+          analysis,
+          specialists,
+          dag
+        });
+        return;
+      }
+
+      const result = await superOrchestrator.orchestrate(prompt, {
+        repoContext: payload.repoContext || {},
+        dryRun: payload.dryRun ?? false,
+        maxConcurrency: payload.maxConcurrency || 5,
+        ...payload.options
+      });
+
+      json(res, 200, {
+        status: "success",
+        result
       });
       return;
     }

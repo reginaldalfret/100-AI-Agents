@@ -1,26 +1,23 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const ROOT = "E:\\Smart Automation\\100-AI-Agents";
-const archiveDir = path.join(ROOT, "archive");
+const ROOT = "E:\\\\Smart Automation\\\\100-AI-Agents";
+const targetVbs = path.join(ROOT, "scripts", "run-silent-background.vbs");
 
-if (!fs.existsSync(archiveDir)) {
-  fs.mkdirSync(archiveDir, { recursive: true });
-}
+const vbsContent = [
+  "' 101 Super AI Agents — Silent Windows Background Launcher",
+  "Set WshShell = CreateObject(\"WScript.Shell\")",
+  "Set fso = CreateObject(\"Scripting.FileSystemObject\")",
+  "scriptDir = fso.GetParentFolderName(WScript.ScriptFullName)",
+  "projectRoot = fso.GetParentFolderName(scriptDir)",
+  "targetScript = scriptDir & \"\\start-production.ps1\"",
+  "cmd = \"powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File \"\"\" & targetScript & \"\"\"\"",
+  "WshShell.CurrentDirectory = projectRoot",
+  "WshShell.Run cmd, 0, False",
+  "Set WshShell = Nothing",
+  "Set fso = Nothing"
+].join("\r\n");
 
-const entries = fs.readdirSync(ROOT, { withFileTypes: true });
-for (const entry of entries) {
-  if (entry.isDirectory() && entry.name.startsWith("backup-before-")) {
-    const src = path.join(ROOT, entry.name);
-    const dest = path.join(archiveDir, entry.name);
-    try {
-      if (fs.existsSync(dest)) {
-        fs.rmSync(dest, { recursive: true, force: true });
-      }
-      fs.renameSync(src, dest);
-      console.log(`[ARCHIVED] Moved ${entry.name} -> archive/${entry.name}`);
-    } catch (err) {
-      console.error(`Error archiving ${entry.name}:`, err.message);
-    }
-  }
-}
+fs.writeFileSync(targetVbs, vbsContent, "utf8");
+console.log("Successfully created scripts/run-silent-background.vbs");
+

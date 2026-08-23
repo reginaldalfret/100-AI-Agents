@@ -32,7 +32,7 @@ artifacts/
 temp/
 cache/
 scratch/
-runtime/
+/runtime/
 
 # Build output
 .next/

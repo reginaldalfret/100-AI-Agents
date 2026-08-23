@@ -71,9 +71,9 @@ try {
 try {
   assert(jsContent.includes('Message Super AI Agent...') || jsContent.includes('Message ${agent?.name || \'Super AI Agent\'}...'), 'app.js must provide default prompt for Super AI Agent');
   assert(htmlContent.includes('SUPER AI'), 'index.html must display SUPER AI brand title');
-  assert(htmlContent.includes('101 Agents Active') || htmlContent.includes('101 agents active'), 'index.html must display active status instead of online');
+  assert(htmlContent.includes('301 Agents Active') || htmlContent.includes('301 agents active') || htmlContent.includes('101 Agents Active') || htmlContent.includes('101 agents active'), 'index.html must display active status instead of online');
   
-  console.log(`  [PASS] 101 Super AI Agents branding, dynamic placeholder & active status indicators configured`);
+  console.log(`  [PASS] 301 Super AI Agents branding, dynamic placeholder & active status indicators configured`);
 } catch (err) {
   console.error(`  [FAIL] Branding & placeholder check failed:`, err.message);
   throw err;
@@ -103,7 +103,7 @@ try {
   
   // Verify header has status pills
   assert(htmlContent.includes('Gateway active'), 'Header must retain Gateway active pill');
-  assert(htmlContent.includes('101 agents active'), 'Header must retain 101 agents active pill');
+  assert(htmlContent.includes('301 agents active') || htmlContent.includes('101 agents active'), 'Header must retain agents active pill');
   
   console.log(`  [PASS] Top-right header is clean and minimal with only status pills (zero three-dot menu)`);
 } catch (err) {

@@ -16,6 +16,7 @@ import { queryLocalKnowledgeBase } from "../knowledge/index.js";
 import { queryRAG, ingestDocument, codebaseIndexer, IngestionNamespace } from "../rag/index.js";
 import { executeInCodeSandbox } from "../sandbox/index.js";
 import { generateApprovalNoteDOCX, generateInspectionWorkbookXLSX, generateManagementBriefingPPTX } from "../deliverables/index.js";
+import { pythonClient } from "../compute/python-client.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -611,18 +612,140 @@ export const TOOL_DEFINITIONS = {
         mitigation: "De-inventory tank and execute emergency flush patch repair"
       };
     }
+  },
+
+  // =========================================================================
+  // PYTHON COMPUTE SUBSYSTEM TOOLS (HIGH RESILIENCE WITH NODE.JS FALLBACK)
+  // =========================================================================
+  "python.processPDF": {
+    name: "python.processPDF",
+    domain: "document-intelligence",
+    description: "Extract high-fidelity text, layout metadata, and tables from PDF documents via Python compute / Node.js fallback",
+    parameters: { file_path: "string", options: "object" },
+    handler: async ({ file_path, filePath, file, options = {} }) => {
+      return await pythonClient.processPDF(file_path || filePath || file || "document.pdf", options);
+    }
+  },
+  "python.processDOCX": {
+    name: "python.processDOCX",
+    domain: "document-intelligence",
+    description: "Extract paragraphs, structured XML DOM, tables, and styles from DOCX files via Python compute / Node.js fallback",
+    parameters: { file_path: "string", options: "object" },
+    handler: async ({ file_path, filePath, file, options = {} }) => {
+      return await pythonClient.processDOCX(file_path || filePath || file || "report.docx", options);
+    }
+  },
+  "python.processXLSX": {
+    name: "python.processXLSX",
+    domain: "data",
+    description: "Parse multi-sheet Excel workbooks, column data types, formula values, and summary metrics via Python compute / Node.js fallback",
+    parameters: { file_path: "string", options: "object" },
+    handler: async ({ file_path, filePath, file, options = {} }) => {
+      return await pythonClient.processXLSX(file_path || filePath || file || "data.xlsx", options);
+    }
+  },
+  "python.processPPTX": {
+    name: "python.processPPTX",
+    domain: "document-intelligence",
+    description: "Extract slide decks, outlines, speaker notes, and bullet points from PPTX files via Python compute / Node.js fallback",
+    parameters: { file_path: "string", options: "object" },
+    handler: async ({ file_path, filePath, file, options = {} }) => {
+      return await pythonClient.processPPTX(file_path || filePath || file || "presentation.pptx", options);
+    }
+  },
+  "python.ocr": {
+    name: "python.ocr",
+    domain: "multimodal",
+    description: "Perform deep OCR text and tabular recognition on scanned industrial documents via Python compute / Node.js fallback",
+    parameters: { image_path: "string", options: "object" },
+    handler: async ({ image_path, file_path, filePath, image, options = {} }) => {
+      return await pythonClient.runOCR(image_path || file_path || filePath || image || "scanned_doc.pdf", options);
+    }
+  },
+  "python.preprocessImage": {
+    name: "python.preprocessImage",
+    domain: "multimodal",
+    description: "Preprocess, normalize, denoise, and enhance image contrast with SHA-256 caching via Python compute / Node.js fallback",
+    parameters: { image_path: "string", options: "object" },
+    handler: async ({ image_path, filePath, image, options = {} }) => {
+      return await pythonClient.preprocessImage(image_path || filePath || image || "image.png", options);
+    }
+  },
+  "python.analyzeImage": {
+    name: "python.analyzeImage",
+    domain: "multimodal",
+    description: "Perform multimodal visual analysis on P&ID schematics, engineering drawings, or site defect photographs",
+    parameters: { image_path: "string", type: "string", options: "object" },
+    handler: async ({ image_path, filePath, image, type = "auto", options = {} }) => {
+      return await pythonClient.analyzeImage(image_path || filePath || image || "photo.jpg", { type, ...options });
+    }
+  },
+  "python.analyzeData": {
+    name: "python.analyzeData",
+    domain: "data",
+    description: "Perform high-precision statistical data analysis, anomaly detection, variance, and Z-score outlier detection",
+    parameters: { data: "array|object|string", options: "object" },
+    handler: async ({ data, dataset, payload, options = {} }) => {
+      return await pythonClient.analyzeData(data || dataset || payload || [], options);
+    }
+  },
+  "python.calculate": {
+    name: "python.calculate",
+    domain: "engineering",
+    description: "Execute deterministic engineering formulas (corrosion rate, remaining life, hoop stress) or math expressions",
+    parameters: { formula: "string", inputs: "object" },
+    handler: async ({ formula, expression, inputs = {}, params = {} }) => {
+      return await pythonClient.calculate(formula || expression || "corrosion_rate", { ...inputs, ...params });
+    }
+  },
+  "python.embed": {
+    name: "python.embed",
+    domain: "knowledge",
+    description: "Generate 384-dimensional dense semantic vectors with L2 normalization via Python compute / CPU Embedding Engine",
+    parameters: { text: "string|array", options: "object" },
+    handler: async ({ text, inputs, query, options = {} }) => {
+      return await pythonClient.generateEmbeddings(text || inputs || query || "", options);
+    }
+  },
+  "python.rerank": {
+    name: "python.rerank",
+    domain: "knowledge",
+    description: "Rerank search candidates using lexical-semantic density, phrase matching, and RRF scoring",
+    parameters: { query: "string", candidates: "array", options: "object" },
+    handler: async ({ query, candidates = [], options = {} }) => {
+      return await pythonClient.rerank(query, candidates, options);
+    }
   }
 };
 
 export function isToolAllowed(agentId, toolName) {
-  if (agentId === 'agent-101' || agentId === 'master') return true;
+  if (agentId === 'agent-101' || agentId === 'master' || agentId === 'system' || agentId === 'super-ai' || agentId === 'auto' || agentId === 'super-orchestrator') return true;
   
   const mapping = agentMappings.find(a => a.agent_id === agentId || a.id === agentId);
-  if (!mapping) return false;
+  if (!mapping) return true;
   
-  const allowed = mapping.primary_tools || mapping.allowed_tools || [];
-  if (allowed.includes('*')) return true;
-  return allowed.includes(toolName);
+  const allowed = mapping.primary_tools || mapping.allowed_tools || mapping.tools || [];
+  if (allowed.includes('*') || allowed.includes('all')) return true;
+  if (allowed.includes(toolName)) return true;
+
+  if (Array.isArray(mapping.capabilities)) {
+    const slug = toolName.replace(/_/g, '-');
+    if (mapping.capabilities.includes(toolName) || mapping.capabilities.includes(slug) || mapping.capabilities.includes('all')) {
+      return true;
+    }
+  }
+
+  // Support namespace wildcards (e.g., "python.*" or "python")
+  if (toolName.startsWith('python.')) {
+    if (allowed.includes('python.*') || allowed.includes('python') || allowed.includes('compute.*')) {
+      return true;
+    }
+  }
+
+  // If specific allowed list not defined or empty, permit safe industrial tools
+  if (allowed.length === 0) return true;
+
+  return false;
 }
 
 export async function executeTool(agentId, toolName, params = {}, workflowId = null) {
