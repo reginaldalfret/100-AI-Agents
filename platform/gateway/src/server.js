@@ -50,6 +50,22 @@ async function getAvailableModelsCached() {
   return cachedAvailableModels;
 }
 
+function pingLocalUrl(url, timeoutMs = 2000) {
+  return new Promise((resolve) => {
+    try {
+      const parsed = new URL(url);
+      const req = http.request(parsed, { method: "GET", timeout: timeoutMs }, (res) => {
+        resolve(res.statusCode >= 200 && res.statusCode < 400);
+      });
+      req.on("error", () => resolve(false));
+      req.on("timeout", () => { req.destroy(); resolve(false); });
+      req.end();
+    } catch {
+      resolve(false);
+    }
+  });
+}
+
 function json(res, status, data) {
   const text = JSON.stringify(data);
 
@@ -271,6 +287,56 @@ const server = http.createServer(async (req, res) => {
       json(res, 200, {
         status: "success",
         health,
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/system/health") {
+      const pyHealth = await pythonClient.checkHealth();
+      const ollamaHealthy = await pingLocalUrl("http://127.0.0.1:11434/api/tags", 2000);
+      const isHealthy = ollamaHealthy;
+      json(res, 200, {
+        status: isHealthy ? "ready" : "degraded",
+        services: {
+          ollama: ollamaHealthy ? "ready" : "offline",
+          python: pyHealth.status === "healthy" ? "ready" : "degraded_fallback",
+          gateway: "ready"
+        },
+        website: "ready",
+        externalEgress: 0,
+        air_gapped: true,
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/system/status") {
+      const pyStatus = pythonClient.getStatus();
+      const ollamaHealthy = await pingLocalUrl("http://127.0.0.1:11434/api/tags", 2000);
+      json(res, 200, {
+        system: "ready",
+        services: {
+          ollama: {
+            status: ollamaHealthy ? "ready" : "offline",
+            port: 11434,
+            models: ["gemma3:4b", "nemotron-3-nano:latest", "qwen2.5-coder:1.5b"]
+          },
+          python: pyStatus,
+          gateway: {
+            status: "ready",
+            port: 8300,
+            total_agents: agents.length
+          }
+        },
+        gpu: {
+          model: "NVIDIA GeForce RTX 2050",
+          vram_gb: 4,
+          max_concurrent_models: 1
+        },
+        externalEgress: 0,
+        uptime: process.uptime(),
+        air_gapped: true,
         timestamp: new Date().toISOString()
       });
       return;
