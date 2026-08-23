@@ -11,7 +11,7 @@ export class ContextBuilder {
    * @param {Object} params - { agent, resolvedContext, userPrompt, model, images }
    * @returns {Object} { systemPrompt, prompt, messages, traceMetadata }
    */
-  buildModelPayload({ agent, resolvedContext, userPrompt, model = '', images = [] }) {
+  buildModelPayload({ agent, resolvedContext = {}, userPrompt = '', model = '', images = [], evidencePack = '' }) {
     const rawSystemPrompt = agent?.system_prompt || (agent?.domain
       ? `You are ${agent.name}, an expert AI Agent specializing in ${agent.domain}. Provide accurate, clear, professional answers.`
       : 'You are a helpful industrial AI specialist.');
@@ -63,7 +63,7 @@ export class ContextBuilder {
     }
 
     // Add current user prompt (enriched with RAG evidence if available)
-    const ragEvidence = params.evidencePack || resolvedContext.evidencePack || '';
+    const ragEvidence = evidencePack || resolvedContext?.evidencePack || '';
     let contextualCurrentPrompt = userPrompt;
     if (ragEvidence) {
       contextualCurrentPrompt = `${userPrompt}\n\n${ragEvidence}`;
