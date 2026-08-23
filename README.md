@@ -145,11 +145,11 @@ When given complex instructions (e.g., *"Write a palindrome program in C++, Java
 
 ---
 
-## Air-Gapped Architecture
+## Offline Voice (Speech-to-Text & Text-to-Speech)
 
-- **0 External Cloud Calls**: All inference, embedding, OCR, and reasoning happens strictly on `127.0.0.1`.
-- **Local Ollama Integration**: Communicates over local loopback on port `11434`.
-- **Authoritative Provenance**: Every response includes an audit stamp showing `Air-Gap Status: Active (0 External Calls)`.
+- **Voice Input (STT)**: 100% offline local speech recognition running on local CPU with 0 external network requests. Audio captured via browser `MediaRecorder` is transcribed locally and placed into the composer.
+- **Voice Output (TTS)**: 100% offline Indian English Female speech synthesis (`Microsoft Heera - en-IN`) streaming standard uncompressed WAV audio locally to the browser.
+- **Privacy & Air-Gap**: 0 telemetry, 0 cloud dependencies, 0 permanent microphone audio retention. Transient audio is purged immediately upon transcription.
 
 ---
 

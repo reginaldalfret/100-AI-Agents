@@ -2430,35 +2430,74 @@ document.addEventListener('DOMContentLoaded', () => {
         return voices.find(v => (v.lang || '').toLowerCase().includes('en-in')) || null;
     }
 
-    function startSpeech(text, btn) {
-        if (!('speechSynthesis' in window)) {
-            alert('Text-to-speech is not supported in this browser.');
-            return;
-        }
-
+    async function startSpeech(text, btn) {
         stopSpeech();
         const clean = sanitizeTextForSpeech(text);
         if (!clean) return;
 
-        // Split into natural sentences for humanized pacing
-        const sentences = clean.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) || [clean];
-        const trimmedSentences = sentences.map(s => s.trim()).filter(s => s.length > 0);
-        if (trimmedSentences.length === 0) return;
-
         voiceState.isSpeaking = true;
         voiceState.activeBtn = btn;
-        voiceState.speechIndex = 0;
-        voiceState.speechSentences = trimmedSentences;
 
         if (btn) {
             btn.classList.add('speaking');
             btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg> <span>Stop</span>`;
         }
 
-        speakNextSentence();
+        try {
+            // 1. Primary Air-Gapped Local Offline Audio Stream (WAV from Native OneCore/SAPI5)
+            const response = await fetch('/api/tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: clean, rate: 1.0 })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Offline TTS endpoint returned status ${response.status}`);
+            }
+
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+
+            voiceState.currentAudio = audio;
+            voiceState.currentAudioUrl = audioUrl;
+
+            audio.onended = () => stopSpeech();
+            audio.onerror = (e) => {
+                console.warn('[OFFLINE_AUDIO_PLAYBACK_WARN] Audio stream playback failed:', e);
+                startBrowserSpeechFallback(clean, btn);
+            };
+
+            await audio.play();
+        } catch (offlineErr) {
+            console.warn('[OFFLINE_TTS_NOTICE] Using browser fallback voice:', offlineErr.message);
+            startBrowserSpeechFallback(clean, btn);
+        }
     }
 
-    function speakNextSentence() {
+    function startBrowserSpeechFallback(clean, btn) {
+        if (!('speechSynthesis' in window)) {
+            stopSpeech();
+            alert('Offline audio could not be synthesized, and browser SpeechSynthesis is not supported.');
+            return;
+        }
+
+        const sentences = clean.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) || [clean];
+        const trimmedSentences = sentences.map(s => s.trim()).filter(s => s.length > 0);
+        if (trimmedSentences.length === 0) {
+            stopSpeech();
+            return;
+        }
+
+        voiceState.isSpeaking = true;
+        voiceState.activeBtn = btn;
+        voiceState.speechIndex = 0;
+        voiceState.speechSentences = trimmedSentences;
+
+        speakNextSentenceBrowser();
+    }
+
+    function speakNextSentenceBrowser() {
         if (!voiceState.isSpeaking || !voiceState.speechSentences) return;
 
         if (voiceState.speechIndex >= voiceState.speechSentences.length) {
@@ -2470,11 +2509,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const utterance = new SpeechSynthesisUtterance(sentence);
         utterance.lang = 'en-IN';
 
-        // Natural humanized voice selection
         const femaleVoice = getIndianFemaleVoice();
         if (femaleVoice) utterance.voice = femaleVoice;
 
-        // Realistic human inflection: subtle variation in pitch and rate across sentences
         const isQuestion = sentence.endsWith('?');
         const isFirst = voiceState.speechIndex === 0;
         const isLast = voiceState.speechIndex === voiceState.speechSentences.length - 1;
@@ -2484,20 +2521,18 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (isFirst) basePitch = 1.01;
         else if (isLast) basePitch = 0.98;
         else {
-            // Subtle natural micro-variation (0.99 to 1.02)
             basePitch = 0.99 + (voiceState.speechIndex % 3) * 0.015;
         }
 
         utterance.pitch = basePitch;
-        utterance.rate = 0.98; // calm, sweet, articulate conversational speed
+        utterance.rate = 0.98;
         utterance.volume = 1.0;
 
         utterance.onend = () => {
             if (!voiceState.isSpeaking) return;
             voiceState.speechIndex++;
-            // Natural human pause between sentences (130ms)
             voiceState.speechTimer = setTimeout(() => {
-                speakNextSentence();
+                speakNextSentenceBrowser();
             }, 130);
         };
 
@@ -2509,12 +2544,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stopSpeech() {
+        if (voiceState.currentAudio) {
+            try {
+                voiceState.currentAudio.pause();
+                voiceState.currentAudio.currentTime = 0;
+            } catch {}
+            voiceState.currentAudio = null;
+        }
+        if (voiceState.currentAudioUrl) {
+            try { URL.revokeObjectURL(voiceState.currentAudioUrl); } catch {}
+            voiceState.currentAudioUrl = null;
+        }
         if (voiceState.speechTimer) {
             clearTimeout(voiceState.speechTimer);
             voiceState.speechTimer = null;
         }
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
+            try { window.speechSynthesis.cancel(); } catch {}
         }
         if (voiceState.activeBtn) {
             voiceState.activeBtn.classList.remove('speaking');
@@ -2535,15 +2581,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function startVoiceRecording() {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            alert("Speech recognition is not supported in this browser environment. You can continue typing directly in the composer.");
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            alert("Microphone access is not supported in this browser. You can continue typing directly in the composer.");
             return;
         }
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             voiceState.mediaStream = stream;
+            voiceState.recordedChunks = [];
 
             const AudioContextClass = window.AudioContext || window.webkitAudioContext;
             if (AudioContextClass) {
@@ -2555,47 +2601,93 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateWaveformBars();
             }
 
-            const rec = new SpeechRecognition();
-            rec.lang = 'en-IN';
-            rec.continuous = true;
-            rec.interimResults = true;
+            // Local MediaRecorder for offline audio capture
+            const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+                ? 'audio/webm;codecs=opus'
+                : (MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/wav');
 
-            let finalTranscript = '';
+            const mediaRecorder = new MediaRecorder(stream, { mimeType });
+            voiceState.mediaRecorder = mediaRecorder;
 
-            rec.onresult = (event) => {
-                let interim = '';
-                for (let i = event.resultIndex; i < event.results.length; ++i) {
-                    if (event.results[i].isFinal) {
-                        finalTranscript += event.results[i][0].transcript + ' ';
-                    } else {
-                        interim += event.results[i][0].transcript;
-                    }
-                }
-                const liveText = (finalTranscript + interim).trim();
-                if (liveText && elements.chatInput) {
-                    elements.chatInput.value = liveText;
-                    elements.chatInput.dispatchEvent(new Event('input'));
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    voiceState.recordedChunks.push(event.data);
                 }
             };
 
-            rec.onerror = (e) => {
-                console.warn('Speech recognition status:', e.error);
-                stopVoiceRecording(true);
-            };
+            mediaRecorder.onstop = async () => {
+                if (voiceState.isCancelled) {
+                    voiceState.isCancelled = false;
+                    return;
+                }
 
-            rec.onend = () => {
-                if (voiceState.isRecording) {
-                    stopVoiceRecording(false);
+                if (!voiceState.recordedChunks || voiceState.recordedChunks.length === 0) {
+                    return;
+                }
+
+                const audioBlob = new Blob(voiceState.recordedChunks, { type: mimeType });
+                voiceState.recordedChunks = [];
+
+                if (elements.voiceStatusText) {
+                    elements.voiceStatusText.textContent = 'Transcribing locally (Offline STT)...';
+                }
+
+                try {
+                    // Convert Blob to base64
+                    const reader = new FileReader();
+                    reader.onloadend = async () => {
+                        const base64Audio = reader.result;
+                        try {
+                            const resp = await fetch('/api/stt/transcribe', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    audio_base64: base64Audio,
+                                    locale: 'en-IN'
+                                })
+                            });
+
+                            if (!resp.ok) {
+                                throw new Error(`Offline STT returned status ${resp.status}`);
+                            }
+
+                            const data = await resp.json();
+                            const transcript = (data.text || '').trim();
+
+                            if (transcript && elements.chatInput) {
+                                elements.chatInput.value = (elements.chatInput.value ? elements.chatInput.value + ' ' : '') + transcript;
+                                elements.chatInput.dispatchEvent(new Event('input'));
+                                elements.chatInput.focus();
+                            }
+
+                            if (elements.voiceStatusText) {
+                                elements.voiceStatusText.textContent = transcript ? '✓ Transcript Ready (Offline)' : 'No speech detected';
+                            }
+                        } catch (err) {
+                            console.warn('[OFFLINE_STT_ERROR]', err);
+                            if (elements.voiceStatusText) {
+                                elements.voiceStatusText.textContent = '⚠ Offline Voice Input Unavailable';
+                            }
+                        } finally {
+                            setTimeout(() => {
+                                if (elements.voiceRecordingBanner) elements.voiceRecordingBanner.style.display = 'none';
+                                if (elements.voiceInputBtn) elements.voiceInputBtn.classList.remove('recording');
+                            }, 1200);
+                        }
+                    };
+                    reader.readAsDataURL(audioBlob);
+                } catch (e) {
+                    console.warn('[AUDIO_BLOB_ERROR]', e);
                 }
             };
 
-            rec.start();
-            voiceState.recognition = rec;
+            mediaRecorder.start(100); // 100ms timeslice
             voiceState.isRecording = true;
+            voiceState.isCancelled = false;
 
             if (elements.voiceInputBtn) elements.voiceInputBtn.classList.add('recording');
             if (elements.voiceRecordingBanner) elements.voiceRecordingBanner.style.display = 'flex';
-            if (elements.voiceStatusText) elements.voiceStatusText.textContent = 'Listening (Indian English)...';
+            if (elements.voiceStatusText) elements.voiceStatusText.textContent = 'Listening (Air-Gapped Local Capture)...';
         } catch (err) {
             console.warn('Microphone access note:', err);
             alert("Microphone access could not be acquired. Please ensure microphone permissions are allowed.");
@@ -2623,9 +2715,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function stopVoiceRecording(cancelled = false) {
         if (voiceState.animFrame) cancelAnimationFrame(voiceState.animFrame);
-        if (voiceState.recognition) {
-            try { voiceState.recognition.stop(); } catch {}
-            voiceState.recognition = null;
+        voiceState.isCancelled = cancelled;
+
+        if (voiceState.mediaRecorder && voiceState.mediaRecorder.state !== 'inactive') {
+            try { voiceState.mediaRecorder.stop(); } catch {}
         }
         if (voiceState.mediaStream) {
             voiceState.mediaStream.getTracks().forEach(t => t.stop());
@@ -2637,14 +2730,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         voiceState.isRecording = false;
-        if (elements.voiceInputBtn) elements.voiceInputBtn.classList.remove('recording');
-        if (elements.voiceRecordingBanner) elements.voiceRecordingBanner.style.display = 'none';
-
-        if (cancelled && elements.chatInput) {
-            elements.chatInput.value = '';
-            elements.chatInput.dispatchEvent(new Event('input'));
-        } else if (elements.chatInput) {
-            elements.chatInput.focus();
+        if (cancelled) {
+            if (elements.voiceInputBtn) elements.voiceInputBtn.classList.remove('recording');
+            if (elements.voiceRecordingBanner) elements.voiceRecordingBanner.style.display = 'none';
+            if (elements.chatInput) elements.chatInput.focus();
         }
     }
 

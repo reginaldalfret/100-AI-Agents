@@ -12,7 +12,7 @@ import { agentScopeGuard } from "../../intelligence/index.js";
 import { documentExtractor } from "../../multimodal/index.js";
 import { validateAttachmentIntegrity } from "../../multimodal/attachment-integrity.js";
 import { ingestDocument, queryRAG, IngestionNamespace } from "../../rag/index.js";
-import { voiceService } from "../../voice/index.js";
+import { voiceService, globalOfflineTTSEngine, globalOfflineSTTEngine } from "../../voice/index.js";
 import { pythonClient } from "../../compute/python-client.js";
 import { superOrchestrator } from "../../orchestration/super-orchestrator.js";
 import { routingRegistry } from "../../intelligence/routing-registry.js";
@@ -440,6 +440,93 @@ const server = http.createServer(async (req, res) => {
         count: artifacts.length,
         artifacts
       });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/tts/voices") {
+      json(res, 200, {
+        status: "success",
+        engine: "Windows.Media.SpeechSynthesis (OneCore Local)",
+        voice: globalOfflineTTSEngine.getVoiceInfo(),
+        offline: true,
+        airGapped: true
+      });
+      return;
+    }
+
+    if ((req.method === "POST" || req.method === "GET") && url.pathname === "/api/tts") {
+      let text = "";
+      let rate = 1.0;
+      if (req.method === "POST") {
+        const payload = await readBody(req);
+        text = payload.text || payload.message || payload.prompt || "";
+        rate = payload.rate || 1.0;
+      } else {
+        text = url.searchParams.get("text") || "";
+        rate = parseFloat(url.searchParams.get("rate")) || 1.0;
+      }
+
+      if (!text || text.trim().length === 0) {
+        json(res, 400, { status: "error", error: "Text is required for TTS synthesis" });
+        return;
+      }
+
+      try {
+        const audioResult = await globalOfflineTTSEngine.synthesize(text, { rate });
+        res.writeHead(200, {
+          "Content-Type": audioResult.contentType || "audio/wav",
+          "Content-Length": audioResult.buffer.length,
+          "X-Voice-Name": audioResult.voice,
+          "X-Voice-Locale": audioResult.locale,
+          "X-Voice-Source": audioResult.source,
+          "X-Air-Gap": "100% Offline Local",
+          "Cache-Control": "public, max-age=86400"
+        });
+        res.end(audioResult.buffer);
+      } catch (ttsErr) {
+        console.error("[OFFLINE_TTS_ERROR]", ttsErr.message);
+        json(res, 500, {
+          status: "error",
+          error: "TTS_SYNTHESIS_FAILED: " + ttsErr.message,
+          airGapped: true
+        });
+      }
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/stt/health") {
+      json(res, 200, globalOfflineSTTEngine.getHealth());
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/stt/transcribe") {
+      try {
+        const payload = await readBody(req);
+        const audioInput = payload.audio || payload.audio_base64 || payload.audio_path || payload.data;
+        const locale = payload.locale || "en-IN";
+
+        if (!audioInput) {
+          json(res, 400, {
+            status: "error",
+            error: "AUDIO_DATA_REQUIRED: Audio base64 or path is required for STT transcription"
+          });
+          return;
+        }
+
+        const sttResult = await globalOfflineSTTEngine.transcribe(audioInput, { locale });
+        json(res, 200, {
+          status: "success",
+          ...sttResult
+        });
+      } catch (sttErr) {
+        console.error("[OFFLINE_STT_ERROR]", sttErr.message);
+        json(res, 500, {
+          status: "error",
+          error: "STT_TRANSCRIPTION_FAILED: " + sttErr.message,
+          offline: true,
+          externalCalls: 0
+        });
+      }
       return;
     }
 

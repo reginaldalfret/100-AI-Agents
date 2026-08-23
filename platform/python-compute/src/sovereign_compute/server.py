@@ -16,6 +16,7 @@ from .data.analytics import analyze_dataset
 from .data.statistics import calculate_corrosion_rate
 from .embeddings.engine import generate_embedding
 from .reranking.engine import rerank_documents
+from .stt.engine import transcribe_audio, get_stt_health
 
 class ComputeHandler(http.server.BaseHTTPRequestHandler):
     def _send_json(self, status: int, data: dict):
@@ -33,8 +34,10 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
                 "status": "healthy",
                 "service": "sovereign-compute",
                 "version": "2.0.0",
-                "capabilities": ["pdf", "docx", "xlsx", "pptx", "ocr", "vision", "analytics", "calculations", "embeddings", "reranking"]
+                "capabilities": ["pdf", "docx", "xlsx", "pptx", "ocr", "vision", "analytics", "calculations", "embeddings", "reranking", "stt"]
             }))
+        elif self.path in ["/stt/health", "/api/stt/health"]:
+            self._send_json(200, success_response(get_stt_health()))
         else:
             self._send_json(404, error_response("NOT_FOUND", f"Endpoint {self.path} not found"))
 
@@ -84,6 +87,13 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
                 self._send_json(200, success_response({"embedding": res, "dimensions": len(res)}))
             elif path in ["/rerank", "/api/rerank"]:
                 res = rerank_documents(payload.get("query", ""), payload.get("documents", []))
+                self._send_json(200, success_response(res))
+            elif path in ["/stt/transcribe", "/api/stt/transcribe"]:
+                res = transcribe_audio(
+                    audio_path=payload.get("audio_path"),
+                    audio_base64=payload.get("audio_base64"),
+                    locale=payload.get("locale", "en-IN")
+                )
                 self._send_json(200, success_response(res))
             else:
                 self._send_json(404, error_response("NOT_FOUND", f"POST endpoint {self.path} not found"))
