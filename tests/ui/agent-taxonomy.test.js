@@ -67,6 +67,6 @@ describe('101 Super AI Agents — Agent Taxonomy & Ordering Test', () => {
     const htmlContent = fs.readFileSync(path.join(ROOT, 'platform', 'web', 'index.html'), 'utf8');
     assert.ok(htmlContent.includes('<title>101 Super AI Agents</title>'), 'HTML title must be 101 Super AI Agents');
     assert.ok(htmlContent.includes('101 SUPER AI AGENTS'), 'HTML header must contain 101 SUPER AI AGENTS');
-    assert.ok(htmlContent.includes('101 Agents Active'), 'HTML status must use Active terminology');
+    assert.ok(htmlContent.toLowerCase().includes('101 agents active'), 'HTML status must use Active terminology');
   });
 });

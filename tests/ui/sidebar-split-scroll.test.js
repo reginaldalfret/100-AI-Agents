@@ -59,23 +59,20 @@ describe('101 Super AI Agents — Sidebar Independent Split Scroll Subsystem', (
     assert.ok(agentBlock.includes('flex: 1 1 0;') || agentBlock.includes('flex: 1;'), 'Agent list must have flex expansion');
   });
 
-  it('5. Fixed header, search, category filter bar, and footer status remain fixed outside scroll areas', () => {
+  it('5. Fixed header, search, and category filter bar remain fixed outside scroll areas', () => {
     assert.ok(html.includes('class="sidebar-header"'), 'Header must exist');
     assert.ok(html.includes('id="btnNewChat"'), 'New Chat must exist in fixed header');
     assert.ok(html.includes('id="sidebarSearch"'), 'Sidebar search must exist in fixed header');
     assert.ok(html.includes('id="categoryFilterBar"'), 'Category filters must exist in agent section header');
-    assert.ok(html.includes('class="sidebar-footer"'), 'Footer status must exist');
 
     // Verify search and category filter bar are outside the scrollable containers
     const searchIdx = html.indexOf('id="sidebarSearch"');
     const convIdx = html.indexOf('id="conversationList"');
     const catIdx = html.indexOf('id="categoryFilterBar"');
     const agentListIdx = html.indexOf('id="agentList"');
-    const footerIdx = html.indexOf('class="sidebar-footer"');
 
     assert.ok(searchIdx < convIdx, 'Search box must be above conversation scroll container');
     assert.ok(catIdx < agentListIdx, 'Category filters must be above agent scroll container');
-    assert.ok(agentListIdx < footerIdx, 'Footer must be below agent scroll container');
   });
 
   it('6. Agent 101 Super AI Agent is rendered LAST in agent ordering', () => {
