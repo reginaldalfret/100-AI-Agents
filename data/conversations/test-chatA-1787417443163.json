@@ -1,0 +1,33 @@
+{
+  "id": "test-chatA-1787417443163",
+  "title": "New Conversation",
+  "agentId": "agent-101",
+  "modelMode": "auto",
+  "messages": [
+    {
+      "id": "msg-1787417443163",
+      "role": "user",
+      "content": "Explain solar panels.",
+      "model": null,
+      "actualModel": null,
+      "timestamp": "2026-08-22T16:50:43.163Z"
+    },
+    {
+      "id": "msg-1787417443163",
+      "role": "assistant",
+      "content": "Solar panels convert sunlight to electricity.",
+      "model": null,
+      "actualModel": null,
+      "timestamp": "2026-08-22T16:50:43.163Z"
+    }
+  ],
+  "memory": {
+    "summary": "",
+    "activeTopic": "Solar panels",
+    "subtopic": "",
+    "intent": "explanation",
+    "entities": []
+  },
+  "createdAt": "2026-08-22T16:50:43.163Z",
+  "updatedAt": "2026-08-22T16:50:43.163Z"
+}

@@ -1,0 +1,62 @@
+{
+  "version": "1.0.0",
+  "scenarios": [
+    {
+      "id": "SCEN-001",
+      "category": "pronouns",
+      "turn1": "Write a professional article about renewable energy.",
+      "turn2": "write about the types in it",
+      "expectedReference": "Renewable Energy",
+      "expectedTopic": "Renewable Energy"
+    },
+    {
+      "id": "SCEN-002",
+      "category": "ordinals",
+      "turn1": "List the top 3 web frameworks: React, Vue, and Angular.",
+      "turn2": "Which one is easiest for beginners?",
+      "expectedReference": "options under topic 'React vs Vue Comparison'",
+      "expectedTopic": "React vs Vue Comparison"
+    },
+    {
+      "id": "SCEN-003",
+      "category": "code",
+      "turn1": "Write a Python script to parse CSV files.",
+      "turn2": "Now optimize it for large 10GB files.",
+      "expectedReference": "the code previously generated in this conversation",
+      "expectedTopic": "Python Programming"
+    },
+    {
+      "id": "SCEN-004",
+      "category": "documents",
+      "turn1": "Analyze the ultrasonic thickness readings for HX-204.",
+      "turn2": "What is the corrosion rate on its second shell course?",
+      "expectedReference": "Heat Exchanger HX-204",
+      "expectedTopic": "Heat Exchanger HX-204"
+    },
+    {
+      "id": "SCEN-005",
+      "category": "actions",
+      "turn1": "Generate a comprehensive audit report for OISD-STD-129 compliance.",
+      "turn2": "Make it shorter and convert the findings to bullet points.",
+      "expectedReference": "the previous response regarding 'Statutory Inspection Standards'",
+      "expectedTopic": "Statutory Inspection Standards"
+    },
+    {
+      "id": "SCEN-006",
+      "category": "follow-ups",
+      "turn1": "Explain the biological mechanism of photosynthesis.",
+      "turn2": "What happens in its dark reaction phase?",
+      "expectedReference": "Photosynthesis",
+      "expectedTopic": "Photosynthesis"
+    },
+    {
+      "id": "SCEN-007",
+      "category": "isolation",
+      "chatA_turn1": "Explain solar panel installation.",
+      "chatB_turn1": "Write a SQL query for student admissions.",
+      "chatB_turn2": "Explain it.",
+      "chatB_expectedContext": "SQL / Student Admissions",
+      "chatB_prohibitedContext": "solar panel"
+    }
+  ]
+}

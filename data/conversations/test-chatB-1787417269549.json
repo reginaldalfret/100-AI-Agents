@@ -1,0 +1,45 @@
+{
+  "id": "test-chatB-1787417269549",
+  "title": "New Conversation",
+  "agentId": "agent-101",
+  "modelMode": "auto",
+  "messages": [
+    {
+      "id": "msg-1787417269550",
+      "role": "user",
+      "content": "Write a Python function to calculate fibonacci.",
+      "model": null,
+      "actualModel": null,
+      "timestamp": "2026-08-22T16:47:49.550Z"
+    },
+    {
+      "id": "msg-1787417269551",
+      "role": "assistant",
+      "content": "def fib(n): return n if n <= 1 else fib(n-1)+fib(n-2)",
+      "model": null,
+      "actualModel": null,
+      "timestamp": "2026-08-22T16:47:49.551Z"
+    }
+  ],
+  "memory": {
+    "summary": "",
+    "activeTopic": "Python Programming",
+    "subtopic": "",
+    "intent": "writing",
+    "entities": [
+      {
+        "id": "python",
+        "name": "Python",
+        "type": "technology",
+        "aliases": [],
+        "attributes": {},
+        "mentions": 2,
+        "confidence": 0.95,
+        "firstMentionedAt": "2026-08-22T16:47:49.550Z",
+        "lastMentionedAt": "2026-08-22T16:47:49.551Z"
+      }
+    ]
+  },
+  "createdAt": "2026-08-22T16:47:49.550Z",
+  "updatedAt": "2026-08-22T16:47:49.551Z"
+}

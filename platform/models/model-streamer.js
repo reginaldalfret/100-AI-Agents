@@ -242,6 +242,85 @@ class ModelStreamerManager {
       this.releaseExecutionLock();
     }
   }
+  /**
+   * Non-streaming single-shot generation from Ollama.
+   * Used for Stage 1 vision extraction in the two-stage pipeline.
+   */
+  async generateFromOllama({
+    model,
+    system = "",
+    prompt = "",
+    images = [],
+    temperature = 0.3,
+    options = {}
+  }) {
+    const lock = await this.acquireExecutionLock(model);
+
+    try {
+      const ollamaUrl = new URL(`${DEFAULT_OLLAMA_URL}/api/generate`);
+      const payload = {
+        model,
+        system,
+        prompt,
+        stream: false,
+        think: false,
+        keep_alive: "5m",
+        options: {
+          temperature,
+          num_predict: options.num_predict || 1024,
+          ...options
+        }
+      };
+
+      if (Array.isArray(images) && images.length > 0) {
+        payload.images = images;
+      }
+
+      const postData = JSON.stringify(payload);
+
+      return await new Promise((resolve, reject) => {
+        const req = http.request(
+          ollamaUrl,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Content-Length": Buffer.byteLength(postData)
+            }
+          },
+          (res) => {
+            let body = "";
+            res.setEncoding("utf8");
+            res.on("data", (chunk) => { body += chunk; });
+            res.on("end", () => {
+              if (res.statusCode !== 200) {
+                reject(new Error(`Ollama returned status ${res.statusCode}: ${body || res.statusMessage}`));
+                return;
+              }
+              try {
+                const parsed = JSON.parse(body);
+                resolve({
+                  text: parsed.response || "",
+                  model: parsed.model || model,
+                  total_duration: parsed.total_duration,
+                  eval_count: parsed.eval_count
+                });
+              } catch (parseErr) {
+                reject(new Error(`Failed to parse Ollama response: ${parseErr.message}`));
+              }
+            });
+            res.on("error", reject);
+          }
+        );
+
+        req.on("error", reject);
+        req.write(postData);
+        req.end();
+      });
+    } finally {
+      this.releaseExecutionLock();
+    }
+  }
 }
 
 export const modelStreamer = new ModelStreamerManager();

@@ -1,0 +1,39 @@
+{
+  "id": "quality-test-1787417603163",
+  "title": "New Conversation",
+  "agentId": "agent-101",
+  "modelMode": "auto",
+  "messages": [],
+  "memory": {
+    "summary": "",
+    "activeTopic": "Renewable Energy",
+    "subtopic": "",
+    "intent": "writing",
+    "entities": [
+      {
+        "id": "renewable energy",
+        "name": "Renewable energy",
+        "type": "concept",
+        "aliases": [],
+        "attributes": {},
+        "mentions": 2,
+        "confidence": 0.96,
+        "firstMentionedAt": "2026-08-22T16:53:23.165Z",
+        "lastMentionedAt": "2026-08-22T16:53:23.165Z"
+      },
+      {
+        "id": "geothermal",
+        "name": "geothermal",
+        "type": "concept",
+        "aliases": [],
+        "attributes": {},
+        "mentions": 1,
+        "confidence": 0.96,
+        "firstMentionedAt": "2026-08-22T16:53:23.165Z",
+        "lastMentionedAt": "2026-08-22T16:53:23.165Z"
+      }
+    ]
+  },
+  "createdAt": "2026-08-22T16:53:23.163Z",
+  "updatedAt": "2026-08-22T16:53:23.166Z"
+}

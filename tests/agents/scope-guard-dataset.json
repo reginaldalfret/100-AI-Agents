@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "scenarios": [
+    {
+      "id": "CASE-001",
+      "agent": "agent-003",
+      "agentName": "Study AI Agent",
+      "task": "Write a REST API handler in Node.js.",
+      "expectedInScope": false,
+      "expectedDomain": "Backend & API Development",
+      "primaryRecommendation": "agent-046"
+    },
+    {
+      "id": "CASE-002",
+      "agent": "agent-003",
+      "agentName": "Study AI Agent",
+      "task": "Explain Docker for my exam.",
+      "expectedInScope": true,
+      "expectedDomain": "Education & Study Planning"
+    },
+    {
+      "id": "CASE-003",
+      "agent": "agent-001",
+      "agentName": "Writing AI Agent",
+      "task": "Write an article about Kubernetes and cloud architecture.",
+      "expectedInScope": true,
+      "expectedDomain": "Writing & Editorial"
+    },
+    {
+      "id": "CASE-004",
+      "agent": "agent-001",
+      "agentName": "Writing AI Agent",
+      "task": "Deploy this Docker container to AWS.",
+      "expectedInScope": false,
+      "expectedDomain": "DevOps & Infrastructure",
+      "primaryRecommendation": "agent-015"
+    },
+    {
+      "id": "CASE-005",
+      "agent": "agent-066",
+      "agentName": "Image Analysis AI Agent",
+      "task": "Write a PostgreSQL migration to add user roles table.",
+      "expectedInScope": false,
+      "expectedDomain": "Database & SQL Engineering",
+      "primaryRecommendation": "agent-031"
+    },
+    {
+      "id": "CASE-006",
+      "agent": "agent-033",
+      "agentName": "JavaScript AI Agent",
+      "task": "Create a 7-day exam revision timetable for chemistry.",
+      "expectedInScope": false,
+      "expectedDomain": "Education & Study Planning",
+      "primaryRecommendation": "agent-003"
+    },
+    {
+      "id": "CASE-007",
+      "agent": "agent-101",
+      "agentName": "Super AI Agent",
+      "task": "Build a full-stack app with authentication, PostgreSQL, Docker, testing, and documentation.",
+      "expectedInScope": true,
+      "isMasterOrchestrator": true
+    },
+    {
+      "id": "CASE-008",
+      "agent": "agent-003",
+      "agentName": "Study AI Agent",
+      "task": "Explain how REST APIs work in simple terms.",
+      "expectedInScope": true,
+      "expectedDomain": "Education & Study Planning"
+    },
+    {
+      "id": "CASE-009",
+      "agent": "agent-010",
+      "agentName": "UI/UX AI Agent",
+      "task": "Design a clean dark mode dashboard layout in Figma.",
+      "expectedInScope": true
+    },
+    {
+      "id": "CASE-010",
+      "agent": "agent-010",
+      "agentName": "UI/UX AI Agent",
+      "task": "Write a SQL query to backup postgresql database.",
+      "expectedInScope": false,
+      "primaryRecommendation": "agent-031"
+    }
+  ]
+}

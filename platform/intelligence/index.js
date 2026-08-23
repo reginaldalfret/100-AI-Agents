@@ -6,3 +6,4 @@ export * from "./task-state.js";
 export * from "./task-planner.js";
 export * from "./replanner.js";
 export * from "./execution-engine.js";
+export * from "./agent-scope-guard.js";

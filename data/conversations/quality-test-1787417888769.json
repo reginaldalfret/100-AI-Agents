@@ -1,0 +1,56 @@
+{
+  "id": "quality-test-1787417888769",
+  "title": "New Conversation",
+  "agentId": "agent-101",
+  "modelMode": "auto",
+  "messages": [
+    {
+      "id": "msg-1787417888770",
+      "role": "user",
+      "content": "Write a professional article about renewable energy.",
+      "model": null,
+      "actualModel": null,
+      "timestamp": "2026-08-22T16:58:08.770Z"
+    },
+    {
+      "id": "msg-1787417888772",
+      "role": "assistant",
+      "content": "Renewable energy includes solar, wind, hydro, and geothermal power sources.",
+      "model": null,
+      "actualModel": null,
+      "timestamp": "2026-08-22T16:58:08.772Z"
+    }
+  ],
+  "memory": {
+    "summary": "",
+    "activeTopic": "Renewable Energy",
+    "subtopic": "",
+    "intent": "writing",
+    "entities": [
+      {
+        "id": "renewable energy",
+        "name": "Renewable energy",
+        "type": "concept",
+        "aliases": [],
+        "attributes": {},
+        "mentions": 4,
+        "confidence": 0.96,
+        "firstMentionedAt": "2026-08-22T16:58:08.771Z",
+        "lastMentionedAt": "2026-08-22T16:58:08.772Z"
+      },
+      {
+        "id": "geothermal",
+        "name": "geothermal",
+        "type": "concept",
+        "aliases": [],
+        "attributes": {},
+        "mentions": 2,
+        "confidence": 0.96,
+        "firstMentionedAt": "2026-08-22T16:58:08.772Z",
+        "lastMentionedAt": "2026-08-22T16:58:08.772Z"
+      }
+    ]
+  },
+  "createdAt": "2026-08-22T16:58:08.769Z",
+  "updatedAt": "2026-08-22T16:58:08.773Z"
+}
