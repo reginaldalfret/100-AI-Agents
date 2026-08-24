@@ -12,7 +12,7 @@ import { agentScopeGuard } from "../../intelligence/index.js";
 import { documentExtractor } from "../../multimodal/index.js";
 import { validateAttachmentIntegrity } from "../../multimodal/attachment-integrity.js";
 import { ingestDocument, queryRAG, IngestionNamespace } from "../../rag/index.js";
-import { voiceService } from "../../voice/index.js";
+import { voiceService, globalOfflineTTSEngine, globalOfflineSTTEngine } from "../../voice/index.js";
 import { pythonClient } from "../../compute/python-client.js";
 import { superOrchestrator } from "../../orchestration/super-orchestrator.js";
 import { routingRegistry } from "../../intelligence/routing-registry.js";
@@ -323,7 +323,7 @@ const server = http.createServer(async (req, res) => {
           ollama: {
             status: ollamaHealthy ? "ready" : "offline",
             port: 11434,
-            models: ["gemma3:4b", "nemotron-3-nano:latest", "qwen2.5-coder:1.5b"]
+            models: ["gemma4:e2b", "nemotron-3-nano:latest", "qwen2.5-coder:1.5b"]
           },
           python: pyStatus,
           gateway: {
@@ -443,6 +443,93 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (req.method === "GET" && url.pathname === "/api/tts/voices") {
+      json(res, 200, {
+        status: "success",
+        engine: "Windows.Media.SpeechSynthesis (OneCore Local)",
+        voice: globalOfflineTTSEngine.getVoiceInfo(),
+        offline: true,
+        airGapped: true
+      });
+      return;
+    }
+
+    if ((req.method === "POST" || req.method === "GET") && url.pathname === "/api/tts") {
+      let text = "";
+      let rate = 1.0;
+      if (req.method === "POST") {
+        const payload = await readBody(req);
+        text = payload.text || payload.message || payload.prompt || "";
+        rate = payload.rate || 1.0;
+      } else {
+        text = url.searchParams.get("text") || "";
+        rate = parseFloat(url.searchParams.get("rate")) || 1.0;
+      }
+
+      if (!text || text.trim().length === 0) {
+        json(res, 400, { status: "error", error: "Text is required for TTS synthesis" });
+        return;
+      }
+
+      try {
+        const audioResult = await globalOfflineTTSEngine.synthesize(text, { rate });
+        res.writeHead(200, {
+          "Content-Type": audioResult.contentType || "audio/wav",
+          "Content-Length": audioResult.buffer.length,
+          "X-Voice-Name": audioResult.voice,
+          "X-Voice-Locale": audioResult.locale,
+          "X-Voice-Source": audioResult.source,
+          "X-Air-Gap": "100% Offline Local",
+          "Cache-Control": "public, max-age=86400"
+        });
+        res.end(audioResult.buffer);
+      } catch (ttsErr) {
+        console.error("[OFFLINE_TTS_ERROR]", ttsErr.message);
+        json(res, 500, {
+          status: "error",
+          error: "TTS_SYNTHESIS_FAILED: " + ttsErr.message,
+          airGapped: true
+        });
+      }
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/stt/health") {
+      json(res, 200, globalOfflineSTTEngine.getHealth());
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/stt/transcribe") {
+      try {
+        const payload = await readBody(req);
+        const audioInput = payload.audio || payload.audio_base64 || payload.audio_path || payload.data;
+        const locale = payload.locale || "en-IN";
+
+        if (!audioInput) {
+          json(res, 400, {
+            status: "error",
+            error: "AUDIO_DATA_REQUIRED: Audio base64 or path is required for STT transcription"
+          });
+          return;
+        }
+
+        const sttResult = await globalOfflineSTTEngine.transcribe(audioInput, { locale });
+        json(res, 200, {
+          status: "success",
+          ...sttResult
+        });
+      } catch (sttErr) {
+        console.error("[OFFLINE_STT_ERROR]", sttErr.message);
+        json(res, 500, {
+          status: "error",
+          error: "STT_TRANSCRIPTION_FAILED: " + sttErr.message,
+          offline: true,
+          externalCalls: 0
+        });
+      }
+      return;
+    }
+
     if (
       req.method === "POST" &&
       url.pathname === "/api/chat"
@@ -512,15 +599,31 @@ const server = http.createServer(async (req, res) => {
       const availableModels = await getAvailableModelsCached();
 
       const CANONICAL_MODEL_MAP = {
-        "gemma": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
-        "gemma3:4b": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
-        "gemma3-4b": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
+        "gemma": { tag: "gemma3:1b", displayName: "Google Gemma 3 1B", role: "lightweight-general-text" },
+        "gemma3": { tag: "gemma3:1b", displayName: "Google Gemma 3 1B", role: "lightweight-general-text" },
+        "gemma3:1b": { tag: "gemma3:1b", displayName: "Google Gemma 3 1B", role: "lightweight-general-text" },
+        "gemma3-1b": { tag: "gemma3:1b", displayName: "Google Gemma 3 1B", role: "lightweight-general-text" },
         "nemotron": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
         "nemotron-3-nano": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
         "nemotron-3-nano:latest": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
         "qwen": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" },
         "qwen2.5-coder:1.5b": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" },
-        "local-code-specialist": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" }
+        "local-code-specialist": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" },
+        "llama": { tag: "llama3.2:1b", displayName: "Meta Llama 3.2 1B", role: "lightweight-general" },
+        "llama3": { tag: "llama3.2:1b", displayName: "Meta Llama 3.2 1B", role: "lightweight-general" },
+        "llama3.2": { tag: "llama3.2:1b", displayName: "Meta Llama 3.2 1B", role: "lightweight-general" },
+        "llama3.2:1b": { tag: "llama3.2:1b", displayName: "Meta Llama 3.2 1B", role: "lightweight-general" },
+        "granite": { tag: "granite4:1b-h", displayName: "IBM Granite 4 1B-H", role: "enterprise-rag-tools" },
+        "granite4": { tag: "granite4:1b-h", displayName: "IBM Granite 4 1B-H", role: "enterprise-rag-tools" },
+        "granite4:1b-h": { tag: "granite4:1b-h", displayName: "IBM Granite 4 1B-H", role: "enterprise-rag-tools" },
+        "phi": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
+        "phi4": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
+        "phi4-mini": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
+        "deepseek": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
+        "deepseek-r1": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
+        "deepseek-r1:1.5b": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
+        "deepseek-r1-1.5b": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
+        "r1": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" }
       };
 
       const requestedMode = payload.modelMode || "auto";
@@ -659,9 +762,9 @@ const server = http.createServer(async (req, res) => {
           && !specialistKeywords.coding.patterns.some(k => taskLower.includes(k));
 
         if (isVisionOnly) {
-          // Pure vision task — route directly to Gemma 3
-          targetOllamaModel = "gemma3:4b";
-          modelDisplayName = "Google Gemma 3";
+          // Pure vision task — route directly to Gemma 4 E2B
+          targetOllamaModel = "gemma4:e2b";
+          modelDisplayName = "Google Gemma 4 E2B";
         } else {
           // Two-stage pipeline: Vision extraction → Specialist synthesis
           // Find which specialist domain matches
@@ -675,23 +778,36 @@ const server = http.createServer(async (req, res) => {
 
           if (specialistModel) {
             needsTwoStagePipeline = true;
-            // Stage 1 will use Gemma 3 for vision, Stage 2 will use the specialist
+            // Stage 1 will use Gemma 4 E2B for vision, Stage 2 will use the specialist
             visionExtractionPrompt = `Carefully examine the attached image(s) and extract ALL visible content including: text, numbers, labels, headings, structure, layout, tables, diagrams, handwriting, and any other visual information. Provide a comprehensive, detailed, and accurate description of everything you see. Format your response as structured plain text.`;
-            targetOllamaModel = "gemma3:4b";
-            modelDisplayName = "Google Gemma 3";
+            targetOllamaModel = "gemma4:e2b";
+            modelDisplayName = "Google Gemma 4 E2B";
           } else {
-            // No clear specialist match — default to Gemma 3 for the full task
-            targetOllamaModel = "gemma3:4b";
-            modelDisplayName = "Google Gemma 3";
+            // No clear specialist match — default to Gemma 4 E2B for the full task
+            targetOllamaModel = "gemma4:e2b";
+            modelDisplayName = "Google Gemma 4 E2B";
           }
         }
       } else if (!isManual) {
-        // Standard auto routing (no images) based on task keywords
+        // Intelligent Auto routing based on task specialization and context
         const taskLower = effectiveTask.toLowerCase();
         if (taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr") || taskLower.includes("diagram")) {
-          targetOllamaModel = "gemma3:4b";
-          modelDisplayName = "Google Gemma 3";
-        } else if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv") || taskLower.includes("table")) {
+          // Document / Visual extraction routes via OCR + Nemotron/Llama
+          targetOllamaModel = "nemotron-3-nano:latest";
+          modelDisplayName = "NVIDIA Nemotron 3 (via OCR Engine)";
+        } else if (taskLower.includes("deepseek") || taskLower.includes("27 × 43") || taskLower.includes("17 × 28") || taskLower.includes("17 * 28") || taskLower.includes("logic problem") || taskLower.includes("why this algorithm works") || taskLower.includes("reasoning problem") || taskLower.includes("step-by-step reasoning")) {
+          targetOllamaModel = "deepseek-r1:1.5b";
+          modelDisplayName = "DeepSeek-R1 1.5B";
+        } else if (taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes(" × ") || taskLower.includes(" + ") || taskLower.includes(" / ") || taskLower.includes(" - ") || taskLower.includes("equation") || taskLower.includes("formula") || taskLower.includes("arithmetic") || taskLower.includes("algebra") || taskLower.includes("logic") || taskLower.includes("puzzle")) {
+          targetOllamaModel = "deepseek-r1:1.5b";
+          modelDisplayName = "DeepSeek-R1 1.5B";
+        } else if (taskLower.includes("rag") || taskLower.includes("retriev") || taskLower.includes("entities") || taskLower.includes("entity") || taskLower.includes("classify") || taskLower.includes("classification") || taskLower.includes("extract key") || taskLower.includes("tool call") || taskLower.includes("enterprise")) {
+          targetOllamaModel = "granite4:1b-h";
+          modelDisplayName = "IBM Granite 4 1B-H";
+        } else if (taskLower.includes("rewrite") || taskLower.includes("rephrase") || taskLower.includes("proofread") || taskLower.includes("summarize this") || taskLower.includes("short summary") || taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi") {
+          targetOllamaModel = "gemma3:1b";
+          modelDisplayName = "Google Gemma 3 1B";
+        } else if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("java") || taskLower.includes("c++") || taskLower.includes("rust") || taskLower.includes("sql") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv") || taskLower.includes("table")) {
           targetOllamaModel = "qwen2.5-coder:1.5b";
           modelDisplayName = "Qwen 2.5 Coder";
         } else {
@@ -930,12 +1046,12 @@ const server = http.createServer(async (req, res) => {
           // TWO-STAGE VISION PIPELINE
           // ================================================================
           if (needsTwoStagePipeline && hasImages && specialistModel) {
-            // STAGE 1: Vision Extraction with Gemma 3
+            // STAGE 1: Vision Extraction with Gemma 4 E2B
             sendSSE("status", {
               state: ModelLifecycleState.PREPARING,
-              message: "Analyzing image with Google Gemma 3 Vision...",
-              model: "Google Gemma 3",
-              tag: "gemma3:4b",
+              message: "Analyzing image with Google Gemma 4 E2B Multimodal...",
+              model: "Google Gemma 4 E2B",
+              tag: "gemma4:e2b",
               stage: 1,
               pipeline: "vision-to-specialist"
             });
@@ -943,7 +1059,7 @@ const server = http.createServer(async (req, res) => {
             let visionExtractedText = "";
             try {
               const visionResult = await modelStreamer.generateFromOllama({
-                model: "gemma3:4b",
+                model: "gemma4:e2b",
                 system: "You are a vision analysis engine. Extract and describe ALL content from the provided image(s) with maximum detail and accuracy. Include all text, numbers, structure, layout, tables, and visual elements.",
                 prompt: visionExtractionPrompt + "\n\nUser's original request for context: " + task,
                 images: imagesList,
@@ -958,10 +1074,10 @@ const server = http.createServer(async (req, res) => {
               
               sendSSE("error", {
                 code: errCode,
-                message: `Vision analysis failed: ${visionErr.message}. Gemma 3 may not be available for image processing.`,
+                message: `Vision analysis failed: ${visionErr.message}. Gemma 4 E2B may not be available for image processing.`,
                 status: "vision_error",
                 stage: 1,
-                model: "gemma3:4b"
+                model: "gemma4:e2b"
               });
               res.end();
               return;
@@ -1028,7 +1144,7 @@ const server = http.createServer(async (req, res) => {
                   agent_id: agent.agent_id,
                   requested_model: "auto",
                   actual_model: specialistModel,
-                  vision_model: "gemma3:4b",
+                  vision_model: "gemma4:e2b",
                   model_mode: "auto",
                   model_source: "ollama-local",
                   model: specialistDisplayName,
@@ -1174,9 +1290,9 @@ const server = http.createServer(async (req, res) => {
       try {
         if (hasImages) {
           if (needsTwoStagePipeline && specialistModel) {
-            // Stage 1: Vision Extraction via Gemma 3
+            // Stage 1: Vision Extraction via Gemma 4 E2B
             const stage1 = await modelStreamer.generateFromOllama({
-              model: "gemma3:4b",
+              model: "gemma4:e2b",
               system: "You are an expert visual analyzer. Extract all visual information, text, labels, and content accurately.",
               prompt: visionExtractionPrompt || "Extract all visual content from this image.",
               images: imagesList,
@@ -1539,6 +1655,42 @@ const server = http.createServer(async (req, res) => {
       const sentences = voiceService.chunkText(payload.text || "");
       json(res, 200, { status: "success", spokenText, sentences });
       return;
+    }
+
+    if (
+      req.method === "POST" &&
+      (url.pathname === "/api/export" ||
+        (url.pathname.startsWith("/api/messages/") && url.pathname.endsWith("/export")))
+    ) {
+      const payload = await readBody(req);
+      const { globalResponseExportEngine } = await import("../../exports/response-export-engine.js");
+
+      try {
+        const exported = await globalResponseExportEngine.exportResponse({
+          content: payload.content || payload.text || "",
+          title: payload.title || payload.subject || "AI Response",
+          format: payload.format || url.searchParams.get("format") || "pdf",
+          conversationId: payload.conversationId,
+          messageId: payload.messageId
+        });
+
+        res.writeHead(200, {
+          "Content-Type": exported.mimeType,
+          "Content-Disposition": `attachment; filename="${exported.filename}"`,
+          "Content-Length": exported.sizeBytes,
+          "X-Artifact-Id": exported.artifactId,
+          "X-SHA256": exported.sha256,
+          "X-Air-Gap": "100% Offline Local"
+        });
+        res.end(exported.buffer);
+        return;
+      } catch (err) {
+        json(res, 400, {
+          status: "error",
+          error: err.message || "Failed to export response"
+        });
+        return;
+      }
     }
 
     if (

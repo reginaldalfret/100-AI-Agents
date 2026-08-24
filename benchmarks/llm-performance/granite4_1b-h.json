@@ -1,0 +1,20 @@
+{
+  "model": "granite4:1b-h",
+  "tag": "granite4:1b-h",
+  "size": "1.45 GB",
+  "size_bytes": 1558945427,
+  "success": true,
+  "status": "HEALTHY",
+  "ttft_ms": 217,
+  "latency_ms": 1514,
+  "cold_latency_ms": 2993,
+  "warm_latency_ms": 1514,
+  "output_tokens": 69,
+  "tokens_per_second": 53.26,
+  "vram_mb": 2081,
+  "gpu_percent": 97,
+  "temperature_c": 66,
+  "ram_mb": 6150,
+  "cold_response": "OK",
+  "warm_response": "Artificial Intelligence (AI) refers to the simulation of human intelligence in machines that are programmed to think and learn like humans. AI systems can process large amounts of data, identify patterns, and make decisions with minimal human intervention. These systems are used in various applications, such as virtual assistants, image recognition, and autonomous vehicles, among others."
+}

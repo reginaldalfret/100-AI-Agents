@@ -74,7 +74,7 @@ Enterprises operating in oil & gas, defense, power grids, manufacturing, and cri
                                               ▼
                         ┌───────────────────────────────────────────┐
                         │  LOCAL OLLAMA INFERENCE (Port 11434)      │
-                        │  Qwen 2.5 Coder / Nemotron 3 / Gemma 3    │
+                        │  Nemotron 3 / Qwen 2.5 Coder / Gemma 4 E2B│
                         └─────────────────────┬─────────────────────┘
                                               │
                                               ▼
@@ -130,9 +130,15 @@ When given complex instructions (e.g., *"Write a palindrome program in C++, Java
 
 | Model Family | Canonical Tag | VRAM Footprint | Primary Specialization |
 | :--- | :--- | :--- | :--- |
-| **Qwen 2.5 Coder** | `qwen2.5-coder:1.5b` | ~1.8 GB | Code generation, refactoring, algorithms, multi-language translation |
-| **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | ~2.1 GB | Reasoning, logical deduction, compliance, business workflows |
-| **Google Gemma 3** | `gemma3:latest` | ~2.6 GB | General intelligence, writing, multimodal analysis, conversational chat |
+| **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | ~2.8 GB | Super AI orchestration, multi-agent decomposition, deep reasoning |
+| **Qwen 2.5 Coder** | `qwen2.5-coder:1.5b` | ~1.2 GB | Multi-language code generation, refactoring, deterministic sandbox |
+| **Google Gemma 3 1B** | `gemma3:1b` | ~815 MB | Edge NLP & semantic synthesis, syntactic parsing, dense transformer reasoning |
+| **Meta Llama 3.2 1B** | `llama3.2:1b` | ~1.3 GB | Fast lightweight general text, quick summaries, low-latency assistance |
+| **IBM Granite 4 1B-H** | `granite4:1b-h` | ~1.2 GB | Enterprise RAG, structured extraction, classification & tool calling |
+| **Microsoft Phi-4 Mini** | `phi4-mini` | ~2.4 GB | Advanced reasoning, mathematics, logic, algorithmic problem solving |
+| **DeepSeek-R1 1.5B** | `deepseek-r1:1.5b` | ~1.1 GB | Lightweight reasoning, mathematics, logic & step-by-step problem solving |
+| **OCR & Document Intelligence** | `python-compute-ocr` | CPU / RAM | Primary Image/PDF character & table extraction |
+| **Faster-Whisper Tiny** | `tiny.en` | ~78 MB | 100% Offline Speech-to-Text (Voice Input) |
 
 ---
 
@@ -145,11 +151,11 @@ When given complex instructions (e.g., *"Write a palindrome program in C++, Java
 
 ---
 
-## Air-Gapped Architecture
+## Offline Voice (Speech-to-Text & Text-to-Speech)
 
-- **0 External Cloud Calls**: All inference, embedding, OCR, and reasoning happens strictly on `127.0.0.1`.
-- **Local Ollama Integration**: Communicates over local loopback on port `11434`.
-- **Authoritative Provenance**: Every response includes an audit stamp showing `Air-Gap Status: Active (0 External Calls)`.
+- **Voice Input (STT)**: 100% offline local speech recognition running on local CPU with 0 external network requests. Audio captured via browser `MediaRecorder` is transcribed locally and placed into the composer.
+- **Voice Output (TTS)**: 100% offline Indian English Female speech synthesis (`Microsoft Heera - en-IN`) streaming standard uncompressed WAV audio locally to the browser.
+- **Privacy & Air-Gap**: 0 telemetry, 0 cloud dependencies, 0 permanent microphone audio retention. Transient audio is purged immediately upon transcription.
 
 ---
 

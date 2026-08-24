@@ -52,14 +52,14 @@ export function classifyTask(input = {}, maybeAttachments = []) {
 
   if (isVision) {
     const isScanPdf = hasPDF || (prompt.includes("scan") && prompt.includes("pdf")) || (prompt.includes("ocr") && !prompt.includes("photo"));
-    const selectedModel = isScanPdf ? "local-vision-ocr" : "gemma3-4b";
+    const selectedModel = isScanPdf ? "local-vision-ocr" : "gemma4-e2b";
     const mod = isScanPdf ? "ocr" : "vision";
     return {
       task_type: TaskType.VISION_MULTIMODAL,
       primary_modality: mod,
       preferred_model_id: selectedModel,
       recommended_model_id: selectedModel,
-      preferred_model_name: isScanPdf ? "Local Vision & OCR Engine" : "Google Gemma 3 (4B Multimodal)",
+      preferred_model_name: isScanPdf ? "Local Vision & OCR Engine" : "Google Gemma 4 E2B (Multimodal & Reasoning)",
       confidence: 0.95,
       reason: isScanPdf ? "High-speed OCR & document parsing required" : "Deep visual reasoning, photograph defect analysis, or P&ID schematic interpretation required",
       recommended_agents: ["agent-045", "agent-051", "agent-052"]

@@ -12,7 +12,10 @@
     "test:ui": "node tests/sih/ui/composer-ui.test.js && node tests/ui/model-selector.test.js && node tests/ui/agent-numbering.test.js",
     "benchmark": "node scripts/benchmark/run-model-benchmark.js",
     "fleet:start": "node scripts/run-fleet.js",
-    "supervisor": "node scripts/supervisor.js"
+    "supervisor": "node scripts/supervisor.js",
+    "desktop:test": "node --test tests/desktop/*.test.js",
+    "desktop:start": "node desktop/main/main.js",
+    "desktop:build": "node scripts/build-desktop.js"
   },
   "keywords": [
     "super-ai",

@@ -1,0 +1,20 @@
+{
+  "model": "gemma4:e2b",
+  "tag": "gemma4:e2b",
+  "size": "6.67 GB",
+  "size_bytes": 7162405653,
+  "success": false,
+  "status": "LIMITED_CAPACITY",
+  "ttft_ms": 7983,
+  "latency_ms": 7983,
+  "cold_latency_ms": 20855,
+  "warm_latency_ms": 7983,
+  "output_tokens": 80,
+  "tokens_per_second": 11.33,
+  "vram_mb": 376,
+  "gpu_percent": 0,
+  "temperature_c": 64,
+  "ram_mb": 7616,
+  "cold_response": "HTTP 200",
+  "warm_response": ""
+}

@@ -1,0 +1,20 @@
+{
+  "model": "qwen2.5-coder:1.5b",
+  "tag": "qwen2.5-coder:1.5b",
+  "size": "0.92 GB",
+  "size_bytes": 986062089,
+  "success": true,
+  "status": "HEALTHY",
+  "ttft_ms": 199,
+  "latency_ms": 411,
+  "cold_latency_ms": 2530,
+  "warm_latency_ms": 411,
+  "output_tokens": 19,
+  "tokens_per_second": 89.98,
+  "vram_mb": 1573,
+  "gpu_percent": 92,
+  "temperature_c": 65,
+  "ram_mb": 5277,
+  "cold_response": "OK",
+  "warm_response": "Artificial intelligence is the simulation of human intelligence and decision-making through computer systems and algorithms."
+}

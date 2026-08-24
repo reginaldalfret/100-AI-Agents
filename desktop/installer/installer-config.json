@@ -1,0 +1,47 @@
+{
+  "appId": "com.sovereign.301superai",
+  "productName": "301 Super AI",
+  "artifactName": "301-Super-AI-Setup-${version}.${ext}",
+  "copyright": "Copyright © 2026 Smart India Hackathon Team",
+  "directories": {
+    "output": "dist",
+    "buildResources": "desktop/assets"
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
+    ],
+    "icon": "desktop/assets/icon.ico",
+    "requestedExecutionLevel": "asInvoker"
+  },
+  "nsis": {
+    "oneClick": true,
+    "perMachine": false,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": false,
+    "deleteAppDataOnUninstall": false,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "shortcutName": "301 Super AI"
+  },
+  "files": [
+    "desktop/**/*",
+    "platform/**/*",
+    "agents/**/*",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "models/",
+      "to": "models",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ]
+}

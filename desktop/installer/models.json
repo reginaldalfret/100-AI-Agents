@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "2.0.0",
+  "platform": "Sovereign AI Workbench",
+  "models": [
+    {
+      "id": "nemotron-3-nano:latest",
+      "name": "NVIDIA Nemotron 3 Nano",
+      "tag": "nemotron-3-nano:latest",
+      "role": "orchestrator",
+      "specialization": "Super AI Orchestration / Reasoning",
+      "required": true,
+      "sizeBytes": 2837073129,
+      "sizeDisplay": "2.8 GB",
+      "vramMinMb": 2500,
+      "description": "Super AI Agent master orchestrator, high-level task decomposition, synthesis, and deep reasoning"
+    },
+    {
+      "id": "qwen2.5-coder:1.5b",
+      "name": "Qwen 2.5 Coder 1.5B",
+      "tag": "qwen2.5-coder:1.5b",
+      "role": "coder",
+      "specialization": "Coding & Refactoring",
+      "required": true,
+      "sizeBytes": 986062089,
+      "sizeDisplay": "986 MB",
+      "vramMinMb": 1200,
+      "description": "High-efficiency local multi-language code generation, debugging, refactoring, and AST analysis"
+    },
+    {
+      "id": "gemma3:1b",
+      "name": "Google Gemma 3 1B",
+      "tag": "gemma3:1b",
+      "role": "edge_nlp_synthesis",
+      "specialization": "Edge NLP & Semantic Synthesis",
+      "required": false,
+      "sizeBytes": 815000000,
+      "sizeDisplay": "815 MB",
+      "vramMinMb": 1100,
+      "description": "High-throughput dense transformer for natural language processing, semantic summarization, and syntactic reasoning"
+    },
+    {
+      "id": "llama3.2:1b",
+      "name": "Meta Llama 3.2 1B",
+      "tag": "llama3.2:1b",
+      "role": "edge_assistant",
+      "specialization": "Ultra-Lightweight Edge Assistant",
+      "required": false,
+      "sizeBytes": 1321000000,
+      "sizeDisplay": "1.3 GB",
+      "vramMinMb": 900,
+      "description": "Ultra-compact edge language model for high-speed dialogue, text summarization, and low-footprint inference"
+    },
+    {
+      "id": "granite4:1b-h",
+      "name": "IBM Granite 4 1B-H",
+      "tag": "granite4:1b-h",
+      "role": "enterprise_agent",
+      "specialization": "Enterprise & Structured Reasoning",
+      "required": false,
+      "sizeBytes": 1450000000,
+      "sizeDisplay": "1.4 GB",
+      "vramMinMb": 1100,
+      "description": "Enterprise-grade high-precision model for structured workflows, tabular data processing, and deterministic tool execution"
+    },
+    {
+      "id": "phi4-mini:latest",
+      "name": "Microsoft Phi-4 Mini 3.8B",
+      "tag": "phi4-mini:latest",
+      "role": "math_stem_reasoning",
+      "specialization": "Advanced Math & STEM Reasoning",
+      "required": false,
+      "sizeBytes": 2490000000,
+      "sizeDisplay": "2.5 GB",
+      "vramMinMb": 2600,
+      "description": "State-of-the-art synthetic reasoning model for mathematical logic, algorithmic problem solving, and STEM intelligence"
+    },
+    {
+      "id": "deepseek-r1:1.5b",
+      "name": "DeepSeek-R1 1.5B",
+      "tag": "deepseek-r1:1.5b",
+      "role": "lightweight_reasoning",
+      "specialization": "Lightweight Reasoning & Logic",
+      "required": false,
+      "sizeBytes": 1100000000,
+      "sizeDisplay": "1.1 GB",
+      "vramMinMb": 1200,
+      "description": "Lightweight reasoning, mathematics and logic model with chain-of-thought problem solving"
+    },
+    {
+      "id": "ocr-document-intelligence",
+      "name": "Python Compute OCR & Document Intelligence",
+      "tag": "python-compute-ocr",
+      "role": "document_intelligence",
+      "specialization": "Primary Image/PDF Extraction",
+      "required": true,
+      "sizeBytes": 150000000,
+      "sizeDisplay": "150 MB",
+      "vramMinMb": 0,
+      "description": "Deterministic PDF text extraction, scanned page OCR, table parsing, and P&ID symbol detection"
+    },
+    {
+      "id": "whisper-tiny.en",
+      "name": "Faster-Whisper Tiny English",
+      "tag": "tiny.en",
+      "role": "stt",
+      "specialization": "Offline Voice Input",
+      "required": true,
+      "sizeBytes": 77800000,
+      "sizeDisplay": "78 MB",
+      "vramMinMb": 200,
+      "description": "100% offline air-gapped speech-to-text local model with zero cloud dependencies"
+    }
+  ]
+}

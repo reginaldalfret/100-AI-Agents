@@ -19,6 +19,7 @@ credentials/
 blobs/
 AI/Models/
 data/models/
+release/offline-payload/
 
 # Local Runtime Data and Caches
 data/context/*.json
@@ -53,3 +54,9 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

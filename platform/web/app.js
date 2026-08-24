@@ -428,19 +428,32 @@ document.addEventListener('DOMContentLoaded', () => {
         _CHART_COLORS: ['#06b6d4', '#8b5cf6', '#f43f5e', '#10b981', '#f59e0b', '#3b82f6', '#ec4899', '#14b8a6', '#f97316', '#a855f7', '#22d3ee', '#e879f9', '#34d399', '#fbbf24', '#fb7185'],
 
         _normalizeChartData(spec) {
-            // Accept both { labels, series } and { data: [{label, value}] } formats
-            let labels = spec.labels || spec.x?.values || [];
-            let series = spec.series || [];
+            // Accept categories, labels, x.values, series.data, series.values, and data array
+            let labels = spec.categories || spec.labels || spec.x?.values || [];
+            let series = (spec.series || []).map((sr, idx) => ({
+                name: sr.name || sr.label || `Series ${idx + 1}`,
+                values: Array.isArray(sr.data) ? sr.data : (Array.isArray(sr.values) ? sr.values : [])
+            }));
+
             if ((!labels.length || !series.length) && Array.isArray(spec.data) && spec.data.length > 0) {
                 const d = spec.data;
-                if (d[0] && typeof d[0].label === 'string' && typeof d[0].value === 'number') {
-                    labels = d.map(i => i.label);
-                    series = [{ name: spec.seriesName || 'Value', values: d.map(i => i.value) }];
+                if (d[0] && (typeof d[0].label === 'string' || typeof d[0].name === 'string')) {
+                    labels = d.map(i => i.label || i.name || 'Item');
+                    series = [{ name: spec.seriesName || spec.yAxis?.label || 'Value', values: d.map(i => (typeof i.value === 'number' ? i.value : Number(i.value) || 0)) }];
+                } else if (typeof d[0] === 'number') {
+                    labels = d.map((_, i) => `Item ${i + 1}`);
+                    series = [{ name: 'Value', values: d }];
                 }
             }
+
             if (series.length === 0 && Array.isArray(spec.values)) {
                 series = [{ name: spec.seriesName || 'Value', values: spec.values }];
             }
+
+            if (!labels.length && series.length && series[0].values) {
+                labels = series[0].values.map((_, i) => `Item ${i + 1}`);
+            }
+
             return { labels, series };
         },
 
@@ -1155,14 +1168,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 const titleMatch = code.match(/title\s+(.+)/i);
                 const slices = [];
                 lines.forEach(l => {
-                    const m = l.match(/^\s*"([^"]+)"\s*:\s*([\d.]+)/);
-                    if (m) slices.push({ label: m[1], value: parseFloat(m[2]) });
+                    const m = l.match(/^\s*(?:"([^"]+)"|([a-zA-Z0-9_\s-]+))\s*:\s*([\d.]+)/);
+                    if (m && !/title|xAxis|yAxis|data/i.test(m[1] || m[2])) {
+                        slices.push({ label: (m[1] || m[2]).trim(), value: parseFloat(m[3]) });
+                    }
                 });
                 if (slices.length > 0) {
                     return this._renderPie({
-                        title: titleMatch ? titleMatch[1] : 'Pie Chart',
+                        title: titleMatch ? titleMatch[1].replace(/["']/g, '') : 'Pie Chart',
                         data: slices
                     }, false);
+                }
+            }
+
+            // Mermaid BARCHART & XYCHART support
+            if (header.startsWith('barchart') || header.startsWith('xychart') || header.startsWith('xychart-beta') || header.startsWith('linechart')) {
+                const titleMatch = code.match(/title\s+["']?([^"'\n\r]+)["']?/i);
+                const isLine = header.startsWith('linechart') || code.includes('line [');
+                const categories = [];
+                const values = [];
+
+                // Format 1: data block with "key: value" pairs
+                lines.forEach(l => {
+                    const m = l.match(/^\s*(?:"([^"]+)"|([a-zA-Z0-9_.-]+))\s*:\s*([\d.]+)/);
+                    if (m && !/title|xAxis|yAxis|data|theme/i.test(m[1] || m[2])) {
+                        categories.push((m[1] || m[2]).trim());
+                        values.push(parseFloat(m[3]));
+                    }
+                });
+
+                // Format 2: x-axis [...] and bar [...] or line [...]
+                if (categories.length === 0) {
+                    const xMatch = code.match(/x-?axis\s*(?:\[(.*?)\]|"(.*?)"\s*\[(.*?)\])/i);
+                    if (xMatch) {
+                        const rawCats = (xMatch[1] || xMatch[3] || '').split(',').map(s => s.trim().replace(/^["']|["']$/g, ''));
+                        categories.push(...rawCats);
+                    }
+                    const barMatch = code.match(/(?:bar|line)\s*\[(.*?)\]/i);
+                    if (barMatch) {
+                        const rawVals = (barMatch[1] || '').split(',').map(s => parseFloat(s.trim()) || 0);
+                        values.push(...rawVals);
+                    }
+                }
+
+                if (categories.length > 0 && values.length > 0) {
+                    const title = titleMatch ? titleMatch[1].trim() : (isLine ? 'Trend Chart' : 'Frequency Distribution');
+                    if (isLine) {
+                        return this._renderLine({
+                            title,
+                            categories,
+                            series: [{ name: 'Value', data: values }]
+                        }, false);
+                    }
+                    return this._renderBar({
+                        title,
+                        categories,
+                        series: [{ name: 'Frequency', data: values }]
+                    });
                 }
             }
 
@@ -1590,16 +1652,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const l = (lang || '').toLowerCase().trim();
             const cleanCode = code.trim();
 
-            if (l === 'mermaid' || (!l && /^(graph|flowchart|sequencediagram|pie)\b/i.test(cleanCode))) {
+            if (l === 'mermaid' || (!l && /^(graph|flowchart|sequencediagram|pie|barchart|xychart|linechart)\b/i.test(cleanCode)) || cleanCode.startsWith('%%{init')) {
                 const cardHtml = ClientDiagramRenderer.renderCard(cleanCode, { title: 'Workflow Diagram' });
                 codeBlocks.push(cardHtml);
                 return `___CODE_BLOCK_${idx}___`;
             }
 
-            if (l === 'diagram' || l === 'chart' || (l === 'json' && cleanCode.includes('"type"'))) {
+            if (['visualization', 'diagram', 'chart', 'plot'].includes(l) || (l === 'json' && (cleanCode.includes('"type"') || cleanCode.includes('"series"') || cleanCode.includes('"categories"') || cleanCode.includes('"nodes"')))) {
                 try {
                     const spec = JSON.parse(cleanCode);
-                    if (spec && typeof spec === 'object' && (spec.type || spec.nodes || spec.series)) {
+                    if (spec && typeof spec === 'object' && (spec.type || spec.nodes || spec.series || spec.categories || spec.matrix || spec.data)) {
                         const cardHtml = ClientDiagramRenderer.renderCard(spec, { title: spec.title || 'Visual Diagram' });
                         codeBlocks.push(cardHtml);
                         return `___CODE_BLOCK_${idx}___`;
@@ -2316,6 +2378,60 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePlaceholder(state.selectedAgent);
     }
 
+    async function downloadResponseExport(content, title, format, btnEl) {
+        if (!content) return;
+        const origHtml = btnEl ? btnEl.innerHTML : '';
+        if (btnEl) {
+            btnEl.disabled = true;
+            btnEl.innerHTML = `<span class="spinner-tiny" style="display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:4px;"></span> <span>Exporting...</span>`;
+        }
+
+        try {
+            const resp = await fetch('/api/export', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    content,
+                    title: title || state.currentConversation?.title || state.selectedAgent?.name || 'AI Response',
+                    format
+                })
+            });
+
+            if (!resp.ok) {
+                const err = await resp.json().catch(() => ({ error: 'Export failed' }));
+                showToast(`⚠ ${err.error || 'Could not export this response.'}`);
+                return;
+            }
+
+            const disposition = resp.headers.get('content-disposition');
+            let filename = `${(title || 'response').toLowerCase().replace(/[^a-z0-9]/g, '-')}.${format === 'excel' ? 'xlsx' : format}`;
+            if (disposition && disposition.includes('filename=')) {
+                const match = disposition.match(/filename="?([^"]+)"?/);
+                if (match && match[1]) filename = match[1];
+            }
+
+            const blob = await resp.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+
+            showToast(`✓ Downloaded ${filename}`);
+        } catch (err) {
+            console.error('[ExportResponse]', err);
+            showToast('⚠ Could not export this response.');
+        } finally {
+            if (btnEl) {
+                btnEl.disabled = false;
+                btnEl.innerHTML = origHtml;
+            }
+        }
+    }
+
     function createActionsRow(cleanContent, agentName, modelName, msgId) {
         const row = document.createElement('div');
         row.className = 'msg-actions-row';
@@ -2346,9 +2462,30 @@ document.addEventListener('DOMContentLoaded', () => {
         readAloudBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg> <span>Read Aloud</span>`;
         readAloudBtn.addEventListener('click', () => toggleSpeech(cleanContent, readAloudBtn));
 
+        const pdfBtn = document.createElement('button');
+        pdfBtn.className = 'btn-msg-action btn-export-pdf';
+        pdfBtn.title = 'Download response as formatted PDF';
+        pdfBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg> <span>PDF</span>`;
+        pdfBtn.addEventListener('click', () => downloadResponseExport(cleanContent, agentName, 'pdf', pdfBtn));
+
+        const xlsxBtn = document.createElement('button');
+        xlsxBtn.className = 'btn-msg-action btn-export-xlsx';
+        xlsxBtn.title = 'Download structured response as Excel spreadsheet (.xlsx)';
+        xlsxBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="3" y1="15" x2="21" y2="15"></line><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg> <span>Excel</span>`;
+        xlsxBtn.addEventListener('click', () => downloadResponseExport(cleanContent, agentName, 'xlsx', xlsxBtn));
+
+        const csvBtn = document.createElement('button');
+        csvBtn.className = 'btn-msg-action btn-export-csv';
+        csvBtn.title = 'Download structured data as CSV (.csv)';
+        csvBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> <span>CSV</span>`;
+        csvBtn.addEventListener('click', () => downloadResponseExport(cleanContent, agentName, 'csv', csvBtn));
+
         row.appendChild(copyBtn);
         row.appendChild(answerBtn);
         row.appendChild(readAloudBtn);
+        row.appendChild(pdfBtn);
+        row.appendChild(xlsxBtn);
+        row.appendChild(csvBtn);
         return row;
     }
 
@@ -2430,35 +2567,74 @@ document.addEventListener('DOMContentLoaded', () => {
         return voices.find(v => (v.lang || '').toLowerCase().includes('en-in')) || null;
     }
 
-    function startSpeech(text, btn) {
-        if (!('speechSynthesis' in window)) {
-            alert('Text-to-speech is not supported in this browser.');
-            return;
-        }
-
+    async function startSpeech(text, btn) {
         stopSpeech();
         const clean = sanitizeTextForSpeech(text);
         if (!clean) return;
 
-        // Split into natural sentences for humanized pacing
-        const sentences = clean.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) || [clean];
-        const trimmedSentences = sentences.map(s => s.trim()).filter(s => s.length > 0);
-        if (trimmedSentences.length === 0) return;
-
         voiceState.isSpeaking = true;
         voiceState.activeBtn = btn;
-        voiceState.speechIndex = 0;
-        voiceState.speechSentences = trimmedSentences;
 
         if (btn) {
             btn.classList.add('speaking');
             btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg> <span>Stop</span>`;
         }
 
-        speakNextSentence();
+        try {
+            // 1. Primary Air-Gapped Local Offline Audio Stream (WAV from Native OneCore/SAPI5)
+            const response = await fetch('/api/tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: clean, rate: 1.0 })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Offline TTS endpoint returned status ${response.status}`);
+            }
+
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+
+            voiceState.currentAudio = audio;
+            voiceState.currentAudioUrl = audioUrl;
+
+            audio.onended = () => stopSpeech();
+            audio.onerror = (e) => {
+                console.warn('[OFFLINE_AUDIO_PLAYBACK_WARN] Audio stream playback failed:', e);
+                startBrowserSpeechFallback(clean, btn);
+            };
+
+            await audio.play();
+        } catch (offlineErr) {
+            console.warn('[OFFLINE_TTS_NOTICE] Using browser fallback voice:', offlineErr.message);
+            startBrowserSpeechFallback(clean, btn);
+        }
     }
 
-    function speakNextSentence() {
+    function startBrowserSpeechFallback(clean, btn) {
+        if (!('speechSynthesis' in window)) {
+            stopSpeech();
+            alert('Offline audio could not be synthesized, and browser SpeechSynthesis is not supported.');
+            return;
+        }
+
+        const sentences = clean.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) || [clean];
+        const trimmedSentences = sentences.map(s => s.trim()).filter(s => s.length > 0);
+        if (trimmedSentences.length === 0) {
+            stopSpeech();
+            return;
+        }
+
+        voiceState.isSpeaking = true;
+        voiceState.activeBtn = btn;
+        voiceState.speechIndex = 0;
+        voiceState.speechSentences = trimmedSentences;
+
+        speakNextSentenceBrowser();
+    }
+
+    function speakNextSentenceBrowser() {
         if (!voiceState.isSpeaking || !voiceState.speechSentences) return;
 
         if (voiceState.speechIndex >= voiceState.speechSentences.length) {
@@ -2470,11 +2646,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const utterance = new SpeechSynthesisUtterance(sentence);
         utterance.lang = 'en-IN';
 
-        // Natural humanized voice selection
         const femaleVoice = getIndianFemaleVoice();
         if (femaleVoice) utterance.voice = femaleVoice;
 
-        // Realistic human inflection: subtle variation in pitch and rate across sentences
         const isQuestion = sentence.endsWith('?');
         const isFirst = voiceState.speechIndex === 0;
         const isLast = voiceState.speechIndex === voiceState.speechSentences.length - 1;
@@ -2484,20 +2658,18 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (isFirst) basePitch = 1.01;
         else if (isLast) basePitch = 0.98;
         else {
-            // Subtle natural micro-variation (0.99 to 1.02)
             basePitch = 0.99 + (voiceState.speechIndex % 3) * 0.015;
         }
 
         utterance.pitch = basePitch;
-        utterance.rate = 0.98; // calm, sweet, articulate conversational speed
+        utterance.rate = 0.98;
         utterance.volume = 1.0;
 
         utterance.onend = () => {
             if (!voiceState.isSpeaking) return;
             voiceState.speechIndex++;
-            // Natural human pause between sentences (130ms)
             voiceState.speechTimer = setTimeout(() => {
-                speakNextSentence();
+                speakNextSentenceBrowser();
             }, 130);
         };
 
@@ -2509,12 +2681,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stopSpeech() {
+        if (voiceState.currentAudio) {
+            try {
+                voiceState.currentAudio.pause();
+                voiceState.currentAudio.currentTime = 0;
+            } catch {}
+            voiceState.currentAudio = null;
+        }
+        if (voiceState.currentAudioUrl) {
+            try { URL.revokeObjectURL(voiceState.currentAudioUrl); } catch {}
+            voiceState.currentAudioUrl = null;
+        }
         if (voiceState.speechTimer) {
             clearTimeout(voiceState.speechTimer);
             voiceState.speechTimer = null;
         }
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
+            try { window.speechSynthesis.cancel(); } catch {}
         }
         if (voiceState.activeBtn) {
             voiceState.activeBtn.classList.remove('speaking');
@@ -2535,15 +2718,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function startVoiceRecording() {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            alert("Speech recognition is not supported in this browser environment. You can continue typing directly in the composer.");
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            alert("Microphone access is not supported in this browser. You can continue typing directly in the composer.");
             return;
         }
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             voiceState.mediaStream = stream;
+            voiceState.recordedChunks = [];
 
             const AudioContextClass = window.AudioContext || window.webkitAudioContext;
             if (AudioContextClass) {
@@ -2555,47 +2738,93 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateWaveformBars();
             }
 
-            const rec = new SpeechRecognition();
-            rec.lang = 'en-IN';
-            rec.continuous = true;
-            rec.interimResults = true;
+            // Local MediaRecorder for offline audio capture
+            const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+                ? 'audio/webm;codecs=opus'
+                : (MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/wav');
 
-            let finalTranscript = '';
+            const mediaRecorder = new MediaRecorder(stream, { mimeType });
+            voiceState.mediaRecorder = mediaRecorder;
 
-            rec.onresult = (event) => {
-                let interim = '';
-                for (let i = event.resultIndex; i < event.results.length; ++i) {
-                    if (event.results[i].isFinal) {
-                        finalTranscript += event.results[i][0].transcript + ' ';
-                    } else {
-                        interim += event.results[i][0].transcript;
-                    }
-                }
-                const liveText = (finalTranscript + interim).trim();
-                if (liveText && elements.chatInput) {
-                    elements.chatInput.value = liveText;
-                    elements.chatInput.dispatchEvent(new Event('input'));
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    voiceState.recordedChunks.push(event.data);
                 }
             };
 
-            rec.onerror = (e) => {
-                console.warn('Speech recognition status:', e.error);
-                stopVoiceRecording(true);
-            };
+            mediaRecorder.onstop = async () => {
+                if (voiceState.isCancelled) {
+                    voiceState.isCancelled = false;
+                    return;
+                }
 
-            rec.onend = () => {
-                if (voiceState.isRecording) {
-                    stopVoiceRecording(false);
+                if (!voiceState.recordedChunks || voiceState.recordedChunks.length === 0) {
+                    return;
+                }
+
+                const audioBlob = new Blob(voiceState.recordedChunks, { type: mimeType });
+                voiceState.recordedChunks = [];
+
+                if (elements.voiceStatusText) {
+                    elements.voiceStatusText.textContent = 'Transcribing locally (Offline STT)...';
+                }
+
+                try {
+                    // Convert Blob to base64
+                    const reader = new FileReader();
+                    reader.onloadend = async () => {
+                        const base64Audio = reader.result;
+                        try {
+                            const resp = await fetch('/api/stt/transcribe', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    audio_base64: base64Audio,
+                                    locale: 'en-IN'
+                                })
+                            });
+
+                            if (!resp.ok) {
+                                throw new Error(`Offline STT returned status ${resp.status}`);
+                            }
+
+                            const data = await resp.json();
+                            const transcript = (data.text || '').trim();
+
+                            if (transcript && elements.chatInput) {
+                                elements.chatInput.value = (elements.chatInput.value ? elements.chatInput.value + ' ' : '') + transcript;
+                                elements.chatInput.dispatchEvent(new Event('input'));
+                                elements.chatInput.focus();
+                            }
+
+                            if (elements.voiceStatusText) {
+                                elements.voiceStatusText.textContent = transcript ? '✓ Transcript Ready (Offline)' : 'No speech detected';
+                            }
+                        } catch (err) {
+                            console.warn('[OFFLINE_STT_ERROR]', err);
+                            if (elements.voiceStatusText) {
+                                elements.voiceStatusText.textContent = '⚠ Offline Voice Input Unavailable';
+                            }
+                        } finally {
+                            setTimeout(() => {
+                                if (elements.voiceRecordingBanner) elements.voiceRecordingBanner.style.display = 'none';
+                                if (elements.voiceInputBtn) elements.voiceInputBtn.classList.remove('recording');
+                            }, 1200);
+                        }
+                    };
+                    reader.readAsDataURL(audioBlob);
+                } catch (e) {
+                    console.warn('[AUDIO_BLOB_ERROR]', e);
                 }
             };
 
-            rec.start();
-            voiceState.recognition = rec;
+            mediaRecorder.start(100); // 100ms timeslice
             voiceState.isRecording = true;
+            voiceState.isCancelled = false;
 
             if (elements.voiceInputBtn) elements.voiceInputBtn.classList.add('recording');
             if (elements.voiceRecordingBanner) elements.voiceRecordingBanner.style.display = 'flex';
-            if (elements.voiceStatusText) elements.voiceStatusText.textContent = 'Listening (Indian English)...';
+            if (elements.voiceStatusText) elements.voiceStatusText.textContent = 'Listening (Air-Gapped Local Capture)...';
         } catch (err) {
             console.warn('Microphone access note:', err);
             alert("Microphone access could not be acquired. Please ensure microphone permissions are allowed.");
@@ -2623,9 +2852,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function stopVoiceRecording(cancelled = false) {
         if (voiceState.animFrame) cancelAnimationFrame(voiceState.animFrame);
-        if (voiceState.recognition) {
-            try { voiceState.recognition.stop(); } catch {}
-            voiceState.recognition = null;
+        voiceState.isCancelled = cancelled;
+
+        if (voiceState.mediaRecorder && voiceState.mediaRecorder.state !== 'inactive') {
+            try { voiceState.mediaRecorder.stop(); } catch {}
         }
         if (voiceState.mediaStream) {
             voiceState.mediaStream.getTracks().forEach(t => t.stop());
@@ -2637,14 +2867,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         voiceState.isRecording = false;
-        if (elements.voiceInputBtn) elements.voiceInputBtn.classList.remove('recording');
-        if (elements.voiceRecordingBanner) elements.voiceRecordingBanner.style.display = 'none';
-
-        if (cancelled && elements.chatInput) {
-            elements.chatInput.value = '';
-            elements.chatInput.dispatchEvent(new Event('input'));
-        } else if (elements.chatInput) {
-            elements.chatInput.focus();
+        if (cancelled) {
+            if (elements.voiceInputBtn) elements.voiceInputBtn.classList.remove('recording');
+            if (elements.voiceRecordingBanner) elements.voiceRecordingBanner.style.display = 'none';
+            if (elements.chatInput) elements.chatInput.focus();
         }
     }
 
@@ -3152,72 +3378,162 @@ document.addEventListener('DOMContentLoaded', () => {
         'auto': {
             id: 'auto',
             internalId: 'auto',
-            displayName: 'Auto (Best Fit)',
-            badge: 'Smart',
-            speed: 'Fast',
-            description: 'Nemotron 3 / Gemma 3 / Qwen Coder dynamic selection',
+            displayName: 'Auto (Intelligent Routing)',
+            badge: 'Intelligent',
+            speed: 'Dynamic',
+            description: 'Dynamic routing across 6 local models based on task intent',
             runtime: 'Local Orchestration Router',
             hardware: 'RTX 2050 (Optimized VRAM)'
         },
         'nemotron': {
             id: 'nemotron',
-            internalId: 'nemotron-3-nano',
+            internalId: 'nemotron-3-nano:latest',
             displayName: 'NVIDIA Nemotron 3 Nano',
             badge: 'Reasoning',
             speed: 'High Speed',
-            description: 'Orchestration, multi-agent planning & deep reasoning',
+            description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
         },
         'nemotron-3-nano': {
             id: 'nemotron',
-            internalId: 'nemotron-3-nano',
+            internalId: 'nemotron-3-nano:latest',
             displayName: 'NVIDIA Nemotron 3 Nano',
             badge: 'Reasoning',
             speed: 'High Speed',
-            description: 'Orchestration, multi-agent planning & deep reasoning',
+            description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
         },
-        'gemma': {
-            id: 'gemma',
-            internalId: 'gemma3:4b',
-            displayName: 'Google Gemma 3 (4B)',
-            badge: 'Vision',
-            speed: 'Multimodal',
-            description: 'Equipment diagram QA, document OCR & visual verification',
+        'nemotron-3-nano:latest': {
+            id: 'nemotron',
+            internalId: 'nemotron-3-nano:latest',
+            displayName: 'NVIDIA Nemotron 3 Nano',
+            badge: 'Reasoning',
+            speed: 'High Speed',
+            description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
-            hardware: 'RTX 2050 (~3.1GB VRAM)'
-        },
-        'gemma3:4b': {
-            id: 'gemma',
-            internalId: 'gemma3:4b',
-            displayName: 'Google Gemma 3 (4B)',
-            badge: 'Vision',
-            speed: 'Multimodal',
-            description: 'Equipment diagram QA, document OCR & visual verification',
-            runtime: 'Local Ollama (127.0.0.1:11434)',
-            hardware: 'RTX 2050 (~3.1GB VRAM)'
+            hardware: 'RTX 2050 (~2.8GB VRAM)'
         },
         'qwen': {
             id: 'qwen',
             internalId: 'qwen2.5-coder:1.5b',
-            displayName: 'Qwen 2.5 Coder (1.5B)',
-            badge: 'Coding',
+            displayName: 'Qwen 2.5 Coder 1.5B',
+            badge: 'Code',
             speed: 'Ultra Fast',
-            description: 'Code synthesis, analytics scripting & SQL modeling',
+            description: 'Code Synthesis & Sandbox',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~986MB VRAM)'
         },
         'qwen2.5-coder:1.5b': {
             id: 'qwen',
             internalId: 'qwen2.5-coder:1.5b',
-            displayName: 'Qwen 2.5 Coder (1.5B)',
-            badge: 'Coding',
+            displayName: 'Qwen 2.5 Coder 1.5B',
+            badge: 'Code',
             speed: 'Ultra Fast',
-            description: 'Code synthesis, analytics scripting & SQL modeling',
+            description: 'Code Synthesis & Sandbox',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~986MB VRAM)'
+        },
+        'gemma': {
+            id: 'gemma',
+            internalId: 'gemma3:1b',
+            displayName: 'Google Gemma 3 1B',
+            badge: 'Edge NLP',
+            speed: 'Ultra Fast',
+            description: 'On-Device NLP & Semantic Synthesis',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~815MB VRAM)'
+        },
+        'gemma3:1b': {
+            id: 'gemma',
+            internalId: 'gemma3:1b',
+            displayName: 'Google Gemma 3 1B',
+            badge: 'Edge NLP',
+            speed: 'Ultra Fast',
+            description: 'On-Device NLP & Semantic Synthesis',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~815MB VRAM)'
+        },
+        'llama': {
+            id: 'llama',
+            internalId: 'llama3.2:1b',
+            displayName: 'Meta Llama 3.2 1B',
+            badge: 'Fast Text',
+            speed: 'Ultra Fast',
+            description: 'Fast Lightweight General Text',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.3GB VRAM)'
+        },
+        'llama3.2:1b': {
+            id: 'llama',
+            internalId: 'llama3.2:1b',
+            displayName: 'Meta Llama 3.2 1B',
+            badge: 'Fast Text',
+            speed: 'Ultra Fast',
+            description: 'Fast Lightweight General Text',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.3GB VRAM)'
+        },
+        'granite': {
+            id: 'granite',
+            internalId: 'granite4:1b-h',
+            displayName: 'IBM Granite 4 1B-H',
+            badge: 'Enterprise',
+            speed: 'Ultra Fast',
+            description: 'Enterprise RAG & Tool Use',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.4GB VRAM)'
+        },
+        'granite4:1b-h': {
+            id: 'granite',
+            internalId: 'granite4:1b-h',
+            displayName: 'IBM Granite 4 1B-H',
+            badge: 'Enterprise',
+            speed: 'Ultra Fast',
+            description: 'Enterprise RAG & Tool Use',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.4GB VRAM)'
+        },
+        'phi4': {
+            id: 'phi4',
+            internalId: 'phi4-mini',
+            displayName: 'Microsoft Phi-4 Mini',
+            badge: 'Logic',
+            speed: 'High Speed',
+            description: 'Reasoning, Mathematics & Logic',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~2.5GB VRAM)'
+        },
+        'phi4-mini': {
+            id: 'phi4',
+            internalId: 'phi4-mini',
+            displayName: 'Microsoft Phi-4 Mini',
+            badge: 'Logic',
+            speed: 'High Speed',
+            description: 'Reasoning, Mathematics & Logic',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~2.5GB VRAM)'
+        },
+        'deepseek': {
+            id: 'deepseek',
+            internalId: 'deepseek-r1:1.5b',
+            displayName: 'DeepSeek-R1 1.5B',
+            badge: 'Reasoning',
+            speed: 'Ultra Fast',
+            description: 'Lightweight reasoning, mathematics and logic model',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.1GB VRAM)'
+        },
+        'deepseek-r1:1.5b': {
+            id: 'deepseek',
+            internalId: 'deepseek-r1:1.5b',
+            displayName: 'DeepSeek-R1 1.5B',
+            badge: 'Reasoning',
+            speed: 'Ultra Fast',
+            description: 'Lightweight reasoning, mathematics and logic model',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.1GB VRAM)'
         }
     };
 
@@ -3292,12 +3608,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const def = LOCAL_MODEL_DEFS[state.selectedModelMode] || LOCAL_MODEL_DEFS['auto'];
         const activeKey = def.id;
         if (elements.modelSelectorLabel) {
-            elements.modelSelectorLabel.textContent = def.displayName.replace('NVIDIA ', '').replace('Google ', '');
+            if (def.id === 'auto') {
+                elements.modelSelectorLabel.textContent = 'Auto';
+            } else {
+                elements.modelSelectorLabel.textContent = def.displayName
+                    .replace('NVIDIA ', '')
+                    .replace('Google ', '')
+                    .replace('Meta ', '')
+                    .replace('IBM ', '')
+                    .replace('Microsoft ', '');
+            }
         }
         document.querySelectorAll('.model-option-item').forEach(opt => {
             const optId = opt.dataset.modelId;
             const optInternal = opt.dataset.internalId;
-            const isMatch = optId === activeKey || optInternal === state.selectedModelMode || optId === state.selectedModelMode;
+            const isMatch = optId === activeKey || optInternal === state.selectedModelMode || optId === state.selectedModelMode || optInternal === def.internalId;
             opt.classList.toggle('active', isMatch);
         });
     }
@@ -3902,9 +4227,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 data = await res.json();
             } else {
                 data.models = [
-                    { name: 'Nemotron 3 Nano (4B)', role: 'Orchestration & Reasoning', vram_mb: 2800, status: 'ready' },
-                    { name: 'Gemma 3 (4B Multimodal)', role: 'Vision & Equipment QA', vram_mb: 3100, status: 'ready' },
-                    { name: 'Qwen 2.5 Coder (1.5B)', role: 'Code Sandbox & Analytics', vram_mb: 986, status: 'ready' }
+                    { name: 'NVIDIA Nemotron 3 Nano', tag: 'nemotron-3-nano:latest', role: 'Reasoning & Orchestration', vram_mb: 2800, status: 'ready' },
+                    { name: 'Qwen 2.5 Coder 1.5B', tag: 'qwen2.5-coder:1.5b', role: 'Code Synthesis & Sandbox', vram_mb: 986, status: 'ready' },
+                    { name: 'Google Gemma 4 E2B', tag: 'gemma4:e2b', role: 'Multimodal Reasoning & Evidence', vram_mb: 2400, status: 'ready' },
+                    { name: 'Meta Llama 3.2 1B', tag: 'llama3.2:1b', role: 'Fast Lightweight General Text', vram_mb: 1300, status: 'ready' },
+                    { name: 'IBM Granite 4 1B-H', tag: 'granite4:1b-h', role: 'Enterprise RAG & Tool Use', vram_mb: 1400, status: 'ready' },
+                    { name: 'Microsoft Phi-4 Mini', tag: 'phi4-mini', role: 'Reasoning, Mathematics & Logic', vram_mb: 2500, status: 'ready' }
                 ];
             }
             
@@ -3913,10 +4241,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="models-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:16px;">
                     ${(data.models || []).map(m => `
                         <div class="model-card" style="background:var(--bg-surface);padding:18px;border-radius:12px;border:1px solid var(--border-subtle);">
-                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                                <h3 style="margin:0;font-size:16px;color:var(--text-primary);">${escapeHtml(m.name || m.id)}</h3>
-                                <span class="status-indicator status-ready" style="font-size:11px;font-weight:600;color:var(--accent-green);">● READY</span>
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                                <h3 style="margin:0;font-size:15.5px;color:var(--text-primary);">${escapeHtml(m.name || m.id)}</h3>
+                                <span class="status-indicator status-ready" style="font-size:11px;font-weight:600;color:var(--neon-green);">● READY</span>
                             </div>
+                            <div style="margin:2px 0 6px 0;font-size:11.5px;color:var(--neon-cyan);font-family:monospace;">${escapeHtml(m.tag || m.internalId || m.id || '')}</div>
                             <p style="margin:4px 0;font-size:13px;color:var(--text-secondary);">${escapeHtml(m.role || m.description || 'Local LLM')}</p>
                             <div style="margin-top:12px;font-size:12px;color:var(--text-tertiary);">VRAM: ${m.vram_mb ? m.vram_mb + ' MB' : 'Local GPU'} · Context: ${m.context_length || '4K-128K'}</div>
                         </div>
@@ -3934,7 +4263,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             const res = await fetch('/api/sovereign/status').catch(() => null);
-            let statusData = { external_ai_calls: 0, cloud_egress_bytes: 0, local_models: 3, total_agents: 301 };
+            let statusData = { external_ai_calls: 0, cloud_egress_bytes: 0, local_models: 6, total_agents: 301 };
             
             if (res && res.ok) {
                 statusData = await res.json();
@@ -3945,7 +4274,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.innerHTML = `
                     <div class="metric-card"><span class="m-val" style="color:#22c55e;">${statusData.external_ai_calls || 0}</span><span class="m-lbl">External AI API Calls</span></div>
                     <div class="metric-card"><span class="m-val" style="color:#22c55e;">${statusData.cloud_egress_bytes || '0 B'}</span><span class="m-lbl">Cloud Data Egress</span></div>
-                    <div class="metric-card"><span class="m-val">${statusData.local_models || 3}</span><span class="m-lbl">Local Models (Ollama/ONNX)</span></div>
+                    <div class="metric-card"><span class="m-val">${statusData.local_models || 6}</span><span class="m-lbl">Local Models (Ollama/ONNX)</span></div>
                     <div class="metric-card"><span class="m-val">${statusData.total_agents || 301}</span><span class="m-lbl">Active Industrial Agents</span></div>
                 `;
             }
@@ -3999,7 +4328,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <h2>Execution Trace</h2>
             <div class="trace-meta">
                 <span class="trace-id">Trace ID: ${escapeHtml(data.trace_id || data.traceId || 'TRC-LOCAL-001')}</span>
-                <span class="trace-model">${escapeHtml(data.model || 'Nemotron 3 Nano / Gemma 3 4B')}</span>
+                <span class="trace-model">${escapeHtml(data.model || 'Nemotron 3 Nano / Gemma 4 E2B')}</span>
             </div>
             ${planHtml}
             <div class="inspector-section">

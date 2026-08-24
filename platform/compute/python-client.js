@@ -68,7 +68,18 @@ export class PythonComputeClient {
         signal: AbortSignal.timeout(this.timeoutMs)
       });
       const data = await res.json();
-      if (data.success) return data.data;
+      if (data.success) {
+        if (Array.isArray(data.data)) {
+          data.data.is_air_gapped = data.is_air_gapped ?? true;
+          data.data.external_calls = data.external_calls ?? 0;
+          return data.data;
+        }
+        return {
+          ...data.data,
+          is_air_gapped: data.is_air_gapped ?? true,
+          external_calls: data.external_calls ?? 0
+        };
+      }
       throw new Error(data.error?.message || 'Compute error');
     } catch {
       return this._executeNodeFallback(endpoint, payload);

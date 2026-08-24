@@ -1,0 +1,20 @@
+{
+  "model": "llama3.2:1b",
+  "tag": "llama3.2:1b",
+  "size": "1.23 GB",
+  "size_bytes": 1321098329,
+  "success": true,
+  "status": "HEALTHY",
+  "ttft_ms": 237,
+  "latency_ms": 1293,
+  "cold_latency_ms": 3053,
+  "warm_latency_ms": 1293,
+  "output_tokens": 80,
+  "tokens_per_second": 76.04,
+  "vram_mb": 1905,
+  "gpu_percent": 96,
+  "temperature_c": 67,
+  "ram_mb": 6164,
+  "cold_response": "OK",
+  "warm_response": "Artificial intelligence (AI) refers to the development of computer systems that can perform tasks that typically require human intelligence, such as learning, problem-solving, and decision-making. AI systems use algorithms and data to analyze and process information, allowing them to make predictions, classify objects, and generate responses. The ultimate goal of AI is to create machines that can think and act like humans, blurring the line"
+}

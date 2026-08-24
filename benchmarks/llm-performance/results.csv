@@ -1,0 +1,9 @@
+model,size,ttft_ms,latency_ms,output_tokens,tokens_per_second,vram_mb,gpu_percent,temperature_c,ram_mb,cold_latency_ms,warm_latency_ms,status
+"phi4-mini:latest","2.32 GB",439,4941,80,17.77,2675,35,64,7202,8724,4941,"HEALTHY"
+"granite4:1b-h","1.45 GB",217,1514,69,53.26,2081,97,66,6150,2993,1514,"HEALTHY"
+"llama3.2:1b","1.23 GB",237,1293,80,76.04,1905,96,67,6164,3053,1293,"HEALTHY"
+"gemma4:e2b","6.67 GB",7983,7983,80,11.33,376,0,64,7616,20855,7983,"LIMITED_CAPACITY"
+"gemma3:4b","3.11 GB",1024,5836,56,11.64,2829,24,64,6918,10849,5836,"HEALTHY"
+"gemma2:2b","1.52 GB",258,1543,71,55.35,2501,95,66,5525,3601,1543,"HEALTHY"
+"qwen2.5-coder:1.5b","0.92 GB",199,411,19,89.98,1573,92,65,5277,2530,411,"HEALTHY"
+"nemotron-3-nano:latest","2.64 GB",882,2540,76,35.43,3145,71,68,5720,4714,2540,"HEALTHY"
