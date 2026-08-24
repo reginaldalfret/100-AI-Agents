@@ -1168,14 +1168,63 @@ document.addEventListener('DOMContentLoaded', () => {
                 const titleMatch = code.match(/title\s+(.+)/i);
                 const slices = [];
                 lines.forEach(l => {
-                    const m = l.match(/^\s*"([^"]+)"\s*:\s*([\d.]+)/);
-                    if (m) slices.push({ label: m[1], value: parseFloat(m[2]) });
+                    const m = l.match(/^\s*(?:"([^"]+)"|([a-zA-Z0-9_\s-]+))\s*:\s*([\d.]+)/);
+                    if (m && !/title|xAxis|yAxis|data/i.test(m[1] || m[2])) {
+                        slices.push({ label: (m[1] || m[2]).trim(), value: parseFloat(m[3]) });
+                    }
                 });
                 if (slices.length > 0) {
                     return this._renderPie({
-                        title: titleMatch ? titleMatch[1] : 'Pie Chart',
+                        title: titleMatch ? titleMatch[1].replace(/["']/g, '') : 'Pie Chart',
                         data: slices
                     }, false);
+                }
+            }
+
+            // Mermaid BARCHART & XYCHART support
+            if (header.startsWith('barchart') || header.startsWith('xychart') || header.startsWith('xychart-beta') || header.startsWith('linechart')) {
+                const titleMatch = code.match(/title\s+["']?([^"'\n\r]+)["']?/i);
+                const isLine = header.startsWith('linechart') || code.includes('line [');
+                const categories = [];
+                const values = [];
+
+                // Format 1: data block with "key: value" pairs
+                lines.forEach(l => {
+                    const m = l.match(/^\s*(?:"([^"]+)"|([a-zA-Z0-9_.-]+))\s*:\s*([\d.]+)/);
+                    if (m && !/title|xAxis|yAxis|data|theme/i.test(m[1] || m[2])) {
+                        categories.push((m[1] || m[2]).trim());
+                        values.push(parseFloat(m[3]));
+                    }
+                });
+
+                // Format 2: x-axis [...] and bar [...] or line [...]
+                if (categories.length === 0) {
+                    const xMatch = code.match(/x-?axis\s*(?:\[(.*?)\]|"(.*?)"\s*\[(.*?)\])/i);
+                    if (xMatch) {
+                        const rawCats = (xMatch[1] || xMatch[3] || '').split(',').map(s => s.trim().replace(/^["']|["']$/g, ''));
+                        categories.push(...rawCats);
+                    }
+                    const barMatch = code.match(/(?:bar|line)\s*\[(.*?)\]/i);
+                    if (barMatch) {
+                        const rawVals = (barMatch[1] || '').split(',').map(s => parseFloat(s.trim()) || 0);
+                        values.push(...rawVals);
+                    }
+                }
+
+                if (categories.length > 0 && values.length > 0) {
+                    const title = titleMatch ? titleMatch[1].trim() : (isLine ? 'Trend Chart' : 'Frequency Distribution');
+                    if (isLine) {
+                        return this._renderLine({
+                            title,
+                            categories,
+                            series: [{ name: 'Value', data: values }]
+                        }, false);
+                    }
+                    return this._renderBar({
+                        title,
+                        categories,
+                        series: [{ name: 'Frequency', data: values }]
+                    });
                 }
             }
 
@@ -1603,7 +1652,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const l = (lang || '').toLowerCase().trim();
             const cleanCode = code.trim();
 
-            if (l === 'mermaid' || (!l && /^(graph|flowchart|sequencediagram|pie)\b/i.test(cleanCode))) {
+            if (l === 'mermaid' || (!l && /^(graph|flowchart|sequencediagram|pie|barchart|xychart|linechart)\b/i.test(cleanCode)) || cleanCode.startsWith('%%{init')) {
                 const cardHtml = ClientDiagramRenderer.renderCard(cleanCode, { title: 'Workflow Diagram' });
                 codeBlocks.push(cardHtml);
                 return `___CODE_BLOCK_${idx}___`;
