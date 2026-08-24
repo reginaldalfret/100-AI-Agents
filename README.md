@@ -26,13 +26,17 @@ Enterprises operating in oil & gas, defense, power grids, manufacturing, and cri
 
 ## Key Features
 
-1. **301 Autonomous Specialist Agents**: Complete 001..301 numeric taxonomy covering programming, DevOps, database architecture, legal contracts, engineering standards (API-653, OISD-129), finance, and scientific analysis.
+1. **301 Autonomous Specialist Agents**: Complete `001`..`301` numeric taxonomy covering programming, DevOps, database architecture, legal contracts, engineering standards (API-653, OISD-129), finance, and scientific analysis.
 2. **301 Super AI Master Orchestrator**: Automatically decomposes complex multi-stage objectives, dispatches subtasks across specialists, schedules execution on local GPU queues, and synthesizes unified responses.
-3. **Pure Real Model Execution**: Zero canned answers, zero static templates, and zero fake durations in production. All specialist outputs are dynamically generated via local Ollama.
-4. **Universal Backend Execution Trace**: Every completed response displays truthful hardware execution metrics (`Ran on NVIDIA RTX 2050`), model engine, exact runtime model, air-gap status, and subtask telemetry.
-5. **Real Indian English Female Voice**: Sweet, articulate, natural `en-IN` female voice persona with conversational humanized sentence pacing and speech sanitization.
-6. **Liquid Glass UI & Visual Architecture**: Translucent glassmorphism interface with real-time Mermaid diagrams, SVG charts, and Markdown rendering.
-7. **Cryptographic Artifact Workspace**: All generated code files (`.cpp`, `.java`, `.py`, `.html`, `.css`, `.js`) are isolated, syntax-validated, and stamped with SHA-256 checksums.
+3. **Image Question Auto-Read + Auto-Answer (Zero Typing / Copying)**: Users can drop a photograph, screenshot, or scan of a question or task. Local PaddleOCR 3.7.0 reads the text, the Symmetrical Task Classifier identifies the objective, routes to the exact specialist (e.g. Email AI Agent 002 for emails, Python AI Agent 101 for code, Study AI Agent 003 for math), executes on local open-weight LLMs, and presents a direct answer ready for 1-click clean copying or offline voice readout.
+4. **7 Local Open-Weight Models**: Production stack featuring specialized models for reasoning, code, NLP, enterprise RAG, mathematics, and logic running locally via Ollama.
+5. **Local OCR & Document Intelligence Engine**: 100% offline, air-gapped PaddleOCR 3.7.0 / PP-OCRv6 / PP-StructureV3 subsystem with layout analysis, SLANet table extraction, and LaTeX formula recognition on port 8305.
+6. **Real-Time Stream Sanitization**: Zero-latency streaming finite state machine that intercepts and suppresses `<think>...</think>` internal reasoning tokens (e.g., DeepSeek-R1 / SmolLM2) and balances markdown code fences while preserving Time-To-First-Token (TTFT).
+7. **Pure Real Model Execution**: Zero canned answers, zero static templates, and zero fake durations in production. All specialist outputs are dynamically generated via local Ollama.
+8. **Universal Backend Execution Trace**: Every completed response displays truthful hardware execution metrics (`Ran on NVIDIA RTX 2050`), model engine, exact runtime model, air-gap status, and subtask telemetry.
+9. **Real Indian English Female Voice**: Sweet, articulate, natural `en-IN` female voice persona (`Microsoft Heera - en-IN`) with conversational humanized sentence pacing and speech sanitization.
+10. **Liquid Glass UI & Visual Architecture**: Translucent glassmorphism interface with real-time Mermaid diagrams, SVG charts, and Markdown rendering.
+11. **Cryptographic Artifact Workspace**: All generated code files (`.cpp`, `.java`, `.py`, `.html`, `.css`, `.js`) are isolated, syntax-validated, and stamped with SHA-256 checksums.
 
 ---
 
@@ -42,7 +46,7 @@ Enterprises operating in oil & gas, defense, power grids, manufacturing, and cri
                                   ┌───────────────────────────────┐
                                   │   USER (Browser / Desktop)   │
                                   └───────────────┬───────────────┘
-                                                  │ HTTP / SSE (/api/chat)
+                                                  │ HTTP / SSE (/api/chat, /api/ocr/analyze-image)
                                                   ▼
                         ┌───────────────────────────────────────────────────┐
                         │      CENTRAL GATEWAY (Port 8300)                  │
@@ -67,14 +71,30 @@ Enterprises operating in oil & gas, defense, power grids, manufacturing, and cri
                                               │
                                               ▼
                         ┌───────────────────────────────────────────┐
-                        │  RESOURCE SCHEDULER (Single GPU Mutex)    │
-                        │  platform/workflow-engine/resource-sched  │
+                        │  MULTIMODAL ROUTING & TASK CLASSIFIER     │
+                        │  platform/multimodal/task-classifier.js   │
+                        └─────────────────────┬─────────────────────┘
+                                              │
+                        ┌─────────────────────┴─────────────────────┐
+                        │                                           │
+                        ▼                                           ▼
+      ┌───────────────────────────────────┐       ┌───────────────────────────────────┐
+      │  LOCAL OCR ENGINE (Port 8305)     │       │  RESOURCE SCHEDULER (GPU Mutex)   │
+      │  PaddleOCR 3.7.0 / PP-StructureV3 │       │  platform/workflow-engine/        │
+      └─────────────────┬─────────────────┘       └─────────────────┬─────────────────┘
+                        │                                           │
+                        └─────────────────────┬─────────────────────┘
+                                              │ Structured Evidence Payload
+                                              ▼
+                        ┌───────────────────────────────────────────┐
+                        │  LOCAL OLLAMA INFERENCE (Port 11434)      │
+                        │  7 Open-Weight Models (Nemotron/Qwen/...) │
                         └─────────────────────┬─────────────────────┘
                                               │
                                               ▼
                         ┌───────────────────────────────────────────┐
-                        │  LOCAL OLLAMA INFERENCE (Port 11434)      │
-                        │  Nemotron 3 / Qwen 2.5 Coder / Gemma 4 E2B│
+                        │  STREAM SANITIZER (Finite State Machine)  │
+                        │  Suppresses <think> / Buffers Tag Splits  │
                         └─────────────────────┬─────────────────────┘
                                               │
                                               ▼
@@ -95,6 +115,74 @@ Enterprises operating in oil & gas, defense, power grids, manufacturing, and cri
                         │  Real-Time SSE Event Render + Voice Audio │
                         └───────────────────────────────────────────┘
 ```
+
+---
+
+## Image Question Auto-Read + Auto-Answer Subsystem
+
+The workbench eliminates the tedious need to manually copy or type questions from documents, photos, or screenshots through a seamless **8-step pipeline**:
+
+1. **Image Upload**: Drag-and-drop or paste screenshots/photos (`.png`, `.jpg`, `.jpeg`, `.webp`, `.bmp`).
+2. **Offline OCR Ingestion**: Local PaddleOCR 3.7.0 / RapidOCR ONNX compute on port 8305.
+3. **Clean Text Extraction**: Layout analysis, table structure parsing, and noise filtering.
+4. **Symmetrical Task Classifier**: Exact same classification logic applied to typed queries and visual text.
+5. **Specialist AI Agent Routing**: Routes email requests to **Email AI Agent 002**, code requests to **Python AI Agent 101**, math problems to **Study AI Agent 003**, etc.
+6. **Local Open-Weight Model Execution**: NVIDIA RTX 2050 inference with single-GPU mutex locks.
+7. **Zero-Contamination Response**: Suppresses delimiter tags (`[IMAGE OCR EVIDENCE]`) and outputs pure, high-grade answers.
+8. **Clean Copy & Offline Voice Readout**: 1-click clipboard copy and natural Indian English Female TTS speech.
+
+*For complete details, see [Image Question Routing Architecture](docs/architecture/IMAGE-QUESTION-ROUTING.md).*
+
+---
+
+## The 7 Local Open-Weight Models
+
+The workbench deploys a balanced suite of **7 local open-weight models** running locally via Ollama (`http://127.0.0.1:11434`), each matched to its architectural strength:
+
+| # | Model Family | Canonical Tag | Quantization | VRAM Footprint | Context Window | Primary Specialization |
+| :-: | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | 4B Q4_K_M | ~2.8 GB | 4,096 | **Super AI Orchestration & Epistemic Reasoning**<br>Autonomous task decomposition, SOP synthesis, hazard assessments, structured JSON contracts. |
+| **2** | **Qwen 2.5 Coder** | `qwen2.5-coder:1.5b` | 1.5B Q4_K_M | ~1.2 GB | 4,096 | **Multi-Language Code Generation & Sandbox Execution**<br>Python, C++, Java, JS, Rust, SQL, AST parsing, SCADA telemetry parsing, script refactoring. |
+| **3** | **Google Gemma 3 1B** | `gemma3:1b` | 1B Q4_K_M | ~815 MB | 32,768 | **Edge NLP, Syntactic Parsing & Semantic Synthesis**<br>High-throughput dense transformer, contextual summarization, text rewriting, deductive Q&A. |
+| **4** | **Meta Llama 3.2 1B** | `llama3.2:1b` | 1B Q4_K_M | ~1.3 GB | 8,192 | **Fast Lightweight General Text & Low-Latency Assistance**<br>Rapid conversational replies, text rewriting, quick document drafting, latency-critical Q&A. |
+| **5** | **IBM Granite 4 1B-H** | `granite4:1b-h` | 1B Q4_K_M | ~1.2 GB | 8,192 | **Enterprise RAG, Entity Extraction & Tool Invocations**<br>Deterministic entity extraction, classification, structured evidence retrieval, enterprise workflows. |
+| **6** | **Microsoft Phi-4 Mini** | `phi4-mini` | 3.8B Q4_K_M | ~2.4 GB | 16,384 | **Advanced Reasoning, Mathematics & STEM Logic**<br>Complex algorithmic proofs, formal mathematical deductions, algorithmic planning, long-context logic. |
+| **7** | **SmolLM2 1.7B** | `smollm2:1.7b` | 1.5B Q4_K_M | ~1.1 GB | 131,072 | **Lightweight Chain-of-Thought Reasoning & Arithmetic**<br>Step-by-step logic deduction, arithmetic calculations, analytical explanations (with stream sanitization). |
+
+*Complementary Offline Engines:*
+- **Local OCR & Document Engine**: `paddleocr-engine` (~62 MB models) · PaddleOCR 3.7.0 / PP-OCRv6 Small / PP-StructureV3 / SLANet tables / LaTeX formulas.
+- **Offline Speech-to-Text (STT)**: `tiny.en` (~78 MB RAM) · Faster-Whisper int8 local voice transcription.
+- **Offline Text-to-Speech (TTS)**: `Microsoft Heera - en-IN` · Real Indian English Female voice synthesis.
+
+---
+
+## Local OCR & Document Intelligence Engine
+
+Because lightweight open-weight LLMs (like Gemma 3 1B and Llama 3.2 1B) operate strictly on text, the workbench employs a dedicated **Two-Stage Optical Extraction Subsystem** (`platform/ocr/`, `platform/python-compute/` on port 8305):
+
+1. **Stage 1 (Optical Extraction)**:
+   - **Document Layout Analysis**: `PP-DocLayout-S` (23-class document block segmentation).
+   - **Multi-Script Character Recognition**: `PP-OCRv6 Small` (50 languages + dedicated Tamil `ta_PP-OCRv4_mobile_rec` and Hindi `devanagari_PP-OCRv5_mobile_rec`).
+   - **Table Structure Recognition**: `SLANet` extracts grid and borderless tables into structured Markdown and JSON rows.
+   - **Formula Recognition**: `PP-FormulaNet-S` converts mathematical expressions directly to LaTeX notation.
+   - **Native PDF & Metadata Scrubbing**: PyMuPDF rasterization with automatic filtering of XMP, C2PA, and PDF dictionary noise.
+2. **Stage 2 (Local LLM Reasoning)**:
+   - The structured character, table, and bounding box evidence is injected into the local LLM context (e.g., Nemotron 3 Nano, Granite 4 1B-H, or Qwen 2.5 Coder) for synthesis and verification.
+
+*For complete architectural specifications, see [OCR Document Engine](docs/architecture/OCR-DOCUMENT-ENGINE.md).*
+
+---
+
+## Real-Time Stream Sanitization
+
+The platform includes a zero-latency streaming finite state machine (`StreamSanitizer` in `platform/models/stream-sanitizer.js`):
+
+- **Reasoning Token Suppression**: Automatically intercepts and strips `<think>...</think>`, `<reasoning>...</reasoning>`, `[THINK]...[/THINK]`, and `[REASONING]...[/REASONING]` blocks from models like SmolLM2 1.7B before tokens reach the browser.
+- **Chunk-Boundary Split Recovery**: Employs lookahead prefix buffering so tags split across arbitrary streaming chunks (e.g., `["<th", "ink>", "...", "</", "think>"]`) are cleanly caught and removed without leaking raw markup.
+- **False Start Recovery**: Text resembling tag prefixes (e.g., `"I think about..."`) is safely flushed without losing legitimate user content.
+- **Speech & Visual Sanitization**: Companion sanitizers (`platform/voice/speech-sanitizer.js` and `platform/visuals/sanitizer.js`) clean formatting, unclosed code fences, and symbols before audio synthesis or SVG/Mermaid diagram rendering.
+
+*For complete architectural specifications, see [Stream Sanitization](docs/architecture/STREAM-SANITIZATION.md).*
 
 ---
 
@@ -126,28 +214,13 @@ When given complex instructions (e.g., *"Write a palindrome program in C++, Java
 
 ---
 
-## Local Models
-
-| Model Family | Canonical Tag | VRAM Footprint | Primary Specialization |
-| :--- | :--- | :--- | :--- |
-| **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | ~2.8 GB | Super AI orchestration, multi-agent decomposition, deep reasoning |
-| **Qwen 2.5 Coder** | `qwen2.5-coder:1.5b` | ~1.2 GB | Multi-language code generation, refactoring, deterministic sandbox |
-| **Google Gemma 3 1B** | `gemma3:1b` | ~815 MB | Edge NLP & semantic synthesis, syntactic parsing, dense transformer reasoning |
-| **Meta Llama 3.2 1B** | `llama3.2:1b` | ~1.3 GB | Fast lightweight general text, quick summaries, low-latency assistance |
-| **IBM Granite 4 1B-H** | `granite4:1b-h` | ~1.2 GB | Enterprise RAG, structured extraction, classification & tool calling |
-| **Microsoft Phi-4 Mini** | `phi4-mini` | ~2.4 GB | Advanced reasoning, mathematics, logic, algorithmic problem solving |
-| **DeepSeek-R1 1.5B** | `deepseek-r1:1.5b` | ~1.1 GB | Lightweight reasoning, mathematics, logic & step-by-step problem solving |
-| **OCR & Document Intelligence** | `python-compute-ocr` | CPU / RAM | Primary Image/PDF character & table extraction |
-| **Faster-Whisper Tiny** | `tiny.en` | ~78 MB | 100% Offline Speech-to-Text (Voice Input) |
-
----
-
 ## Hardware Profile
 
 - **Target System**: Local Windows 11 Pro PC
 - **GPU**: NVIDIA GeForce RTX 2050 (4GB GDDR6 VRAM, CUDA 12.5)
-- **Concurrency Policy**: Single GPU execution lock (Queue concurrency = 1)
+- **Concurrency Policy**: Single GPU execution lock (`MAX_GPU_CONCURRENCY = 1`)
 - **Memory Footprint**: Strictly constrained within 4GB VRAM limit
+- **Session Affinity**: 5-minute warm model residency to prevent reloading thrash
 
 ---
 
@@ -183,17 +256,18 @@ http://127.0.0.1:8300/
 
 ```
 platform/
-├── gateway/              # Central HTTP & SSE Gateway server
+├── gateway/              # Central HTTP & SSE Gateway server (Port 8300)
 ├── workflow-engine/      # 301 Super AI Agent Master Orchestration Engine
-├── intelligence/         # Domain Scope Guard & Intent Router
-├── models/               # Model Registry & Ollama Streamer
-├── multimodal/           # Document & Image Processing Subsystem
-├── python-compute/       # Specialized Python Compute Engine
-├── rag/                  # Local Vector Indexing & Evidence Retrieval
+├── intelligence/         # Domain Scope Guard, Intent Router & Routing Registry
+├── models/               # Model Registry, Stream Sanitizer & Ollama Streamer
+├── multimodal/           # Universal Document Extractor & Attachment Integrity
+├── ocr/                  # Python OCR & Document Intelligence Engine (Port 8305)
+├── python-compute/       # Specialized Python Compute Engine & Data Analytics
+├── rag/                  # Local Vector Indexing & Hybrid BM25 Evidence Retrieval
 ├── system/               # Truthful Hardware Provider & System Metrics
 ├── tools/                # Tool Sandbox & Registry
-├── visuals/              # Diagram & Chart Generator (Mermaid/SVG)
-├── voice/                # Real Indian English Female Speech Engine
+├── visuals/              # Diagram & Chart Generator (Mermaid/SVG Sanitizer)
+├── voice/                # Real Indian English Female Speech Engine (STT/TTS)
 └── web/                  # Liquid Glass Single-Page Application (HTML/CSS/JS)
 
 registry/
@@ -202,18 +276,31 @@ registry/
 
 tests/
 ├── runtime/              # Server, gateway, and no-default-response tests
-├── workflow/             # 26 multi-agent orchestration & provenance tests
+├── workflow/             # Multi-agent orchestration & provenance tests
 ├── agents/               # Registry numbering, scope guard, and trace tests
+├── models/               # 7-model registry, stream sanitizer & routing tests
+├── multimodal/           # Document extractor, PDF & attachment integrity tests
 ├── ui/                   # Liquid Glass UI, composer, model selector tests
 ├── voice/                # Indian English Female speech tests
 └── python-compute/       # Python compute & document extraction tests
 
 docs/
-├── architecture/         # System specifications & architecture maps
+├── architecture/         # System specifications (Stream Sanitization, OCR, Routing)
 ├── development/          # Developer guides & SDK contracts
 ├── operations/           # Deployment & background runtime runbooks
 └── verification/         # Proof-of-execution & audit reports
 ```
+
+---
+
+## Key Architecture Documentation
+
+- [Image Question Auto-Read & Routing Architecture](docs/architecture/IMAGE-QUESTION-ROUTING.md)
+- [OCR & Document Intelligence Engine Specification](docs/architecture/OCR-DOCUMENT-ENGINE.md)
+- [Multimodal Routing & Model Selection Specification](docs/architecture/MULTIMODAL-ROUTING.md)
+- [Stream Sanitization Specification](docs/architecture/STREAM-SANITIZATION.md)
+- [Production Model Stack Architecture](docs/architecture/MODEL-ARCHITECTURE.md)
+- [Sovereign Hybrid RAG Architecture](docs/architecture/RAG-ARCHITECTURE.md)
 
 ---
 
@@ -222,7 +309,7 @@ docs/
 Run the complete 147-test regression battery:
 ```bash
 # Run all core test suites
-node --test tests/runtime/*.test.js tests/agents/*.test.js tests/workflow/*.test.js tests/ui/*.test.js tests/python-compute/*.test.js tests/voice/*.test.js
+node --test tests/runtime/*.test.js tests/agents/*.test.js tests/workflow/*.test.js tests/ui/*.test.js tests/python-compute/*.test.js tests/voice/*.test.js tests/models/*.test.js tests/multimodal/*.test.js
 
 # Run SIH UI validation suite
 node tests/sih/run-all-tests.js

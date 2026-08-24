@@ -1,0 +1,138 @@
+{
+  "version": "1.0.0",
+  "engine": "PaddleOCR 3.7.0",
+  "models": [
+    {
+      "id": "pp-ocrv6-det-small",
+      "name": "PP-OCRv6 Small Detection",
+      "purpose": "Text region detection in images",
+      "directory": "detection/PP-OCRv6_det_small",
+      "required": true,
+      "sizeBytes": 9600000,
+      "sizeDisplay": "9.6 MB",
+      "version": "6.0",
+      "languages": ["multilingual-50"],
+      "files": [
+        "inference.pdmodel",
+        "inference.pdiparams",
+        "inference.pdiparams.info"
+      ]
+    },
+    {
+      "id": "pp-ocrv6-rec-small",
+      "name": "PP-OCRv6 Small Recognition",
+      "purpose": "Text character recognition",
+      "directory": "recognition/PP-OCRv6_rec_small",
+      "required": true,
+      "sizeBytes": 14500000,
+      "sizeDisplay": "14.5 MB",
+      "version": "6.0",
+      "languages": ["multilingual-50"],
+      "files": [
+        "inference.pdmodel",
+        "inference.pdiparams",
+        "inference.pdiparams.info",
+        "ppocr_keys_v1.txt"
+      ]
+    },
+    {
+      "id": "ppocr-cls-v2",
+      "name": "Text Orientation Classifier",
+      "purpose": "Text angle classification (0/180 degree)",
+      "directory": "classification/ch_ppocr_mobile_v2.0_cls",
+      "required": true,
+      "sizeBytes": 1400000,
+      "sizeDisplay": "1.4 MB",
+      "version": "2.0",
+      "languages": ["universal"],
+      "files": [
+        "inference.pdmodel",
+        "inference.pdiparams"
+      ]
+    },
+    {
+      "id": "pp-doclayout-s",
+      "name": "PP-DocLayout Small",
+      "purpose": "Document layout analysis (23 region types)",
+      "directory": "layout/PP-DocLayout-S",
+      "required": true,
+      "sizeBytes": 15000000,
+      "sizeDisplay": "15 MB",
+      "version": "3.0",
+      "languages": ["universal"],
+      "files": [
+        "inference.pdmodel",
+        "inference.pdiparams"
+      ]
+    },
+    {
+      "id": "slanet-table",
+      "name": "SLANet Table Recognition",
+      "purpose": "Table structure recognition and cell extraction",
+      "directory": "table/SLANet",
+      "required": true,
+      "sizeBytes": 9000000,
+      "sizeDisplay": "9 MB",
+      "version": "2.0",
+      "languages": ["universal"],
+      "files": [
+        "inference.pdmodel",
+        "inference.pdiparams"
+      ]
+    },
+    {
+      "id": "pp-formulanet-s",
+      "name": "PP-FormulaNet Small",
+      "purpose": "Mathematical formula recognition to LaTeX",
+      "directory": "formula/PP-FormulaNet-S",
+      "required": false,
+      "sizeBytes": 12000000,
+      "sizeDisplay": "12 MB",
+      "version": "1.0",
+      "languages": ["universal"],
+      "files": [
+        "inference.pdmodel",
+        "inference.pdiparams"
+      ]
+    },
+    {
+      "id": "ta-ppocrv4-mobile-rec",
+      "name": "Tamil PP-OCRv4 Mobile Recognition",
+      "purpose": "Tamil script text recognition",
+      "directory": "recognition/ta_PP-OCRv4_mobile_rec",
+      "required": false,
+      "sizeBytes": 10000000,
+      "sizeDisplay": "10 MB",
+      "version": "4.0",
+      "languages": ["ta"],
+      "files": [
+        "inference.pdmodel",
+        "inference.pdiparams",
+        "ta_dict.txt"
+      ]
+    },
+    {
+      "id": "devanagari-ppocrv5-mobile-rec",
+      "name": "Hindi/Devanagari PP-OCRv5 Mobile Recognition",
+      "purpose": "Hindi and Devanagari script text recognition",
+      "directory": "recognition/devanagari_PP-OCRv5_mobile_rec",
+      "required": false,
+      "sizeBytes": 12000000,
+      "sizeDisplay": "12 MB",
+      "version": "5.0",
+      "languages": ["hi", "devanagari"],
+      "files": [
+        "inference.pdmodel",
+        "inference.pdiparams",
+        "devanagari_dict.txt"
+      ]
+    }
+  ],
+  "totalRequiredSizeBytes": 49500000,
+  "totalRequiredSizeDisplay": "49.5 MB",
+  "totalOptionalSizeBytes": 12000000,
+  "totalOptionalSizeDisplay": "12 MB",
+  "offlineMode": true,
+  "downloadAtRuntime": false,
+  "cloudAPIRequired": false
+}

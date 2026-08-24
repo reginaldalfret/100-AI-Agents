@@ -42,27 +42,32 @@ export const LOCAL_MODELS = [
   },
   {
     model_id: "local-vision-ocr",
-    name: "Local Multimodal & Document Vision Engine",
-    provider: "local-multimodal",
-    runtime: "in-process-onnx",
-    endpoint: "http://127.0.0.1:8081",
-    quantization: "FP16 / Int8",
+    name: "PaddleOCR 3.7.0 Document Intelligence Engine",
+    provider: "paddleocr",
+    runtime: "paddleocr-engine",
+    endpoint: "http://127.0.0.1:8305",
+    quantization: "FP32 / Int8",
     vram_mb: 1200,
-    ram_mb: 2048,
-    context_length: 2048,
+    ram_mb: 1024,
+    context_length: 8192,
     supported_modalities: [ModelModality.VISION, ModelModality.OCR],
     capabilities: [
       "scanned-pdf-ocr",
-      "engineering-drawing-tag-extraction",
-      "corrosion-photo-analysis",
+      "multilingual-text-recognition",
+      "tamil-ocr",
+      "hindi-ocr",
       "table-structure-parsing",
-      "handwriting-transcription"
+      "engineering-drawing-tag-extraction",
+      "handwriting-transcription",
+      "layout-analysis"
     ],
     recommended_tasks: [
-      "p-and-id-tag-extraction",
+      "scanned-document-ocr",
+      "invoice-and-receipt-digitization",
+      "tamil-document-recognition",
       "ndt-ultrasonic-report-ocr",
-      "flange-defect-inspection",
-      "scanned-work-order-digitization"
+      "p-and-id-tag-extraction",
+      "table-extraction"
     ],
     priority: 2,
     status: "ready"
@@ -208,31 +213,32 @@ export const LOCAL_MODELS = [
     status: "ready"
   },
   {
-    model_id: "deepseek-r1-1.5b",
-    ollama_name: "deepseek-r1:1.5b",
-    name: "DeepSeek-R1 1.5B (Reasoning Specialist)",
-    provider: "ollama",
+    model_id: "smollm2-1.7b",
+    ollama_name: "smollm2:1.7b",
+    name: "SmolLM2 1.7B (Lightweight Text)",
+    provider: "Hugging Face",
     runtime: "local-ollama",
     endpoint: "http://127.0.0.1:11434",
-    quantization: "Q4_K_M",
-    vram_mb: 1200,
+    quantization: "Q8_0",
+    vram_mb: 1800,
     ram_mb: 2048,
-    context_length: 131072,
+    context_length: 8192,
     supported_modalities: [ModelModality.TEXT],
     capabilities: [
-      "mathematics",
-      "logical-reasoning",
-      "step-by-step-reasoning",
-      "analytical-questions",
-      "lightweight-planning",
-      "chain-of-thought"
+      "general-text-generation",
+      "rewriting",
+      "summarization",
+      "lightweight-qa",
+      "simple-instruction-following",
+      "conversational-tasks",
+      "basic-reasoning"
     ],
     recommended_tasks: [
-      "math-calculation",
-      "logic-problem-solving",
-      "algorithm-explanation",
-      "step-by-step-deduction",
-      "analytical-reasoning"
+      "text-rewriting",
+      "concise-summarization",
+      "general-inquiries",
+      "lightweight-text-transformation",
+      "conversational-response"
     ],
     priority: 2,
     status: "ready"

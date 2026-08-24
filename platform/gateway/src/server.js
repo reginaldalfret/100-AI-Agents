@@ -9,7 +9,7 @@ import { StudentService, AcademicService, FinanceService, DocumentService, Admis
 import { modelStreamer, ModelLifecycleState } from "../../models/model-streamer.js";
 import { conversationManager } from "../../context/index.js";
 import { agentScopeGuard } from "../../intelligence/index.js";
-import { documentExtractor } from "../../multimodal/index.js";
+import { documentExtractor, imageQuestionPipeline, classifyTaskAndAgent, TaskType } from "../../multimodal/index.js";
 import { validateAttachmentIntegrity } from "../../multimodal/attachment-integrity.js";
 import { ingestDocument, queryRAG, IngestionNamespace } from "../../rag/index.js";
 import { voiceService, globalOfflineTTSEngine, globalOfflineSTTEngine } from "../../voice/index.js";
@@ -122,7 +122,7 @@ async function executeAgentInProcess(agentId, payload) {
   const modPath = path.join(agentsDir, found, "backend", "src", "agent.js");
   if (!fs.existsSync(modPath)) return null;
 
-  process.env.OLLAMA_MODEL = process.env.OLLAMA_MODEL || "nemotron-3-nano";
+  process.env.OLLAMA_MODEL = payload.model || process.env.OLLAMA_MODEL || "nemotron-3-nano:latest";
   const { pathToFileURL } = await import("node:url");
   const mod = await import(pathToFileURL(modPath).href);
   if (typeof mod.runAgent === "function") {
@@ -256,7 +256,7 @@ const server = http.createServer(async (req, res) => {
     const registry = loadRegistry();
     const agents = registry.agents || [];
 
-    if (req.method === "GET" && url.pathname === "/api/health") {
+    if (req.method === "GET" && (url.pathname === "/api/health" || url.pathname === "/health")) {
       json(res, 200, {
         status: "healthy",
         service: "100-to-1-gateway",
@@ -323,7 +323,7 @@ const server = http.createServer(async (req, res) => {
           ollama: {
             status: ollamaHealthy ? "ready" : "offline",
             port: 11434,
-            models: ["gemma4:e2b", "nemotron-3-nano:latest", "qwen2.5-coder:1.5b"]
+            models: ["nemotron-3-nano:latest", "qwen2.5-coder:1.5b", "gemma3:1b", "llama3.2:1b", "granite4:1b-h", "phi4-mini", "smollm2:1.7b"]
           },
           python: pyStatus,
           gateway: {
@@ -530,6 +530,27 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (req.method === "POST" && (url.pathname === "/api/ocr/analyze-image" || url.pathname === "/api/attachments/extract" || url.pathname === "/api/ocr")) {
+      try {
+        const payload = await readBody(req);
+        const fileObj = payload.attachment || payload.file || payload;
+        const result = await imageQuestionPipeline.processImageQuestion(fileObj, payload.options || {});
+        json(res, 200, {
+          status: "success",
+          ...result
+        });
+      } catch (err) {
+        console.error("[IMAGE_OCR_API_ERROR]", err.message);
+        json(res, 500, {
+          status: "error",
+          error: "IMAGE_OCR_FAILED: " + err.message,
+          is_air_gapped: true,
+          external_calls: 0
+        });
+      }
+      return;
+    }
+
     if (
       req.method === "POST" &&
       url.pathname === "/api/chat"
@@ -554,6 +575,25 @@ const server = http.createServer(async (req, res) => {
           : (typeof payload.message === "string" ? payload.message.trim() : (typeof payload.prompt === "string" ? payload.prompt.trim() : ""));
 
       const hasAttachments = Array.isArray(payload.attachments) && payload.attachments.length > 0;
+
+      // Handle Image OCR and Question Extraction
+      let imageQuestionResult = null;
+      if (hasAttachments) {
+        const imageAtt = payload.attachments.find(a => a.type?.startsWith("image/") || /\.(png|jpe?g|webp|bmp|gif|tiff)$/i.test(a.name || ""));
+        if (imageAtt) {
+          try {
+            imageQuestionResult = await imageQuestionPipeline.processImageQuestion(imageAtt, payload.options || {});
+            if (imageQuestionResult && imageQuestionResult.text) {
+              const isGenericTask = !task || task.startsWith("Analyze and describe the contents of the attached image:");
+              if (isGenericTask) {
+                task = imageQuestionResult.text;
+              }
+            }
+          } catch (imgErr) {
+            console.warn("[IMAGE_QUESTION_PIPELINE_WARN]", imgErr.message);
+          }
+        }
+      }
 
       if (!task && !hasAttachments) {
         json(res, 400, {
@@ -583,8 +623,17 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
+      // Symmetrically classify task & agent for Auto routing (typed text & OCR image text share the exact same classifier)
+      let chosenAgentId = normalizedAgentId;
+      if (!rawAgentId || rawAgentId === "auto" || rawAgentId === "super-ai" || rawAgentId === "101") {
+        const autoClassification = imageQuestionResult?.classification || classifyTaskAndAgent(task);
+        if (autoClassification && autoClassification.agentId) {
+          chosenAgentId = autoClassification.agentId;
+        }
+      }
+
       const agent = agents.find(
-        a => a.agent_id === normalizedAgentId || a.agent_id === rawAgentId
+        a => a.agent_id === chosenAgentId || a.agent_id === normalizedAgentId || a.agent_id === rawAgentId
       ) || agents.find(a => a.agent_id === "agent-101");
 
       if (!agent) {
@@ -619,11 +668,10 @@ const server = http.createServer(async (req, res) => {
         "phi": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
         "phi4": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
         "phi4-mini": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
-        "deepseek": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
-        "deepseek-r1": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
-        "deepseek-r1:1.5b": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
-        "deepseek-r1-1.5b": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
-        "r1": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" }
+        "smollm": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" },
+        "smollm2": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" },
+        "smollm2:1.7b": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" },
+        "smollm2-1.7b": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" }
       };
 
       const requestedMode = payload.modelMode || "auto";
@@ -665,6 +713,7 @@ const server = http.createServer(async (req, res) => {
       // Process Multimodal Attachments & Document Extraction
       let extractedEvidenceText = "";
       const imagesList = Array.isArray(payload.images) ? [...payload.images] : [];
+      const hasImages = imagesList.length > 0;
       const sseAttachmentErrors = [];
       if (Array.isArray(payload.attachments) && payload.attachments.length > 0) {
         const userPromptLower = task.toLowerCase();
@@ -726,97 +775,60 @@ const server = http.createServer(async (req, res) => {
                 extractedEvidenceText += `\n\n[ATTACHED EVIDENCE: ${doc.filename}]\n${primaryContent}`;
               }
             }
-            if (userAsksForMetadata && doc.metadataText) {
-              extractedEvidenceText += `\n\n[DOCUMENT METADATA: ${doc.filename}]\n${doc.metadataText}`;
-            }
           }
+        }
+      }
+
+      if (imageQuestionResult && imageQuestionResult.text) {
+        if (!extractedEvidenceText.includes("[IMAGE OCR EVIDENCE]")) {
+          extractedEvidenceText = `\n\n${imageQuestionResult.evidenceBlock}`;
         }
       }
 
       const effectiveTask = extractedEvidenceText ? `${task}\n${extractedEvidenceText}` : task;
 
       // ================================================================
-      // MODALITY-FIRST ROUTING — Images ALWAYS override model selection
+      // MODALITY & SPECIALIST ROUTING — OCR Evidence + Specialized LLM
       // ================================================================
-      const hasImages = imagesList.length > 0;
       let needsTwoStagePipeline = false;
       let specialistModel = null;
       let specialistDisplayName = null;
-      let visionExtractionPrompt = "";
 
-      if (hasImages) {
-        // RULE: Any request with image attachments MUST go through Gemma 3 first.
-        // Nemotron and Qwen cannot process images — they will error out.
-
-        const taskLower = task.toLowerCase();
-
-        // Detect if the task requires BOTH vision understanding AND specialist work
-        const specialistKeywords = {
-          email: { model: "nemotron-3-nano:latest", display: "NVIDIA Nemotron 3", patterns: ["email", "mail", "compose", "draft", "letter", "memo"] },
-          coding: { model: "qwen2.5-coder:1.5b", display: "Qwen 2.5 Coder", patterns: ["code", "script", "python", "sql", "function", "debug", "implement", "program", "algorithm"] },
-          reasoning: { model: "nemotron-3-nano:latest", display: "NVIDIA Nemotron 3", patterns: ["analyze", "explain", "summarize", "plan", "strategy", "compare", "evaluate", "review", "write", "essay", "article", "report", "blog"] }
-        };
-
-        // Check if the task ALSO needs specialist work beyond just reading the image
-        const isVisionOnly = !specialistKeywords.email.patterns.some(k => taskLower.includes(k))
-          && !specialistKeywords.coding.patterns.some(k => taskLower.includes(k));
-
-        if (isVisionOnly) {
-          // Pure vision task — route directly to Gemma 4 E2B
-          targetOllamaModel = "gemma4:e2b";
-          modelDisplayName = "Google Gemma 4 E2B";
+      if (!isManual) {
+        if (imageQuestionResult && imageQuestionResult.classification && imageQuestionResult.classification.recommendedModel) {
+          targetOllamaModel = imageQuestionResult.classification.recommendedModel;
+          const mapped = CANONICAL_MODEL_MAP[targetOllamaModel];
+          modelDisplayName = mapped ? mapped.displayName : targetOllamaModel;
         } else {
-          // Two-stage pipeline: Vision extraction → Specialist synthesis
-          // Find which specialist domain matches
-          for (const [domain, config] of Object.entries(specialistKeywords)) {
-            if (config.patterns.some(k => taskLower.includes(k))) {
-              specialistModel = config.model;
-              specialistDisplayName = config.display;
-              break;
-            }
-          }
-
-          if (specialistModel) {
-            needsTwoStagePipeline = true;
-            // Stage 1 will use Gemma 4 E2B for vision, Stage 2 will use the specialist
-            visionExtractionPrompt = `Carefully examine the attached image(s) and extract ALL visible content including: text, numbers, labels, headings, structure, layout, tables, diagrams, handwriting, and any other visual information. Provide a comprehensive, detailed, and accurate description of everything you see. Format your response as structured plain text.`;
-            targetOllamaModel = "gemma4:e2b";
-            modelDisplayName = "Google Gemma 4 E2B";
+          // Intelligent Auto routing based on task specialization, context, and document evidence
+          const taskLower = effectiveTask.toLowerCase();
+          if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("java") || taskLower.includes("c++") || taskLower.includes("rust") || taskLower.includes("sql") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv")) {
+            targetOllamaModel = "qwen2.5-coder:1.5b";
+            modelDisplayName = "Qwen 2.5 Coder";
+          } else if (hasAttachments && (taskLower.includes("rag") || taskLower.includes("extract table") || taskLower.includes("parse invoice") || taskLower.includes("extract entities"))) {
+            // Document extraction / RAG routes to IBM Granite 4 1B-H
+            targetOllamaModel = "granite4:1b-h";
+            modelDisplayName = "IBM Granite 4 1B-H";
+          } else if (taskLower.includes("27 × 43") || taskLower.includes("17 × 28") || taskLower.includes("17 * 28") || taskLower.includes("logic problem") || taskLower.includes("why this algorithm works") || taskLower.includes("reasoning problem") || taskLower.includes("step-by-step reasoning") || taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes("equation") || taskLower.includes("formula")) {
+            targetOllamaModel = "phi4-mini";
+            modelDisplayName = "Microsoft Phi-4 Mini";
+          } else if (taskLower.includes("rag") || taskLower.includes("retriev") || taskLower.includes("entities") || taskLower.includes("entity") || taskLower.includes("classify") || taskLower.includes("classification") || taskLower.includes("extract key") || taskLower.includes("tool call") || taskLower.includes("enterprise")) {
+            targetOllamaModel = "granite4:1b-h";
+            modelDisplayName = "IBM Granite 4 1B-H";
+          } else if (taskLower.includes("rewrite") || taskLower.includes("rephrase") || taskLower.includes("proofread") || taskLower.includes("summarize") || taskLower.includes("summary") || taskLower.includes("explain simply") || taskLower.includes("explain this concept")) {
+            targetOllamaModel = "smollm2:1.7b";
+            modelDisplayName = "SmolLM2 1.7B";
+          } else if (taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi") {
+            targetOllamaModel = "llama3.2:1b";
+            modelDisplayName = "Meta Llama 3.2 1B";
           } else {
-            // No clear specialist match — default to Gemma 4 E2B for the full task
-            targetOllamaModel = "gemma4:e2b";
-            modelDisplayName = "Google Gemma 4 E2B";
+            targetOllamaModel = "nemotron-3-nano:latest";
+            modelDisplayName = "NVIDIA Nemotron 3";
           }
-        }
-      } else if (!isManual) {
-        // Intelligent Auto routing based on task specialization and context
-        const taskLower = effectiveTask.toLowerCase();
-        if (taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr") || taskLower.includes("diagram")) {
-          // Document / Visual extraction routes via OCR + Nemotron/Llama
-          targetOllamaModel = "nemotron-3-nano:latest";
-          modelDisplayName = "NVIDIA Nemotron 3 (via OCR Engine)";
-        } else if (taskLower.includes("deepseek") || taskLower.includes("27 × 43") || taskLower.includes("17 × 28") || taskLower.includes("17 * 28") || taskLower.includes("logic problem") || taskLower.includes("why this algorithm works") || taskLower.includes("reasoning problem") || taskLower.includes("step-by-step reasoning")) {
-          targetOllamaModel = "deepseek-r1:1.5b";
-          modelDisplayName = "DeepSeek-R1 1.5B";
-        } else if (taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes(" × ") || taskLower.includes(" + ") || taskLower.includes(" / ") || taskLower.includes(" - ") || taskLower.includes("equation") || taskLower.includes("formula") || taskLower.includes("arithmetic") || taskLower.includes("algebra") || taskLower.includes("logic") || taskLower.includes("puzzle")) {
-          targetOllamaModel = "deepseek-r1:1.5b";
-          modelDisplayName = "DeepSeek-R1 1.5B";
-        } else if (taskLower.includes("rag") || taskLower.includes("retriev") || taskLower.includes("entities") || taskLower.includes("entity") || taskLower.includes("classify") || taskLower.includes("classification") || taskLower.includes("extract key") || taskLower.includes("tool call") || taskLower.includes("enterprise")) {
-          targetOllamaModel = "granite4:1b-h";
-          modelDisplayName = "IBM Granite 4 1B-H";
-        } else if (taskLower.includes("rewrite") || taskLower.includes("rephrase") || taskLower.includes("proofread") || taskLower.includes("summarize this") || taskLower.includes("short summary") || taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi") {
-          targetOllamaModel = "gemma3:1b";
-          modelDisplayName = "Google Gemma 3 1B";
-        } else if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("java") || taskLower.includes("c++") || taskLower.includes("rust") || taskLower.includes("sql") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv") || taskLower.includes("table")) {
-          targetOllamaModel = "qwen2.5-coder:1.5b";
-          modelDisplayName = "Qwen 2.5 Coder";
-        } else {
-          targetOllamaModel = "nemotron-3-nano:latest";
-          modelDisplayName = "NVIDIA Nemotron 3";
         }
       }
 
-      console.log(`[ROUTING_DECISION] task="${task.slice(0, 60)}" hasImages=${hasImages} needsTwoStage=${needsTwoStagePipeline} targetModel="${targetOllamaModel}" specialist="${specialistModel || 'none'}"`);
+      console.log(`[ROUTING_DECISION] task="${task.slice(0, 60)}" hasAttachments=${hasAttachments} targetModel="${targetOllamaModel}"`);
 
       const conversationId = payload.conversation_id || payload.conversationId || payload.chat_id || payload.chatId || null;
       const contextPayload = conversationManager.prepareContext({
@@ -914,6 +926,11 @@ const server = http.createServer(async (req, res) => {
           tag: targetOllamaModel
         });
 
+        if (imageQuestionResult) {
+          sendSSE("ocr_trace", imageQuestionResult.backendTrace);
+          sendSSE("task_detected", imageQuestionResult.classification);
+        }
+
         sendSSE("metadata", {
           requestedModel: isManual ? targetOllamaModel : "auto",
           actualModel: targetOllamaModel,
@@ -921,6 +938,11 @@ const server = http.createServer(async (req, res) => {
           modelMode: isManual ? "manual" : "auto",
           agentId: agent.agent_id,
           agentName: agent.name || agent.agent_id,
+          agentNumber: agent.agent_id?.replace("agent-", "") || "001",
+          ocrTrace: imageQuestionResult?.backendTrace || null,
+          ocrResult: imageQuestionResult?.text || null,
+          ocrConfidence: imageQuestionResult?.confidence || null,
+          detectedTask: imageQuestionResult?.classification?.taskLabel || null,
           requestId
         });
 
@@ -1043,137 +1065,15 @@ const server = http.createServer(async (req, res) => {
           }
 
           // ================================================================
-          // TWO-STAGE VISION PIPELINE
           // ================================================================
-          if (needsTwoStagePipeline && hasImages && specialistModel) {
-            // STAGE 1: Vision Extraction with Gemma 4 E2B
-            sendSSE("status", {
-              state: ModelLifecycleState.PREPARING,
-              message: "Analyzing image with Google Gemma 4 E2B Multimodal...",
-              model: "Google Gemma 4 E2B",
-              tag: "gemma4:e2b",
-              stage: 1,
-              pipeline: "vision-to-specialist"
-            });
-
-            let visionExtractedText = "";
-            try {
-              const visionResult = await modelStreamer.generateFromOllama({
-                model: "gemma4:e2b",
-                system: "You are a vision analysis engine. Extract and describe ALL content from the provided image(s) with maximum detail and accuracy. Include all text, numbers, structure, layout, tables, and visual elements.",
-                prompt: visionExtractionPrompt + "\n\nUser's original request for context: " + task,
-                images: imagesList,
-                temperature: 0.2,
-                options: { num_predict: 1024 }
-              });
-              visionExtractedText = visionResult.text || "";
-            } catch (visionErr) {
-              let errCode = "VISION_REQUEST_FAILED";
-              if (visionErr.message.includes("fetch failed") || visionErr.message.includes("ECONNREFUSED")) errCode = "OLLAMA_UNAVAILABLE";
-              else if (visionErr.message.includes("model not found") || visionErr.message.includes("not available") || visionErr.message.includes("does not support vision")) errCode = "GEMMA_UNAVAILABLE";
-              
-              sendSSE("error", {
-                code: errCode,
-                message: `Vision analysis failed: ${visionErr.message}. Gemma 4 E2B may not be available for image processing.`,
-                status: "vision_error",
-                stage: 1,
-                model: "gemma4:e2b"
-              });
-              res.end();
-              return;
-            }
-
-            if (!visionExtractedText.trim()) {
-              sendSSE("error", {
-                code: "VISION_REQUEST_FAILED",
-                message: "Vision extraction returned empty results. The image may not contain readable content.",
-                status: "vision_empty",
-                stage: 1
-              });
-              res.end();
-              return;
-            }
-
-            sendSSE("status", {
-              state: ModelLifecycleState.ACTIVE,
-              message: `Image analyzed. Now generating response with ${specialistDisplayName}...`,
-              model: specialistDisplayName,
-              tag: specialistModel,
-              stage: 2,
-              pipeline: "vision-to-specialist"
-            });
-
-            // STAGE 2: Specialist Synthesis — stream the specialist model's response
-            const specialistPrompt = `${contextPayload.systemPrompt ? contextPayload.systemPrompt + "\n\n" : ""}The user uploaded an image. Here is what was found in the image:\n\n--- IMAGE CONTENT START ---\n${visionExtractedText}\n--- IMAGE CONTENT END ---\n\nUser's request: ${task}\n\nUsing the image content above, fulfill the user's request.`;
-
-            const stage2RequestId = `${requestId}_s2`;
-            req.on("close", () => {
-              modelStreamer.cancelStream(stage2RequestId);
-            });
-
-            await modelStreamer.streamFromOllama({
-              model: specialistModel,
-              system: contextPayload.systemPrompt || "",
-              prompt: specialistPrompt,
-              images: [], // Stage 2 receives TEXT, not images
-              temperature: 0.3,
-              options: {
-                num_predict: payload.parameters?.max_tokens || 512,
-                ...(payload.parameters || {})
-              },
-              requestId: stage2RequestId,
-              onStatus: (statusObj) => {
-                sendSSE("status", { ...statusObj, stage: 2 });
-              },
-              onToken: (tokenChunk, accumulatedText) => {
-                sendSSE("token", { text: tokenChunk, fullText: accumulatedText });
-              },
-              onComplete: (metrics) => {
-                if (conversationId && metrics.text) {
-                  conversationManager.recordTurn({
-                    conversationId,
-                    userPrompt: task,
-                    assistantResponse: metrics.text,
-                    agent,
-                    model: specialistDisplayName,
-                    replyTo: payload.replyTo || null
-                  });
-                }
-                sendSSE("complete", {
-                  ...metrics,
-                  agent_id: agent.agent_id,
-                  requested_model: "auto",
-                  actual_model: specialistModel,
-                  vision_model: "gemma4:e2b",
-                  model_mode: "auto",
-                  model_source: "ollama-local",
-                  model: specialistDisplayName,
-                  pipeline: "vision-to-specialist",
-                  external_calls: 0
-                });
-                res.end();
-              },
-              onError: (err) => {
-                sendSSE("error", {
-                  message: `Specialist generation failed: ${err.message}`,
-                  status: "error",
-                  stage: 2,
-                  model: specialistModel
-                });
-                res.end();
-              }
-            });
-
-          } else {
-            // ================================================================
-            // STANDARD SINGLE-STAGE STREAMING (vision-only or no images)
-            // ================================================================
-            await modelStreamer.streamFromOllama({
-              model: targetOllamaModel,
-              system: contextPayload.systemPrompt,
-              prompt: contextPayload.prompt,
-              images: imagesList,
-              temperature: 0.3,
+          // DIRECT STREAMING INFERENCE
+          // ================================================================
+          await modelStreamer.streamFromOllama({
+            model: targetOllamaModel,
+            system: contextPayload.systemPrompt,
+            prompt: contextPayload.prompt,
+            images: [],
+            temperature: 0.3,
               options: {
                 num_predict: payload.parameters?.max_tokens || 512,
                 ...(payload.parameters || {})
@@ -1199,11 +1099,16 @@ const server = http.createServer(async (req, res) => {
                 sendSSE("complete", {
                   ...metrics,
                   agent_id: agent.agent_id,
+                  agentName: agent.name || agent.agent_id,
+                  agentNumber: agent.agent_id?.replace("agent-", "") || "001",
                   requested_model: isManual ? targetOllamaModel : "auto",
                   actual_model: targetOllamaModel,
                   model_mode: isManual ? "manual" : "auto",
                   model_source: "ollama-local",
                   model: modelDisplayName,
+                  ocrTrace: imageQuestionResult?.backendTrace || null,
+                  ocrResult: imageQuestionResult?.text || null,
+                  detectedTask: imageQuestionResult?.classification?.taskLabel || null,
                   external_calls: 0
                 });
                 res.end();
@@ -1216,7 +1121,6 @@ const server = http.createServer(async (req, res) => {
                 if (!res.writableEnded) res.end();
               }
             });
-          }
         } catch (streamErr) {
           sendSSE("error", {
             message: streamErr.message,
@@ -1288,59 +1192,7 @@ const server = http.createServer(async (req, res) => {
       let result;
       const inferenceStart = performance.now();
       try {
-        if (hasImages) {
-          if (needsTwoStagePipeline && specialistModel) {
-            // Stage 1: Vision Extraction via Gemma 4 E2B
-            const stage1 = await modelStreamer.generateFromOllama({
-              model: "gemma4:e2b",
-              system: "You are an expert visual analyzer. Extract all visual information, text, labels, and content accurately.",
-              prompt: visionExtractionPrompt || "Extract all visual content from this image.",
-              images: imagesList,
-              temperature: 0.1,
-              options: { num_predict: 512 }
-            });
-
-            // Stage 2: Specialist Synthesis
-            const stage2 = await modelStreamer.generateFromOllama({
-              model: specialistModel,
-              system: contextPayload.systemPrompt || "You are a professional AI specialist.",
-              prompt: `${contextPayload.prompt || task}\n\n[Visual Evidence from Attached Image]:\n${stage1.text}`,
-              temperature: 0.3,
-              options: { num_predict: payload.parameters?.max_tokens || 512 }
-            });
-
-            result = {
-              status: "success",
-              result: stage2.text,
-              metadata: {
-                model: specialistDisplayName || modelDisplayName,
-                actual_model: specialistModel,
-                total_duration: stage1.durationMs + stage2.durationMs
-              }
-            };
-          } else {
-            // Direct multimodal generation via Gemma 3
-            const gen = await modelStreamer.generateFromOllama({
-              model: targetOllamaModel,
-              system: contextPayload.systemPrompt,
-              prompt: contextPayload.prompt || task,
-              images: imagesList,
-              temperature: 0.2,
-              options: { num_predict: payload.parameters?.max_tokens || 512 }
-            });
-            result = {
-              status: "success",
-              result: gen.text,
-              metadata: {
-                model: modelDisplayName,
-                actual_model: targetOllamaModel,
-                total_duration: gen.durationMs
-              }
-            };
-          }
-        } else {
-          result = await requestAgent(agent, agentPayload);
-        }
+        result = await requestAgent(agent, agentPayload);
       } catch (err) {
         try {
           const inProc = await executeAgentInProcess(agent.agent_id, agentPayload);
@@ -1355,7 +1207,7 @@ const server = http.createServer(async (req, res) => {
             model: targetOllamaModel,
             system: contextPayload.systemPrompt,
             prompt: contextPayload.prompt,
-            images: imagesList,
+            images: [],
             temperature: 0.3,
             options: { num_predict: payload.parameters?.max_tokens || 512 }
           });
@@ -1470,6 +1322,9 @@ const server = http.createServer(async (req, res) => {
         model_mode: isManual ? "manual" : "auto",
         model_source: "ollama-local",
         model: modelDisplayName,
+        ocrTrace: imageQuestionResult?.backendTrace || null,
+        ocrResult: imageQuestionResult?.text || null,
+        detectedTask: imageQuestionResult?.classification?.taskLabel || null,
         external_calls: 0,
         text: answerText,
         evidence,

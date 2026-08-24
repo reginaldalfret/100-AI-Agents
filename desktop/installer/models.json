@@ -75,28 +75,28 @@
       "description": "State-of-the-art synthetic reasoning model for mathematical logic, algorithmic problem solving, and STEM intelligence"
     },
     {
-      "id": "deepseek-r1:1.5b",
-      "name": "DeepSeek-R1 1.5B",
-      "tag": "deepseek-r1:1.5b",
-      "role": "lightweight_reasoning",
-      "specialization": "Lightweight Reasoning & Logic",
+      "id": "smollm2:1.7b",
+      "name": "SmolLM2 1.7B",
+      "tag": "smollm2:1.7b",
+      "role": "lightweight_general_text",
+      "specialization": "Lightweight General Text & Summarization",
       "required": false,
-      "sizeBytes": 1100000000,
-      "sizeDisplay": "1.1 GB",
-      "vramMinMb": 1200,
-      "description": "Lightweight reasoning, mathematics and logic model with chain-of-thought problem solving"
+      "sizeBytes": 1800000000,
+      "sizeDisplay": "1.8 GB",
+      "vramMinMb": 1800,
+      "description": "High-throughput compact model for general text generation, rewriting, summarization, and lightweight conversational tasks"
     },
     {
-      "id": "ocr-document-intelligence",
-      "name": "Python Compute OCR & Document Intelligence",
-      "tag": "python-compute-ocr",
+      "id": "paddleocr-engine",
+      "name": "PaddleOCR 3.7.0 Document Intelligence Engine",
+      "tag": "paddleocr-engine",
       "role": "document_intelligence",
-      "specialization": "Primary Image/PDF Extraction",
+      "specialization": "Production Offline OCR & Document Understanding",
       "required": true,
-      "sizeBytes": 150000000,
-      "sizeDisplay": "150 MB",
+      "sizeBytes": 62000000,
+      "sizeDisplay": "62 MB (models)",
       "vramMinMb": 0,
-      "description": "Deterministic PDF text extraction, scanned page OCR, table parsing, and P&ID symbol detection"
+      "description": "PP-OCRv6 Small text detection/recognition, PP-StructureV3 layout analysis, SLANet table extraction, PP-FormulaNet LaTeX formula recognition. 50-language support. 100% offline."
     },
     {
       "id": "whisper-tiny.en",

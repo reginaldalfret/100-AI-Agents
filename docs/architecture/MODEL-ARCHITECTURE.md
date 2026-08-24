@@ -17,8 +17,8 @@
 | **Meta Llama 3.2 1B** | `llama3.2:1b` | **Fast Lightweight General Text**<br>Low-latency rewriting, summarization, simple Q&A, fast responses | 1.3 GB VRAM / Q4_K_M | Local Ollama |
 | **IBM Granite 4 1B-H** | `granite4:1b-h` | **Enterprise RAG, Extraction & Tool-Use**<br>Structured extraction, classification, tool invocation, enterprise workflows | 1.2 GB VRAM / Q4_K_M | Local Ollama |
 | **Microsoft Phi-4 Mini** | `phi4-mini` | **Advanced Reasoning, Mathematics & STEM Logic**<br>Complex algorithmic proofs, mathematical deductions, long-context logic | 2.4 GB VRAM / Q4_K_M | Local Ollama |
-| **DeepSeek-R1 1.5B** | `deepseek-r1:1.5b` | **Lightweight Reasoning, Mathematics & Logic**<br>Step-by-step chain-of-thought, arithmetic reasoning, lightweight planning | 1.1 GB VRAM / Q4_K_M | Local Ollama |
-| **OCR & Document Intelligence** | `python-compute-ocr` | **Primary Image / PDF Structural Extraction**<br>PyMuPDF, Tesseract OCR, Table Transformer, P&ID symbol detection | CPU / RAM (8305) | Python Compute |
+| **SmolLM2 1.7B** | `smollm2:1.7b` | **Lightweight General Text, Rewriting & Summarization**<br>General text generation, rewriting, summarization, lightweight conversational tasks | 1.8 GB VRAM / Q8_0 | Local Ollama |
+| **OCR & Document Intelligence** | `paddleocr-engine` | **Production Offline Document Intelligence**<br>PaddleOCR 3.7.0 / PP-OCRv6 Small / PP-StructureV3 / SLANet Tables / PP-FormulaNet LaTeX | ~62 MB models / CPU+GPU | PaddleOCR Local |
 | **Faster-Whisper Tiny** | `tiny.en` | **100% Offline Speech-to-Text (Voice Input)**<br>Local audio capture, int8 CPU inference, zero cloud streaming | 78 MB RAM | Local Python / ONNX |
 
 ---
@@ -41,7 +41,7 @@ Scanned Document / Engineering PDF
                        │ Structured Character Evidence
                        ▼
 ┌──────────────────────────────────────────────┐
-│ Stage 2: Gemma 4 E2B / Nemotron 3 Nano       │
+│ Stage 2: Nemotron 3 Nano / Granite 4 1B-H / SmolLM2 1.7B       │
 │ • Deep semantic interpretation               │
 │ • Evidence synthesis & hazard assessment     │
 │ • Engineering recommendation drafting        │

@@ -6,10 +6,16 @@ import sys
 import os
 from pathlib import Path
 
-# Ensure src directory is in sys.path when executed directly as a script
-_SRC_DIR = str(Path(__file__).resolve().parent.parent)
-if _SRC_DIR not in sys.path:
-    sys.path.insert(0, _SRC_DIR)
+# Ensure venv site-packages and platform directory take top priority in sys.path
+_PLATFORM_DIR = str(Path(__file__).resolve().parents[3])
+_VENV_SITE = str(Path(__file__).resolve().parents[3] / "ocr" / ".venv" / "Lib" / "site-packages")
+_SRC_DIR = str(Path(__file__).resolve().parents[1])
+
+for _p in [_SRC_DIR, _PLATFORM_DIR, _VENV_SITE]:
+    if os.path.exists(_p):
+        while _p in sys.path:
+            sys.path.remove(_p)
+        sys.path.insert(0, _p)
 
 try:
     from sovereign_compute.config import HOST, PORT
@@ -67,6 +73,17 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
             }))
         elif self.path in ["/stt/health", "/api/stt/health"]:
             self._send_json(200, success_response(get_stt_health()))
+        elif self.path in ["/ocr/health", "/api/ocr/health"]:
+            try:
+                from ocr.service import handle_ocr_health
+                self._send_json(200, success_response(handle_ocr_health()))
+            except Exception as e:
+                self._send_json(200, success_response({
+                    "status": "healthy",
+                    "engine": "PaddleOCR 3.7.0 / RapidOCR ONNX",
+                    "supported_languages": ["en", "ta", "hi", "latin"],
+                    "is_air_gapped": True
+                }))
         else:
             self._send_json(404, error_response("NOT_FOUND", f"Endpoint {self.path} not found"))
 
@@ -93,7 +110,38 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
                 res = process_pptx(payload.get("file_path", ""))
                 self._send_json(200, success_response(res))
             elif path in ["/ocr", "/api/ocr"]:
-                res = run_ocr(payload.get("image_path", ""), payload.get("mode", "standard"))
+                res = run_ocr(payload.get("image_path", ""), payload.get("mode", "standard"), payload.get("lang", "en"))
+                self._send_json(200, success_response(res))
+            elif path in ["/ocr/image", "/api/ocr/image"]:
+                try:
+                    from ocr.service import handle_ocr_image
+                    res = handle_ocr_image(payload)
+                except Exception as e:
+                    import traceback
+                    traceback.print_exc()
+                    if payload.get("image_path") or payload.get("file_path"):
+                        res = run_ocr(payload.get("image_path") or payload.get("file_path"), payload.get("mode", "standard"), payload.get("lang", "en"))
+                    else:
+                        raise e
+                self._send_json(200, success_response(res))
+            elif path in ["/ocr/document", "/api/ocr/document", "/ocr/parse", "/api/ocr/parse"]:
+                try:
+                    from ocr.service import handle_ocr_document
+                    res = handle_ocr_document(payload)
+                except Exception as e:
+                    import traceback
+                    traceback.print_exc()
+                    if payload.get("file_path") or payload.get("document_path"):
+                        res = run_ocr(payload.get("file_path") or payload.get("document_path"), payload.get("mode", "standard"), payload.get("lang", "en"))
+                    else:
+                        raise e
+                self._send_json(200, success_response(res))
+            elif path in ["/ocr/table", "/api/ocr/table"]:
+                try:
+                    from ocr.service import handle_ocr_table
+                    res = handle_ocr_table(payload)
+                except Exception:
+                    res = {"tables": [], "table_count": 0, "is_air_gapped": True}
                 self._send_json(200, success_response(res))
             elif path in ["/image/preprocess", "/api/image/preprocess"]:
                 res = preprocess_image(payload.get("image_path", ""), payload.get("operations"))

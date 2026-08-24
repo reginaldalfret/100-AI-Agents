@@ -29,21 +29,21 @@ describe('Model Health, Hardware Profiling & Lifecycle Management Test Suite', (
       assert.equal(slot1.model_id, 'nemotron-3-nano');
       assert.equal(modelLifecycle.getModelState('nemotron-3-nano'), LifecycleState.ACTIVE);
 
-      // 2. Sequential switch to Gemma 4 E2B
-      const slot2 = await modelLifecycle.acquireModelSlot('gemma4-e2b');
+      // 2. Sequential switch to Gemma 3 1B
+      const slot2 = await modelLifecycle.acquireModelSlot('gemma3-1b');
       assert.equal(slot2.acquired, true);
-      assert.equal(slot2.model_id, 'gemma4-e2b');
-      assert.equal(modelLifecycle.getModelState('gemma4-e2b'), LifecycleState.ACTIVE);
+      assert.equal(slot2.model_id, 'gemma3-1b');
+      assert.equal(modelLifecycle.getModelState('gemma3-1b'), LifecycleState.ACTIVE);
       assert.equal(modelLifecycle.getModelState('nemotron-3-nano'), LifecycleState.IDLE);
 
       // 3. Release slot and verify execution trace
-      const trace = modelLifecycle.releaseModelSlot('gemma4-e2b', { duration_ms: 45, status: 'success' });
+      const trace = modelLifecycle.releaseModelSlot('gemma3-1b', { duration_ms: 45, status: 'success' });
       assert.ok(trace.trace_id.startsWith('tr_'));
-      assert.equal(trace.model_id, 'gemma4-e2b');
+      assert.equal(trace.model_id, 'gemma3-1b');
       assert.equal(trace.status, 'success');
       assert.equal(trace.external_calls, 0);
       assert.equal(trace.is_air_gapped, true);
-      assert.equal(modelLifecycle.getModelState('gemma4-e2b'), LifecycleState.IDLE);
+      assert.equal(modelLifecycle.getModelState('gemma3-1b'), LifecycleState.IDLE);
 
       // 4. Verify history log contains the trace
       const history = modelLifecycle.getExecutionHistory();

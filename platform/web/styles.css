@@ -2525,6 +2525,13 @@ html, body {
   border: 1px solid rgba(236, 72, 153, 0.40);
 }
 
+.icon-smollm,
+.icon-nlp {
+  background: rgba(14, 165, 233, 0.20);
+  color: #38bdf8;
+  border: 1px solid rgba(14, 165, 233, 0.40);
+}
+
 .model-option-meta {
   display: flex;
   flex-direction: column;
@@ -2598,6 +2605,13 @@ html, body {
   background: rgba(236, 72, 153, 0.25);
   color: #fbcfe8;
   border: 1px solid rgba(236, 72, 153, 0.45);
+}
+
+.badge-smollm,
+.badge-nlp {
+  background: rgba(14, 165, 233, 0.25);
+  color: #bae6fd;
+  border: 1px solid rgba(14, 165, 233, 0.45);
 }
 
 .model-desc {
@@ -3565,5 +3579,113 @@ html, body {
   outline: 2px solid var(--neon-cyan);
   outline-offset: 2px;
 }
+
+/* ================================================================
+   OFFLINE OCR QUESTION AUTO-READ & AUTO-ANSWER UI
+   ================================================================ */
+.ocr-preview-container {
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.65);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  overflow: hidden;
+  font-size: 12.5px;
+}
+
+.ocr-details {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.ocr-details summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  list-style: none;
+}
+
+.ocr-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.ocr-tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.ocr-details-content {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.ocr-meta-line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.ocr-full-text-box {
+  margin-top: 6px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  font-family: var(--font-mono, monospace);
+  font-size: 11.5px;
+  white-space: pre-wrap;
+}
+
+.ocr-live-trace {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(6, 182, 212, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  font-size: 12px;
+}
+
+.ocr-trace-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  color: #38bdf8;
+  margin-bottom: 6px;
+}
+
+.ocr-engine-badge {
+  font-size: 10.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(56, 189, 248, 0.2);
+  color: #7dd3fc;
+}
+
+.ocr-trace-text {
+  color: #f1f5f9;
+  margin-bottom: 6px;
+}
+
+.ocr-trace-routing {
+  display: flex;
+  gap: 16px;
+  color: var(--text-secondary);
+  font-size: 11.5px;
+}
+
 
 

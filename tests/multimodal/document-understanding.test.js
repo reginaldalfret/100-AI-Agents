@@ -37,7 +37,7 @@ test('2. Code / Text File Content Decoding', async () => {
   assert.ok(doc.extractedText.includes('calculate_corrosion_rate'));
 });
 
-test('3. Image Attachment Identified for Google Gemma 3 Vision Engine', async () => {
+test('3. Image Attachment Processed by Local OCR Document Engine', async () => {
   const dummyImageBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
 
   const doc = await documentExtractor.extractContent({
@@ -46,9 +46,9 @@ test('3. Image Attachment Identified for Google Gemma 3 Vision Engine', async ()
     data: dummyImageBase64
   });
 
-  assert.strictEqual(doc.isMultimodalImage, true, 'Image must be flagged for multimodal vision processing');
   assert.strictEqual(doc.docType, 'image');
-  assert.strictEqual(doc.base64Image, dummyImageBase64);
+  assert.strictEqual(doc.isMultimodalImage, false, 'Image is processed by OCR engine without raw image bypass');
+  assert.ok(doc.extractedText.length > 0);
 });
 
 test('4. PDF Document Content Extraction', async () => {

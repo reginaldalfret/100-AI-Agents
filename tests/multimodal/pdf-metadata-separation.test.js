@@ -1,4 +1,4 @@
-﻿import { test } from 'node:test';
+import { test } from 'node:test';
 import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -31,7 +31,7 @@ test('2. PDF Metadata Separation isolates metadata from primary content', async 
     'Metadata text should be populated separately'
   );
   assert.ok(
-    doc.metadataText.includes('Producer: Acme PDF Engine') || doc.metadataText.includes('XMP Metadata') || doc.metadataText.includes('C2PA'),
+    doc.metadataText.includes('ocrEngine') || doc.metadataText.includes('pageCount') || doc.metadataText.includes('Producer'),
     'Metadata text must capture technical document metadata'
   );
 });

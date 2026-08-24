@@ -1645,6 +1645,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function formatResponse(text) {
         if (!text) return '';
 
+        // Strip any residual thinking tags from history or exports
+        text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '').trim();
+        if (!text) return '<span style="color:var(--text-tertiary);font-style:italic;">The model produced no visible answer.</span>';
+
         // Extract and render code / diagram blocks before escaping
         const codeBlocks = [];
         let placeholderText = text.replace(/```([\w-]*)\n?([\s\S]*?)```/g, (match, lang, code) => {
@@ -2321,6 +2325,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function copyCleanResponse(text, btnEl) {
         if (!text) return;
+        text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '').trim();
         try {
             if (navigator.clipboard && window.isSecureContext) {
                 await navigator.clipboard.writeText(text);
@@ -2503,7 +2508,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function sanitizeTextForSpeech(raw) {
         if (!raw) return '';
-        let text = raw.trim();
+        let text = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '').trim();
         text = text.replace(/```[\s\S]*?```/g, " I have generated the code on screen for your review. ");
         text = text.replace(/`([^`]+)`/g, '$1');
         text = text.replace(/\|[\s\S]*?\|\n\|[-:\s|]+\|\n([\s\S]*?)(?=\n\n|$)/g, " The data table is displayed on screen. ");
@@ -3515,25 +3520,25 @@ document.addEventListener('DOMContentLoaded', () => {
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.5GB VRAM)'
         },
-        'deepseek': {
-            id: 'deepseek',
-            internalId: 'deepseek-r1:1.5b',
-            displayName: 'DeepSeek-R1 1.5B',
-            badge: 'Reasoning',
+        'smollm2': {
+            id: 'smollm2',
+            internalId: 'smollm2:1.7b',
+            displayName: 'SmolLM2 1.7B',
+            badge: 'Text',
             speed: 'Ultra Fast',
-            description: 'Lightweight reasoning, mathematics and logic model',
+            description: 'Lightweight general text model',
             runtime: 'Local Ollama (127.0.0.1:11434)',
-            hardware: 'RTX 2050 (~1.1GB VRAM)'
+            hardware: 'RTX 2050 (~1.8GB VRAM)'
         },
-        'deepseek-r1:1.5b': {
-            id: 'deepseek',
-            internalId: 'deepseek-r1:1.5b',
-            displayName: 'DeepSeek-R1 1.5B',
-            badge: 'Reasoning',
+        'smollm2:1.7b': {
+            id: 'smollm2',
+            internalId: 'smollm2:1.7b',
+            displayName: 'SmolLM2 1.7B',
+            badge: 'Text',
             speed: 'Ultra Fast',
-            description: 'Lightweight reasoning, mathematics and logic model',
+            description: 'Lightweight general text model',
             runtime: 'Local Ollama (127.0.0.1:11434)',
-            hardware: 'RTX 2050 (~1.1GB VRAM)'
+            hardware: 'RTX 2050 (~1.8GB VRAM)'
         }
     };
 
@@ -4229,10 +4234,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 data.models = [
                     { name: 'NVIDIA Nemotron 3 Nano', tag: 'nemotron-3-nano:latest', role: 'Reasoning & Orchestration', vram_mb: 2800, status: 'ready' },
                     { name: 'Qwen 2.5 Coder 1.5B', tag: 'qwen2.5-coder:1.5b', role: 'Code Synthesis & Sandbox', vram_mb: 986, status: 'ready' },
-                    { name: 'Google Gemma 4 E2B', tag: 'gemma4:e2b', role: 'Multimodal Reasoning & Evidence', vram_mb: 2400, status: 'ready' },
+                    { name: 'Google Gemma 3 1B', tag: 'gemma3:1b', role: 'Edge NLP & Semantic Synthesis', vram_mb: 815, status: 'ready' },
                     { name: 'Meta Llama 3.2 1B', tag: 'llama3.2:1b', role: 'Fast Lightweight General Text', vram_mb: 1300, status: 'ready' },
                     { name: 'IBM Granite 4 1B-H', tag: 'granite4:1b-h', role: 'Enterprise RAG & Tool Use', vram_mb: 1400, status: 'ready' },
-                    { name: 'Microsoft Phi-4 Mini', tag: 'phi4-mini', role: 'Reasoning, Mathematics & Logic', vram_mb: 2500, status: 'ready' }
+                    { name: 'Microsoft Phi-4 Mini', tag: 'phi4-mini', role: 'Reasoning, Mathematics & Logic', vram_mb: 2500, status: 'ready' },
+                    { name: 'SmolLM2 1.7B', tag: 'smollm2:1.7b', role: 'Lightweight General Text Specialist', vram_mb: 1800, status: 'ready' }
                 ];
             }
             

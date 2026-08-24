@@ -50,11 +50,11 @@ const modelBlobs = [
     vramMinMb: 1200
   },
   { 
-    name: 'Google Gemma 4 E2B (gemma4:e2b)', 
+    name: 'Google Gemma 3 1B (gemma3:1b)', 
     path: path.join(modelStoreSource, 'blobs/sha256-4e30e2665218745ef463f722c0bf86be0cab6ee676320f1cfadf91e989107448'), 
-    minSize: 2.0 * 1024 * 1024 * 1024,
+    minSize: 800 * 1024 * 1024,
     required: true,
-    vramMinMb: 2400
+    vramMinMb: 900
   },
   { 
     name: 'Meta Llama 3.2 1B (llama3.2:1b)', 
@@ -251,7 +251,7 @@ const bundledModelsList = modelsConfig.models.length > 0
   : [
       { name: 'NVIDIA Nemotron 3 Nano (nemotron-3-nano:latest)', role: 'orchestrator', size: '2.8 GB', vramMinMb: 2500, required: true },
       { name: 'Qwen 2.5 Coder 1.5B (qwen2.5-coder:1.5b)', role: 'coder', size: '986 MB', vramMinMb: 1200, required: true },
-      { name: 'Google Gemma 4 E2B (gemma4:e2b)', role: 'multimodal_reasoning', size: '2.4 GB', vramMinMb: 2400, required: true },
+      { name: 'Google Gemma 3 1B (gemma3:1b)', role: 'edge_nlp', size: '815 MB', vramMinMb: 900, required: true },
       { name: 'Meta Llama 3.2 1B (llama3.2:1b)', role: 'edge_assistant', size: '1.3 GB', vramMinMb: 900, required: false },
       { name: 'IBM Granite 4 1B-H (granite4:1b-h)', role: 'enterprise_agent', size: '1.4 GB', vramMinMb: 1100, required: false },
       { name: 'Microsoft Phi-4 Mini 3.8B (phi4-mini:latest)', role: 'math_stem_reasoning', size: '2.5 GB', vramMinMb: 2600, required: false },
