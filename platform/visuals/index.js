@@ -4,6 +4,9 @@
  */
 
 export { VisualType, ThemeTokens, NodeKind } from './schema.js';
+export { CHART_REGISTRY } from './registry.js';
+export { ChartSelector } from './chart-selector.js';
+export { VisualDataParser } from './parser.js';
 export { DiagramSanitizer } from './sanitizer.js';
 export { DiagramValidator } from './validator.js';
 export { VisualPlanner, PROJECT_ARCHITECTURE_CATALOG } from './planner.js';

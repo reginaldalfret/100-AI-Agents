@@ -1,36 +1,54 @@
 /**
  * Sovereign AI Workbench — Diagram & Visual Specification Schemas
- * Standardizes definitions for flowcharts, architecture diagrams, sequence lifelines,
- * timelines, state machines, and data charts.
  */
 
 export const VisualType = {
+  // Comparison
+  BAR_CHART: 'bar_chart',
+  HORIZONTAL_BAR_CHART: 'horizontal_bar_chart',
+  GROUPED_BAR_CHART: 'grouped_bar_chart',
+  STACKED_BAR_CHART: 'stacked_bar_chart',
+  
+  // Trend
+  LINE_CHART: 'line_chart',
+  AREA_CHART: 'area_chart',
+  STACKED_AREA_CHART: 'stacked_area_chart',
+  
+  // Distribution
+  HISTOGRAM: 'histogram',
+  BOX_PLOT: 'box_plot',
+  
+  // Relationship
+  SCATTER_PLOT: 'scatter_plot',
+  BUBBLE_CHART: 'bubble_chart',
+  
+  // Composition
+  PIE_CHART: 'pie_chart',
+  DONUT_CHART: 'donut_chart',
+  WATERFALL_CHART: 'waterfall_chart',
+  
+  // Matrix
+  HEATMAP: 'heatmap',
+  RADAR_CHART: 'radar_chart',
+  
+  // KPI / Statistical
+  GAUGE_CHART: 'gauge_chart',
+  KPI_CARD: 'kpi_card',
+  POPULATION_PYRAMID: 'population_pyramid',
+  
+  // Time / Process
+  TIMELINE: 'timeline',
+  GANTT: 'gantt',
+  
+  // Structural
   FLOWCHART: 'flowchart',
   ARCHITECTURE: 'architecture',
   SEQUENCE: 'sequence',
   STATE: 'state',
-  TIMELINE: 'timeline',
   MINDMAP: 'mindmap',
   HIERARCHY: 'hierarchy',
   DECISION_TREE: 'decision_tree',
-  BAR_CHART: 'bar_chart',
-  LINE_CHART: 'line_chart',
-  PIE_CHART: 'pie_chart',
-  AREA_CHART: 'area_chart',
-  DONUT_CHART: 'donut_chart',
-  HORIZONTAL_BAR_CHART: 'horizontal_bar_chart',
-  GROUPED_BAR_CHART: 'grouped_bar_chart',
-  STACKED_BAR_CHART: 'stacked_bar_chart',
-  HISTOGRAM: 'histogram',
-  SCATTER_PLOT: 'scatter_plot',
-  STACKED_AREA_CHART: 'stacked_area_chart',
-  BUBBLE_CHART: 'bubble_chart',
-  RADAR_CHART: 'radar_chart',
-  HEATMAP: 'heatmap',
-  BOX_PLOT: 'box_plot',
-  WATERFALL_CHART: 'waterfall_chart',
-  GAUGE_CHART: 'gauge_chart',
-  POPULATION_PYRAMID: 'population_pyramid',
+  NETWORK_GRAPH: 'network_graph',
   MERMAID: 'mermaid'
 };
 
@@ -58,12 +76,13 @@ export const NodeKind = {
   END: 'end',
   PROCESS: 'process',
   DECISION: 'decision',
-  AGENT: 'agent',
-  MODEL: 'model',
-  DATABASE: 'database',
-  STORAGE: 'storage',
+  DATA: 'data',
+  SERVICE: 'service',
   GATEWAY: 'gateway',
-  CLIENT: 'client',
+  MODEL: 'model',
+  AGENT: 'agent',
+  STORAGE: 'storage',
+  EVIDENCE: 'evidence',
   SECURITY: 'security',
-  EVIDENCE: 'evidence'
+  CLIENT: 'client'
 };

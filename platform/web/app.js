@@ -428,19 +428,32 @@ document.addEventListener('DOMContentLoaded', () => {
         _CHART_COLORS: ['#06b6d4', '#8b5cf6', '#f43f5e', '#10b981', '#f59e0b', '#3b82f6', '#ec4899', '#14b8a6', '#f97316', '#a855f7', '#22d3ee', '#e879f9', '#34d399', '#fbbf24', '#fb7185'],
 
         _normalizeChartData(spec) {
-            // Accept both { labels, series } and { data: [{label, value}] } formats
-            let labels = spec.labels || spec.x?.values || [];
-            let series = spec.series || [];
+            // Accept categories, labels, x.values, series.data, series.values, and data array
+            let labels = spec.categories || spec.labels || spec.x?.values || [];
+            let series = (spec.series || []).map((sr, idx) => ({
+                name: sr.name || sr.label || `Series ${idx + 1}`,
+                values: Array.isArray(sr.data) ? sr.data : (Array.isArray(sr.values) ? sr.values : [])
+            }));
+
             if ((!labels.length || !series.length) && Array.isArray(spec.data) && spec.data.length > 0) {
                 const d = spec.data;
-                if (d[0] && typeof d[0].label === 'string' && typeof d[0].value === 'number') {
-                    labels = d.map(i => i.label);
-                    series = [{ name: spec.seriesName || 'Value', values: d.map(i => i.value) }];
+                if (d[0] && (typeof d[0].label === 'string' || typeof d[0].name === 'string')) {
+                    labels = d.map(i => i.label || i.name || 'Item');
+                    series = [{ name: spec.seriesName || spec.yAxis?.label || 'Value', values: d.map(i => (typeof i.value === 'number' ? i.value : Number(i.value) || 0)) }];
+                } else if (typeof d[0] === 'number') {
+                    labels = d.map((_, i) => `Item ${i + 1}`);
+                    series = [{ name: 'Value', values: d }];
                 }
             }
+
             if (series.length === 0 && Array.isArray(spec.values)) {
                 series = [{ name: spec.seriesName || 'Value', values: spec.values }];
             }
+
+            if (!labels.length && series.length && series[0].values) {
+                labels = series[0].values.map((_, i) => `Item ${i + 1}`);
+            }
+
             return { labels, series };
         },
 
@@ -1596,10 +1609,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `___CODE_BLOCK_${idx}___`;
             }
 
-            if (l === 'diagram' || l === 'chart' || (l === 'json' && cleanCode.includes('"type"'))) {
+            if (['visualization', 'diagram', 'chart', 'plot'].includes(l) || (l === 'json' && (cleanCode.includes('"type"') || cleanCode.includes('"series"') || cleanCode.includes('"categories"') || cleanCode.includes('"nodes"')))) {
                 try {
                     const spec = JSON.parse(cleanCode);
-                    if (spec && typeof spec === 'object' && (spec.type || spec.nodes || spec.series)) {
+                    if (spec && typeof spec === 'object' && (spec.type || spec.nodes || spec.series || spec.categories || spec.matrix || spec.data)) {
                         const cardHtml = ClientDiagramRenderer.renderCard(spec, { title: spec.title || 'Visual Diagram' });
                         codeBlocks.push(cardHtml);
                         return `___CODE_BLOCK_${idx}___`;
