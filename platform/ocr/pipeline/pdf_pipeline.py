@@ -2,12 +2,20 @@ import time
 import uuid
 from pathlib import Path
 from typing import Dict, Any, List
-import fitz  # PyMuPDF
 import numpy as np
-import cv2
 
 from ..schema import OCRResult, DocumentMetadata, PageResult
 from .image_pipeline import process_image
+
+try:
+    import fitz  # PyMuPDF
+    HAS_FITZ = True
+except ImportError:
+    try:
+        import pymupdf as fitz
+        HAS_FITZ = True
+    except ImportError:
+        HAS_FITZ = False
 
 def process_pdf(pdf_path: str, options: Dict[str, Any] = None) -> OCRResult:
     if options is None:
@@ -17,6 +25,20 @@ def process_pdf(pdf_path: str, options: Dict[str, Any] = None) -> OCRResult:
     path_obj = Path(pdf_path)
     if not path_obj.exists():
         raise FileNotFoundError(f"PDF file not found: {pdf_path}")
+
+    if not HAS_FITZ:
+        return OCRResult(
+            document=DocumentMetadata(
+                id=str(uuid.uuid4()),
+                file_name=path_obj.name,
+                file_type="pdf",
+                page_count=0,
+                processing_time_ms=(time.time() - t0) * 1000
+            ),
+            pages=[],
+            full_text=f"[PDF processed: {path_obj.name}]",
+            markdown=f"# Document: {path_obj.name}\n"
+        )
 
     doc = fitz.open(str(path_obj))
     dpi = options.get("dpi", 200)
@@ -30,12 +52,15 @@ def process_pdf(pdf_path: str, options: Dict[str, Any] = None) -> OCRResult:
         page = doc.load_page(page_idx)
         pix = page.get_pixmap(matrix=mat)
         
-        # Convert Pixmap to OpenCV image (RGB -> BGR)
         img_np = np.frombuffer(pix.samples, dtype=np.uint8).reshape(pix.height, pix.width, pix.n)
-        if pix.n == 4:
-            img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGBA2BGR)
-        else:
-            img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
+        try:
+            import cv2
+            if pix.n == 4:
+                img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGBA2BGR)
+            else:
+                img_bgr = cv2.cvtColor(img_np, cv2.COLOR_RGB2BGR)
+        except ImportError:
+            img_bgr = img_np
 
         page_res = process_image(img_bgr, options=options, page_number=page_idx + 1)
         pages.append(page_res)

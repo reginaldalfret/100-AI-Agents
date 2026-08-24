@@ -2,7 +2,8 @@
 
 > **Engine**: PaddleOCR 3.7.0 · PP-OCRv6 Small · PP-StructureV3 · RapidOCR ONNX  
 > **Python Compute**: `platform/ocr/`, `platform/python-compute/` (Port 8305)  
-> **Node.js Client**: `platform/multimodal/ocr-engine.js`, `platform/multimodal/document-extractor.js`  
+> **Node.js Client**: `platform/multimodal/ocr-engine.js`, `platform/multimodal/image-question-pipeline.js`, `platform/multimodal/document-extractor.js`  
+> **Gateway Endpoints**: `/api/ocr/analyze-image`, `/api/attachments/extract`, `/api/ocr` (Port 8300)  
 > **Mode**: 100% Offline · Air-Gapped · CPU-Primary with Dynamic CUDA Acceleration  
 > **Status**: Production
 
@@ -10,7 +11,7 @@
 
 ## 1. Architecture Overview
 
-The Sovereign AI Workbench incorporates a dedicated, high-throughput on-premise Document Intelligence & OCR Engine designed for industrial schematics, scanned refinery inspection reports, NDT ultrasonic logs, tax invoices, academic papers, and multi-page technical PDFs.
+The Sovereign AI Workbench incorporates a dedicated, high-throughput on-premise Document Intelligence & OCR Engine designed for industrial schematics, scanned refinery inspection reports, NDT ultrasonic logs, tax invoices, academic papers, multi-page technical PDFs, and photographic question prompts.
 
 Because lightweight on-device LLMs (such as Google Gemma 3 1B and Meta Llama 3.2 1B) operate strictly in text mode, optical character recognition and document layout decomposition are handled prior to language model reasoning by this specialized vision subsystem.
 
@@ -36,7 +37,7 @@ Topological Reading Order Reconstruction & Spatial Bounding Box Alignment
 Canonical Structured Document Payload (JSON Schema / Markdown Tables / Citations)
   │
   ▼
-Local LLM Reasoning & Synthesis (Nemotron 3 / Granite 4 / Qwen 2.5 / Gemma 3 / Phi-4 / DeepSeek-R1)
+Local LLM Reasoning & Synthesis (Nemotron 3 / Granite 4 / Qwen 2.5 / Gemma 3 / Phi-4 / SmolLM2)
 ```
 
 ---
@@ -97,7 +98,7 @@ flowchart TD
         H -->|Enterprise RAG & Structured Data| M3[IBM Granite 4 1B-H]
         H -->|Text Summarization & Rewriting| M4[Google Gemma 3 1B]
         H -->|Mathematical Proofs & STEM Logic| M5[Microsoft Phi-4 Mini]
-        H -->|Chain-of-Thought & Arithmetic| M6[DeepSeek-R1 1.5B]
+        H -->|Chain-of-Thought & Arithmetic| M6[SmolLM2 1.7B]
         H -->|Fast Conversational Assistance| M7[Meta Llama 3.2 1B]
     end
 
@@ -134,24 +135,24 @@ The workflow scheduler guarantees that GPU-heavy OCR kernels and Ollama LLM forw
 | **Spreadsheets & Tables** | `.csv`, `.xlsx`, `.tsv` | Native parsing + SLANet visual table extraction | Markdown tables, JSON row arrays |
 | **Industrial Inspection Forms** | Any image / PDF | Layout bounding box matching → Key-value field extraction | Key-value pairs (`Equipment ID`, `Thickness`, `Corrosion Rate`) |
 | **Academic & Technical Papers** | `.pdf` | Document layout + SLANet tables + PP-FormulaNet LaTeX | Markdown with embedded LaTeX formulas and tables |
+| **Problem Screenshots & Question Images** | `.png`, `.jpg`, `.jpeg`, `.webp` | Rapid orientation fix → PP-OCRv6 text extraction → Symmetrical Task Classifier | Clean question text, agent routing, evidence block |
 
 ---
 
-## 6. Python OCR Service API Contracts
+## 6. Python OCR Service API Contracts (Port 8305)
 
 The local Python compute server (`platform/ocr/service.py` / `platform/python-compute/` on port 8305) exposes high-speed REST endpoints:
 
-### 6.1 Endpoints
+### 6.1 Endpoints Specification
 
-| Route | Method | Payload | Purpose |
+| Route | Method | Payload Parameters | Description |
 | :--- | :--- | :--- | :--- |
-| `/ocr/image` | `POST` | `{ image_path?, image_base64?, lang?, options? }` | Single image text and block extraction |
-| `/ocr/document` | `POST` | `{ file_path?, file_base64?, file_name?, lang?, options? }` | Multi-page document and PDF layout parsing |
-| `/ocr/table` | `POST` | `{ image_base64?, options? }` | SLANet table structure recognition only |
-| `/ocr/parse` | `POST` | `{ file_base64?, file_name?, extract_formulas: true }` | Full multi-modal document understanding |
-| `/ocr/health` | `GET` | _None_ | Engine health, model integrity, and device status |
+| `/ocr/image` | `POST` | `{ "image_path"?: string, "image_base64"?: string, "lang"?: "en"\|"ta"\|"hi", "options"?: object }` | Single image OCR, bounding box detection, and character recognition. |
+| `/ocr/document` | `POST` | `{ "file_path"?: string, "file_base64"?: string, "file_name"?: string, "lang"?: string, "options"?: object }` | Multi-page document/PDF rasterization, layout decomposition, and full-text extraction. |
+| `/ocr/table` | `POST` | `{ "image_base64"?: string, "file_path"?: string, "options"?: object }` | Dedicated SLANet tabular recognition returning HTML/Markdown tables and row JSON. |
+| `/ocr/health` | `GET` | _None_ | OCR engine readiness status, model inventory, and hardware acceleration state. |
 
-### 6.2 Authoritative Response Schema
+### 6.2 Python OCR Service Response Schema
 
 ```json
 {
@@ -207,7 +208,86 @@ The local Python compute server (`platform/ocr/service.py` / `platform/python-co
 
 ---
 
-## 7. Confidence Calibration & Thresholding
+## 7. Gateway OCR & Ingestion Endpoints (Port 8300)
+
+The central Node.js Gateway (`platform/gateway/src/server.js`) exposes high-level multimodal endpoints consumed by the web UI and desktop clients:
+
+### 7.1 Gateway Endpoints
+
+| Route | Method | Payload | Purpose |
+| :--- | :--- | :--- | :--- |
+| `/api/ocr/analyze-image` | `POST` | `{ "attachment": { "name": string, "type": string, "data": string } }` | Universal image question auto-read, confidence scoring, and agent classification. |
+| `/api/attachments/extract` | `POST` | `{ "file": { "name": string, "type": string, "data": string } }` | Universal attachment extraction (alias for `/api/ocr/analyze-image`). |
+| `/api/ocr` | `POST` | `{ "attachment": object, "options"?: object }` | Gateway route for direct OCR question processing and evidence bundling. |
+
+### 7.2 Unified Image Question Extraction Response
+
+```json
+{
+  "status": "success",
+  "sourceType": "image",
+  "fileName": "manager-review-request.png",
+  "text": "Write a professional email to my manager requesting a project review",
+  "confidence": 0.96,
+  "confidenceLevel": "HIGH",
+  "blocks": [],
+  "tables": [],
+  "pages": [
+    {
+      "pageNumber": 1,
+      "text": "Write a professional email to my manager requesting a project review",
+      "confidence": 0.96
+    }
+  ],
+  "classification": {
+    "taskType": "EMAIL_WRITING",
+    "taskLabel": "Email Writing",
+    "agentId": "agent-002",
+    "agentNumber": "002",
+    "agentName": "Email AI Agent",
+    "domain": "Writing & Communication",
+    "recommendedModel": "nemotron-3-nano:latest"
+  },
+  "evidenceBlock": "[IMAGE OCR EVIDENCE]\nSource: manager-review-request.png\nExtracted Text: Write a professional email to my manager requesting a project review\nOCR Confidence: 0.96\n[/IMAGE OCR EVIDENCE]",
+  "effectivePrompt": "[IMAGE OCR EVIDENCE]\nSource: manager-review-request.png\nExtracted Text: Write a professional email to my manager requesting a project review\nOCR Confidence: 0.96\n[/IMAGE OCR EVIDENCE]\n\nPlease fulfill the above request: Write a professional email to my manager requesting a project review",
+  "backendTrace": {
+    "attachmentReceived": "manager-review-request.png",
+    "inputType": "Image",
+    "ocrEngine": "PaddleOCR 3.7.0 (PP-OCRv6 + PP-StructureV3)",
+    "ocrResult": "Write a professional email to my manager requesting a project review",
+    "taskClassification": "Email Writing",
+    "agentDispatched": "Email AI Agent (Agent 002)",
+    "modelEngine": "nemotron-3-nano:latest",
+    "hardware": "NVIDIA RTX 2050",
+    "externalCalls": 0,
+    "executionTrace": "audit-img-4a7b1c8e9f2d",
+    "elapsedMs": 1180
+  },
+  "is_air_gapped": true,
+  "external_calls": 0
+}
+```
+
+---
+
+## 8. Image Question Auto-Read + Auto-Answer System Integration
+
+When a user drops an image into the chat interface without typing any instructions:
+
+1. **Automatic Ingestion**: The gateway intercepts the upload and invokes `ImageQuestionPipeline.processImageQuestion()`.
+2. **Offline OCR Invocations**: Calls `POST http://127.0.0.1:8305/ocr/image` with the base64-encoded image.
+3. **Intent Classification**: Evaluates the recognized text using `classifyTaskAndAgent(rawText)` in `platform/multimodal/task-classifier.js`.
+4. **Symmetrical Routing**:
+   - If the image contains an email prompt $\rightarrow$ Dispatches **Email AI Agent (002)** on `nemotron-3-nano:latest`.
+   - If the image contains Python code / async instructions $\rightarrow$ Dispatches **Python AsyncIO AI Agent (101)** on `qwen2.5-coder:1.5b`.
+   - If the image contains arithmetic / STEM equations $\rightarrow$ Dispatches **Study AI Agent (003)** on `phi4-mini`.
+5. **Direct Answer Generation**: The response is streamed to the UI with zero delimiter leakage and full offline voice readout capability.
+
+*For complete details on the 8-step pipeline, see [Image Question Routing Architecture](IMAGE-QUESTION-ROUTING.md).*
+
+---
+
+## 9. Confidence Calibration & Thresholding
 
 Every recognized character, line, and table bounding box is scored against calibrated confidence thresholds:
 
@@ -219,8 +299,9 @@ Every recognized character, line, and table bounding box is scored against calib
 
 ---
 
-## 8. Security & Sovereign Isolation
+## 10. Security & Sovereign Isolation
 
 1. **Zero Data Egress**: All rasterization, OpenCV image processing, neural inference, and bounding box math occur inside local memory (`127.0.0.1:8305`).
 2. **Path Traversal Protection**: Filenames and paths are sanitized using strict basename resolution to prevent arbitrary file read attacks.
 3. **Transient File Lifecycle**: Ephemeral image rasters generated during PDF parsing are scrubbed from system memory immediately following feature extraction.
+4. **Anti-Leakage Grounding**: Delimiter tags (`[IMAGE OCR EVIDENCE]`) are strictly suppressed from user-facing views to guarantee clean UI presentation and pristine voice TTS readout.

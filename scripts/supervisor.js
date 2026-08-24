@@ -184,12 +184,21 @@ function startOllama() {
 // 2. Python Compute Controller (Port 8305)
 async function checkPython() {
   const healthy = await pingUrl('http://127.0.0.1:8305/health', 2500);
-  state.python.running = healthy;
   if (healthy) {
+    const pid = getPortOwningPid(8305);
+    const cmdLine = pid ? getProcessCommandLine(pid) : '';
+    if (cmdLine && !cmdLine.includes('Python311') && !cmdLine.includes('python311')) {
+      log('info', `[PYTHON COMPUTE] Detected outdated python interpreter (PID ${pid}). Upgrading to Python 3.11 OCR runtime.`);
+      if (pid) safelyKillPid(pid, 'python');
+      state.python.running = false;
+      return false;
+    }
+    state.python.running = true;
     transitionState('python', 'READY');
     state.python.failures = 0;
-    const pid = getPortOwningPid(8305);
     if (pid) state.python.pid = pid;
+  } else {
+    state.python.running = false;
   }
   return healthy;
 }
@@ -222,19 +231,22 @@ function startPython() {
 
   const pythonScript = path.join(ROOT, 'platform', 'python-compute', 'src', 'sovereign_compute', 'server.py');
   const pythonSrcDir = path.join(ROOT, 'platform', 'python-compute', 'src');
-  const ocrVenvExe = path.join(ROOT, 'platform', 'ocr', '.venv', 'Scripts', 'python.exe');
-  const pyExePath = 'C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python312\\python.exe';
-  const executable = fs.existsSync(ocrVenvExe) ? ocrVenvExe : (fs.existsSync(pyExePath) ? pyExePath : 'py');
+  const py311Path = 'C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python311\\python.exe';
+  const executable = fs.existsSync(py311Path) ? py311Path : 'py';
   const args = executable === 'py' ? ['-3.11', pythonScript] : [pythonScript];
 
   const logStream = fs.createWriteStream(PYTHON_LOG, { flags: 'a' });
 
   try {
+    const venvDir = path.join(ROOT, 'platform', 'ocr', '.venv');
+    const venvScripts = path.join(venvDir, 'Scripts');
     const pyProcess = spawn(executable, args, {
       cwd: ROOT,
       env: {
         ...process.env,
-        PYTHONPATH: `${pythonSrcDir};${path.join(ROOT, 'platform')}`,
+        VIRTUAL_ENV: venvDir,
+        PATH: `${venvScripts};${path.dirname(py311Path)};${process.env.PATH}`,
+        PYTHONPATH: `${pythonSrcDir};${path.join(ROOT, 'platform')};${path.join(venvDir, 'Lib', 'site-packages')}`,
         PYTHONUNBUFFERED: '1'
       },
       stdio: ['ignore', 'pipe', 'pipe'],

@@ -6,10 +6,16 @@ import sys
 import os
 from pathlib import Path
 
-# Ensure src directory is in sys.path when executed directly as a script
-_SRC_DIR = str(Path(__file__).resolve().parent.parent)
-if _SRC_DIR not in sys.path:
-    sys.path.insert(0, _SRC_DIR)
+# Ensure venv site-packages and platform directory take top priority in sys.path
+_PLATFORM_DIR = str(Path(__file__).resolve().parents[3])
+_VENV_SITE = str(Path(__file__).resolve().parents[3] / "ocr" / ".venv" / "Lib" / "site-packages")
+_SRC_DIR = str(Path(__file__).resolve().parents[1])
+
+for _p in [_SRC_DIR, _PLATFORM_DIR, _VENV_SITE]:
+    if os.path.exists(_p):
+        while _p in sys.path:
+            sys.path.remove(_p)
+        sys.path.insert(0, _p)
 
 try:
     from sovereign_compute.config import HOST, PORT
@@ -110,15 +116,25 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
                 try:
                     from ocr.service import handle_ocr_image
                     res = handle_ocr_image(payload)
-                except Exception:
-                    res = run_ocr(payload.get("image_path", ""), payload.get("mode", "standard"), payload.get("lang", "en"))
+                except Exception as e:
+                    import traceback
+                    traceback.print_exc()
+                    if payload.get("image_path") or payload.get("file_path"):
+                        res = run_ocr(payload.get("image_path") or payload.get("file_path"), payload.get("mode", "standard"), payload.get("lang", "en"))
+                    else:
+                        raise e
                 self._send_json(200, success_response(res))
             elif path in ["/ocr/document", "/api/ocr/document", "/ocr/parse", "/api/ocr/parse"]:
                 try:
                     from ocr.service import handle_ocr_document
                     res = handle_ocr_document(payload)
-                except Exception:
-                    res = run_ocr(payload.get("file_path", ""), payload.get("mode", "standard"), payload.get("lang", "en"))
+                except Exception as e:
+                    import traceback
+                    traceback.print_exc()
+                    if payload.get("file_path") or payload.get("document_path"):
+                        res = run_ocr(payload.get("file_path") or payload.get("document_path"), payload.get("mode", "standard"), payload.get("lang", "en"))
+                    else:
+                        raise e
                 self._send_json(200, success_response(res))
             elif path in ["/ocr/table", "/api/ocr/table"]:
                 try:

@@ -169,32 +169,18 @@ export class DocumentExtractor {
       contentText = extractedText;
     }
 
-    // 4. PDF Documents — Authoritative OCR & Page-First Processing
+    // 4. PDF Documents — Fast Native Text First, Offline OCR for Scanned Pages
     else if (ext === '.pdf' || mimeType.includes('pdf')) {
       docType = 'pdf';
-      const ocrRes = await processDocumentOCR(attachment);
-      if (ocrRes && ocrRes.fullText && ocrRes.fullText !== `[Document processed: ${filename}]`) {
-        extractedText = ocrRes.fullText;
-        contentText = ocrRes.fullText;
-        tables = ocrRes.tables || [];
-        pages = ocrRes.pages || [];
-        pageCount = pages.length || 1;
-        metadataText = JSON.stringify(ocrRes.metadata || {});
-      } else {
-        // Fallback to local native text extraction
-        const rawBytes = this._decodeBase64ToBuffer(rawData);
-        const rawDecoded = rawBytes.toString('latin1');
-        pageCount = this._detectPdfPageCount(rawDecoded);
-        const nativeText = this._extractPdfNativeText(rawDecoded);
-        metadataText = this._extractPdfMetadata(rawDecoded);
-        contentText = this._filterMetadataFromContent(nativeText);
+      const rawBytes = this._decodeBase64ToBuffer(rawData);
+      const rawDecoded = rawBytes.toString('latin1');
+      pageCount = this._detectPdfPageCount(rawDecoded);
+      const nativeText = this._extractPdfNativeText(rawDecoded);
+      metadataText = this._extractPdfMetadata(rawDecoded);
+      contentText = this._filterMetadataFromContent(nativeText);
 
-        if (contentText.trim().length < 10) {
-          const fallbackText = this._extractReadableStrings(rawDecoded);
-          contentText = this._filterMetadataFromContent(fallbackText);
-        }
-
-        extractedText = contentText || `[Document processed: ${filename}]`;
+      if (contentText.trim().length >= 30) {
+        extractedText = contentText;
         pages = [{
           pageNumber: 1,
           text: extractedText,
@@ -202,6 +188,28 @@ export class DocumentExtractor {
           hasImages: false,
           hasVisualContent: false
         }];
+      } else {
+        // Scanned or low-text PDF: dispatch to offline OCR engine
+        const ocrRes = await processDocumentOCR(attachment);
+        if (ocrRes && ocrRes.fullText && ocrRes.fullText !== `[Document processed: ${filename}]`) {
+          extractedText = ocrRes.fullText;
+          contentText = ocrRes.fullText;
+          tables = ocrRes.tables || [];
+          pages = ocrRes.pages || [];
+          pageCount = pages.length || 1;
+          metadataText = JSON.stringify(ocrRes.metadata || {});
+        } else {
+          const fallbackText = this._extractReadableStrings(rawDecoded);
+          contentText = this._filterMetadataFromContent(fallbackText);
+          extractedText = contentText || `[Document processed: ${filename}]`;
+          pages = [{
+            pageNumber: 1,
+            text: extractedText,
+            contentType: 'text',
+            hasImages: false,
+            hasVisualContent: false
+          }];
+        }
       }
       needsVision = false;
       isMultimodalImage = false;

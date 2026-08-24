@@ -11,11 +11,13 @@ from .models.registry import list_ocr_models
 def handle_ocr_image(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Handles single image OCR request via file path or base64 data."""
     image_path = payload.get("image_path") or payload.get("file_path")
-    image_base64 = payload.get("image_base64")
+    image_base64 = payload.get("image_base64") or payload.get("image") or payload.get("data") or payload.get("content")
     lang = payload.get("lang", "en")
     options = {"lang": lang, **payload.get("options", {})}
 
     if image_base64:
+        if "," in image_base64:
+            image_base64 = image_base64.split(",", 1)[1]
         temp_dir = tempfile.gettempdir()
         temp_file = Path(temp_dir) / f"ocr_{uuid.uuid4().hex}.png"
         try:

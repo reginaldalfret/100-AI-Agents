@@ -9,7 +9,7 @@ import { StudentService, AcademicService, FinanceService, DocumentService, Admis
 import { modelStreamer, ModelLifecycleState } from "../../models/model-streamer.js";
 import { conversationManager } from "../../context/index.js";
 import { agentScopeGuard } from "../../intelligence/index.js";
-import { documentExtractor } from "../../multimodal/index.js";
+import { documentExtractor, imageQuestionPipeline, classifyTaskAndAgent, TaskType } from "../../multimodal/index.js";
 import { validateAttachmentIntegrity } from "../../multimodal/attachment-integrity.js";
 import { ingestDocument, queryRAG, IngestionNamespace } from "../../rag/index.js";
 import { voiceService, globalOfflineTTSEngine, globalOfflineSTTEngine } from "../../voice/index.js";
@@ -122,7 +122,7 @@ async function executeAgentInProcess(agentId, payload) {
   const modPath = path.join(agentsDir, found, "backend", "src", "agent.js");
   if (!fs.existsSync(modPath)) return null;
 
-  process.env.OLLAMA_MODEL = process.env.OLLAMA_MODEL || "nemotron-3-nano";
+  process.env.OLLAMA_MODEL = payload.model || process.env.OLLAMA_MODEL || "nemotron-3-nano:latest";
   const { pathToFileURL } = await import("node:url");
   const mod = await import(pathToFileURL(modPath).href);
   if (typeof mod.runAgent === "function") {
@@ -530,6 +530,27 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
+    if (req.method === "POST" && (url.pathname === "/api/ocr/analyze-image" || url.pathname === "/api/attachments/extract" || url.pathname === "/api/ocr")) {
+      try {
+        const payload = await readBody(req);
+        const fileObj = payload.attachment || payload.file || payload;
+        const result = await imageQuestionPipeline.processImageQuestion(fileObj, payload.options || {});
+        json(res, 200, {
+          status: "success",
+          ...result
+        });
+      } catch (err) {
+        console.error("[IMAGE_OCR_API_ERROR]", err.message);
+        json(res, 500, {
+          status: "error",
+          error: "IMAGE_OCR_FAILED: " + err.message,
+          is_air_gapped: true,
+          external_calls: 0
+        });
+      }
+      return;
+    }
+
     if (
       req.method === "POST" &&
       url.pathname === "/api/chat"
@@ -554,6 +575,25 @@ const server = http.createServer(async (req, res) => {
           : (typeof payload.message === "string" ? payload.message.trim() : (typeof payload.prompt === "string" ? payload.prompt.trim() : ""));
 
       const hasAttachments = Array.isArray(payload.attachments) && payload.attachments.length > 0;
+
+      // Handle Image OCR and Question Extraction
+      let imageQuestionResult = null;
+      if (hasAttachments) {
+        const imageAtt = payload.attachments.find(a => a.type?.startsWith("image/") || /\.(png|jpe?g|webp|bmp|gif|tiff)$/i.test(a.name || ""));
+        if (imageAtt) {
+          try {
+            imageQuestionResult = await imageQuestionPipeline.processImageQuestion(imageAtt, payload.options || {});
+            if (imageQuestionResult && imageQuestionResult.text) {
+              const isGenericTask = !task || task.startsWith("Analyze and describe the contents of the attached image:");
+              if (isGenericTask) {
+                task = imageQuestionResult.text;
+              }
+            }
+          } catch (imgErr) {
+            console.warn("[IMAGE_QUESTION_PIPELINE_WARN]", imgErr.message);
+          }
+        }
+      }
 
       if (!task && !hasAttachments) {
         json(res, 400, {
@@ -583,8 +623,17 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
+      // Symmetrically classify task & agent for Auto routing (typed text & OCR image text share the exact same classifier)
+      let chosenAgentId = normalizedAgentId;
+      if (!rawAgentId || rawAgentId === "auto" || rawAgentId === "super-ai" || rawAgentId === "101") {
+        const autoClassification = imageQuestionResult?.classification || classifyTaskAndAgent(task);
+        if (autoClassification && autoClassification.agentId) {
+          chosenAgentId = autoClassification.agentId;
+        }
+      }
+
       const agent = agents.find(
-        a => a.agent_id === normalizedAgentId || a.agent_id === rawAgentId
+        a => a.agent_id === chosenAgentId || a.agent_id === normalizedAgentId || a.agent_id === rawAgentId
       ) || agents.find(a => a.agent_id === "agent-101");
 
       if (!agent) {
@@ -726,10 +775,13 @@ const server = http.createServer(async (req, res) => {
                 extractedEvidenceText += `\n\n[ATTACHED EVIDENCE: ${doc.filename}]\n${primaryContent}`;
               }
             }
-            if (userAsksForMetadata && doc.metadataText) {
-              extractedEvidenceText += `\n\n[DOCUMENT METADATA: ${doc.filename}]\n${doc.metadataText}`;
-            }
           }
+        }
+      }
+
+      if (imageQuestionResult && imageQuestionResult.text) {
+        if (!extractedEvidenceText.includes("[IMAGE OCR EVIDENCE]")) {
+          extractedEvidenceText = `\n\n${imageQuestionResult.evidenceBlock}`;
         }
       }
 
@@ -743,30 +795,36 @@ const server = http.createServer(async (req, res) => {
       let specialistDisplayName = null;
 
       if (!isManual) {
-        // Intelligent Auto routing based on task specialization, context, and document evidence
-        const taskLower = effectiveTask.toLowerCase();
-        if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("java") || taskLower.includes("c++") || taskLower.includes("rust") || taskLower.includes("sql") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv")) {
-          targetOllamaModel = "qwen2.5-coder:1.5b";
-          modelDisplayName = "Qwen 2.5 Coder";
-        } else if (hasAttachments && (taskLower.includes("rag") || taskLower.includes("document") || taskLower.includes("table") || taskLower.includes("pdf") || taskLower.includes("extract") || taskLower.includes("invoice") || taskLower.includes("report") || taskLower.includes("data"))) {
-          // Document extraction / RAG routes to IBM Granite 4 1B-H
-          targetOllamaModel = "granite4:1b-h";
-          modelDisplayName = "IBM Granite 4 1B-H";
-        } else if (taskLower.includes("27 × 43") || taskLower.includes("17 × 28") || taskLower.includes("17 * 28") || taskLower.includes("logic problem") || taskLower.includes("why this algorithm works") || taskLower.includes("reasoning problem") || taskLower.includes("step-by-step reasoning") || taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes("equation") || taskLower.includes("formula")) {
-          targetOllamaModel = "phi4-mini";
-          modelDisplayName = "Microsoft Phi-4 Mini";
-        } else if (taskLower.includes("rag") || taskLower.includes("retriev") || taskLower.includes("entities") || taskLower.includes("entity") || taskLower.includes("classify") || taskLower.includes("classification") || taskLower.includes("extract key") || taskLower.includes("tool call") || taskLower.includes("enterprise")) {
-          targetOllamaModel = "granite4:1b-h";
-          modelDisplayName = "IBM Granite 4 1B-H";
-        } else if (taskLower.includes("rewrite") || taskLower.includes("rephrase") || taskLower.includes("proofread") || taskLower.includes("summarize") || taskLower.includes("summary") || taskLower.includes("explain simply") || taskLower.includes("explain this concept")) {
-          targetOllamaModel = "smollm2:1.7b";
-          modelDisplayName = "SmolLM2 1.7B";
-        } else if (taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi") {
-          targetOllamaModel = "llama3.2:1b";
-          modelDisplayName = "Meta Llama 3.2 1B";
+        if (imageQuestionResult && imageQuestionResult.classification && imageQuestionResult.classification.recommendedModel) {
+          targetOllamaModel = imageQuestionResult.classification.recommendedModel;
+          const mapped = CANONICAL_MODEL_MAP[targetOllamaModel];
+          modelDisplayName = mapped ? mapped.displayName : targetOllamaModel;
         } else {
-          targetOllamaModel = "nemotron-3-nano:latest";
-          modelDisplayName = "NVIDIA Nemotron 3";
+          // Intelligent Auto routing based on task specialization, context, and document evidence
+          const taskLower = effectiveTask.toLowerCase();
+          if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("java") || taskLower.includes("c++") || taskLower.includes("rust") || taskLower.includes("sql") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv")) {
+            targetOllamaModel = "qwen2.5-coder:1.5b";
+            modelDisplayName = "Qwen 2.5 Coder";
+          } else if (hasAttachments && (taskLower.includes("rag") || taskLower.includes("extract table") || taskLower.includes("parse invoice") || taskLower.includes("extract entities"))) {
+            // Document extraction / RAG routes to IBM Granite 4 1B-H
+            targetOllamaModel = "granite4:1b-h";
+            modelDisplayName = "IBM Granite 4 1B-H";
+          } else if (taskLower.includes("27 × 43") || taskLower.includes("17 × 28") || taskLower.includes("17 * 28") || taskLower.includes("logic problem") || taskLower.includes("why this algorithm works") || taskLower.includes("reasoning problem") || taskLower.includes("step-by-step reasoning") || taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes("equation") || taskLower.includes("formula")) {
+            targetOllamaModel = "phi4-mini";
+            modelDisplayName = "Microsoft Phi-4 Mini";
+          } else if (taskLower.includes("rag") || taskLower.includes("retriev") || taskLower.includes("entities") || taskLower.includes("entity") || taskLower.includes("classify") || taskLower.includes("classification") || taskLower.includes("extract key") || taskLower.includes("tool call") || taskLower.includes("enterprise")) {
+            targetOllamaModel = "granite4:1b-h";
+            modelDisplayName = "IBM Granite 4 1B-H";
+          } else if (taskLower.includes("rewrite") || taskLower.includes("rephrase") || taskLower.includes("proofread") || taskLower.includes("summarize") || taskLower.includes("summary") || taskLower.includes("explain simply") || taskLower.includes("explain this concept")) {
+            targetOllamaModel = "smollm2:1.7b";
+            modelDisplayName = "SmolLM2 1.7B";
+          } else if (taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi") {
+            targetOllamaModel = "llama3.2:1b";
+            modelDisplayName = "Meta Llama 3.2 1B";
+          } else {
+            targetOllamaModel = "nemotron-3-nano:latest";
+            modelDisplayName = "NVIDIA Nemotron 3";
+          }
         }
       }
 
@@ -868,6 +926,11 @@ const server = http.createServer(async (req, res) => {
           tag: targetOllamaModel
         });
 
+        if (imageQuestionResult) {
+          sendSSE("ocr_trace", imageQuestionResult.backendTrace);
+          sendSSE("task_detected", imageQuestionResult.classification);
+        }
+
         sendSSE("metadata", {
           requestedModel: isManual ? targetOllamaModel : "auto",
           actualModel: targetOllamaModel,
@@ -875,6 +938,11 @@ const server = http.createServer(async (req, res) => {
           modelMode: isManual ? "manual" : "auto",
           agentId: agent.agent_id,
           agentName: agent.name || agent.agent_id,
+          agentNumber: agent.agent_id?.replace("agent-", "") || "001",
+          ocrTrace: imageQuestionResult?.backendTrace || null,
+          ocrResult: imageQuestionResult?.text || null,
+          ocrConfidence: imageQuestionResult?.confidence || null,
+          detectedTask: imageQuestionResult?.classification?.taskLabel || null,
           requestId
         });
 
@@ -1031,11 +1099,16 @@ const server = http.createServer(async (req, res) => {
                 sendSSE("complete", {
                   ...metrics,
                   agent_id: agent.agent_id,
+                  agentName: agent.name || agent.agent_id,
+                  agentNumber: agent.agent_id?.replace("agent-", "") || "001",
                   requested_model: isManual ? targetOllamaModel : "auto",
                   actual_model: targetOllamaModel,
                   model_mode: isManual ? "manual" : "auto",
                   model_source: "ollama-local",
                   model: modelDisplayName,
+                  ocrTrace: imageQuestionResult?.backendTrace || null,
+                  ocrResult: imageQuestionResult?.text || null,
+                  detectedTask: imageQuestionResult?.classification?.taskLabel || null,
                   external_calls: 0
                 });
                 res.end();
@@ -1249,6 +1322,9 @@ const server = http.createServer(async (req, res) => {
         model_mode: isManual ? "manual" : "auto",
         model_source: "ollama-local",
         model: modelDisplayName,
+        ocrTrace: imageQuestionResult?.backendTrace || null,
+        ocrResult: imageQuestionResult?.text || null,
+        detectedTask: imageQuestionResult?.classification?.taskLabel || null,
         external_calls: 0,
         text: answerText,
         evidence,

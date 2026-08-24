@@ -28,7 +28,8 @@ async function sendChat(payload) {
 }
 
 describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
-  const gatewayOnline = await isGatewayAvailable();
+  let gatewayOnline = false;
+  try { gatewayOnline = await isGatewayAvailable(); } catch { gatewayOnline = false; }
 
   it('Gemma selection strictly executes on actual runtime model [gemma3:1b]', async (t) => {
     if (!gatewayOnline) {
