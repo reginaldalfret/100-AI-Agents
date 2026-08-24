@@ -56,11 +56,13 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
-        if self.path in ["/health", "/api/health"]:
+        if self.path in ["/", "/health", "/api/health"]:
             self._send_json(200, success_response({
                 "status": "healthy",
                 "service": "sovereign-compute",
                 "version": "2.0.0",
+                "web_ui_url": "http://127.0.0.1:8300/",
+                "message": "Sovereign Compute Engine is online. For the Web UI, visit http://127.0.0.1:8300/",
                 "capabilities": ["pdf", "docx", "xlsx", "pptx", "ocr", "vision", "analytics", "calculations", "embeddings", "reranking", "stt"]
             }))
         elif self.path in ["/stt/health", "/api/stt/health"]:

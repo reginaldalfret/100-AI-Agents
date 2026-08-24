@@ -70,7 +70,7 @@ export const LOCAL_MODELS = [
   {
     model_id: "gemma3-1b",
     ollama_name: "gemma3:1b",
-    name: "Google Gemma 3 1B",
+    name: "Google Gemma 3 1B (On-Device NLP & Semantic Synthesis)",
     provider: "ollama",
     runtime: "local-ollama",
     endpoint: "http://127.0.0.1:11434",
@@ -80,19 +80,19 @@ export const LOCAL_MODELS = [
     context_length: 32768,
     supported_modalities: [ModelModality.TEXT],
     capabilities: [
-      "text-generation",
-      "summarization",
-      "classification",
-      "simple-reasoning",
-      "rewriting",
-      "lightweight-qa"
+      "semantic-synthesis",
+      "syntactic-parsing",
+      "contextual-summarization",
+      "token-classification",
+      "structural-rewriting",
+      "deductive-text-qa"
     ],
     recommended_tasks: [
-      "simple-text-questions",
-      "text-summarization",
-      "text-rewriting",
+      "semantic-text-processing",
+      "contextual-summarization",
+      "syntactic-rewriting",
       "document-classification",
-      "lightweight-qa"
+      "on-device-nlp-inference"
     ],
     priority: 3,
     status: "ready"

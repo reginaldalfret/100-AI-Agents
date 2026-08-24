@@ -13,7 +13,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | **Super AI Orchestration & Epistemic Reasoning**<br>Autonomous task decomposition, epistemic verification, multi-agent synthesis | 2.8 GB VRAM / Q4_K_M | Local Ollama |
 | **Qwen 2.5 Coder 1.5B** | `qwen2.5-coder:1.5b` | **Coding & Deterministic Sandbox Execution**<br>Python, C++, Java, JS, Rust, SQL, AST parsing & refactoring | 986 MB VRAM / Q4_K_M | Local Ollama |
-| **Google Gemma 3 1B** | `gemma3:1b` | **Lightweight General Text & Summarization**<br>Text-only, high-efficiency Q&A, rewriting, and classification | 815 MB / Q4_K_M | Local Ollama |
+| **Google Gemma 3 1B** | `gemma3:1b` | **Edge NLP & Semantic Synthesis**<br>High-throughput dense transformer, syntactic parsing, semantic summarization | 815 MB / Q4_K_M | Local Ollama |
 | **Meta Llama 3.2 1B** | `llama3.2:1b` | **Fast Lightweight General Text**<br>Low-latency rewriting, summarization, simple Q&A, fast responses | 1.3 GB VRAM / Q4_K_M | Local Ollama |
 | **IBM Granite 4 1B-H** | `granite4:1b-h` | **Enterprise RAG, Extraction & Tool-Use**<br>Structured extraction, classification, tool invocation, enterprise workflows | 1.2 GB VRAM / Q4_K_M | Local Ollama |
 | **Microsoft Phi-4 Mini** | `phi4-mini` | **Reasoning, Mathematics & Logic**<br>Algorithmic problem solving, mathematical proofs, deductive logic, planning | 2.4 GB VRAM / Q4_K_M | Local Ollama |

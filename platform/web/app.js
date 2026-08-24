@@ -3439,9 +3439,9 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'gemma',
             internalId: 'gemma3:1b',
             displayName: 'Google Gemma 3 1B',
-            badge: 'Text',
+            badge: 'Edge NLP',
             speed: 'Ultra Fast',
-            description: 'Lightweight general text model',
+            description: 'On-Device NLP & Semantic Synthesis',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~815MB VRAM)'
         },
@@ -3449,9 +3449,9 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'gemma',
             internalId: 'gemma3:1b',
             displayName: 'Google Gemma 3 1B',
-            badge: 'Text',
+            badge: 'Edge NLP',
             speed: 'Ultra Fast',
-            description: 'Lightweight general text model',
+            description: 'On-Device NLP & Semantic Synthesis',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~815MB VRAM)'
         },
