@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "2.0.0",
+  "platform": "Sovereign AI Workbench",
+  "models": [
+    {
+      "id": "nemotron-3-nano:latest",
+      "name": "NVIDIA Nemotron 3",
+      "tag": "nemotron-3-nano:latest",
+      "role": "orchestrator",
+      "required": true,
+      "sizeBytes": 2837073129,
+      "sizeDisplay": "2.8 GB",
+      "vramMinMb": 2500,
+      "description": "Super AI Agent master reasoning and autonomous multi-agent decomposition"
+    },
+    {
+      "id": "qwen2.5-coder:1.5b",
+      "name": "Qwen 2.5 Coder",
+      "tag": "qwen2.5-coder:1.5b",
+      "role": "coder",
+      "required": true,
+      "sizeBytes": 986062089,
+      "sizeDisplay": "986 MB",
+      "vramMinMb": 1200,
+      "description": "High-efficiency local multi-language code generation and debugging"
+    },
+    {
+      "id": "gemma3:4b",
+      "name": "Google Gemma 3",
+      "tag": "gemma3:4b",
+      "role": "vision",
+      "required": true,
+      "sizeBytes": 3338801804,
+      "sizeDisplay": "3.3 GB",
+      "vramMinMb": 3000,
+      "description": "Multimodal visual inspection, document intelligence, and OCR understanding"
+    },
+    {
+      "id": "gemma2:2b",
+      "name": "Google Gemma 2 (Fast Fallback)",
+      "tag": "gemma2:2b",
+      "role": "fallback",
+      "required": false,
+      "sizeBytes": 1629518495,
+      "sizeDisplay": "1.6 GB",
+      "vramMinMb": 1500,
+      "description": "Ultra-low latency reasoning and quick text assistance"
+    },
+    {
+      "id": "whisper-tiny.en",
+      "name": "Faster-Whisper Tiny English",
+      "tag": "tiny.en",
+      "role": "stt",
+      "required": true,
+      "sizeBytes": 77800000,
+      "sizeDisplay": "78 MB",
+      "vramMinMb": 200,
+      "description": "100% offline air-gapped speech-to-text local model"
+    }
+  ]
+}
