@@ -1,0 +1,16 @@
+# =============================================================
+# 301 Super AI — OCR Document Intelligence Engine
+# PaddleOCR 3.x / PP-OCRv6 / PP-StructureV3
+# =============================================================
+# CPU-primary. GPU optional via paddlepaddle-gpu.
+# For GPU: pip install paddlepaddle-gpu==3.2.2
+# =============================================================
+
+paddlepaddle>=3.2.0
+paddleocr>=3.7.0
+opencv-python>=4.8.0
+pillow>=10.0.0
+PyMuPDF>=1.24.0
+shapely>=2.0.0
+pyclipper>=1.3.0
+numpy>=1.22.0

@@ -87,16 +87,16 @@
       "description": "Lightweight reasoning, mathematics and logic model with chain-of-thought problem solving"
     },
     {
-      "id": "ocr-document-intelligence",
-      "name": "Python Compute OCR & Document Intelligence",
-      "tag": "python-compute-ocr",
+      "id": "paddleocr-engine",
+      "name": "PaddleOCR 3.7.0 Document Intelligence Engine",
+      "tag": "paddleocr-engine",
       "role": "document_intelligence",
-      "specialization": "Primary Image/PDF Extraction",
+      "specialization": "Production Offline OCR & Document Understanding",
       "required": true,
-      "sizeBytes": 150000000,
-      "sizeDisplay": "150 MB",
+      "sizeBytes": 62000000,
+      "sizeDisplay": "62 MB (models)",
       "vramMinMb": 0,
-      "description": "Deterministic PDF text extraction, scanned page OCR, table parsing, and P&ID symbol detection"
+      "description": "PP-OCRv6 Small text detection/recognition, PP-StructureV3 layout analysis, SLANet table extraction, PP-FormulaNet LaTeX formula recognition. 50-language support. 100% offline."
     },
     {
       "id": "whisper-tiny.en",

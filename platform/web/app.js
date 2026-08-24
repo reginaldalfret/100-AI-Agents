@@ -1645,6 +1645,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function formatResponse(text) {
         if (!text) return '';
 
+        // Strip any residual thinking tags from history or exports
+        text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '').trim();
+        if (!text) return '<span style="color:var(--text-tertiary);font-style:italic;">The model produced no visible answer.</span>';
+
         // Extract and render code / diagram blocks before escaping
         const codeBlocks = [];
         let placeholderText = text.replace(/```([\w-]*)\n?([\s\S]*?)```/g, (match, lang, code) => {
@@ -2321,6 +2325,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function copyCleanResponse(text, btnEl) {
         if (!text) return;
+        text = text.replace(/<think>[\s\S]*?<\/think>/gi, '').replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '').trim();
         try {
             if (navigator.clipboard && window.isSecureContext) {
                 await navigator.clipboard.writeText(text);
@@ -2503,7 +2508,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function sanitizeTextForSpeech(raw) {
         if (!raw) return '';
-        let text = raw.trim();
+        let text = raw.replace(/<think>[\s\S]*?<\/think>/gi, '').replace(/<reasoning>[\s\S]*?<\/reasoning>/gi, '').trim();
         text = text.replace(/```[\s\S]*?```/g, " I have generated the code on screen for your review. ");
         text = text.replace(/`([^`]+)`/g, '$1');
         text = text.replace(/\|[\s\S]*?\|\n\|[-:\s|]+\|\n([\s\S]*?)(?=\n\n|$)/g, " The data table is displayed on screen. ");

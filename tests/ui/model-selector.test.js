@@ -24,14 +24,14 @@ const jsContent = fs.readFileSync(jsPath, 'utf8');
 // Test 1: Exactly 3 Production Models in Registry
 try {
   const nemotron = getModelById('nemotron-3-nano');
-  const gemma = getModelById('gemma3-4b');
+  const gemma = getModelById('gemma3-1b');
   const qwen = getModelById('local-code-specialist');
 
   assert(nemotron, 'NVIDIA Nemotron 3 model must exist in registry');
   assert(gemma, 'Google Gemma 3 model must exist in registry');
   assert(qwen, 'Qwen 2.5 Coder model must exist in registry');
 
-  assert.strictEqual(gemma.ollama_name, 'gemma3:4b', 'Gemma internal tag must be gemma3:4b');
+  assert.strictEqual(gemma.ollama_name, 'gemma3:1b', 'Gemma internal tag must be gemma3:1b');
   assert.strictEqual(qwen.ollama_name, 'qwen2.5-coder:1.5b', 'Qwen internal tag must be qwen2.5-coder:1.5b');
 
   console.log(`  [PASS] Exactly 3 production models verified in registry with canonical IDs`);
@@ -92,9 +92,9 @@ try {
   assert(jsContent.includes('modelMode: currentModelMode'), 'app.js sendToBackend must include modelMode');
   assert(jsContent.includes('model_override: modelOverride'), 'app.js sendToBackend must include model_override');
 
-  // Verify backend model router handles visual tasks -> Gemma, reasoning -> Nemotron, coding -> Qwen in Auto mode
-  const visualTask = await routeTaskToLocalModel({ task: 'Analyze photograph of corrosion on HX-204' });
-  assert.strictEqual(visualTask.selected_model, 'gemma3-4b', 'Visual photograph task must route to Gemma 3 in Auto mode');
+  // Verify backend model router handles OCR tasks -> local-vision-ocr, reasoning -> Nemotron, coding -> Qwen in Auto mode
+  const ocrTask = await routeTaskToLocalModel({ prompt: 'Perform OCR scan extraction on scanned maintenance work order PDF' });
+  assert.strictEqual(ocrTask.selected_model, 'local-vision-ocr', 'Scanned document task must route to OCR engine in Auto mode');
 
   const reasoningTask = await routeTaskToLocalModel({ task: 'Perform multi-agent root cause synthesis' });
   assert.strictEqual(reasoningTask.selected_model, 'nemotron-3-nano', 'Reasoning task must route to Nemotron 3 in Auto mode');
@@ -104,7 +104,7 @@ try {
 
   // Verify explicit manual overrides
   const manualGemma = await routeTaskToLocalModel({ task: 'General question', modelMode: 'gemma' });
-  assert.strictEqual(manualGemma.selected_model, 'gemma3-4b', 'Manual gemma mode must route to Gemma 3');
+  assert.strictEqual(manualGemma.selected_model, 'gemma3-1b', 'Manual gemma mode must route to Gemma 3 1B');
 
   const manualNemotron = await routeTaskToLocalModel({ task: 'General question', modelMode: 'nemotron' });
   assert.strictEqual(manualNemotron.selected_model, 'nemotron-3-nano', 'Manual nemotron mode must route to Nemotron 3');

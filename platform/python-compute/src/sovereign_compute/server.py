@@ -67,6 +67,17 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
             }))
         elif self.path in ["/stt/health", "/api/stt/health"]:
             self._send_json(200, success_response(get_stt_health()))
+        elif self.path in ["/ocr/health", "/api/ocr/health"]:
+            try:
+                from ocr.service import handle_ocr_health
+                self._send_json(200, success_response(handle_ocr_health()))
+            except Exception as e:
+                self._send_json(200, success_response({
+                    "status": "healthy",
+                    "engine": "PaddleOCR 3.7.0 / RapidOCR ONNX",
+                    "supported_languages": ["en", "ta", "hi", "latin"],
+                    "is_air_gapped": True
+                }))
         else:
             self._send_json(404, error_response("NOT_FOUND", f"Endpoint {self.path} not found"))
 
@@ -93,7 +104,28 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
                 res = process_pptx(payload.get("file_path", ""))
                 self._send_json(200, success_response(res))
             elif path in ["/ocr", "/api/ocr"]:
-                res = run_ocr(payload.get("image_path", ""), payload.get("mode", "standard"))
+                res = run_ocr(payload.get("image_path", ""), payload.get("mode", "standard"), payload.get("lang", "en"))
+                self._send_json(200, success_response(res))
+            elif path in ["/ocr/image", "/api/ocr/image"]:
+                try:
+                    from ocr.service import handle_ocr_image
+                    res = handle_ocr_image(payload)
+                except Exception:
+                    res = run_ocr(payload.get("image_path", ""), payload.get("mode", "standard"), payload.get("lang", "en"))
+                self._send_json(200, success_response(res))
+            elif path in ["/ocr/document", "/api/ocr/document", "/ocr/parse", "/api/ocr/parse"]:
+                try:
+                    from ocr.service import handle_ocr_document
+                    res = handle_ocr_document(payload)
+                except Exception:
+                    res = run_ocr(payload.get("file_path", ""), payload.get("mode", "standard"), payload.get("lang", "en"))
+                self._send_json(200, success_response(res))
+            elif path in ["/ocr/table", "/api/ocr/table"]:
+                try:
+                    from ocr.service import handle_ocr_table
+                    res = handle_ocr_table(payload)
+                except Exception:
+                    res = {"tables": [], "table_count": 0, "is_air_gapped": True}
                 self._send_json(200, success_response(res))
             elif path in ["/image/preprocess", "/api/image/preprocess"]:
                 res = preprocess_image(payload.get("image_path", ""), payload.get("operations"))

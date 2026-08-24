@@ -55,8 +55,11 @@ Thumbs.db
 tmp/
 temp/
 
-# Python Cache
+# Python Virtual Envs and Cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.venv/
+venv/
+*.onnx

@@ -30,7 +30,7 @@ async function sendChat(payload) {
 describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
   const gatewayOnline = await isGatewayAvailable();
 
-  it('Gemma selection strictly executes on actual runtime model [gemma4:e2b]', async (t) => {
+  it('Gemma selection strictly executes on actual runtime model [gemma3:1b]', async (t) => {
     if (!gatewayOnline) {
       t.skip('Gateway is offline at 127.0.0.1:8300; skipping live network inference test');
       return;
@@ -39,11 +39,11 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
       agent_id: 'agent-101',
       task: 'Reply with the word "READY" only.',
       modelMode: 'gemma',
-      model_override: 'gemma4:e2b'
+      model_override: 'gemma3:1b'
     });
     assert.strictEqual(status, 200, 'HTTP status must be 200');
     assert.strictEqual(data.model_mode, 'manual', 'model_mode must be manual');
-    assert(data.actual_model.includes('gemma4:e2b') || data.actual_model.includes('gemma4') || data.actual_model.includes('gemma'), `actual_model must be gemma4:e2b, got ${data.actual_model}`);
+    assert(data.actual_model.includes('gemma3:1b') || data.actual_model.includes('gemma3') || data.actual_model.includes('gemma'), `actual_model must be gemma3:1b, got ${data.actual_model}`);
     assert.strictEqual(data.external_calls, 0, 'Zero external calls required');
   });
 
@@ -111,7 +111,7 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
     const seq = [
       { mode: 'qwen', override: 'qwen2.5-coder:1.5b', expected: 'qwen2.5-coder:1.5b' },
       { mode: 'nemotron', override: 'nemotron-3-nano', expected: 'nemotron-3-nano' },
-      { mode: 'gemma', override: 'gemma4:e2b', expected: 'gemma4:e2b' }
+      { mode: 'gemma', override: 'gemma3:1b', expected: 'gemma3:1b' }
     ];
 
     for (let i = 0; i < seq.length; i++) {

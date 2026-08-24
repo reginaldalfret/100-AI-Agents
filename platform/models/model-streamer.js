@@ -5,6 +5,7 @@
  */
 
 import http from "node:http";
+import { StreamSanitizer } from "./stream-sanitizer.js";
 
 const DEFAULT_OLLAMA_URL = process.env.OLLAMA_URL || "http://127.0.0.1:11434";
 
@@ -137,8 +138,8 @@ class ModelStreamerManager {
       const postData = JSON.stringify(payload);
       const startTime = performance.now();
       let firstTokenTime = null;
-      let fullText = "";
       let tokenCount = 0;
+      const sanitizer = new StreamSanitizer();
 
       await new Promise((resolve, reject) => {
         const req = http.request(
@@ -181,15 +182,31 @@ class ModelStreamerManager {
                 try {
                   const parsed = JSON.parse(trimmed);
                   if (parsed.response) {
-                    if (!firstTokenTime) {
-                      firstTokenTime = performance.now();
+                    const visibleChunk = sanitizer.push(parsed.response);
+                    if (visibleChunk) {
+                      if (!firstTokenTime) {
+                        firstTokenTime = performance.now();
+                      }
+                      tokenCount++;
+                      onToken(visibleChunk, sanitizer.getVisibleText());
                     }
-                    fullText += parsed.response;
-                    tokenCount++;
-                    onToken(parsed.response, fullText);
                   }
 
                   if (parsed.done) {
+                    const tail = sanitizer.flush();
+                    if (tail) {
+                      if (!firstTokenTime) {
+                        firstTokenTime = performance.now();
+                      }
+                      tokenCount++;
+                      onToken(tail, sanitizer.getVisibleText());
+                    }
+
+                    let finalVisibleText = sanitizer.getVisibleText();
+                    if (!finalVisibleText.trim()) {
+                      finalVisibleText = "The model produced no visible answer.";
+                    }
+
                     const totalDuration = Math.round(performance.now() - startTime);
                     const ttft = firstTokenTime ? Math.round(firstTokenTime - startTime) : totalDuration;
                     const evalCount = parsed.eval_count || tokenCount;
@@ -197,7 +214,7 @@ class ModelStreamerManager {
                     const tokensPerSec = evalDurationSec > 0 ? Number((evalCount / evalDurationSec).toFixed(2)) : 0;
 
                     onComplete({
-                      text: fullText,
+                      text: finalVisibleText,
                       actual_model: parsed.model || model,
                       total_tokens: evalCount,
                       ttft_ms: ttft,
@@ -299,8 +316,12 @@ class ModelStreamerManager {
               }
               try {
                 const parsed = JSON.parse(body);
+                let cleanText = StreamSanitizer.sanitizeFullText(parsed.response || "");
+                if (!cleanText.trim()) {
+                  cleanText = "The model produced no visible answer.";
+                }
                 resolve({
-                  text: parsed.response || "",
+                  text: cleanText,
                   model: parsed.model || model,
                   total_duration: parsed.total_duration,
                   eval_count: parsed.eval_count
