@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.IO.Compression;
 using System.Reflection;
 using System.Threading;
 using System.Windows.Forms;
@@ -25,7 +24,7 @@ namespace SovereignInstaller
 
             installForm = new Form();
             installForm.Text = "301 Super AI Setup";
-            installForm.Size = new Size(580, 420);
+            installForm.Size = new Size(600, 430);
             installForm.FormBorderStyle = FormBorderStyle.FixedDialog;
             installForm.MaximizeBox = false;
             installForm.StartPosition = FormStartPosition.CenterScreen;
@@ -36,39 +35,39 @@ namespace SovereignInstaller
             titleLabel.Font = new Font("Segoe UI", 16, FontStyle.Bold);
             titleLabel.ForeColor = Color.FromArgb(241, 245, 249);
             titleLabel.Location = new Point(30, 25);
-            titleLabel.Size = new Size(520, 35);
+            titleLabel.Size = new Size(540, 35);
             installForm.Controls.Add(titleLabel);
 
             Label descLabel = new Label();
-            descLabel.Text = "Installing production self-contained sovereign workstation...\nNo internet connection or manual package installation required.";
+            descLabel.Text = "Installing self-contained sovereign workstation with complete offline model payload.\nNo internet connection or manual package installation required.";
             descLabel.Font = new Font("Segoe UI", 9.5f, FontStyle.Regular);
             descLabel.ForeColor = Color.FromArgb(148, 163, 184);
             descLabel.Location = new Point(32, 65);
-            descLabel.Size = new Size(520, 45);
+            descLabel.Size = new Size(540, 45);
             installForm.Controls.Add(descLabel);
 
             Label checklist = new Label();
-            checklist.Text = "• Bundled Runtimes & Supervisor\n• 301 AI Specialist Agents\n• Local Model Manifest & Verification Engine\n• 24 Liquid Glass Visualization Types\n• 100% Offline Voice Input & Speech-to-Text\n• Strict On-Premise Air-Gap Security Enforced";
+            checklist.Text = "• Bundled Node & Python Runtimes & Supervisor\n• 301 AI Specialist Agents Taxonomy\n• Physical Model Payloads: Nemotron 3 · Qwen 2.5 Coder · Gemma 3\n• 24 Liquid Glass Visualization Types\n• 100% Offline Faster-Whisper Voice Input\n• Strict On-Premise Air-Gap Security Enforced";
             checklist.Font = new Font("Segoe UI", 9.5f, FontStyle.Regular);
             checklist.ForeColor = Color.FromArgb(52, 211, 153);
             checklist.Location = new Point(32, 120);
-            checklist.Size = new Size(520, 140);
+            checklist.Size = new Size(540, 140);
             installForm.Controls.Add(checklist);
 
             progressBar = new ProgressBar();
             progressBar.Location = new Point(32, 275);
-            progressBar.Size = new Size(505, 14);
+            progressBar.Size = new Size(520, 14);
             progressBar.Minimum = 0;
             progressBar.Maximum = 100;
             progressBar.Value = 10;
             installForm.Controls.Add(progressBar);
 
             lblStatus = new Label();
-            lblStatus.Text = "Preparing installation payload...";
+            lblStatus.Text = "Preparing installation package...";
             lblStatus.Font = new Font("Segoe UI", 9, FontStyle.Regular);
             lblStatus.ForeColor = Color.FromArgb(203, 213, 225);
             lblStatus.Location = new Point(32, 300);
-            lblStatus.Size = new Size(505, 25);
+            lblStatus.Size = new Size(520, 25);
             installForm.Controls.Add(lblStatus);
 
             btnFinish = new Button();
@@ -78,7 +77,7 @@ namespace SovereignInstaller
             btnFinish.BackColor = Color.FromArgb(99, 102, 241);
             btnFinish.FlatStyle = FlatStyle.Flat;
             btnFinish.FlatAppearance.BorderSize = 0;
-            btnFinish.Location = new Point(405, 335);
+            btnFinish.Location = new Point(420, 335);
             btnFinish.Size = new Size(130, 36);
             btnFinish.Click += (s, e) => PerformInstallation();
             installForm.Controls.Add(btnFinish);
@@ -92,19 +91,38 @@ namespace SovereignInstaller
             Thread worker = new Thread(() => {
                 try
                 {
-                    UpdateStatus("Extracting core files to local application directory...", 30);
                     string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                     string installDir = Path.Combine(localAppData, "Programs", "301 Super AI");
+                    string modelTargetDir = Path.Combine(localAppData, "301SuperAI", "models", "ollama");
+
                     if (!Directory.Exists(installDir)) Directory.CreateDirectory(installDir);
+                    if (!Directory.Exists(modelTargetDir)) Directory.CreateDirectory(modelTargetDir);
 
-                    // Extract embedded resources or copy application files
                     string sourceDir = AppDomain.CurrentDomain.BaseDirectory;
-                    CopyDirectory(sourceDir, installDir);
+                    string payloadDir = Path.Combine(sourceDir, "offline-payload");
 
-                    UpdateStatus("Creating Desktop and Start Menu shortcuts...", 60);
+                    // 1. Install application files
+                    UpdateStatus("Installing 301 Super AI application files...", 25);
+                    string appSource = Directory.Exists(Path.Combine(payloadDir, "app")) ? Path.Combine(payloadDir, "app") : sourceDir;
+                    CopyDirectory(appSource, installDir);
+
+                    // 2. Provision physical model payloads
+                    UpdateStatus("Provisioning offline model store (Nemotron, Qwen, Gemma)...", 60);
+                    string modelsSource = Path.Combine(payloadDir, "models", "ollama");
+                    if (Directory.Exists(modelsSource))
+                    {
+                        CopyDirectory(modelsSource, modelTargetDir);
+                    }
+
+                    // 3. Set OLLAMA_MODELS user environment variable
+                    Environment.SetEnvironmentVariable("OLLAMA_MODELS", modelTargetDir, EnvironmentVariableTarget.User);
+
+                    // 4. Create Desktop and Start Menu Shortcuts
+                    UpdateStatus("Creating Desktop and Start Menu shortcuts...", 85);
                     CreateShortcuts(installDir);
 
-                    UpdateStatus("Registering Windows uninstaller and air-gap policy...", 85);
+                    // 5. Register in Windows Programs & Features
+                    UpdateStatus("Registering Windows uninstaller...", 95);
                     RegisterUninstaller(installDir);
 
                     UpdateStatus("Installation complete! Sovereign AI Workbench is ready.", 100);
@@ -145,6 +163,7 @@ namespace SovereignInstaller
 
         private static void CopyDirectory(string sourceDir, string targetDir)
         {
+            if (!Directory.Exists(sourceDir)) return;
             foreach (string file in Directory.GetFiles(sourceDir, "*.*", SearchOption.AllDirectories))
             {
                 if (file.EndsWith("301-Super-AI-Setup.exe", StringComparison.OrdinalIgnoreCase)) continue;

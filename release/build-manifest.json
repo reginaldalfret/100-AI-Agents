@@ -1,46 +1,68 @@
 {
   "product": "301 Super AI -- Sovereign AI Workbench",
   "version": "2.0.0",
-  "buildDate": "2026-08-24T07:18:48.116Z",
-  "gitCommit": "a9b8b2206004532fba4a0a9428698b755bac1eae",
+  "buildDate": "2026-08-24T07:30:35.757Z",
+  "gitCommit": "3e58580ec846293350c46061cf16e311bf1af95b",
   "targetPlatform": "Windows 10/11 x64",
   "airGapped": true,
   "zeroManualDependencies": true,
-  "offlineModelPayloadIncluded": true,
-  "totalModelSizeBytes": 7161913888,
-  "totalModelSizeDisplay": "6.67 GB",
-  "bundledModels": [
-    {
-      "name": "Nemotron 3 (nemotron-3-nano:latest)",
-      "verified": true
-    },
-    {
-      "name": "Qwen 2.5 Coder (qwen2.5-coder:1.5b)",
-      "verified": true
-    },
-    {
-      "name": "Google Gemma 3 (gemma3:4b)",
-      "verified": true
-    }
-  ],
+  "distributionType": "Self-Contained Offline Windows Distribution Package",
+  "offlinePayload": {
+    "directory": "offline-payload/",
+    "fileCount": 1425,
+    "totalSizeBytes": 9121236457,
+    "totalSizeDisplay": "8.49 GB",
+    "bundledModels": [
+      {
+        "name": "NVIDIA Nemotron 3 (nemotron-3-nano:latest)",
+        "role": "orchestrator",
+        "size": "2.64 GB",
+        "required": true
+      },
+      {
+        "name": "Qwen 2.5 Coder (qwen2.5-coder:1.5b)",
+        "role": "coder",
+        "size": "0.92 GB",
+        "required": true
+      },
+      {
+        "name": "Google Gemma 3 (gemma3:4b)",
+        "role": "vision",
+        "size": "3.11 GB",
+        "required": true
+      },
+      {
+        "name": "Google Gemma 2 (gemma2:2b)",
+        "role": "fallback",
+        "size": "1.52 GB",
+        "required": false
+      },
+      {
+        "name": "Faster-Whisper (tiny.en)",
+        "role": "stt",
+        "size": "78 MB",
+        "required": true
+      }
+    ]
+  },
   "releaseArtifacts": [
     {
       "file": "301-Super-AI-Setup.exe",
-      "sha256": "79c5d48773d5e33e515d68ca29da49bbd53afaa2e5278c087af208e141a89765",
-      "sizeBytes": 12288,
-      "sizeDisplay": "0.01 MB"
+      "sha256": "006ff75752e4c9d337fa0f4a2d61264851a61575587d5b139ab7cc8224c5c3c5",
+      "sizeBytes": 12800,
+      "sizeDisplay": "12.5 KB"
     },
     {
       "file": "301-Super-AI-Setup.msi",
-      "sha256": "79c5d48773d5e33e515d68ca29da49bbd53afaa2e5278c087af208e141a89765",
-      "sizeBytes": 12288,
-      "sizeDisplay": "0.01 MB"
+      "sha256": "006ff75752e4c9d337fa0f4a2d61264851a61575587d5b139ab7cc8224c5c3c5",
+      "sizeBytes": 12800,
+      "sizeDisplay": "12.5 KB"
     },
     {
       "file": "301-Super-AI.exe",
-      "sha256": "00bcb53e542d8b512fd73b420629cb8ad3305bff28148968a3dcfbfe405e6c22",
-      "sizeBytes": 10240,
-      "sizeDisplay": "0.01 MB"
+      "sha256": "a215cbb5542f956d389be44f661bed3554e045fee286393eef8702b50c63cc1f",
+      "sizeBytes": 10752,
+      "sizeDisplay": "10.5 KB"
     }
   ]
 }

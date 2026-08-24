@@ -12,7 +12,28 @@ from pathlib import Path
 
 # Path to pre-bundled local Whisper model
 PROJECT_ROOT = Path(__file__).resolve().parents[5]
-MODEL_DIR = os.path.join(str(PROJECT_ROOT), "platform", "voice", "stt-models", "tiny.en")
+
+def resolve_whisper_model_dir() -> str:
+    if "WHISPER_MODEL_DIR" in os.environ and os.path.exists(os.environ["WHISPER_MODEL_DIR"]):
+        return os.environ["WHISPER_MODEL_DIR"]
+    
+    local_app_data = os.environ.get("LOCALAPPDATA", "")
+    if local_app_data:
+        app_data_path = os.path.join(local_app_data, "301SuperAI", "models", "whisper", "tiny.en")
+        if os.path.exists(app_data_path):
+            return app_data_path
+            
+    candidate_paths = [
+        os.path.join(str(PROJECT_ROOT), "platform", "voice", "stt-models", "tiny.en"),
+        os.path.join(str(PROJECT_ROOT), "models", "whisper", "tiny.en"),
+        os.path.join(str(Path(__file__).resolve().parent), "models", "tiny.en")
+    ]
+    for cp in candidate_paths:
+        if os.path.exists(cp):
+            return cp
+    return candidate_paths[0]
+
+MODEL_DIR = resolve_whisper_model_dir()
 
 # Global singleton model cache
 _cached_model = None

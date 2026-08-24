@@ -68,7 +68,7 @@ namespace SovereignWorkbench
 
             Label statusLabel = new Label();
             statusLabel.Name = "lblStatus";
-            statusLabel.Text = "✓ Application Shell\n✓ Embedded Runtime\n✓ Local Ollama Model Store\n✓ Nemotron 3 · Qwen 2.5 Coder · Gemma 3\n✓ Python Compute & Deterministic Math\n✓ 301 AI Agents Active\n✓ Strict Air-Gap Enforced (0 Cloud Egress)";
+            statusLabel.Text = "✓ Application Shell\n✓ Embedded Runtime\n✓ Local Offline Model Store\n✓ Nemotron 3 · Qwen 2.5 Coder · Gemma 3\n✓ Python Compute Engine\n✓ 301 AI Agents Active\n✓ Strict Air-Gap Enforced (0 Cloud Egress)";
             statusLabel.Font = new Font("Segoe UI", 9.5f, FontStyle.Regular);
             statusLabel.ForeColor = Color.FromArgb(52, 211, 153);
             statusLabel.Location = new Point(32, 105);
@@ -97,14 +97,21 @@ namespace SovereignWorkbench
         {
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;
             string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string bundledModelStore = Path.Combine(baseDir, "models");
-            if (!Directory.Exists(bundledModelStore))
+            
+            // Resolve Model Store dynamically
+            string modelStore = Path.Combine(localAppData, "301SuperAI", "models", "ollama");
+            if (!Directory.Exists(modelStore))
             {
-                bundledModelStore = @"E:\Smart Automation\AI\Models\Ollama";
+                string localModels = Path.Combine(baseDir, "models", "ollama");
+                if (Directory.Exists(localModels)) modelStore = localModels;
+                else
+                {
+                    string parentPayload = Path.Combine(baseDir, "..", "offline-payload", "models", "ollama");
+                    if (Directory.Exists(parentPayload)) modelStore = parentPayload;
+                }
             }
 
-            // Set OLLAMA_MODELS so Ollama uses the local bundled model store
-            Environment.SetEnvironmentVariable("OLLAMA_MODELS", bundledModelStore);
+            Environment.SetEnvironmentVariable("OLLAMA_MODELS", modelStore);
 
             // 1. Check Ollama (Port 11434)
             if (!IsPortListening(11434))
@@ -115,7 +122,7 @@ namespace SovereignWorkbench
                     psi.CreateNoWindow = true;
                     psi.UseShellExecute = false;
                     psi.WindowStyle = ProcessWindowStyle.Hidden;
-                    psi.EnvironmentVariables["OLLAMA_MODELS"] = bundledModelStore;
+                    psi.EnvironmentVariables["OLLAMA_MODELS"] = modelStore;
                     psi.EnvironmentVariables["OLLAMA_HOST"] = "127.0.0.1:11434";
                     ollamaProcess = Process.Start(psi);
                 }
@@ -127,7 +134,7 @@ namespace SovereignWorkbench
             {
                 try
                 {
-                    string pyServer = Path.Combine(baseDir, "platform\\python-compute\\src\\sovereign_compute\\server.py");
+                    string pyServer = Path.Combine(baseDir, "platform", "python-compute", "src", "sovereign_compute", "server.py");
                     if (File.Exists(pyServer))
                     {
                         ProcessStartInfo psi = new ProcessStartInfo("python", "\"" + pyServer + "\"");
@@ -137,7 +144,7 @@ namespace SovereignWorkbench
                         psi.WindowStyle = ProcessWindowStyle.Hidden;
                         psi.EnvironmentVariables["SOVEREIGN_COMPUTE_HOST"] = "127.0.0.1";
                         psi.EnvironmentVariables["SOVEREIGN_COMPUTE_PORT"] = "8305";
-                        psi.EnvironmentVariables["PYTHONPATH"] = Path.Combine(baseDir, "platform\\python-compute\\src");
+                        psi.EnvironmentVariables["PYTHONPATH"] = Path.Combine(baseDir, "platform", "python-compute", "src");
                         pythonProcess = Process.Start(psi);
                     }
                 }
@@ -149,7 +156,7 @@ namespace SovereignWorkbench
             {
                 try
                 {
-                    string gwScript = Path.Combine(baseDir, "platform\\gateway\\src\\server.js");
+                    string gwScript = Path.Combine(baseDir, "platform", "gateway", "src", "server.js");
                     if (File.Exists(gwScript))
                     {
                         ProcessStartInfo psi = new ProcessStartInfo("node", "\"" + gwScript + "\"");

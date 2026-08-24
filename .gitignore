@@ -19,6 +19,7 @@ credentials/
 blobs/
 AI/Models/
 data/models/
+release/offline-payload/
 
 # Local Runtime Data and Caches
 data/context/*.json

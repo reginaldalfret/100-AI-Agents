@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "2.0.0",
+  "generatedAt": "2026-08-24T07:30:35.763Z",
+  "totalSizeBytes": 9121236457,
+  "totalSizeDisplay": "8.49 GB",
+  "modelStore": "offline-payload/models/ollama",
+  "whisperStore": "offline-payload/models/whisper",
+  "appStore": "offline-payload/app"
+}
