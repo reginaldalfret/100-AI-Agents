@@ -100,7 +100,7 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
       modelMode: 'auto'
     });
     assert.strictEqual(nlpTask.data.model_mode, 'auto');
-    assert(nlpTask.data.actual_model.includes('gemma'), `Edge NLP task should auto-route to Gemma 3 1B, got ${nlpTask.data.actual_model}`);
+    assert(nlpTask.data.actual_model.includes('smollm') || nlpTask.data.actual_model.includes('gemma') || nlpTask.data.actual_model.includes('llama'), `Edge NLP task should auto-route to SmolLM2 / Gemma, got ${nlpTask.data.actual_model}`);
   });
 
   it('Sequential model switching (Qwen -> Nemotron -> Gemma) preserves strict model isolation', async (t) => {

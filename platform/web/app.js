@@ -3520,25 +3520,25 @@ document.addEventListener('DOMContentLoaded', () => {
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.5GB VRAM)'
         },
-        'deepseek': {
-            id: 'deepseek',
-            internalId: 'deepseek-r1:1.5b',
-            displayName: 'DeepSeek-R1 1.5B',
-            badge: 'Reasoning',
+        'smollm2': {
+            id: 'smollm2',
+            internalId: 'smollm2:1.7b',
+            displayName: 'SmolLM2 1.7B',
+            badge: 'Text',
             speed: 'Ultra Fast',
-            description: 'Lightweight reasoning, mathematics and logic model',
+            description: 'Lightweight general text model',
             runtime: 'Local Ollama (127.0.0.1:11434)',
-            hardware: 'RTX 2050 (~1.1GB VRAM)'
+            hardware: 'RTX 2050 (~1.8GB VRAM)'
         },
-        'deepseek-r1:1.5b': {
-            id: 'deepseek',
-            internalId: 'deepseek-r1:1.5b',
-            displayName: 'DeepSeek-R1 1.5B',
-            badge: 'Reasoning',
+        'smollm2:1.7b': {
+            id: 'smollm2',
+            internalId: 'smollm2:1.7b',
+            displayName: 'SmolLM2 1.7B',
+            badge: 'Text',
             speed: 'Ultra Fast',
-            description: 'Lightweight reasoning, mathematics and logic model',
+            description: 'Lightweight general text model',
             runtime: 'Local Ollama (127.0.0.1:11434)',
-            hardware: 'RTX 2050 (~1.1GB VRAM)'
+            hardware: 'RTX 2050 (~1.8GB VRAM)'
         }
     };
 
@@ -4238,7 +4238,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     { name: 'Meta Llama 3.2 1B', tag: 'llama3.2:1b', role: 'Fast Lightweight General Text', vram_mb: 1300, status: 'ready' },
                     { name: 'IBM Granite 4 1B-H', tag: 'granite4:1b-h', role: 'Enterprise RAG & Tool Use', vram_mb: 1400, status: 'ready' },
                     { name: 'Microsoft Phi-4 Mini', tag: 'phi4-mini', role: 'Reasoning, Mathematics & Logic', vram_mb: 2500, status: 'ready' },
-                    { name: 'DeepSeek-R1 1.5B', tag: 'deepseek-r1:1.5b', role: 'Deep Reasoning & Logic Specialist', vram_mb: 1100, status: 'ready' }
+                    { name: 'SmolLM2 1.7B', tag: 'smollm2:1.7b', role: 'Lightweight General Text Specialist', vram_mb: 1800, status: 'ready' }
                 ];
             }
             

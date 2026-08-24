@@ -64,7 +64,7 @@ export const ModelModality = {
 | `CODING_SANDBOX` | Keywords: `python`, `script`, `c++`, `java`, `debug`, `sql`, `regex`, `function`, `class`, `.py`, `.js`, `.cpp` | `code` | `qwen2.5-coder:1.5b` |
 | `VISION_MULTIMODAL` | Attachments: `.png`, `.jpg`, `.pdf`, `.dwg`, or keywords: `p&id`, `drawing`, `scan`, `ocr`, `defect` | `ocr` / `vision` | `paddleocr-engine` → Specialist LLM |
 | `RAG_KNOWLEDGE` | Keywords: `rag`, `document`, `table`, `extract entities`, `classify`, `tool call`, `enterprise` | `text` | `granite4:1b-h` |
-| `REASONING` (Deep/Math) | Keywords: `calculate`, `math`, `formula`, `proof`, `logic problem`, `step-by-step`, `why this algorithm works` | `text` | `phi4-mini` / `deepseek-r1:1.5b` |
+| `REASONING` (Deep/Math) | Keywords: `calculate`, `math`, `formula`, `proof`, `logic problem`, `step-by-step`, `why this algorithm works` | `text` | `phi4-mini` / `smollm2:1.7b` |
 | `REASONING` (Fast/NLP) | Keywords: `rewrite`, `rephrase`, `proofread`, `summarize this`, `short summary`, `quick question` | `text` | `gemma3:1b` / `llama3.2:1b` |
 | `ORCHESTRATION` | Multi-agent requests, complex industrial SOPs, cross-domain objectives | `text` | `nemotron-3-nano:latest` |
 
@@ -82,7 +82,7 @@ All 7 text/code/reasoning models run strictly on-premise through local Ollama (`
 | **4. Meta Llama 3.2 1B** | `llama3.2:1b` | 1B Q4_K_M | ~1.3 GB | 8,192 | **Fast Lightweight General Text & Low-Latency Assistance**<br>Rapid conversational replies, text rewriting, quick document drafting, latency-critical Q&A. |
 | **5. IBM Granite 4 1B-H** | `granite4:1b-h` | 1B Q4_K_M | ~1.2 GB | 8,192 | **Enterprise RAG, Entity Extraction & Tool Invocations**<br>Deterministic entity extraction, classification, structured evidence retrieval, enterprise workflows. |
 | **6. Microsoft Phi-4 Mini** | `phi4-mini` | 3.8B Q4_K_M | ~2.4 GB | 16,384 | **Advanced Reasoning, Mathematics & STEM Logic**<br>Complex algorithmic proofs, formal mathematical deductions, algorithmic planning, long-context logic. |
-| **7. DeepSeek-R1 1.5B** | `deepseek-r1:1.5b` | 1.5B Q4_K_M | ~1.1 GB | 131,072 | **Lightweight Chain-of-Thought Reasoning & Arithmetic**<br>Step-by-step logic deduction, arithmetic calculations, analytical explanations (with stream sanitization). |
+| **7. DeepSeek-R1 1.5B** | `smollm2:1.7b` | 1.5B Q4_K_M | ~1.1 GB | 131,072 | **Lightweight Chain-of-Thought Reasoning & Arithmetic**<br>Step-by-step logic deduction, arithmetic calculations, analytical explanations (with stream sanitization). |
 | **OCR Document Engine** | `paddleocr-engine` | FP32 / Int8 | ~1.2 GB (or CPU) | 8,192 | **Production Document Intelligence & Multi-Script OCR**<br>PaddleOCR 3.7.0, PP-OCRv6 Small, PP-StructureV3, SLANet tables, PP-FormulaNet LaTeX (50 languages + Tamil & Hindi). |
 | **Faster-Whisper Tiny** | `tiny.en` | Int8 ONNX | ~78 MB RAM | N/A | **100% Offline Speech-to-Text (Voice Input)**<br>Local audio capture, zero network streaming, transient memory lifecycle. |
 
@@ -178,7 +178,7 @@ Running on an **NVIDIA GeForce RTX 2050 (4GB VRAM)** requires rigorous memory ma
 2. **Session Affinity & Keep-Alive (`keep_alive: "5m"`)**:
    Models remain warm in GPU memory for 5 minutes after inference to eliminate reload latency on follow-up conversational turns.
 3. **Graceful Model Swapping**:
-   When switching between models (e.g., from `qwen2.5-coder:1.5b` to `deepseek-r1:1.5b`), the gateway emits a `preparing_model` status SSE event to notify the UI while Ollama unloads the prior weights and loads the new model into VRAM.
+   When switching between models (e.g., from `qwen2.5-coder:1.5b` to `smollm2:1.7b`), the gateway emits a `preparing_model` status SSE event to notify the UI while Ollama unloads the prior weights and loads the new model into VRAM.
 4. **Air-Gap Guarantee**:
    All endpoints resolve strictly to `127.0.0.1` or `localhost`. `evaluateSovereignEgress` blocks any outbound external sockets.
 

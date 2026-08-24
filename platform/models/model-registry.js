@@ -213,31 +213,32 @@ export const LOCAL_MODELS = [
     status: "ready"
   },
   {
-    model_id: "deepseek-r1-1.5b",
-    ollama_name: "deepseek-r1:1.5b",
-    name: "DeepSeek-R1 1.5B (Reasoning Specialist)",
-    provider: "ollama",
+    model_id: "smollm2-1.7b",
+    ollama_name: "smollm2:1.7b",
+    name: "SmolLM2 1.7B (Lightweight Text)",
+    provider: "Hugging Face",
     runtime: "local-ollama",
     endpoint: "http://127.0.0.1:11434",
-    quantization: "Q4_K_M",
-    vram_mb: 1200,
+    quantization: "Q8_0",
+    vram_mb: 1800,
     ram_mb: 2048,
-    context_length: 131072,
+    context_length: 8192,
     supported_modalities: [ModelModality.TEXT],
     capabilities: [
-      "mathematics",
-      "logical-reasoning",
-      "step-by-step-reasoning",
-      "analytical-questions",
-      "lightweight-planning",
-      "chain-of-thought"
+      "general-text-generation",
+      "rewriting",
+      "summarization",
+      "lightweight-qa",
+      "simple-instruction-following",
+      "conversational-tasks",
+      "basic-reasoning"
     ],
     recommended_tasks: [
-      "math-calculation",
-      "logic-problem-solving",
-      "algorithm-explanation",
-      "step-by-step-deduction",
-      "analytical-reasoning"
+      "text-rewriting",
+      "concise-summarization",
+      "general-inquiries",
+      "lightweight-text-transformation",
+      "conversational-response"
     ],
     priority: 2,
     status: "ready"

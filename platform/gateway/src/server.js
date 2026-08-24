@@ -323,7 +323,7 @@ const server = http.createServer(async (req, res) => {
           ollama: {
             status: ollamaHealthy ? "ready" : "offline",
             port: 11434,
-            models: ["nemotron-3-nano:latest", "qwen2.5-coder:1.5b", "gemma3:1b", "llama3.2:1b", "granite4:1b-h", "phi4-mini", "deepseek-r1:1.5b"]
+            models: ["nemotron-3-nano:latest", "qwen2.5-coder:1.5b", "gemma3:1b", "llama3.2:1b", "granite4:1b-h", "phi4-mini", "smollm2:1.7b"]
           },
           python: pyStatus,
           gateway: {
@@ -619,11 +619,10 @@ const server = http.createServer(async (req, res) => {
         "phi": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
         "phi4": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
         "phi4-mini": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
-        "deepseek": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
-        "deepseek-r1": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
-        "deepseek-r1:1.5b": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
-        "deepseek-r1-1.5b": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
-        "r1": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" }
+        "smollm": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" },
+        "smollm2": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" },
+        "smollm2:1.7b": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" },
+        "smollm2-1.7b": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" }
       };
 
       const requestedMode = payload.modelMode || "auto";
@@ -753,15 +752,18 @@ const server = http.createServer(async (req, res) => {
           // Document extraction / RAG routes to IBM Granite 4 1B-H
           targetOllamaModel = "granite4:1b-h";
           modelDisplayName = "IBM Granite 4 1B-H";
-        } else if (taskLower.includes("deepseek") || taskLower.includes("27 × 43") || taskLower.includes("17 × 28") || taskLower.includes("17 * 28") || taskLower.includes("logic problem") || taskLower.includes("why this algorithm works") || taskLower.includes("reasoning problem") || taskLower.includes("step-by-step reasoning") || taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes("equation") || taskLower.includes("formula")) {
-          targetOllamaModel = "deepseek-r1:1.5b";
-          modelDisplayName = "DeepSeek-R1 1.5B";
+        } else if (taskLower.includes("27 × 43") || taskLower.includes("17 × 28") || taskLower.includes("17 * 28") || taskLower.includes("logic problem") || taskLower.includes("why this algorithm works") || taskLower.includes("reasoning problem") || taskLower.includes("step-by-step reasoning") || taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes("equation") || taskLower.includes("formula")) {
+          targetOllamaModel = "phi4-mini";
+          modelDisplayName = "Microsoft Phi-4 Mini";
         } else if (taskLower.includes("rag") || taskLower.includes("retriev") || taskLower.includes("entities") || taskLower.includes("entity") || taskLower.includes("classify") || taskLower.includes("classification") || taskLower.includes("extract key") || taskLower.includes("tool call") || taskLower.includes("enterprise")) {
           targetOllamaModel = "granite4:1b-h";
           modelDisplayName = "IBM Granite 4 1B-H";
-        } else if (taskLower.includes("rewrite") || taskLower.includes("rephrase") || taskLower.includes("proofread") || taskLower.includes("summarize this") || taskLower.includes("short summary") || taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi") {
-          targetOllamaModel = "gemma3:1b";
-          modelDisplayName = "Google Gemma 3 1B";
+        } else if (taskLower.includes("rewrite") || taskLower.includes("rephrase") || taskLower.includes("proofread") || taskLower.includes("summarize") || taskLower.includes("summary") || taskLower.includes("explain simply") || taskLower.includes("explain this concept")) {
+          targetOllamaModel = "smollm2:1.7b";
+          modelDisplayName = "SmolLM2 1.7B";
+        } else if (taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi") {
+          targetOllamaModel = "llama3.2:1b";
+          modelDisplayName = "Meta Llama 3.2 1B";
         } else {
           targetOllamaModel = "nemotron-3-nano:latest";
           modelDisplayName = "NVIDIA Nemotron 3";
