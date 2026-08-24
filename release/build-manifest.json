@@ -1,0 +1,46 @@
+{
+  "product": "301 Super AI -- Sovereign AI Workbench",
+  "version": "2.0.0",
+  "buildDate": "2026-08-24T07:18:48.116Z",
+  "gitCommit": "a9b8b2206004532fba4a0a9428698b755bac1eae",
+  "targetPlatform": "Windows 10/11 x64",
+  "airGapped": true,
+  "zeroManualDependencies": true,
+  "offlineModelPayloadIncluded": true,
+  "totalModelSizeBytes": 7161913888,
+  "totalModelSizeDisplay": "6.67 GB",
+  "bundledModels": [
+    {
+      "name": "Nemotron 3 (nemotron-3-nano:latest)",
+      "verified": true
+    },
+    {
+      "name": "Qwen 2.5 Coder (qwen2.5-coder:1.5b)",
+      "verified": true
+    },
+    {
+      "name": "Google Gemma 3 (gemma3:4b)",
+      "verified": true
+    }
+  ],
+  "releaseArtifacts": [
+    {
+      "file": "301-Super-AI-Setup.exe",
+      "sha256": "79c5d48773d5e33e515d68ca29da49bbd53afaa2e5278c087af208e141a89765",
+      "sizeBytes": 12288,
+      "sizeDisplay": "0.01 MB"
+    },
+    {
+      "file": "301-Super-AI-Setup.msi",
+      "sha256": "79c5d48773d5e33e515d68ca29da49bbd53afaa2e5278c087af208e141a89765",
+      "sizeBytes": 12288,
+      "sizeDisplay": "0.01 MB"
+    },
+    {
+      "file": "301-Super-AI.exe",
+      "sha256": "00bcb53e542d8b512fd73b420629cb8ad3305bff28148968a3dcfbfe405e6c22",
+      "sizeBytes": 10240,
+      "sizeDisplay": "0.01 MB"
+    }
+  ]
+}

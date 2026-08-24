@@ -1,0 +1,4 @@
+# 301 Super AI -- Official Release Artifacts SHA-256
+79c5d48773d5e33e515d68ca29da49bbd53afaa2e5278c087af208e141a89765  301-Super-AI-Setup.exe
+79c5d48773d5e33e515d68ca29da49bbd53afaa2e5278c087af208e141a89765  301-Super-AI-Setup.msi
+00bcb53e542d8b512fd73b420629cb8ad3305bff28148968a3dcfbfe405e6c22  301-Super-AI.exe
