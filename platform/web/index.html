@@ -312,9 +312,12 @@
         <section id="modelsView" class="view-panel">
           <h2>Models</h2>
           <div class="models-grid">
-            <div class="model-card">Nemotron</div>
-            <div class="model-card">Gemma 3</div>
-            <div class="model-card">Qwen</div>
+            <div class="model-card">NVIDIA Nemotron 3 Nano (nemotron-3-nano:latest)</div>
+            <div class="model-card">Qwen 2.5 Coder 1.5B (qwen2.5-coder:1.5b)</div>
+            <div class="model-card">Google Gemma 4 E2B (gemma4:e2b)</div>
+            <div class="model-card">Meta Llama 3.2 1B (llama3.2:1b)</div>
+            <div class="model-card">IBM Granite 4 1B-H (granite4:1b-h)</div>
+            <div class="model-card">Microsoft Phi-4 Mini (phi4-mini)</div>
           </div>
         </section>
         
@@ -334,7 +337,7 @@
               <span class="m-lbl">Cloud Data Egress</span>
             </div>
             <div class="metric-card">
-              <span class="m-val">3</span>
+              <span class="m-val">6</span>
               <span class="m-lbl">Local Models (Ollama/ONNX)</span>
             </div>
             <div class="metric-card">
@@ -421,11 +424,11 @@
               <div id="modelDropdown" class="model-dropdown-menu" style="display:none;" role="menu" aria-label="Local AI Models">
                 <div class="model-dropdown-header">
                   <span class="dropdown-header-title">Model</span>
-                  <span class="dropdown-header-badge">3 Local Models</span>
+                  <span class="dropdown-header-badge">6 Local Models</span>
                 </div>
                 
                 <div class="model-options-list">
-                  <!-- Option: Auto (Default Router) -->
+                  <!-- Option: Auto (Intelligent Routing) -->
                   <div class="model-option-item active" data-model-id="auto" role="menuitem" tabindex="0">
                     <div class="model-option-left">
                       <div class="model-option-icon icon-auto">
@@ -436,7 +439,7 @@
                           <span class="model-name">Auto</span>
                           <span class="model-badge badge-auto">Intelligent</span>
                         </div>
-                        <span class="model-desc">Dynamic routing based on task context</span>
+                        <span class="model-desc">Dynamic routing across 6 local models</span>
                       </div>
                     </div>
                     <div class="model-option-right">
@@ -444,47 +447,27 @@
                     </div>
                   </div>
 
-                  <!-- Option 1: Google Gemma 3 -->
-                  <div class="model-option-item" data-model-id="gemma" data-internal-id="gemma3:4b" role="menuitem" tabindex="0">
-                    <div class="model-option-left">
-                      <div class="model-option-icon icon-vision">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                      </div>
-                      <div class="model-option-meta">
-                        <div class="model-option-title-row">
-                          <span class="model-name">Google Gemma 3</span>
-                          <span class="model-badge badge-vision">Vision</span>
-                        </div>
-                        <span class="model-desc">Vision · Multimodal · Drawings</span>
-                      </div>
-                    </div>
-                    <div class="model-option-right">
-                      <span class="model-check">✓</span>
-                      <button class="btn-model-info" title="View Gemma 3 Specifications" aria-label="Gemma 3 Info">›</button>
-                    </div>
-                  </div>
-
-                  <!-- Option 2: NVIDIA Nemotron 3 -->
-                  <div class="model-option-item" data-model-id="nemotron" data-internal-id="nemotron-3-nano" role="menuitem" tabindex="0">
+                  <!-- Option 1: NVIDIA Nemotron 3 Nano -->
+                  <div class="model-option-item" data-model-id="nemotron" data-internal-id="nemotron-3-nano:latest" role="menuitem" tabindex="0">
                     <div class="model-option-left">
                       <div class="model-option-icon icon-reasoning">
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
                       </div>
                       <div class="model-option-meta">
                         <div class="model-option-title-row">
-                          <span class="model-name">NVIDIA Nemotron 3</span>
+                          <span class="model-name">NVIDIA Nemotron 3 Nano</span>
                           <span class="model-badge badge-reasoning">Reasoning</span>
                         </div>
-                        <span class="model-desc">Reasoning · Planning · Synthesis</span>
+                        <span class="model-desc">Reasoning &amp; Orchestration · nemotron-3-nano:latest</span>
                       </div>
                     </div>
                     <div class="model-option-right">
                       <span class="model-check">✓</span>
-                      <button class="btn-model-info" title="View Nemotron 3 Specifications" aria-label="Nemotron 3 Info">›</button>
+                      <button class="btn-model-info" title="View NVIDIA Nemotron 3 Nano Specifications" aria-label="NVIDIA Nemotron 3 Nano Info">›</button>
                     </div>
                   </div>
 
-                  <!-- Option 3: Qwen 2.5 Coder -->
+                  <!-- Option 2: Qwen 2.5 Coder 1.5B -->
                   <div class="model-option-item" data-model-id="qwen" data-internal-id="qwen2.5-coder:1.5b" role="menuitem" tabindex="0">
                     <div class="model-option-left">
                       <div class="model-option-icon icon-code">
@@ -492,15 +475,95 @@
                       </div>
                       <div class="model-option-meta">
                         <div class="model-option-title-row">
-                          <span class="model-name">Qwen 2.5 Coder</span>
+                          <span class="model-name">Qwen 2.5 Coder 1.5B</span>
                           <span class="model-badge badge-code">Code</span>
                         </div>
-                        <span class="model-desc">Coding · Calculations · Sandbox</span>
+                        <span class="model-desc">Code Synthesis &amp; Sandbox · qwen2.5-coder:1.5b</span>
                       </div>
                     </div>
                     <div class="model-option-right">
                       <span class="model-check">✓</span>
                       <button class="btn-model-info" title="View Qwen 2.5 Coder Specifications" aria-label="Qwen 2.5 Coder Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- Option 3: Google Gemma 4 E2B -->
+                  <div class="model-option-item" data-model-id="gemma" data-internal-id="gemma4:e2b" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-vision">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">Google Gemma 4 E2B</span>
+                          <span class="model-badge badge-vision">Multimodal</span>
+                        </div>
+                        <span class="model-desc">Multimodal Reasoning &amp; Evidence · gemma4:e2b</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View Google Gemma 4 E2B Specifications" aria-label="Google Gemma 4 E2B Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- Option 4: Meta Llama 3.2 1B -->
+                  <div class="model-option-item" data-model-id="llama" data-internal-id="llama3.2:1b" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-text">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">Meta Llama 3.2 1B</span>
+                          <span class="model-badge badge-text">Fast Text</span>
+                        </div>
+                        <span class="model-desc">Fast Lightweight General Text · llama3.2:1b</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View Meta Llama 3.2 Specifications" aria-label="Meta Llama 3.2 Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- Option 5: IBM Granite 4 1B-H -->
+                  <div class="model-option-item" data-model-id="granite" data-internal-id="granite4:1b-h" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-enterprise">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">IBM Granite 4 1B-H</span>
+                          <span class="model-badge badge-enterprise">Enterprise</span>
+                        </div>
+                        <span class="model-desc">Enterprise RAG &amp; Tool Use · granite4:1b-h</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View IBM Granite 4 Specifications" aria-label="IBM Granite 4 Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- Option 6: Microsoft Phi-4 Mini -->
+                  <div class="model-option-item" data-model-id="phi4" data-internal-id="phi4-mini" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-logic">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">Microsoft Phi-4 Mini</span>
+                          <span class="model-badge badge-logic">Logic</span>
+                        </div>
+                        <span class="model-desc">Reasoning, Mathematics &amp; Logic · phi4-mini</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View Microsoft Phi-4 Mini Specifications" aria-label="Microsoft Phi-4 Mini Info">›</button>
                     </div>
                   </div>
                 </div>

@@ -68,19 +68,20 @@ export const LOCAL_MODELS = [
     status: "ready"
   },
   {
-    model_id: "gemma3-4b",
-    ollama_name: "gemma3:4b",
-    name: "Google Gemma 3 (4B Q4_K_M Multimodal)",
+    model_id: "gemma4-e2b",
+    ollama_name: "gemma4:e2b",
+    name: "Google Gemma 4 E2B (Multimodal & Reasoning)",
     provider: "ollama",
     runtime: "local-ollama",
     endpoint: "http://127.0.0.1:11434",
     quantization: "Q4_K_M",
-    vram_mb: 3100,
+    vram_mb: 2400,
     ram_mb: 4096,
     context_length: 131072,
     supported_modalities: [ModelModality.TEXT, ModelModality.VISION],
     capabilities: [
       "image",
+      "multimodal-reasoning",
       "document-vision",
       "photo-analysis",
       "drawing-analysis",
@@ -93,7 +94,8 @@ export const LOCAL_MODELS = [
       "p-and-id-schematic-reasoning",
       "valve-identification",
       "plant-condition-evaluation",
-      "photograph-defect-analysis"
+      "photograph-defect-analysis",
+      "evidence-synthesis"
     ],
     priority: 2,
     status: "ready"
@@ -122,6 +124,90 @@ export const LOCAL_MODELS = [
       "data-conversion-pipeline"
     ],
     priority: 4,
+    status: "ready"
+  },
+  {
+    model_id: "llama3.2-1b",
+    ollama_name: "llama3.2:1b",
+    name: "Meta Llama 3.2 1B",
+    provider: "ollama",
+    runtime: "local-ollama",
+    endpoint: "http://127.0.0.1:11434",
+    quantization: "Q4_K_M",
+    vram_mb: 1300,
+    ram_mb: 2048,
+    context_length: 8192,
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "lightweight-general",
+      "rewriting",
+      "summarization",
+      "simple-qa",
+      "low-latency-text"
+    ],
+    recommended_tasks: [
+      "general-assistant",
+      "text-rewriting",
+      "quick-summary",
+      "fast-response"
+    ],
+    priority: 3,
+    status: "ready"
+  },
+  {
+    model_id: "granite4-1b-h",
+    ollama_name: "granite4:1b-h",
+    name: "IBM Granite 4 1B-H",
+    provider: "ollama",
+    runtime: "local-ollama",
+    endpoint: "http://127.0.0.1:11434",
+    quantization: "Q4_K_M",
+    vram_mb: 1200,
+    ram_mb: 2048,
+    context_length: 8192,
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "enterprise-rag-tools",
+      "structured-extraction",
+      "classification",
+      "tool-calling",
+      "rag-synthesis"
+    ],
+    recommended_tasks: [
+      "rag-document-search",
+      "entity-extraction",
+      "enterprise-workflows",
+      "tool-invocation"
+    ],
+    priority: 3,
+    status: "ready"
+  },
+  {
+    model_id: "phi4-mini",
+    ollama_name: "phi4-mini",
+    name: "Microsoft Phi-4 Mini",
+    provider: "ollama",
+    runtime: "local-ollama",
+    endpoint: "http://127.0.0.1:11434",
+    quantization: "Q4_K_M",
+    vram_mb: 2400,
+    ram_mb: 4096,
+    context_length: 16384,
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "reasoning-math",
+      "logical-deduction",
+      "mathematics",
+      "algorithmic-problem-solving",
+      "planning"
+    ],
+    recommended_tasks: [
+      "mathematical-calculations",
+      "logical-puzzles",
+      "algorithmic-planning",
+      "analytical-reasoning"
+    ],
+    priority: 2,
     status: "ready"
   }
 ];

@@ -85,7 +85,7 @@ function migrateLegacyConversations() {
                 role: m.role || 'user',
                 content: m.content || '',
                 model: m.model_name || 'NVIDIA Nemotron 3',
-                actualModel: m.model_name ? 'gemma3:4b' : 'nemotron-3-nano:latest',
+                actualModel: m.model_name ? 'gemma4:e2b' : 'nemotron-3-nano:latest',
                 timestamp: m.timestamp || new Date().toISOString()
               }))
             };

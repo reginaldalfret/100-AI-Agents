@@ -323,7 +323,7 @@ const server = http.createServer(async (req, res) => {
           ollama: {
             status: ollamaHealthy ? "ready" : "offline",
             port: 11434,
-            models: ["gemma3:4b", "nemotron-3-nano:latest", "qwen2.5-coder:1.5b"]
+            models: ["gemma4:e2b", "nemotron-3-nano:latest", "qwen2.5-coder:1.5b"]
           },
           python: pyStatus,
           gateway: {
@@ -599,15 +599,26 @@ const server = http.createServer(async (req, res) => {
       const availableModels = await getAvailableModelsCached();
 
       const CANONICAL_MODEL_MAP = {
-        "gemma": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
-        "gemma3:4b": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
-        "gemma3-4b": { tag: "gemma3:4b", displayName: "Google Gemma 3", role: "vision" },
+        "gemma": { tag: "gemma4:e2b", displayName: "Google Gemma 4 E2B", role: "multimodal" },
+        "gemma4": { tag: "gemma4:e2b", displayName: "Google Gemma 4 E2B", role: "multimodal" },
+        "gemma4:e2b": { tag: "gemma4:e2b", displayName: "Google Gemma 4 E2B", role: "multimodal" },
+        "gemma4-e2b": { tag: "gemma4:e2b", displayName: "Google Gemma 4 E2B", role: "multimodal" },
         "nemotron": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
         "nemotron-3-nano": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
         "nemotron-3-nano:latest": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
         "qwen": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" },
         "qwen2.5-coder:1.5b": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" },
-        "local-code-specialist": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" }
+        "local-code-specialist": { tag: "qwen2.5-coder:1.5b", displayName: "Qwen 2.5 Coder", role: "coding" },
+        "llama": { tag: "llama3.2:1b", displayName: "Meta Llama 3.2 1B", role: "lightweight-general" },
+        "llama3": { tag: "llama3.2:1b", displayName: "Meta Llama 3.2 1B", role: "lightweight-general" },
+        "llama3.2": { tag: "llama3.2:1b", displayName: "Meta Llama 3.2 1B", role: "lightweight-general" },
+        "llama3.2:1b": { tag: "llama3.2:1b", displayName: "Meta Llama 3.2 1B", role: "lightweight-general" },
+        "granite": { tag: "granite4:1b-h", displayName: "IBM Granite 4 1B-H", role: "enterprise-rag-tools" },
+        "granite4": { tag: "granite4:1b-h", displayName: "IBM Granite 4 1B-H", role: "enterprise-rag-tools" },
+        "granite4:1b-h": { tag: "granite4:1b-h", displayName: "IBM Granite 4 1B-H", role: "enterprise-rag-tools" },
+        "phi": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
+        "phi4": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
+        "phi4-mini": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" }
       };
 
       const requestedMode = payload.modelMode || "auto";
@@ -746,9 +757,9 @@ const server = http.createServer(async (req, res) => {
           && !specialistKeywords.coding.patterns.some(k => taskLower.includes(k));
 
         if (isVisionOnly) {
-          // Pure vision task — route directly to Gemma 3
-          targetOllamaModel = "gemma3:4b";
-          modelDisplayName = "Google Gemma 3";
+          // Pure vision task — route directly to Gemma 4 E2B
+          targetOllamaModel = "gemma4:e2b";
+          modelDisplayName = "Google Gemma 4 E2B";
         } else {
           // Two-stage pipeline: Vision extraction → Specialist synthesis
           // Find which specialist domain matches
@@ -762,23 +773,32 @@ const server = http.createServer(async (req, res) => {
 
           if (specialistModel) {
             needsTwoStagePipeline = true;
-            // Stage 1 will use Gemma 3 for vision, Stage 2 will use the specialist
+            // Stage 1 will use Gemma 4 E2B for vision, Stage 2 will use the specialist
             visionExtractionPrompt = `Carefully examine the attached image(s) and extract ALL visible content including: text, numbers, labels, headings, structure, layout, tables, diagrams, handwriting, and any other visual information. Provide a comprehensive, detailed, and accurate description of everything you see. Format your response as structured plain text.`;
-            targetOllamaModel = "gemma3:4b";
-            modelDisplayName = "Google Gemma 3";
+            targetOllamaModel = "gemma4:e2b";
+            modelDisplayName = "Google Gemma 4 E2B";
           } else {
-            // No clear specialist match — default to Gemma 3 for the full task
-            targetOllamaModel = "gemma3:4b";
-            modelDisplayName = "Google Gemma 3";
+            // No clear specialist match — default to Gemma 4 E2B for the full task
+            targetOllamaModel = "gemma4:e2b";
+            modelDisplayName = "Google Gemma 4 E2B";
           }
         }
       } else if (!isManual) {
-        // Standard auto routing (no images) based on task keywords
+        // Intelligent Auto routing based on task specialization and context
         const taskLower = effectiveTask.toLowerCase();
         if (taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr") || taskLower.includes("diagram")) {
-          targetOllamaModel = "gemma3:4b";
-          modelDisplayName = "Google Gemma 3";
-        } else if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("sql") || taskLower.includes("calc") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv") || taskLower.includes("table")) {
+          targetOllamaModel = "gemma4:e2b";
+          modelDisplayName = "Google Gemma 4 E2B";
+        } else if (taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes(" × ") || taskLower.includes(" + ") || taskLower.includes(" / ") || taskLower.includes(" - ") || taskLower.includes("equation") || taskLower.includes("formula") || taskLower.includes("arithmetic") || taskLower.includes("algebra") || taskLower.includes("logic") || taskLower.includes("puzzle") || taskLower.includes("17 × 28")) {
+          targetOllamaModel = "phi4-mini";
+          modelDisplayName = "Microsoft Phi-4 Mini";
+        } else if (taskLower.includes("rag") || taskLower.includes("retriev") || taskLower.includes("entities") || taskLower.includes("entity") || taskLower.includes("classify") || taskLower.includes("classification") || taskLower.includes("extract key") || taskLower.includes("tool call") || taskLower.includes("enterprise")) {
+          targetOllamaModel = "granite4:1b-h";
+          modelDisplayName = "IBM Granite 4 1B-H";
+        } else if (taskLower.includes("rewrite") || taskLower.includes("rephrase") || taskLower.includes("proofread") || taskLower.includes("summarize this") || taskLower.includes("short summary") || taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi") {
+          targetOllamaModel = "llama3.2:1b";
+          modelDisplayName = "Meta Llama 3.2 1B";
+        } else if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("java") || taskLower.includes("c++") || taskLower.includes("rust") || taskLower.includes("sql") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv") || taskLower.includes("table")) {
           targetOllamaModel = "qwen2.5-coder:1.5b";
           modelDisplayName = "Qwen 2.5 Coder";
         } else {
@@ -1017,12 +1037,12 @@ const server = http.createServer(async (req, res) => {
           // TWO-STAGE VISION PIPELINE
           // ================================================================
           if (needsTwoStagePipeline && hasImages && specialistModel) {
-            // STAGE 1: Vision Extraction with Gemma 3
+            // STAGE 1: Vision Extraction with Gemma 4 E2B
             sendSSE("status", {
               state: ModelLifecycleState.PREPARING,
-              message: "Analyzing image with Google Gemma 3 Vision...",
-              model: "Google Gemma 3",
-              tag: "gemma3:4b",
+              message: "Analyzing image with Google Gemma 4 E2B Multimodal...",
+              model: "Google Gemma 4 E2B",
+              tag: "gemma4:e2b",
               stage: 1,
               pipeline: "vision-to-specialist"
             });
@@ -1030,7 +1050,7 @@ const server = http.createServer(async (req, res) => {
             let visionExtractedText = "";
             try {
               const visionResult = await modelStreamer.generateFromOllama({
-                model: "gemma3:4b",
+                model: "gemma4:e2b",
                 system: "You are a vision analysis engine. Extract and describe ALL content from the provided image(s) with maximum detail and accuracy. Include all text, numbers, structure, layout, tables, and visual elements.",
                 prompt: visionExtractionPrompt + "\n\nUser's original request for context: " + task,
                 images: imagesList,
@@ -1045,10 +1065,10 @@ const server = http.createServer(async (req, res) => {
               
               sendSSE("error", {
                 code: errCode,
-                message: `Vision analysis failed: ${visionErr.message}. Gemma 3 may not be available for image processing.`,
+                message: `Vision analysis failed: ${visionErr.message}. Gemma 4 E2B may not be available for image processing.`,
                 status: "vision_error",
                 stage: 1,
-                model: "gemma3:4b"
+                model: "gemma4:e2b"
               });
               res.end();
               return;
@@ -1115,7 +1135,7 @@ const server = http.createServer(async (req, res) => {
                   agent_id: agent.agent_id,
                   requested_model: "auto",
                   actual_model: specialistModel,
-                  vision_model: "gemma3:4b",
+                  vision_model: "gemma4:e2b",
                   model_mode: "auto",
                   model_source: "ollama-local",
                   model: specialistDisplayName,
@@ -1261,9 +1281,9 @@ const server = http.createServer(async (req, res) => {
       try {
         if (hasImages) {
           if (needsTwoStagePipeline && specialistModel) {
-            // Stage 1: Vision Extraction via Gemma 3
+            // Stage 1: Vision Extraction via Gemma 4 E2B
             const stage1 = await modelStreamer.generateFromOllama({
-              model: "gemma3:4b",
+              model: "gemma4:e2b",
               system: "You are an expert visual analyzer. Extract all visual information, text, labels, and content accurately.",
               prompt: visionExtractionPrompt || "Extract all visual content from this image.",
               images: imagesList,

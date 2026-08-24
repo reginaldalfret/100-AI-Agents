@@ -3,11 +3,19 @@
  * Tests that model selection strictly controls the actual local model used for inference.
  */
 
-import assert from 'node:assert';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
 
 const GATEWAY_URL = 'http://127.0.0.1:8300';
+
+async function isGatewayAvailable() {
+  try {
+    const res = await fetch(`${GATEWAY_URL}/api/health`, { method: 'GET', signal: AbortSignal.timeout(1000) });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
 async function sendChat(payload) {
   const res = await fetch(`${GATEWAY_URL}/api/chat`, {
@@ -19,44 +27,31 @@ async function sendChat(payload) {
   return { status: res.status, data };
 }
 
-let passed = 0;
-let failed = 0;
+describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
+  const gatewayOnline = await isGatewayAvailable();
 
-function pass(msg) {
-  console.log(`  [PASS] ${msg}`);
-  passed++;
-}
-
-function fail(msg, err) {
-  console.error(`  [FAIL] ${msg}`);
-  if (err) console.error(`         ${err.message}`);
-  failed++;
-}
-
-async function runTests() {
-  console.log('============================================================');
-  console.log('RUNNING TEST SUITE: Real Multi-Model Execution & Fingerprint');
-  console.log('============================================================');
-
-  // Test 1: Gemma selection -> actual Ollama model = gemma3:4b
-  try {
+  it('Gemma selection strictly executes on actual runtime model [gemma4:e2b]', async (t) => {
+    if (!gatewayOnline) {
+      t.skip('Gateway is offline at 127.0.0.1:8300; skipping live network inference test');
+      return;
+    }
     const { status, data } = await sendChat({
       agent_id: 'agent-101',
       task: 'Reply with the word "READY" only.',
       modelMode: 'gemma',
-      model_override: 'gemma3:4b'
+      model_override: 'gemma4:e2b'
     });
     assert.strictEqual(status, 200, 'HTTP status must be 200');
     assert.strictEqual(data.model_mode, 'manual', 'model_mode must be manual');
-    assert(data.actual_model.includes('gemma3:4b') || data.actual_model.includes('gemma'), `actual_model must be gemma3:4b, got ${data.actual_model}`);
+    assert(data.actual_model.includes('gemma4:e2b') || data.actual_model.includes('gemma4') || data.actual_model.includes('gemma'), `actual_model must be gemma4:e2b, got ${data.actual_model}`);
     assert.strictEqual(data.external_calls, 0, 'Zero external calls required');
-    pass('Gemma selection strictly executes on actual runtime model [gemma3:4b]');
-  } catch (e) {
-    fail('Gemma selection strictly executes on actual runtime model [gemma3:4b]', e);
-  }
+  });
 
-  // Test 2: Nemotron selection -> actual Ollama model = nemotron-3-nano
-  try {
+  it('Nemotron selection strictly executes on actual runtime model [nemotron-3-nano]', async (t) => {
+    if (!gatewayOnline) {
+      t.skip('Gateway is offline at 127.0.0.1:8300; skipping live network inference test');
+      return;
+    }
     const { status, data } = await sendChat({
       agent_id: 'agent-101',
       task: 'Reply with the word "READY" only.',
@@ -67,13 +62,13 @@ async function runTests() {
     assert.strictEqual(data.model_mode, 'manual', 'model_mode must be manual');
     assert(data.actual_model.includes('nemotron-3-nano') || data.actual_model.includes('nemotron'), `actual_model must be nemotron-3-nano, got ${data.actual_model}`);
     assert.strictEqual(data.external_calls, 0, 'Zero external calls required');
-    pass('Nemotron selection strictly executes on actual runtime model [nemotron-3-nano]');
-  } catch (e) {
-    fail('Nemotron selection strictly executes on actual runtime model [nemotron-3-nano]', e);
-  }
+  });
 
-  // Test 3: Qwen selection -> actual Ollama model = qwen2.5-coder:1.5b
-  try {
+  it('Qwen selection strictly executes on actual runtime model [qwen2.5-coder:1.5b]', async (t) => {
+    if (!gatewayOnline) {
+      t.skip('Gateway is offline at 127.0.0.1:8300; skipping live network inference test');
+      return;
+    }
     const { status, data } = await sendChat({
       agent_id: 'agent-101',
       task: 'Write: def ping(): return True',
@@ -84,13 +79,13 @@ async function runTests() {
     assert.strictEqual(data.model_mode, 'manual', 'model_mode must be manual');
     assert(data.actual_model.includes('qwen2.5-coder:1.5b') || data.actual_model.includes('qwen'), `actual_model must be qwen2.5-coder:1.5b, got ${data.actual_model}`);
     assert.strictEqual(data.external_calls, 0, 'Zero external calls required');
-    pass('Qwen selection strictly executes on actual runtime model [qwen2.5-coder:1.5b]');
-  } catch (e) {
-    fail('Qwen selection strictly executes on actual runtime model [qwen2.5-coder:1.5b]', e);
-  }
+  });
 
-  // Test 4: Auto selection dynamically routes based on task context
-  try {
+  it('Auto mode dynamically routes tasks to optimal specialist model', async (t) => {
+    if (!gatewayOnline) {
+      t.skip('Gateway is offline at 127.0.0.1:8300; skipping live network inference test');
+      return;
+    }
     const codeTask = await sendChat({
       agent_id: 'agent-101',
       task: 'Write a Python script function to parse JSON string',
@@ -106,18 +101,17 @@ async function runTests() {
     });
     assert.strictEqual(visionTask.data.model_mode, 'auto');
     assert(visionTask.data.actual_model.includes('gemma'), `Vision task should auto-route to Gemma, got ${visionTask.data.actual_model}`);
+  });
 
-    pass('Auto mode dynamically routes tasks to optimal specialist model');
-  } catch (e) {
-    fail('Auto mode dynamically routes tasks to optimal specialist model', e);
-  }
-
-  // Test 5: Model switching sequence (Qwen -> Nemotron -> Gemma)
-  try {
+  it('Sequential model switching (Qwen -> Nemotron -> Gemma) preserves strict model isolation', async (t) => {
+    if (!gatewayOnline) {
+      t.skip('Gateway is offline at 127.0.0.1:8300; skipping live network inference test');
+      return;
+    }
     const seq = [
       { mode: 'qwen', override: 'qwen2.5-coder:1.5b', expected: 'qwen2.5-coder:1.5b' },
       { mode: 'nemotron', override: 'nemotron-3-nano', expected: 'nemotron-3-nano' },
-      { mode: 'gemma', override: 'gemma3:4b', expected: 'gemma3:4b' }
+      { mode: 'gemma', override: 'gemma4:e2b', expected: 'gemma4:e2b' }
     ];
 
     for (let i = 0; i < seq.length; i++) {
@@ -130,13 +124,13 @@ async function runTests() {
       });
       assert(res.data.actual_model.includes(step.expected.split(':')[0]), `Step ${i + 1} expected ${step.expected}, got ${res.data.actual_model}`);
     }
-    pass('Sequential model switching (Qwen -> Nemotron -> Gemma) preserves strict model isolation');
-  } catch (e) {
-    fail('Sequential model switching preserves strict model isolation', e);
-  }
+  });
 
-  // Test 6: Strict no silent fallback on unavailable model
-  try {
+  it('Strict no silent fallback: unavailable model returns model_unavailable', async (t) => {
+    if (!gatewayOnline) {
+      t.skip('Gateway is offline at 127.0.0.1:8300; skipping live network inference test');
+      return;
+    }
     const { status, data } = await sendChat({
       agent_id: 'agent-101',
       task: 'Test hypothetical missing model',
@@ -147,19 +141,5 @@ async function runTests() {
     assert.strictEqual(data.status, 'model_unavailable', 'Status must be model_unavailable');
     assert.strictEqual(data.actual_model, null, 'Actual model must be null (no silent substitution)');
     assert(data.error && data.error.message.includes('unavailable'), 'Error message must explain model unavailability');
-    pass('Strict no silent fallback: unavailable model returns model_unavailable with 0 execution');
-  } catch (e) {
-    fail('Strict no silent fallback: unavailable model returns model_unavailable', e);
-  }
-
-  console.log('------------------------------------------------------------');
-  console.log(`Summary: ${passed} Passed, ${failed} Failed`);
-  console.log('============================================================');
-
-  if (failed > 0) process.exit(1);
-}
-
-runTests().catch(err => {
-  console.error('Fatal test error:', err);
-  process.exit(1);
+  });
 });

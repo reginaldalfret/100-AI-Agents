@@ -74,7 +74,7 @@ Enterprises operating in oil & gas, defense, power grids, manufacturing, and cri
                                               ▼
                         ┌───────────────────────────────────────────┐
                         │  LOCAL OLLAMA INFERENCE (Port 11434)      │
-                        │  Qwen 2.5 Coder / Nemotron 3 / Gemma 3    │
+                        │  Nemotron 3 / Qwen 2.5 Coder / Gemma 4 E2B│
                         └─────────────────────┬─────────────────────┘
                                               │
                                               ▼
@@ -130,9 +130,14 @@ When given complex instructions (e.g., *"Write a palindrome program in C++, Java
 
 | Model Family | Canonical Tag | VRAM Footprint | Primary Specialization |
 | :--- | :--- | :--- | :--- |
-| **Qwen 2.5 Coder** | `qwen2.5-coder:1.5b` | ~1.8 GB | Code generation, refactoring, algorithms, multi-language translation |
-| **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | ~2.1 GB | Reasoning, logical deduction, compliance, business workflows |
-| **Google Gemma 3** | `gemma3:latest` | ~2.6 GB | General intelligence, writing, multimodal analysis, conversational chat |
+| **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | ~2.8 GB | Super AI orchestration, multi-agent decomposition, deep reasoning |
+| **Qwen 2.5 Coder** | `qwen2.5-coder:1.5b` | ~1.2 GB | Multi-language code generation, refactoring, deterministic sandbox |
+| **Google Gemma 4 E2B** | `gemma4:e2b` | ~2.4 GB | Lightweight multimodal reasoning, visual anomaly detection, evidence synthesis |
+| **Meta Llama 3.2 1B** | `llama3.2:1b` | ~1.3 GB | Fast lightweight general text, quick summaries, low-latency assistance |
+| **IBM Granite 4 1B-H** | `granite4:1b-h` | ~1.2 GB | Enterprise RAG, structured extraction, classification & tool calling |
+| **Microsoft Phi-4 Mini** | `phi4-mini` | ~2.4 GB | Advanced reasoning, mathematics, logic, algorithmic problem solving |
+| **OCR & Document Intelligence** | `python-compute-ocr` | CPU / RAM | Primary Image/PDF character & table extraction |
+| **Faster-Whisper Tiny** | `tiny.en` | ~78 MB | 100% Offline Speech-to-Text (Voice Input) |
 
 ---
 

@@ -3378,72 +3378,142 @@ document.addEventListener('DOMContentLoaded', () => {
         'auto': {
             id: 'auto',
             internalId: 'auto',
-            displayName: 'Auto (Best Fit)',
-            badge: 'Smart',
-            speed: 'Fast',
-            description: 'Nemotron 3 / Gemma 3 / Qwen Coder dynamic selection',
+            displayName: 'Auto (Intelligent Routing)',
+            badge: 'Intelligent',
+            speed: 'Dynamic',
+            description: 'Dynamic routing across 6 local models based on task intent',
             runtime: 'Local Orchestration Router',
             hardware: 'RTX 2050 (Optimized VRAM)'
         },
         'nemotron': {
             id: 'nemotron',
-            internalId: 'nemotron-3-nano',
+            internalId: 'nemotron-3-nano:latest',
             displayName: 'NVIDIA Nemotron 3 Nano',
             badge: 'Reasoning',
             speed: 'High Speed',
-            description: 'Orchestration, multi-agent planning & deep reasoning',
+            description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
         },
         'nemotron-3-nano': {
             id: 'nemotron',
-            internalId: 'nemotron-3-nano',
+            internalId: 'nemotron-3-nano:latest',
             displayName: 'NVIDIA Nemotron 3 Nano',
             badge: 'Reasoning',
             speed: 'High Speed',
-            description: 'Orchestration, multi-agent planning & deep reasoning',
+            description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
         },
-        'gemma': {
-            id: 'gemma',
-            internalId: 'gemma3:4b',
-            displayName: 'Google Gemma 3 (4B)',
-            badge: 'Vision',
-            speed: 'Multimodal',
-            description: 'Equipment diagram QA, document OCR & visual verification',
+        'nemotron-3-nano:latest': {
+            id: 'nemotron',
+            internalId: 'nemotron-3-nano:latest',
+            displayName: 'NVIDIA Nemotron 3 Nano',
+            badge: 'Reasoning',
+            speed: 'High Speed',
+            description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
-            hardware: 'RTX 2050 (~3.1GB VRAM)'
-        },
-        'gemma3:4b': {
-            id: 'gemma',
-            internalId: 'gemma3:4b',
-            displayName: 'Google Gemma 3 (4B)',
-            badge: 'Vision',
-            speed: 'Multimodal',
-            description: 'Equipment diagram QA, document OCR & visual verification',
-            runtime: 'Local Ollama (127.0.0.1:11434)',
-            hardware: 'RTX 2050 (~3.1GB VRAM)'
+            hardware: 'RTX 2050 (~2.8GB VRAM)'
         },
         'qwen': {
             id: 'qwen',
             internalId: 'qwen2.5-coder:1.5b',
-            displayName: 'Qwen 2.5 Coder (1.5B)',
-            badge: 'Coding',
+            displayName: 'Qwen 2.5 Coder 1.5B',
+            badge: 'Code',
             speed: 'Ultra Fast',
-            description: 'Code synthesis, analytics scripting & SQL modeling',
+            description: 'Code Synthesis & Sandbox',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~986MB VRAM)'
         },
         'qwen2.5-coder:1.5b': {
             id: 'qwen',
             internalId: 'qwen2.5-coder:1.5b',
-            displayName: 'Qwen 2.5 Coder (1.5B)',
-            badge: 'Coding',
+            displayName: 'Qwen 2.5 Coder 1.5B',
+            badge: 'Code',
             speed: 'Ultra Fast',
-            description: 'Code synthesis, analytics scripting & SQL modeling',
+            description: 'Code Synthesis & Sandbox',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~986MB VRAM)'
+        },
+        'gemma': {
+            id: 'gemma',
+            internalId: 'gemma4:e2b',
+            displayName: 'Google Gemma 4 E2B',
+            badge: 'Multimodal',
+            speed: 'Ultra Fast',
+            description: 'Multimodal Reasoning & Evidence',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~2.4GB VRAM)'
+        },
+        'gemma4:e2b': {
+            id: 'gemma',
+            internalId: 'gemma4:e2b',
+            displayName: 'Google Gemma 4 E2B',
+            badge: 'Multimodal',
+            speed: 'Ultra Fast',
+            description: 'Multimodal Reasoning & Evidence',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~2.4GB VRAM)'
+        },
+        'llama': {
+            id: 'llama',
+            internalId: 'llama3.2:1b',
+            displayName: 'Meta Llama 3.2 1B',
+            badge: 'Fast Text',
+            speed: 'Ultra Fast',
+            description: 'Fast Lightweight General Text',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.3GB VRAM)'
+        },
+        'llama3.2:1b': {
+            id: 'llama',
+            internalId: 'llama3.2:1b',
+            displayName: 'Meta Llama 3.2 1B',
+            badge: 'Fast Text',
+            speed: 'Ultra Fast',
+            description: 'Fast Lightweight General Text',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.3GB VRAM)'
+        },
+        'granite': {
+            id: 'granite',
+            internalId: 'granite4:1b-h',
+            displayName: 'IBM Granite 4 1B-H',
+            badge: 'Enterprise',
+            speed: 'Ultra Fast',
+            description: 'Enterprise RAG & Tool Use',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.4GB VRAM)'
+        },
+        'granite4:1b-h': {
+            id: 'granite',
+            internalId: 'granite4:1b-h',
+            displayName: 'IBM Granite 4 1B-H',
+            badge: 'Enterprise',
+            speed: 'Ultra Fast',
+            description: 'Enterprise RAG & Tool Use',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.4GB VRAM)'
+        },
+        'phi4': {
+            id: 'phi4',
+            internalId: 'phi4-mini',
+            displayName: 'Microsoft Phi-4 Mini',
+            badge: 'Logic',
+            speed: 'High Speed',
+            description: 'Reasoning, Mathematics & Logic',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~2.5GB VRAM)'
+        },
+        'phi4-mini': {
+            id: 'phi4',
+            internalId: 'phi4-mini',
+            displayName: 'Microsoft Phi-4 Mini',
+            badge: 'Logic',
+            speed: 'High Speed',
+            description: 'Reasoning, Mathematics & Logic',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~2.5GB VRAM)'
         }
     };
 
@@ -3518,12 +3588,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const def = LOCAL_MODEL_DEFS[state.selectedModelMode] || LOCAL_MODEL_DEFS['auto'];
         const activeKey = def.id;
         if (elements.modelSelectorLabel) {
-            elements.modelSelectorLabel.textContent = def.displayName.replace('NVIDIA ', '').replace('Google ', '');
+            if (def.id === 'auto') {
+                elements.modelSelectorLabel.textContent = 'Auto';
+            } else {
+                elements.modelSelectorLabel.textContent = def.displayName
+                    .replace('NVIDIA ', '')
+                    .replace('Google ', '')
+                    .replace('Meta ', '')
+                    .replace('IBM ', '')
+                    .replace('Microsoft ', '');
+            }
         }
         document.querySelectorAll('.model-option-item').forEach(opt => {
             const optId = opt.dataset.modelId;
             const optInternal = opt.dataset.internalId;
-            const isMatch = optId === activeKey || optInternal === state.selectedModelMode || optId === state.selectedModelMode;
+            const isMatch = optId === activeKey || optInternal === state.selectedModelMode || optId === state.selectedModelMode || optInternal === def.internalId;
             opt.classList.toggle('active', isMatch);
         });
     }
@@ -4128,9 +4207,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 data = await res.json();
             } else {
                 data.models = [
-                    { name: 'Nemotron 3 Nano (4B)', role: 'Orchestration & Reasoning', vram_mb: 2800, status: 'ready' },
-                    { name: 'Gemma 3 (4B Multimodal)', role: 'Vision & Equipment QA', vram_mb: 3100, status: 'ready' },
-                    { name: 'Qwen 2.5 Coder (1.5B)', role: 'Code Sandbox & Analytics', vram_mb: 986, status: 'ready' }
+                    { name: 'NVIDIA Nemotron 3 Nano', tag: 'nemotron-3-nano:latest', role: 'Reasoning & Orchestration', vram_mb: 2800, status: 'ready' },
+                    { name: 'Qwen 2.5 Coder 1.5B', tag: 'qwen2.5-coder:1.5b', role: 'Code Synthesis & Sandbox', vram_mb: 986, status: 'ready' },
+                    { name: 'Google Gemma 4 E2B', tag: 'gemma4:e2b', role: 'Multimodal Reasoning & Evidence', vram_mb: 2400, status: 'ready' },
+                    { name: 'Meta Llama 3.2 1B', tag: 'llama3.2:1b', role: 'Fast Lightweight General Text', vram_mb: 1300, status: 'ready' },
+                    { name: 'IBM Granite 4 1B-H', tag: 'granite4:1b-h', role: 'Enterprise RAG & Tool Use', vram_mb: 1400, status: 'ready' },
+                    { name: 'Microsoft Phi-4 Mini', tag: 'phi4-mini', role: 'Reasoning, Mathematics & Logic', vram_mb: 2500, status: 'ready' }
                 ];
             }
             
@@ -4139,10 +4221,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="models-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:16px;">
                     ${(data.models || []).map(m => `
                         <div class="model-card" style="background:var(--bg-surface);padding:18px;border-radius:12px;border:1px solid var(--border-subtle);">
-                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-                                <h3 style="margin:0;font-size:16px;color:var(--text-primary);">${escapeHtml(m.name || m.id)}</h3>
-                                <span class="status-indicator status-ready" style="font-size:11px;font-weight:600;color:var(--accent-green);">● READY</span>
+                            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                                <h3 style="margin:0;font-size:15.5px;color:var(--text-primary);">${escapeHtml(m.name || m.id)}</h3>
+                                <span class="status-indicator status-ready" style="font-size:11px;font-weight:600;color:var(--neon-green);">● READY</span>
                             </div>
+                            <div style="margin:2px 0 6px 0;font-size:11.5px;color:var(--neon-cyan);font-family:monospace;">${escapeHtml(m.tag || m.internalId || m.id || '')}</div>
                             <p style="margin:4px 0;font-size:13px;color:var(--text-secondary);">${escapeHtml(m.role || m.description || 'Local LLM')}</p>
                             <div style="margin-top:12px;font-size:12px;color:var(--text-tertiary);">VRAM: ${m.vram_mb ? m.vram_mb + ' MB' : 'Local GPU'} · Context: ${m.context_length || '4K-128K'}</div>
                         </div>
@@ -4160,7 +4243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             const res = await fetch('/api/sovereign/status').catch(() => null);
-            let statusData = { external_ai_calls: 0, cloud_egress_bytes: 0, local_models: 3, total_agents: 301 };
+            let statusData = { external_ai_calls: 0, cloud_egress_bytes: 0, local_models: 6, total_agents: 301 };
             
             if (res && res.ok) {
                 statusData = await res.json();
@@ -4171,7 +4254,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 row.innerHTML = `
                     <div class="metric-card"><span class="m-val" style="color:#22c55e;">${statusData.external_ai_calls || 0}</span><span class="m-lbl">External AI API Calls</span></div>
                     <div class="metric-card"><span class="m-val" style="color:#22c55e;">${statusData.cloud_egress_bytes || '0 B'}</span><span class="m-lbl">Cloud Data Egress</span></div>
-                    <div class="metric-card"><span class="m-val">${statusData.local_models || 3}</span><span class="m-lbl">Local Models (Ollama/ONNX)</span></div>
+                    <div class="metric-card"><span class="m-val">${statusData.local_models || 6}</span><span class="m-lbl">Local Models (Ollama/ONNX)</span></div>
                     <div class="metric-card"><span class="m-val">${statusData.total_agents || 301}</span><span class="m-lbl">Active Industrial Agents</span></div>
                 `;
             }
@@ -4225,7 +4308,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <h2>Execution Trace</h2>
             <div class="trace-meta">
                 <span class="trace-id">Trace ID: ${escapeHtml(data.trace_id || data.traceId || 'TRC-LOCAL-001')}</span>
-                <span class="trace-model">${escapeHtml(data.model || 'Nemotron 3 Nano / Gemma 3 4B')}</span>
+                <span class="trace-model">${escapeHtml(data.model || 'Nemotron 3 Nano / Gemma 4 E2B')}</span>
             </div>
             ${planHtml}
             <div class="inspector-section">

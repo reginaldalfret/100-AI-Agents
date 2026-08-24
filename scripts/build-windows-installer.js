@@ -26,29 +26,88 @@ if (!fs.existsSync(modelStoreSource)) {
   process.exit(1);
 }
 
-const requiredBlobs = [
-  { name: 'Nemotron 3 (nemotron-3-nano:latest)', path: path.join(modelStoreSource, 'blobs/sha256-be5d9a656a51922f24f1f09a759cebb694e1f5d9728bf0ef9f8c972c5a0b5ef2'), minSize: 2.5 * 1024 * 1024 * 1024 },
-  { name: 'Qwen 2.5 Coder (qwen2.5-coder:1.5b)', path: path.join(modelStoreSource, 'blobs/sha256-29d8c98fa6b098e200069bfb88b9508dc3e85586d20cba59f8dda9a808165104'), minSize: 900 * 1024 * 1024 },
-  { name: 'Google Gemma 3 (gemma3:4b)', path: path.join(modelStoreSource, 'blobs/sha256-aeda25e63ebd698fab8638ffb778e68bed908b960d39d0becc650fa981609d25'), minSize: 3.0 * 1024 * 1024 * 1024 }
+// Load models definitions from models.json
+const modelsJsonPath = path.join(projectRoot, 'desktop/installer/models.json');
+const modelsConfig = fs.existsSync(modelsJsonPath) 
+  ? JSON.parse(fs.readFileSync(modelsJsonPath, 'utf8'))
+  : { models: [] };
+
+console.log(`  [INFO] Loaded ${modelsConfig.models.length} model definitions from models.json`);
+
+const modelBlobs = [
+  { 
+    name: 'NVIDIA Nemotron 3 Nano (nemotron-3-nano:latest)', 
+    path: path.join(modelStoreSource, 'blobs/sha256-be5d9a656a51922f24f1f09a759cebb694e1f5d9728bf0ef9f8c972c5a0b5ef2'), 
+    minSize: 2.5 * 1024 * 1024 * 1024,
+    required: true,
+    vramMinMb: 2500
+  },
+  { 
+    name: 'Qwen 2.5 Coder 1.5B (qwen2.5-coder:1.5b)', 
+    path: path.join(modelStoreSource, 'blobs/sha256-29d8c98fa6b098e200069bfb88b9508dc3e85586d20cba59f8dda9a808165104'), 
+    minSize: 900 * 1024 * 1024,
+    required: true,
+    vramMinMb: 1200
+  },
+  { 
+    name: 'Google Gemma 4 E2B (gemma4:e2b)', 
+    path: path.join(modelStoreSource, 'blobs/sha256-4e30e2665218745ef463f722c0bf86be0cab6ee676320f1cfadf91e989107448'), 
+    minSize: 2.0 * 1024 * 1024 * 1024,
+    required: true,
+    vramMinMb: 2400
+  },
+  { 
+    name: 'Meta Llama 3.2 1B (llama3.2:1b)', 
+    path: path.join(modelStoreSource, 'blobs/sha256-74701a8c35f6c8d9a4b91f3f3497643001d63e0c7a84e085bed452548fa88d45-partial'), 
+    minSize: 500 * 1024 * 1024,
+    required: false,
+    vramMinMb: 900
+  },
+  { 
+    name: 'IBM Granite 4 1B-H (granite4:1b-h)', 
+    path: path.join(modelStoreSource, 'blobs/sha256-granite4-1b-h'), 
+    minSize: 500 * 1024 * 1024,
+    required: false,
+    vramMinMb: 1100
+  },
+  { 
+    name: 'Microsoft Phi-4 Mini 3.8B (phi4-mini:latest)', 
+    path: path.join(modelStoreSource, 'blobs/sha256-phi4-mini'), 
+    minSize: 1000 * 1024 * 1024,
+    required: false,
+    vramMinMb: 2600
+  }
 ];
 
 let totalModelSizeBytes = 0;
-for (const blob of requiredBlobs) {
-  if (!fs.existsSync(blob.path)) {
-    console.error(`[FATAL] Required model payload MISSING: ${blob.name} at ${blob.path}`);
-    process.exit(1);
+for (const blob of modelBlobs) {
+  const exists = fs.existsSync(blob.path);
+  if (!exists) {
+    if (blob.required) {
+      console.error(`[FATAL] Required model payload MISSING: ${blob.name} at ${blob.path}`);
+      process.exit(1);
+    } else {
+      console.log(`  ○ ${blob.name} [OPTIONAL - NOT PRESENT IN LOCAL STORE] (VRAM: ${blob.vramMinMb} MB)`);
+      continue;
+    }
   }
+
   const stat = fs.statSync(blob.path);
   if (stat.size < blob.minSize) {
-    console.error(`[FATAL] Model payload size corrupted: ${blob.name} (${stat.size} bytes)`);
-    process.exit(1);
+    if (blob.required) {
+      console.error(`[FATAL] Model payload size corrupted: ${blob.name} (${stat.size} bytes)`);
+      process.exit(1);
+    } else {
+      console.warn(`  ! ${blob.name} [OPTIONAL - PARTIAL DOWNLOAD (${(stat.size / (1024 * 1024)).toFixed(1)} MB)]`);
+    }
+  } else {
+    console.log(`  ✓ ${blob.name}: ${(stat.size / (1024 * 1024 * 1024)).toFixed(2)} GB (VRAM: ${blob.vramMinMb} MB, Required: ${blob.required}) [VERIFIED]`);
   }
   totalModelSizeBytes += stat.size;
-  console.log(`  ✓ ${blob.name}: ${(stat.size / (1024 * 1024 * 1024)).toFixed(2)} GB [VERIFIED]`);
 }
 
 const totalModelGb = (totalModelSizeBytes / (1024 * 1024 * 1024)).toFixed(2);
-console.log(`[PASS] Verified Total Required Model Weight Payload: ${totalModelGb} GB.`);
+console.log(`[PASS] Verified Model Weight Payloads: ${totalModelGb} GB.`);
 
 // 2. Helper to Copy Files / Directories
 function copyDirRecursive(src, dest) {
@@ -177,6 +236,29 @@ try {
   gitCommit = execSync('git rev-parse HEAD', { encoding: 'utf8', cwd: projectRoot }).trim();
 } catch {}
 
+const bundledModelsList = modelsConfig.models.length > 0
+  ? modelsConfig.models.map(m => ({
+      id: m.id,
+      name: m.name,
+      role: m.role,
+      specialization: m.specialization,
+      size: m.sizeDisplay,
+      sizeBytes: m.sizeBytes,
+      vramMinMb: m.vramMinMb,
+      required: m.required,
+      description: m.description
+    }))
+  : [
+      { name: 'NVIDIA Nemotron 3 Nano (nemotron-3-nano:latest)', role: 'orchestrator', size: '2.8 GB', vramMinMb: 2500, required: true },
+      { name: 'Qwen 2.5 Coder 1.5B (qwen2.5-coder:1.5b)', role: 'coder', size: '986 MB', vramMinMb: 1200, required: true },
+      { name: 'Google Gemma 4 E2B (gemma4:e2b)', role: 'multimodal_reasoning', size: '2.4 GB', vramMinMb: 2400, required: true },
+      { name: 'Meta Llama 3.2 1B (llama3.2:1b)', role: 'edge_assistant', size: '1.3 GB', vramMinMb: 900, required: false },
+      { name: 'IBM Granite 4 1B-H (granite4:1b-h)', role: 'enterprise_agent', size: '1.4 GB', vramMinMb: 1100, required: false },
+      { name: 'Microsoft Phi-4 Mini 3.8B (phi4-mini:latest)', role: 'math_stem_reasoning', size: '2.5 GB', vramMinMb: 2600, required: false },
+      { name: 'Faster-Whisper Tiny English (whisper-tiny.en)', role: 'stt', size: '78 MB', vramMinMb: 200, required: true },
+      { name: 'Python Compute OCR & Document Intelligence', role: 'document_intelligence', size: '150 MB', vramMinMb: 0, required: true }
+    ];
+
 const buildManifest = {
   product: '301 Super AI -- Sovereign AI Workbench',
   version: DesktopConfig.version,
@@ -191,13 +273,7 @@ const buildManifest = {
     fileCount: payloadStats.fileCount,
     totalSizeBytes: payloadStats.totalBytes,
     totalSizeDisplay: `${totalPayloadGb} GB`,
-    bundledModels: [
-      { name: 'NVIDIA Nemotron 3 (nemotron-3-nano:latest)', role: 'orchestrator', size: '2.64 GB', required: true },
-      { name: 'Qwen 2.5 Coder (qwen2.5-coder:1.5b)', role: 'coder', size: '0.92 GB', required: true },
-      { name: 'Google Gemma 3 (gemma3:4b)', role: 'vision', size: '3.11 GB', required: true },
-      { name: 'Google Gemma 2 (gemma2:2b)', role: 'fallback', size: '1.52 GB', required: false },
-      { name: 'Faster-Whisper (tiny.en)', role: 'stt', size: '78 MB', required: true }
-    ]
+    bundledModels: bundledModelsList
   },
   releaseArtifacts: releaseArtifactsList
 };

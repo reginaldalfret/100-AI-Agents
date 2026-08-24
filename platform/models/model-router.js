@@ -15,17 +15,26 @@ export async function routeTaskToLocalModel(taskInput = {}) {
   let selectedModelId = classification.preferred_model_id;
 
   if (taskInput.model_override) {
-    if (taskInput.model_override === 'gemma3:4b' || taskInput.model_override === 'gemma3-4b' || taskInput.model_override === 'gemma') {
-      selectedModelId = 'gemma3-4b';
+    if (taskInput.model_override === 'gemma4:e2b' || taskInput.model_override === 'gemma4-e2b' || taskInput.model_override === 'gemma4' || taskInput.model_override === 'gemma') {
+      selectedModelId = 'gemma4-e2b';
     } else if (taskInput.model_override === 'qwen2.5-coder:1.5b' || taskInput.model_override === 'local-code-specialist' || taskInput.model_override === 'qwen') {
       selectedModelId = 'local-code-specialist';
-    } else if (taskInput.model_override === 'nemotron-3-nano' || taskInput.model_override === 'nemotron') {
+    } else if (taskInput.model_override === 'nemotron-3-nano' || taskInput.model_override === 'nemotron' || taskInput.model_override === 'nemotron-3-nano:latest') {
       selectedModelId = 'nemotron-3-nano';
+    } else if (taskInput.model_override === 'llama3.2:1b' || taskInput.model_override === 'llama3.2-1b' || taskInput.model_override === 'llama' || taskInput.model_override === 'llama3') {
+      selectedModelId = 'llama3.2-1b';
+    } else if (taskInput.model_override === 'granite4:1b-h' || taskInput.model_override === 'granite4-1b-h' || taskInput.model_override === 'granite' || taskInput.model_override === 'granite4') {
+      selectedModelId = 'granite4-1b-h';
+    } else if (taskInput.model_override === 'phi4-mini' || taskInput.model_override === 'phi' || taskInput.model_override === 'phi4') {
+      selectedModelId = 'phi4-mini';
     }
   } else if (taskInput.modelMode && taskInput.modelMode !== 'auto') {
-    if (taskInput.modelMode === 'gemma') selectedModelId = 'gemma3-4b';
+    if (taskInput.modelMode === 'gemma' || taskInput.modelMode === 'gemma4') selectedModelId = 'gemma4-e2b';
     else if (taskInput.modelMode === 'qwen') selectedModelId = 'local-code-specialist';
     else if (taskInput.modelMode === 'nemotron') selectedModelId = 'nemotron-3-nano';
+    else if (taskInput.modelMode === 'llama') selectedModelId = 'llama3.2-1b';
+    else if (taskInput.modelMode === 'granite') selectedModelId = 'granite4-1b-h';
+    else if (taskInput.modelMode === 'phi') selectedModelId = 'phi4-mini';
   }
 
   const modelSpec = getModelById(selectedModelId) || LOCAL_MODELS[0];
