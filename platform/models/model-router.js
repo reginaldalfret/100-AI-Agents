@@ -27,6 +27,8 @@ export async function routeTaskToLocalModel(taskInput = {}) {
       selectedModelId = 'granite4-1b-h';
     } else if (taskInput.model_override === 'phi4-mini' || taskInput.model_override === 'phi' || taskInput.model_override === 'phi4') {
       selectedModelId = 'phi4-mini';
+    } else if (taskInput.model_override === 'deepseek-r1:1.5b' || taskInput.model_override === 'deepseek-r1-1.5b' || taskInput.model_override === 'deepseek' || taskInput.model_override === 'r1' || taskInput.model_override === 'deepseek-r1') {
+      selectedModelId = 'deepseek-r1-1.5b';
     }
   } else if (taskInput.modelMode && taskInput.modelMode !== 'auto') {
     if (taskInput.modelMode === 'gemma' || taskInput.modelMode === 'gemma3') selectedModelId = 'gemma3-1b';
@@ -35,6 +37,7 @@ export async function routeTaskToLocalModel(taskInput = {}) {
     else if (taskInput.modelMode === 'llama') selectedModelId = 'llama3.2-1b';
     else if (taskInput.modelMode === 'granite') selectedModelId = 'granite4-1b-h';
     else if (taskInput.modelMode === 'phi') selectedModelId = 'phi4-mini';
+    else if (taskInput.modelMode === 'deepseek' || taskInput.modelMode === 'r1') selectedModelId = 'deepseek-r1-1.5b';
   }
 
   const modelSpec = getModelById(selectedModelId) || LOCAL_MODELS[0];

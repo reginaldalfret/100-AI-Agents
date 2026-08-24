@@ -136,6 +136,7 @@ When given complex instructions (e.g., *"Write a palindrome program in C++, Java
 | **Meta Llama 3.2 1B** | `llama3.2:1b` | ~1.3 GB | Fast lightweight general text, quick summaries, low-latency assistance |
 | **IBM Granite 4 1B-H** | `granite4:1b-h` | ~1.2 GB | Enterprise RAG, structured extraction, classification & tool calling |
 | **Microsoft Phi-4 Mini** | `phi4-mini` | ~2.4 GB | Advanced reasoning, mathematics, logic, algorithmic problem solving |
+| **DeepSeek-R1 1.5B** | `deepseek-r1:1.5b` | ~1.1 GB | Lightweight reasoning, mathematics, logic & step-by-step problem solving |
 | **OCR & Document Intelligence** | `python-compute-ocr` | CPU / RAM | Primary Image/PDF character & table extraction |
 | **Faster-Whisper Tiny** | `tiny.en` | ~78 MB | 100% Offline Speech-to-Text (Voice Input) |
 

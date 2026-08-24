@@ -64,7 +64,9 @@ describe('Model Routing & Task Dispatch Test Suite', () => {
       { mode: 'nemotron', expectedModel: 'nemotron-3-nano' },
       { mode: 'llama', expectedModel: 'llama3.2-1b' },
       { mode: 'granite', expectedModel: 'granite4-1b-h' },
-      { mode: 'phi', expectedModel: 'phi4-mini' }
+      { mode: 'phi', expectedModel: 'phi4-mini' },
+      { mode: 'deepseek', expectedModel: 'deepseek-r1-1.5b' },
+      { mode: 'r1', expectedModel: 'deepseek-r1-1.5b' }
     ];
 
     for (const { mode, expectedModel } of modes) {
@@ -91,7 +93,10 @@ describe('Model Routing & Task Dispatch Test Suite', () => {
       { override: 'granite4:1b-h', expected: 'granite4-1b-h' },
       { override: 'granite4-1b-h', expected: 'granite4-1b-h' },
       { override: 'phi4-mini', expected: 'phi4-mini' },
-      { override: 'phi4', expected: 'phi4-mini' }
+      { override: 'phi4', expected: 'phi4-mini' },
+      { override: 'deepseek-r1:1.5b', expected: 'deepseek-r1-1.5b' },
+      { override: 'deepseek', expected: 'deepseek-r1-1.5b' },
+      { override: 'r1', expected: 'deepseek-r1-1.5b' }
     ];
 
     for (const { override, expected } of overrides) {

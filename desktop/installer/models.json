@@ -75,6 +75,18 @@
       "description": "State-of-the-art synthetic reasoning model for mathematical logic, algorithmic problem solving, and STEM intelligence"
     },
     {
+      "id": "deepseek-r1:1.5b",
+      "name": "DeepSeek-R1 1.5B",
+      "tag": "deepseek-r1:1.5b",
+      "role": "lightweight_reasoning",
+      "specialization": "Lightweight Reasoning & Logic",
+      "required": false,
+      "sizeBytes": 1100000000,
+      "sizeDisplay": "1.1 GB",
+      "vramMinMb": 1200,
+      "description": "Lightweight reasoning, mathematics and logic model with chain-of-thought problem solving"
+    },
+    {
       "id": "ocr-document-intelligence",
       "name": "Python Compute OCR & Document Intelligence",
       "tag": "python-compute-ocr",

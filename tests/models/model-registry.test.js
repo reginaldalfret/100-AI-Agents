@@ -21,7 +21,8 @@ describe('Model Registry Specification & Integrity Test Suite', () => {
       'local-code-specialist',
       'llama3.2-1b',
       'granite4-1b-h',
-      'phi4-mini'
+      'phi4-mini',
+      'deepseek-r1-1.5b'
     ];
 
     it('contains all required production models in LOCAL_MODELS', () => {

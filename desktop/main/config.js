@@ -53,6 +53,7 @@ export const DesktopConfig = {
     llamaEdge: 'llama3.2:1b',
     graniteEnterprise: 'granite4:1b-h',
     phiReasoning: 'phi4-mini:latest',
+    deepseekReasoning: 'deepseek-r1:1.5b',
     stt: 'tiny.en',
     ocr: 'python-compute-ocr',
     registry: [
@@ -62,6 +63,7 @@ export const DesktopConfig = {
       { id: 'llama3.2:1b', name: 'Meta Llama 3.2 1B', role: 'edge_assistant', required: false, vramMinMb: 900 },
       { id: 'granite4:1b-h', name: 'IBM Granite 4 1B-H', role: 'enterprise_agent', required: false, vramMinMb: 1100 },
       { id: 'phi4-mini:latest', name: 'Microsoft Phi-4 Mini 3.8B', role: 'math_stem_reasoning', required: false, vramMinMb: 2600 },
+      { id: 'deepseek-r1:1.5b', name: 'DeepSeek-R1 1.5B', role: 'lightweight_reasoning', required: false, vramMinMb: 1200 },
       { id: 'ocr-document-intelligence', name: 'Python Compute OCR & Document Intelligence', role: 'document_intelligence', required: true, vramMinMb: 0 },
       { id: 'whisper-tiny.en', name: 'Faster-Whisper Tiny English', role: 'stt', required: true, vramMinMb: 200 }
     ]

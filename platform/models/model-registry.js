@@ -206,6 +206,36 @@ export const LOCAL_MODELS = [
     ],
     priority: 2,
     status: "ready"
+  },
+  {
+    model_id: "deepseek-r1-1.5b",
+    ollama_name: "deepseek-r1:1.5b",
+    name: "DeepSeek-R1 1.5B (Reasoning Specialist)",
+    provider: "ollama",
+    runtime: "local-ollama",
+    endpoint: "http://127.0.0.1:11434",
+    quantization: "Q4_K_M",
+    vram_mb: 1200,
+    ram_mb: 2048,
+    context_length: 131072,
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "mathematics",
+      "logical-reasoning",
+      "step-by-step-reasoning",
+      "analytical-questions",
+      "lightweight-planning",
+      "chain-of-thought"
+    ],
+    recommended_tasks: [
+      "math-calculation",
+      "logic-problem-solving",
+      "algorithm-explanation",
+      "step-by-step-deduction",
+      "analytical-reasoning"
+    ],
+    priority: 2,
+    status: "ready"
   }
 ];
 

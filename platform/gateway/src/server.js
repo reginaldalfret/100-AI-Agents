@@ -618,7 +618,12 @@ const server = http.createServer(async (req, res) => {
         "granite4:1b-h": { tag: "granite4:1b-h", displayName: "IBM Granite 4 1B-H", role: "enterprise-rag-tools" },
         "phi": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
         "phi4": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
-        "phi4-mini": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" }
+        "phi4-mini": { tag: "phi4-mini", displayName: "Microsoft Phi-4 Mini", role: "reasoning-math" },
+        "deepseek": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
+        "deepseek-r1": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
+        "deepseek-r1:1.5b": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
+        "deepseek-r1-1.5b": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" },
+        "r1": { tag: "deepseek-r1:1.5b", displayName: "DeepSeek-R1 1.5B", role: "lightweight-reasoning" }
       };
 
       const requestedMode = payload.modelMode || "auto";
@@ -790,9 +795,12 @@ const server = http.createServer(async (req, res) => {
           // Document / Visual extraction routes via OCR + Nemotron/Llama
           targetOllamaModel = "nemotron-3-nano:latest";
           modelDisplayName = "NVIDIA Nemotron 3 (via OCR Engine)";
-        } else if (taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes(" × ") || taskLower.includes(" + ") || taskLower.includes(" / ") || taskLower.includes(" - ") || taskLower.includes("equation") || taskLower.includes("formula") || taskLower.includes("arithmetic") || taskLower.includes("algebra") || taskLower.includes("logic") || taskLower.includes("puzzle") || taskLower.includes("17 × 28")) {
-          targetOllamaModel = "phi4-mini";
-          modelDisplayName = "Microsoft Phi-4 Mini";
+        } else if (taskLower.includes("deepseek") || taskLower.includes("27 × 43") || taskLower.includes("17 × 28") || taskLower.includes("17 * 28") || taskLower.includes("logic problem") || taskLower.includes("why this algorithm works") || taskLower.includes("reasoning problem") || taskLower.includes("step-by-step reasoning")) {
+          targetOllamaModel = "deepseek-r1:1.5b";
+          modelDisplayName = "DeepSeek-R1 1.5B";
+        } else if (taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes(" × ") || taskLower.includes(" + ") || taskLower.includes(" / ") || taskLower.includes(" - ") || taskLower.includes("equation") || taskLower.includes("formula") || taskLower.includes("arithmetic") || taskLower.includes("algebra") || taskLower.includes("logic") || taskLower.includes("puzzle")) {
+          targetOllamaModel = "deepseek-r1:1.5b";
+          modelDisplayName = "DeepSeek-R1 1.5B";
         } else if (taskLower.includes("rag") || taskLower.includes("retriev") || taskLower.includes("entities") || taskLower.includes("entity") || taskLower.includes("classify") || taskLower.includes("classification") || taskLower.includes("extract key") || taskLower.includes("tool call") || taskLower.includes("enterprise")) {
           targetOllamaModel = "granite4:1b-h";
           modelDisplayName = "IBM Granite 4 1B-H";

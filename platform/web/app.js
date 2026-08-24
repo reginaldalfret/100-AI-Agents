@@ -3514,6 +3514,26 @@ document.addEventListener('DOMContentLoaded', () => {
             description: 'Reasoning, Mathematics & Logic',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.5GB VRAM)'
+        },
+        'deepseek': {
+            id: 'deepseek',
+            internalId: 'deepseek-r1:1.5b',
+            displayName: 'DeepSeek-R1 1.5B',
+            badge: 'Reasoning',
+            speed: 'Ultra Fast',
+            description: 'Lightweight reasoning, mathematics and logic model',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.1GB VRAM)'
+        },
+        'deepseek-r1:1.5b': {
+            id: 'deepseek',
+            internalId: 'deepseek-r1:1.5b',
+            displayName: 'DeepSeek-R1 1.5B',
+            badge: 'Reasoning',
+            speed: 'Ultra Fast',
+            description: 'Lightweight reasoning, mathematics and logic model',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'RTX 2050 (~1.1GB VRAM)'
         }
     };
 
