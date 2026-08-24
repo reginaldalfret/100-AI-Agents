@@ -27,16 +27,16 @@
       "description": "High-efficiency local multi-language code generation, debugging, refactoring, and AST analysis"
     },
     {
-      "id": "gemma4:e2b",
-      "name": "Google Gemma 4 E2B",
-      "tag": "gemma4:e2b",
-      "role": "multimodal_reasoning",
-      "specialization": "Lightweight Multimodal Reasoning",
-      "required": true,
-      "sizeBytes": 2400000000,
-      "sizeDisplay": "2.4 GB",
-      "vramMinMb": 2400,
-      "description": "Lightweight multimodal reasoning, edge efficiency, image intelligence, and evidence synthesis"
+      "id": "gemma3:1b",
+      "name": "Google Gemma 3 1B",
+      "tag": "gemma3:1b",
+      "role": "general_text",
+      "specialization": "Lightweight General Text",
+      "required": false,
+      "sizeBytes": 815000000,
+      "sizeDisplay": "815 MB",
+      "vramMinMb": 1100,
+      "description": "Lightweight general text model, summarization, rewriting, and fast Q&A"
     },
     {
       "id": "llama3.2:1b",

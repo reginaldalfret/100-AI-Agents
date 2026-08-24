@@ -1,0 +1,20 @@
+{
+  "model": "gemma3:4b",
+  "tag": "gemma3:4b",
+  "size": "3.11 GB",
+  "size_bytes": 3338801804,
+  "success": true,
+  "status": "HEALTHY",
+  "ttft_ms": 1024,
+  "latency_ms": 5836,
+  "cold_latency_ms": 10849,
+  "warm_latency_ms": 5836,
+  "output_tokens": 56,
+  "tokens_per_second": 11.64,
+  "vram_mb": 2829,
+  "gpu_percent": 24,
+  "temperature_c": 64,
+  "ram_mb": 6918,
+  "cold_response": "OK",
+  "warm_response": "Artificial intelligence (AI) refers to the simulation of human intelligence processes by computer systems. It involves developing algorithms that allow machines to learn, reason, and solve problems, much like humans do. Ultimately, AI aims to create systems capable of performing tasks that typically require human intellect."
+}

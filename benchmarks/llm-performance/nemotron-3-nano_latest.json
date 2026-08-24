@@ -1,0 +1,20 @@
+{
+  "model": "nemotron-3-nano:latest",
+  "tag": "nemotron-3-nano:latest",
+  "size": "2.64 GB",
+  "size_bytes": 2837073129,
+  "success": true,
+  "status": "HEALTHY",
+  "ttft_ms": 882,
+  "latency_ms": 2540,
+  "cold_latency_ms": 4714,
+  "warm_latency_ms": 2540,
+  "output_tokens": 76,
+  "tokens_per_second": 35.43,
+  "vram_mb": 3145,
+  "gpu_percent": 71,
+  "temperature_c": 68,
+  "ram_mb": 5720,
+  "cold_response": "OK",
+  "warm_response": "Artificial intelligence is the ability of machines to perform tasks that normally require human intelligence, such as learning, reasoning, and perception. It enables computers to improve their performance on a given task through experience rather than being explicitly programmed. AI powers many modern applications, from recommendation systems to autonomous vehicles."
+}

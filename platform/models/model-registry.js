@@ -68,36 +68,33 @@ export const LOCAL_MODELS = [
     status: "ready"
   },
   {
-    model_id: "gemma4-e2b",
-    ollama_name: "gemma4:e2b",
-    name: "Google Gemma 4 E2B (Multimodal & Reasoning)",
+    model_id: "gemma3-1b",
+    ollama_name: "gemma3:1b",
+    name: "Google Gemma 3 1B",
     provider: "ollama",
     runtime: "local-ollama",
     endpoint: "http://127.0.0.1:11434",
     quantization: "Q4_K_M",
-    vram_mb: 2400,
-    ram_mb: 4096,
-    context_length: 131072,
-    supported_modalities: [ModelModality.TEXT, ModelModality.VISION],
+    vram_mb: 1100,
+    ram_mb: 2048,
+    context_length: 32768,
+    supported_modalities: [ModelModality.TEXT],
     capabilities: [
-      "image",
-      "multimodal-reasoning",
-      "document-vision",
-      "photo-analysis",
-      "drawing-analysis",
-      "visual-defect-reasoning",
-      "plant-equipment-identification",
-      "multimodal-qa"
+      "text-generation",
+      "summarization",
+      "classification",
+      "simple-reasoning",
+      "rewriting",
+      "lightweight-qa"
     ],
     recommended_tasks: [
-      "equipment-defect-assessment",
-      "p-and-id-schematic-reasoning",
-      "valve-identification",
-      "plant-condition-evaluation",
-      "photograph-defect-analysis",
-      "evidence-synthesis"
+      "simple-text-questions",
+      "text-summarization",
+      "text-rewriting",
+      "document-classification",
+      "lightweight-qa"
     ],
-    priority: 2,
+    priority: 3,
     status: "ready"
   },
   {

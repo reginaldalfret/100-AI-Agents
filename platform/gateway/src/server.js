@@ -599,10 +599,10 @@ const server = http.createServer(async (req, res) => {
       const availableModels = await getAvailableModelsCached();
 
       const CANONICAL_MODEL_MAP = {
-        "gemma": { tag: "gemma4:e2b", displayName: "Google Gemma 4 E2B", role: "multimodal" },
-        "gemma4": { tag: "gemma4:e2b", displayName: "Google Gemma 4 E2B", role: "multimodal" },
-        "gemma4:e2b": { tag: "gemma4:e2b", displayName: "Google Gemma 4 E2B", role: "multimodal" },
-        "gemma4-e2b": { tag: "gemma4:e2b", displayName: "Google Gemma 4 E2B", role: "multimodal" },
+        "gemma": { tag: "gemma3:1b", displayName: "Google Gemma 3 1B", role: "lightweight-general-text" },
+        "gemma3": { tag: "gemma3:1b", displayName: "Google Gemma 3 1B", role: "lightweight-general-text" },
+        "gemma3:1b": { tag: "gemma3:1b", displayName: "Google Gemma 3 1B", role: "lightweight-general-text" },
+        "gemma3-1b": { tag: "gemma3:1b", displayName: "Google Gemma 3 1B", role: "lightweight-general-text" },
         "nemotron": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
         "nemotron-3-nano": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
         "nemotron-3-nano:latest": { tag: "nemotron-3-nano:latest", displayName: "NVIDIA Nemotron 3", role: "reasoning" },
@@ -787,8 +787,9 @@ const server = http.createServer(async (req, res) => {
         // Intelligent Auto routing based on task specialization and context
         const taskLower = effectiveTask.toLowerCase();
         if (taskLower.includes("image") || taskLower.includes("photo") || taskLower.includes("drawing") || taskLower.includes("visual") || taskLower.includes("p&id") || taskLower.includes("ocr") || taskLower.includes("diagram")) {
-          targetOllamaModel = "gemma4:e2b";
-          modelDisplayName = "Google Gemma 4 E2B";
+          // Document / Visual extraction routes via OCR + Nemotron/Llama
+          targetOllamaModel = "nemotron-3-nano:latest";
+          modelDisplayName = "NVIDIA Nemotron 3 (via OCR Engine)";
         } else if (taskLower.includes("math") || taskLower.includes("calculate") || taskLower.includes(" × ") || taskLower.includes(" + ") || taskLower.includes(" / ") || taskLower.includes(" - ") || taskLower.includes("equation") || taskLower.includes("formula") || taskLower.includes("arithmetic") || taskLower.includes("algebra") || taskLower.includes("logic") || taskLower.includes("puzzle") || taskLower.includes("17 × 28")) {
           targetOllamaModel = "phi4-mini";
           modelDisplayName = "Microsoft Phi-4 Mini";
@@ -796,8 +797,8 @@ const server = http.createServer(async (req, res) => {
           targetOllamaModel = "granite4:1b-h";
           modelDisplayName = "IBM Granite 4 1B-H";
         } else if (taskLower.includes("rewrite") || taskLower.includes("rephrase") || taskLower.includes("proofread") || taskLower.includes("summarize this") || taskLower.includes("short summary") || taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi") {
-          targetOllamaModel = "llama3.2:1b";
-          modelDisplayName = "Meta Llama 3.2 1B";
+          targetOllamaModel = "gemma3:1b";
+          modelDisplayName = "Google Gemma 3 1B";
         } else if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("java") || taskLower.includes("c++") || taskLower.includes("rust") || taskLower.includes("sql") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv") || taskLower.includes("table")) {
           targetOllamaModel = "qwen2.5-coder:1.5b";
           modelDisplayName = "Qwen 2.5 Coder";

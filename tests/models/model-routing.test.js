@@ -15,11 +15,11 @@ describe('Model Routing & Task Dispatch Test Suite', () => {
       assert.equal(res.is_air_gapped, true);
     });
 
-    it('auto-routes visual photo and defect inspection tasks to gemma4-e2b', async () => {
+    it('auto-routes visual photo and defect inspection tasks through OCR/Nemotron reasoning', async () => {
       const res = await routeTaskToLocalModel({
         prompt: 'Analyze photograph of pump casing crack defect and assess corrosion severity'
       });
-      assert.equal(res.selected_model, 'gemma4-e2b');
+      assert.equal(res.selected_model, 'nemotron-3-nano');
       assert.equal(res.modality, 'vision');
     });
 
@@ -58,8 +58,8 @@ describe('Model Routing & Task Dispatch Test Suite', () => {
 
   describe('Manual Model Mode Routing', () => {
     const modes = [
-      { mode: 'gemma', expectedModel: 'gemma4-e2b' },
-      { mode: 'gemma4', expectedModel: 'gemma4-e2b' },
+      { mode: 'gemma', expectedModel: 'gemma3-1b' },
+      { mode: 'gemma3', expectedModel: 'gemma3-1b' },
       { mode: 'qwen', expectedModel: 'local-code-specialist' },
       { mode: 'nemotron', expectedModel: 'nemotron-3-nano' },
       { mode: 'llama', expectedModel: 'llama3.2-1b' },
@@ -80,8 +80,8 @@ describe('Model Routing & Task Dispatch Test Suite', () => {
 
   describe('Explicit Model Override Precedence', () => {
     const overrides = [
-      { override: 'gemma4:e2b', expected: 'gemma4-e2b' },
-      { override: 'gemma4-e2b', expected: 'gemma4-e2b' },
+      { override: 'gemma3:1b', expected: 'gemma3-1b' },
+      { override: 'gemma3-1b', expected: 'gemma3-1b' },
       { override: 'qwen2.5-coder:1.5b', expected: 'local-code-specialist' },
       { override: 'local-code-specialist', expected: 'local-code-specialist' },
       { override: 'nemotron-3-nano', expected: 'nemotron-3-nano' },

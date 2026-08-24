@@ -1,0 +1,20 @@
+{
+  "model": "phi4-mini:latest",
+  "tag": "phi4-mini:latest",
+  "size": "2.32 GB",
+  "size_bytes": 2491876774,
+  "success": true,
+  "status": "HEALTHY",
+  "ttft_ms": 439,
+  "latency_ms": 4941,
+  "cold_latency_ms": 8724,
+  "warm_latency_ms": 4941,
+  "output_tokens": 80,
+  "tokens_per_second": 17.77,
+  "vram_mb": 2675,
+  "gpu_percent": 35,
+  "temperature_c": 64,
+  "ram_mb": 7202,
+  "cold_response": "OK",
+  "warm_response": "Artificial intelligence (AI) is the simulation of human intelligence processes by machines, especially computer systems. These processes include learning (the acquisition of information and rules learning for using the information), reasoning (using the rules to reach conclusions), and self-correction. AI can be categorized into narrow or weak AI, which is designed to perform a narrow task (like facial recognition, Internet search, etc.), and general"
+}

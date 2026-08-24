@@ -132,7 +132,7 @@ When given complex instructions (e.g., *"Write a palindrome program in C++, Java
 | :--- | :--- | :--- | :--- |
 | **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | ~2.8 GB | Super AI orchestration, multi-agent decomposition, deep reasoning |
 | **Qwen 2.5 Coder** | `qwen2.5-coder:1.5b` | ~1.2 GB | Multi-language code generation, refactoring, deterministic sandbox |
-| **Google Gemma 4 E2B** | `gemma4:e2b` | ~2.4 GB | Lightweight multimodal reasoning, visual anomaly detection, evidence synthesis |
+| **Google Gemma 3 1B** | `gemma3:1b` | ~815 MB | Lightweight general text, summarization, rewriting, fast Q&A |
 | **Meta Llama 3.2 1B** | `llama3.2:1b` | ~1.3 GB | Fast lightweight general text, quick summaries, low-latency assistance |
 | **IBM Granite 4 1B-H** | `granite4:1b-h` | ~1.2 GB | Enterprise RAG, structured extraction, classification & tool calling |
 | **Microsoft Phi-4 Mini** | `phi4-mini` | ~2.4 GB | Advanced reasoning, mathematics, logic, algorithmic problem solving |

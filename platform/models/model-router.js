@@ -15,8 +15,8 @@ export async function routeTaskToLocalModel(taskInput = {}) {
   let selectedModelId = classification.preferred_model_id;
 
   if (taskInput.model_override) {
-    if (taskInput.model_override === 'gemma4:e2b' || taskInput.model_override === 'gemma4-e2b' || taskInput.model_override === 'gemma4' || taskInput.model_override === 'gemma') {
-      selectedModelId = 'gemma4-e2b';
+    if (taskInput.model_override === 'gemma3:1b' || taskInput.model_override === 'gemma3-1b' || taskInput.model_override === 'gemma3' || taskInput.model_override === 'gemma') {
+      selectedModelId = 'gemma3-1b';
     } else if (taskInput.model_override === 'qwen2.5-coder:1.5b' || taskInput.model_override === 'local-code-specialist' || taskInput.model_override === 'qwen') {
       selectedModelId = 'local-code-specialist';
     } else if (taskInput.model_override === 'nemotron-3-nano' || taskInput.model_override === 'nemotron' || taskInput.model_override === 'nemotron-3-nano:latest') {
@@ -29,7 +29,7 @@ export async function routeTaskToLocalModel(taskInput = {}) {
       selectedModelId = 'phi4-mini';
     }
   } else if (taskInput.modelMode && taskInput.modelMode !== 'auto') {
-    if (taskInput.modelMode === 'gemma' || taskInput.modelMode === 'gemma4') selectedModelId = 'gemma4-e2b';
+    if (taskInput.modelMode === 'gemma' || taskInput.modelMode === 'gemma3') selectedModelId = 'gemma3-1b';
     else if (taskInput.modelMode === 'qwen') selectedModelId = 'local-code-specialist';
     else if (taskInput.modelMode === 'nemotron') selectedModelId = 'nemotron-3-nano';
     else if (taskInput.modelMode === 'llama') selectedModelId = 'llama3.2-1b';

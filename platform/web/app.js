@@ -3437,23 +3437,23 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         'gemma': {
             id: 'gemma',
-            internalId: 'gemma4:e2b',
-            displayName: 'Google Gemma 4 E2B',
-            badge: 'Multimodal',
+            internalId: 'gemma3:1b',
+            displayName: 'Google Gemma 3 1B',
+            badge: 'Text',
             speed: 'Ultra Fast',
-            description: 'Multimodal Reasoning & Evidence',
+            description: 'Lightweight general text model',
             runtime: 'Local Ollama (127.0.0.1:11434)',
-            hardware: 'RTX 2050 (~2.4GB VRAM)'
+            hardware: 'RTX 2050 (~815MB VRAM)'
         },
-        'gemma4:e2b': {
+        'gemma3:1b': {
             id: 'gemma',
-            internalId: 'gemma4:e2b',
-            displayName: 'Google Gemma 4 E2B',
-            badge: 'Multimodal',
+            internalId: 'gemma3:1b',
+            displayName: 'Google Gemma 3 1B',
+            badge: 'Text',
             speed: 'Ultra Fast',
-            description: 'Multimodal Reasoning & Evidence',
+            description: 'Lightweight general text model',
             runtime: 'Local Ollama (127.0.0.1:11434)',
-            hardware: 'RTX 2050 (~2.4GB VRAM)'
+            hardware: 'RTX 2050 (~815MB VRAM)'
         },
         'llama': {
             id: 'llama',

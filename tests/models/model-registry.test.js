@@ -17,7 +17,7 @@ describe('Model Registry Specification & Integrity Test Suite', () => {
     const expectedModelIds = [
       'nemotron-3-nano',
       'local-vision-ocr',
-      'gemma4-e2b',
+      'gemma3-1b',
       'local-code-specialist',
       'llama3.2-1b',
       'granite4-1b-h',
