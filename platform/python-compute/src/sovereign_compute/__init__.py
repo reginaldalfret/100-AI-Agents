@@ -1,1 +1,2 @@
-__version__ = 2.0.0
+"""Sovereign Compute Package"""
+__version__ = "2.0.0"

@@ -1,10 +1,16 @@
 /**
  * Sovereign AI Workbench — Authoritative Windows Local AI Stack Supervisor
- * Manages Ollama (11434), Python Compute (8305), and Node Gateway (8300) with
- * strict dependency gating, crash-loop circuit breaker, and zero egress.
+ * 
+ * Manages Ollama (11434), Python Compute (8305), and Node Gateway (8300) with:
+ * - Precise port & command-line ownership detection (Zero duplicate processes)
+ * - Reuse of existing healthy services
+ * - Terminal FAILED state on crash-loop threshold (Zero infinite restart spam)
+ * - Transparent process stderr/stdout capturing and diagnostics
+ * - 100% On-Premise Air-Gapped Local Operation (0 External Calls)
  */
+
 import http from 'node:http';
-import { spawn } from 'node:child_process';
+import { spawn, execSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -22,10 +28,13 @@ const PID_DIR = path.join(RUNTIME_DIR, 'pids');
 });
 
 const SUPERVISOR_LOG = path.join(LOG_DIR, 'supervisor.log');
+const PYTHON_LOG = path.join(LOG_DIR, 'python-compute.log');
+const GATEWAY_LOG = path.join(LOG_DIR, 'gateway.log');
 
 function log(level, message, meta = {}) {
   const timestamp = new Date().toISOString();
-  const entry = `[${timestamp}] [${level.toUpperCase()}] ${message} ${Object.keys(meta).length ? JSON.stringify(meta) : ''}\n`;
+  const metaStr = Object.keys(meta).length ? ' ' + JSON.stringify(meta) : '';
+  const entry = `[${timestamp}] [${level.toUpperCase()}] ${message}${metaStr}\n`;
   try {
     fs.appendFileSync(SUPERVISOR_LOG, entry, 'utf8');
   } catch {}
@@ -33,25 +42,47 @@ function log(level, message, meta = {}) {
 }
 
 const state = {
-  ollama: { process: null, pid: null, running: false, failures: 0, lastRestart: 0, state: 'STOPPED' },
-  python: { process: null, pid: null, running: false, failures: 0, lastRestart: 0, state: 'STOPPED' },
-  gateway: { process: null, pid: null, running: false, failures: 0, lastRestart: 0, state: 'STOPPED' },
+  ollama: { process: null, pid: null, running: false, failures: 0, lastRestart: 0, state: 'STOPPED', loggedState: '' },
+  python: { process: null, pid: null, running: false, failures: 0, lastRestart: 0, state: 'STOPPED', loggedState: '' },
+  gateway: { process: null, pid: null, running: false, failures: 0, lastRestart: 0, state: 'STOPPED', loggedState: '' },
   isShuttingDown: false
 };
 
-function writeStateFile(serviceName, data) {
+function writeStateFile(serviceName, serviceState) {
   try {
     const p = path.join(STATE_DIR, `${serviceName}.json`);
-    fs.writeFileSync(p, JSON.stringify({ ...data, updatedAt: new Date().toISOString() }, null, 2), 'utf8');
+    fs.writeFileSync(p, JSON.stringify({
+      running: serviceState.running,
+      pid: serviceState.pid,
+      state: serviceState.state,
+      failures: serviceState.failures,
+      lastRestart: serviceState.lastRestart,
+      updatedAt: new Date().toISOString()
+    }, null, 2), 'utf8');
   } catch {}
 }
 
-function pingUrl(url, timeoutMs = 3000) {
+function transitionState(serviceName, newState, reason = '') {
+  const s = state[serviceName];
+  if (!s) return;
+  if (s.state !== newState || s.loggedState !== newState) {
+    s.state = newState;
+    s.loggedState = newState;
+    writeStateFile(serviceName, s);
+    log('info', `[${serviceName.toUpperCase()}] State transition -> ${newState}${reason ? ' (' + reason + ')' : ''}`);
+  }
+}
+
+function pingUrl(url, timeoutMs = 2500) {
   return new Promise((resolve) => {
     try {
       const parsed = new URL(url);
       const req = http.request(parsed, { method: 'GET', timeout: timeoutMs }, (res) => {
-        resolve(res.statusCode >= 200 && res.statusCode < 400);
+        let body = '';
+        res.on('data', chunk => { body += chunk; });
+        res.on('end', () => {
+          resolve(res.statusCode >= 200 && res.statusCode < 400);
+        });
       });
       req.on('error', () => resolve(false));
       req.on('timeout', () => { req.destroy(); resolve(false); });
@@ -62,144 +93,285 @@ function pingUrl(url, timeoutMs = 3000) {
   });
 }
 
+function getPortOwningPid(port) {
+  try {
+    const output = execSync(`powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort ${port} -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess"`, {
+      encoding: 'utf8',
+      windowsHide: true,
+      stdio: ['pipe', 'pipe', 'pipe']
+    }).trim();
+    if (!output) return null;
+    const pid = parseInt(output.split(/\r?\n/)[0], 10);
+    return isNaN(pid) ? null : pid;
+  } catch {
+    return null;
+  }
+}
+
+function getProcessCommandLine(pid) {
+  if (!pid) return '';
+  try {
+    const cmd = execSync(`powershell -NoProfile -Command "Get-CimInstance Win32_Process -Filter 'ProcessId = ${pid}' | Select-Object -ExpandProperty CommandLine"`, {
+      encoding: 'utf8',
+      windowsHide: true,
+      stdio: ['pipe', 'pipe', 'pipe']
+    }).trim();
+    return cmd || '';
+  } catch {
+    return '';
+  }
+}
+
+function isOurProjectProcess(cmdLine) {
+  if (!cmdLine) return false;
+  const lower = cmdLine.toLowerCase();
+  return lower.includes('100-ai-agents') || lower.includes('sovereign_compute') || lower.includes('super-ai');
+}
+
+function safelyKillPid(pid, serviceName) {
+  if (!pid) return;
+  try {
+    const cmdLine = getProcessCommandLine(pid);
+    if (isOurProjectProcess(cmdLine) || serviceName === 'gateway') {
+      log('warn', `Terminating stale ${serviceName} process PID ${pid}`);
+      execSync(`taskkill /PID ${pid} /F`, { windowsHide: true, stdio: 'ignore' });
+    } else {
+      log('warn', `Refusing to terminate external process PID ${pid} on ${serviceName} port`);
+    }
+  } catch {}
+}
+
 // 1. Ollama Controller
 async function checkOllama() {
-  const healthy = await pingUrl('http://127.0.0.1:11434/api/tags', 3000);
+  const healthy = await pingUrl('http://127.0.0.1:11434/api/tags', 2500);
   state.ollama.running = healthy;
-  state.ollama.state = healthy ? 'READY' : 'OFFLINE';
-  writeStateFile('ollama', state.ollama);
+  if (healthy) {
+    transitionState('ollama', 'READY');
+    state.ollama.failures = 0;
+  }
   return healthy;
 }
 
 function startOllama() {
   if (state.isShuttingDown || state.ollama.running) return;
+  if (state.ollama.state === 'FAILED') return; // Stop retrying in terminal failure
+
   const now = Date.now();
   if (now - state.ollama.lastRestart < 600000 && state.ollama.failures >= 5) {
-    log('error', 'Ollama entered FAILED state due to crash-loop (5 failures in 10 min)');
-    state.ollama.state = 'FAILED';
-    writeStateFile('ollama', state.ollama);
+    transitionState('ollama', 'FAILED', 'crash-loop threshold: 5 failures in 10min');
+    log('error', '[OLLAMA] Entered terminal FAILED state. Automatic retries disabled.');
     return;
   }
+
   state.ollama.failures++;
   state.ollama.lastRestart = now;
-  state.ollama.state = 'STARTING';
-  log('info', 'Ensuring local Ollama daemon is running on 11434...');
-  const ollamaExe = 'C:\\Users\\ASUS\\AppData\\Local\\Programs\\Ollama\\ollama.exe';
+  transitionState('ollama', 'STARTING');
+
+  const ollamaExe = path.join(process.env.LOCALAPPDATA || 'C:\\Users\\ASUS\\AppData\\Local', 'Programs', 'Ollama', 'ollama.exe');
   if (fs.existsSync(ollamaExe)) {
-    const p = spawn(ollamaExe, ['serve'], { detached: true, stdio: 'ignore' });
-    p.unref();
-    state.ollama.pid = p.pid;
+    try {
+      const p = spawn(ollamaExe, ['serve'], { detached: true, stdio: 'ignore' });
+      p.unref();
+      state.ollama.pid = p.pid;
+    } catch (e) {
+      log('error', `Failed to spawn Ollama: ${e.message}`);
+    }
+  } else {
+    log('warn', `Ollama executable not found at ${ollamaExe}`);
   }
 }
 
-// 2. Python Compute Controller
+// 2. Python Compute Controller (Port 8305)
 async function checkPython() {
   const healthy = await pingUrl('http://127.0.0.1:8305/health', 2500);
   state.python.running = healthy;
-  state.python.state = healthy ? 'READY' : 'OFFLINE';
-  writeStateFile('python', state.python);
+  if (healthy) {
+    transitionState('python', 'READY');
+    state.python.failures = 0;
+    const pid = getPortOwningPid(8305);
+    if (pid) state.python.pid = pid;
+  }
   return healthy;
 }
 
 function startPython() {
   if (state.isShuttingDown || state.python.running) return;
+  if (state.python.state === 'FAILED') return; // Stop retrying in terminal failure
+
+  const existingPid = getPortOwningPid(8305);
+  if (existingPid) {
+    const cmdLine = getProcessCommandLine(existingPid);
+    if (!isOurProjectProcess(cmdLine)) {
+      transitionState('python', 'PORT_CONFLICT', `Port 8305 occupied by foreign PID ${existingPid}`);
+      return;
+    }
+    // Stale our process that is not responding to /health -> terminate it
+    safelyKillPid(existingPid, 'python');
+  }
+
   const now = Date.now();
   if (now - state.python.lastRestart < 600000 && state.python.failures >= 5) {
-    log('error', 'Python Compute entered FAILED state due to crash-loop');
-    state.python.state = 'FAILED';
-    writeStateFile('python', state.python);
+    transitionState('python', 'FAILED', 'crash-loop threshold: 5 failures in 10min');
+    log('error', '[PYTHON COMPUTE] Entered terminal FAILED state. Automatic retries disabled.');
     return;
   }
+
   state.python.failures++;
   state.python.lastRestart = now;
-  state.python.state = 'STARTING';
-  log('info', 'Starting Python Compute microservice on 127.0.0.1:8305...');
+  transitionState('python', 'STARTING');
 
   const pythonScript = path.join(ROOT, 'platform', 'python-compute', 'src', 'sovereign_compute', 'server.py');
-  const pythonExe = 'C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python312\\python.exe';
-  const executable = fs.existsSync(pythonExe) ? pythonExe : 'python';
+  const pythonSrcDir = path.join(ROOT, 'platform', 'python-compute', 'src');
+  const pyExePath = 'C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python312\\python.exe';
+  const executable = fs.existsSync(pyExePath) ? pyExePath : 'py';
+  const args = executable === 'py' ? ['-3.12', pythonScript] : [pythonScript];
 
-  const pyProcess = spawn(executable, [pythonScript], {
-    cwd: ROOT,
-    stdio: ['ignore', 'ignore', 'ignore'],
-    detached: false
-  });
+  const logStream = fs.createWriteStream(PYTHON_LOG, { flags: 'a' });
 
-  state.python.process = pyProcess;
-  state.python.pid = pyProcess.pid;
+  try {
+    const pyProcess = spawn(executable, args, {
+      cwd: ROOT,
+      env: {
+        ...process.env,
+        PYTHONPATH: pythonSrcDir,
+        PYTHONUNBUFFERED: '1'
+      },
+      stdio: ['ignore', 'pipe', 'pipe'],
+      detached: false
+    });
 
-  pyProcess.on('exit', (code, signal) => {
-    log('warn', `Python Compute process exited with code ${code}, signal ${signal}`);
-    state.python.running = false;
-    state.python.process = null;
-    state.python.state = 'STOPPED';
-    writeStateFile('python', state.python);
-  });
+    state.python.process = pyProcess;
+    state.python.pid = pyProcess.pid;
+
+    pyProcess.stdout.pipe(logStream);
+    pyProcess.stderr.pipe(logStream);
+
+    let stderrBuffer = '';
+    pyProcess.stderr.on('data', (d) => {
+      stderrBuffer += d.toString();
+    });
+
+    pyProcess.on('exit', (code, signal) => {
+      state.python.running = false;
+      state.python.process = null;
+      if (!state.isShuttingDown) {
+        log('warn', `Python Compute process exited with code ${code}${stderrBuffer ? ' Reason: ' + stderrBuffer.trim() : ''}`);
+        if (state.python.failures >= 5) {
+          transitionState('python', 'FAILED', `Exit code ${code}`);
+        } else {
+          transitionState('python', 'STOPPED', `Exit code ${code}`);
+        }
+      }
+    });
+  } catch (e) {
+    log('error', `Failed to spawn Python Compute: ${e.message}`);
+    transitionState('python', 'FAILED', e.message);
+  }
 }
 
-// 3. Node Gateway Controller
+// 3. Node Gateway Controller (Port 8300)
 async function checkGateway() {
   const healthy = await pingUrl('http://127.0.0.1:8300/api/health', 2500);
   state.gateway.running = healthy;
-  state.gateway.state = healthy ? 'READY' : 'OFFLINE';
-  writeStateFile('gateway', state.gateway);
+  if (healthy) {
+    transitionState('gateway', 'READY');
+    state.gateway.failures = 0;
+    const pid = getPortOwningPid(8300);
+    if (pid) state.gateway.pid = pid;
+  }
   return healthy;
 }
 
 function startGateway() {
   if (state.isShuttingDown || state.gateway.running) return;
+  if (state.gateway.state === 'FAILED') return; // Stop retrying in terminal failure
+
+  const existingPid = getPortOwningPid(8300);
+  if (existingPid) {
+    const cmdLine = getProcessCommandLine(existingPid);
+    if (!isOurProjectProcess(cmdLine)) {
+      transitionState('gateway', 'PORT_CONFLICT', `Port 8300 occupied by foreign PID ${existingPid}`);
+      return;
+    }
+    // Stale our process not responding to /api/health -> terminate it
+    safelyKillPid(existingPid, 'gateway');
+  }
+
   const now = Date.now();
   if (now - state.gateway.lastRestart < 600000 && state.gateway.failures >= 5) {
-    log('error', 'Node Gateway entered FAILED state due to crash-loop');
-    state.gateway.state = 'FAILED';
-    writeStateFile('gateway', state.gateway);
+    transitionState('gateway', 'FAILED', 'crash-loop threshold: 5 failures in 10min');
+    log('error', '[GATEWAY] Entered terminal FAILED state. Automatic retries disabled.');
     return;
   }
+
   state.gateway.failures++;
   state.gateway.lastRestart = now;
-  state.gateway.state = 'STARTING';
-  log('info', 'Starting Sovereign AI Gateway on http://127.0.0.1:8300...');
+  transitionState('gateway', 'STARTING');
 
   const gatewayScript = path.join(ROOT, 'platform', 'gateway', 'src', 'server.js');
-  const nodeExe = process.execPath;
+  const logStream = fs.createWriteStream(GATEWAY_LOG, { flags: 'a' });
 
-  const gwProcess = spawn(nodeExe, [gatewayScript], {
-    cwd: ROOT,
-    stdio: 'inherit',
-    env: { ...process.env, PORT: '8300', HOST: '0.0.0.0', NODE_ENV: 'production' }
-  });
+  try {
+    const gwProcess = spawn(process.execPath, [gatewayScript], {
+      cwd: ROOT,
+      env: {
+        ...process.env,
+        PORT: '8300',
+        HOST: '0.0.0.0',
+        NODE_ENV: 'production'
+      },
+      stdio: ['ignore', 'pipe', 'pipe'],
+      detached: false
+    });
 
-  state.gateway.process = gwProcess;
-  state.gateway.pid = gwProcess.pid;
+    state.gateway.process = gwProcess;
+    state.gateway.pid = gwProcess.pid;
 
-  gwProcess.on('exit', (code, signal) => {
-    log('warn', `Gateway process exited with code ${code}, signal ${signal}`);
-    state.gateway.running = false;
-    state.gateway.process = null;
-    state.gateway.state = 'STOPPED';
-    writeStateFile('gateway', state.gateway);
-  });
+    gwProcess.stdout.pipe(logStream);
+    gwProcess.stderr.pipe(logStream);
+
+    let stderrBuffer = '';
+    gwProcess.stderr.on('data', (d) => {
+      stderrBuffer += d.toString();
+    });
+
+    gwProcess.on('exit', (code, signal) => {
+      state.gateway.running = false;
+      state.gateway.process = null;
+      if (!state.isShuttingDown) {
+        log('warn', `Gateway process exited with code ${code}${stderrBuffer ? ' Reason: ' + stderrBuffer.trim() : ''}`);
+        if (state.gateway.failures >= 5) {
+          transitionState('gateway', 'FAILED', `Exit code ${code}`);
+        } else {
+          transitionState('gateway', 'STOPPED', `Exit code ${code}`);
+        }
+      }
+    });
+  } catch (e) {
+    log('error', `Failed to spawn Gateway: ${e.message}`);
+    transitionState('gateway', 'FAILED', e.message);
+  }
 }
 
-// Supervision Loop with Dependency Gating
+// Global Supervision Loop
 async function supervisionLoop() {
   if (state.isShuttingDown) return;
 
-  // Step 1: Check & Start Ollama
+  // 1. Ollama Check / Start
   const ollamaOk = await checkOllama();
-  if (!ollamaOk) {
+  if (!ollamaOk && state.ollama.state !== 'FAILED') {
     startOllama();
   }
 
-  // Step 2: Check & Start Python Compute
+  // 2. Python Compute Check / Start
   const pythonOk = await checkPython();
-  if (!pythonOk) {
+  if (!pythonOk && state.python.state !== 'FAILED' && state.python.state !== 'PORT_CONFLICT') {
     startPython();
   }
 
-  // Step 3: Check & Start Node Gateway
+  // 3. Gateway Check / Start
   const gatewayOk = await checkGateway();
-  if (!gatewayOk) {
+  if (!gatewayOk && state.gateway.state !== 'FAILED' && state.gateway.state !== 'PORT_CONFLICT') {
     startGateway();
   }
 }
@@ -208,8 +380,12 @@ async function supervisionLoop() {
 function shutdown() {
   state.isShuttingDown = true;
   log('info', 'Supervisor received shutdown signal. Terminating child processes gracefully...');
-  if (state.gateway.process) state.gateway.process.kill('SIGTERM');
-  if (state.python.process) state.python.process.kill('SIGTERM');
+  if (state.gateway.process) {
+    try { state.gateway.process.kill('SIGTERM'); } catch {}
+  }
+  if (state.python.process) {
+    try { state.python.process.kill('SIGTERM'); } catch {}
+  }
   process.exit(0);
 }
 
@@ -217,9 +393,10 @@ process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
 log('info', '============================================================');
-log('info', '  101 SUPER AI AGENTS — LOCAL STACK SUPERVISOR ACTIVE');
+log('info', '  301 SUPER AI AGENTS — LOCAL STACK SUPERVISOR ACTIVE');
 log('info', '  Problem Statement: SIH 26117 — Mangalore Refinery (MRPL)');
 log('info', '  Local Website URI: http://127.0.0.1:8300/');
+log('info', '  Python Compute URI: http://127.0.0.1:8305/');
 log('info', '============================================================');
 
 // Initial boot

@@ -1,24 +1,21 @@
-# Stops only managed Super AI platform processes gracefully
-$ErrorActionPreference = "Continue"
+<#
+.SYNOPSIS
+  Stops local stack gateway and python compute safely.
+#>
+$ErrorActionPreference = 'Continue'
 
-Write-Host "Stopping 101 Super AI Agents stack processes..." -ForegroundColor Yellow
-
-# Find node processes running supervisor or gateway
-$nodeProcs = Get-CimInstance Win32_Process -Filter "Name = 'node.exe'"
-foreach ($p in $nodeProcs) {
-    if ($p.CommandLine -match "supervisor.js|platform/gateway/src/server.js|run-fleet.js") {
-        Write-Host "Stopping managed Node process (PID $($p.ProcessId))..." -ForegroundColor Gray
-        Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
-    }
+function Stop-PortProcess($port) {
+    try {
+        $pids = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess
+        foreach ($pid in $pids) {
+            if ($pid) {
+                Write-Host "Terminating process on port $port (PID: $pid)..." -ForegroundColor Yellow
+                Stop-Process -Id $pid -Force -ErrorAction SilentlyContinue
+            }
+        }
+    } catch {}
 }
 
-# Stop Python compute if running sovereign_compute
-$pyProcs = Get-CimInstance Win32_Process -Filter "Name = 'python.exe'"
-foreach ($p in $pyProcs) {
-    if ($p.CommandLine -match "sovereign_compute") {
-        Write-Host "Stopping managed Python compute (PID $($p.ProcessId))..." -ForegroundColor Gray
-        Stop-Process -Id $p.ProcessId -Force -ErrorAction SilentlyContinue
-    }
-}
-
-Write-Host "Stack stopped successfully." -ForegroundColor Green
+Stop-PortProcess 8300
+Stop-PortProcess 8305
+Write-Host '[STOP] Stopped Gateway and Python Compute services.' -ForegroundColor Green

@@ -2,21 +2,48 @@
 import http.server
 import socketserver
 import json
+import sys
+import os
+from pathlib import Path
 
-from .config import HOST, PORT
-from .schemas import success_response, error_response
-from .documents.pdf import process_pdf
-from .documents.docx import process_docx
-from .documents.xlsx import process_xlsx
-from .documents.pptx import process_pptx
-from .ocr.engine import run_ocr
-from .vision.preprocess import preprocess_image
-from .vision.image import analyze_image_features
-from .data.analytics import analyze_dataset
-from .data.statistics import calculate_corrosion_rate
-from .embeddings.engine import generate_embedding
-from .reranking.engine import rerank_documents
-from .stt.engine import transcribe_audio, get_stt_health
+# Ensure src directory is in sys.path when executed directly as a script
+_SRC_DIR = str(Path(__file__).resolve().parent.parent)
+if _SRC_DIR not in sys.path:
+    sys.path.insert(0, _SRC_DIR)
+
+try:
+    from sovereign_compute.config import HOST, PORT
+    from sovereign_compute.schemas import success_response, error_response
+    from sovereign_compute.documents.pdf import process_pdf
+    from sovereign_compute.documents.docx import process_docx
+    from sovereign_compute.documents.xlsx import process_xlsx
+    from sovereign_compute.documents.pptx import process_pptx
+    from sovereign_compute.ocr.engine import run_ocr
+    from sovereign_compute.vision.preprocess import preprocess_image
+    from sovereign_compute.vision.image import analyze_image_features
+    from sovereign_compute.data.analytics import analyze_dataset
+    from sovereign_compute.data.statistics import calculate_corrosion_rate
+    from sovereign_compute.embeddings.engine import generate_embedding
+    from sovereign_compute.reranking.engine import rerank_documents
+    from sovereign_compute.stt.engine import transcribe_audio, get_stt_health
+except ImportError:
+    from .config import HOST, PORT
+    from .schemas import success_response, error_response
+    from .documents.pdf import process_pdf
+    from .documents.docx import process_docx
+    from .documents.xlsx import process_xlsx
+    from .documents.pptx import process_pptx
+    from .ocr.engine import run_ocr
+    from .vision.preprocess import preprocess_image
+    from .vision.image import analyze_image_features
+    from .data.analytics import analyze_dataset
+    from .data.statistics import calculate_corrosion_rate
+    from .embeddings.engine import generate_embedding
+    from .reranking.engine import rerank_documents
+    from .stt.engine import transcribe_audio, get_stt_health
+
+class ReusableTCPServer(socketserver.TCPServer):
+    allow_reuse_address = True
 
 class ComputeHandler(http.server.BaseHTTPRequestHandler):
     def _send_json(self, status: int, data: dict):
@@ -101,7 +128,7 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
             self._send_json(500, error_response("COMPUTE_ERROR", str(e)))
 
 def run_server():
-    server = socketserver.TCPServer((HOST, PORT), ComputeHandler)
+    server = ReusableTCPServer((HOST, PORT), ComputeHandler)
     print(f"[SOVEREIGN COMPUTE] Server running on http://{HOST}:{PORT}")
     try:
         server.serve_forever()
