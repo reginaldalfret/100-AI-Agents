@@ -222,9 +222,10 @@ function startPython() {
 
   const pythonScript = path.join(ROOT, 'platform', 'python-compute', 'src', 'sovereign_compute', 'server.py');
   const pythonSrcDir = path.join(ROOT, 'platform', 'python-compute', 'src');
+  const ocrVenvExe = path.join(ROOT, 'platform', 'ocr', '.venv', 'Scripts', 'python.exe');
   const pyExePath = 'C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python312\\python.exe';
-  const executable = fs.existsSync(pyExePath) ? pyExePath : 'py';
-  const args = executable === 'py' ? ['-3.12', pythonScript] : [pythonScript];
+  const executable = fs.existsSync(ocrVenvExe) ? ocrVenvExe : (fs.existsSync(pyExePath) ? pyExePath : 'py');
+  const args = executable === 'py' ? ['-3.11', pythonScript] : [pythonScript];
 
   const logStream = fs.createWriteStream(PYTHON_LOG, { flags: 'a' });
 
@@ -233,7 +234,7 @@ function startPython() {
       cwd: ROOT,
       env: {
         ...process.env,
-        PYTHONPATH: pythonSrcDir,
+        PYTHONPATH: `${pythonSrcDir};${path.join(ROOT, 'platform')}`,
         PYTHONUNBUFFERED: '1'
       },
       stdio: ['ignore', 'pipe', 'pipe'],

@@ -94,13 +94,13 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
     assert.strictEqual(codeTask.data.model_mode, 'auto');
     assert(codeTask.data.actual_model.includes('qwen') || codeTask.data.actual_model.includes('coder'), `Code task should auto-route to Qwen Coder, got ${codeTask.data.actual_model}`);
 
-    const visionTask = await sendChat({
+    const nlpTask = await sendChat({
       agent_id: 'agent-101',
-      task: 'Analyze this photo image diagram of heat exchanger',
+      task: 'Rewrite this short sentence to be more polite: Send me the file right now',
       modelMode: 'auto'
     });
-    assert.strictEqual(visionTask.data.model_mode, 'auto');
-    assert(visionTask.data.actual_model.includes('gemma'), `Vision task should auto-route to Gemma, got ${visionTask.data.actual_model}`);
+    assert.strictEqual(nlpTask.data.model_mode, 'auto');
+    assert(nlpTask.data.actual_model.includes('gemma'), `Edge NLP task should auto-route to Gemma 3 1B, got ${nlpTask.data.actual_model}`);
   });
 
   it('Sequential model switching (Qwen -> Nemotron -> Gemma) preserves strict model isolation', async (t) => {

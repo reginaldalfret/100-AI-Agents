@@ -10,6 +10,7 @@
  */
 
 import path from 'node:path';
+import { processDocumentOCR } from './ocr-engine.js';
 
 // ============================================================
 // PDF METADATA PATTERNS — things that are NOT page content
@@ -109,13 +110,23 @@ export class DocumentExtractor {
     let pages = [];
     let needsVision = false;
 
-    // 1. Image Formats -> Pass to Gemma 3 Vision
+    // 1. Image Formats -> Process through Local OCR Document Engine
     if (mimeType.startsWith('image/') || /\.(png|jpe?g|webp|bmp|gif|tiff)$/i.test(filename)) {
-      isMultimodalImage = true;
-      base64Image = this._normalizeBase64(rawData);
       docType = 'image';
-      extractedText = `[Image Attached: ${filename} (Visual Analysis by Google Gemma 3 Vision Engine)]`;
-      contentText = extractedText;
+      const ocrRes = await processDocumentOCR(attachment);
+      if (ocrRes && ocrRes.fullText) {
+        extractedText = ocrRes.fullText;
+        contentText = ocrRes.fullText;
+        tables = ocrRes.tables || [];
+        pages = ocrRes.pages || [];
+        pageCount = pages.length || 1;
+        metadataText = JSON.stringify(ocrRes.metadata || {});
+      } else {
+        extractedText = `[Image Document: ${filename}]`;
+        contentText = extractedText;
+      }
+      isMultimodalImage = false;
+      needsVision = false;
     }
 
     // 2. CSV / TSV -> Structured Table Extraction
@@ -158,64 +169,42 @@ export class DocumentExtractor {
       contentText = extractedText;
     }
 
-    // 4. PDF Documents — PAGE-FIRST CONTENT-FIRST EXTRACTION
+    // 4. PDF Documents — Authoritative OCR & Page-First Processing
     else if (ext === '.pdf' || mimeType.includes('pdf')) {
       docType = 'pdf';
-      const rawBytes = this._decodeBase64ToBuffer(rawData);
-      const rawDecoded = rawBytes.toString('latin1'); // Use latin1 to preserve byte values
+      const ocrRes = await processDocumentOCR(attachment);
+      if (ocrRes && ocrRes.fullText && ocrRes.fullText !== `[Document processed: ${filename}]`) {
+        extractedText = ocrRes.fullText;
+        contentText = ocrRes.fullText;
+        tables = ocrRes.tables || [];
+        pages = ocrRes.pages || [];
+        pageCount = pages.length || 1;
+        metadataText = JSON.stringify(ocrRes.metadata || {});
+      } else {
+        // Fallback to local native text extraction
+        const rawBytes = this._decodeBase64ToBuffer(rawData);
+        const rawDecoded = rawBytes.toString('latin1');
+        pageCount = this._detectPdfPageCount(rawDecoded);
+        const nativeText = this._extractPdfNativeText(rawDecoded);
+        metadataText = this._extractPdfMetadata(rawDecoded);
+        contentText = this._filterMetadataFromContent(nativeText);
 
-      // Step 1: Detect page count
-      pageCount = this._detectPdfPageCount(rawDecoded);
-
-      // Step 2: Extract native text using multiple strategies
-      const nativeText = this._extractPdfNativeText(rawDecoded);
-
-      // Step 3: Extract metadata separately
-      metadataText = this._extractPdfMetadata(rawDecoded);
-
-      // Step 4: Clean the native text — remove any metadata that leaked in
-      contentText = this._filterMetadataFromContent(nativeText);
-
-      // Step 5: Determine if vision is needed
-      if (contentText.trim().length < 10) {
-        // Native text extraction failed — might be a scanned PDF
-        // Try readable-string fallback (but filtered)
-        const fallbackText = this._extractReadableStrings(rawDecoded);
-        const filteredFallback = this._filterMetadataFromContent(fallbackText);
-        
-        if (filteredFallback.trim().length >= 10) {
-          contentText = filteredFallback;
-        } else {
-          // Truly scanned or image-based PDF — needs Gemma 3 Vision
-          needsVision = true;
-          isMultimodalImage = false;
-          base64Image = null;
-          contentText = `[PDF requires OCR - no extractable text found in: ${filename}]`;
+        if (contentText.trim().length < 10) {
+          const fallbackText = this._extractReadableStrings(rawDecoded);
+          contentText = this._filterMetadataFromContent(fallbackText);
         }
+
+        extractedText = contentText || `[Document processed: ${filename}]`;
+        pages = [{
+          pageNumber: 1,
+          text: extractedText,
+          contentType: 'text',
+          hasImages: false,
+          hasVisualContent: false
+        }];
       }
-
-      // Build page structure
-      pages = [{
-        pageNumber: 1,
-        text: contentText,
-        contentType: needsVision ? 'scanned' : 'text',
-        hasImages: needsVision,
-        hasVisualContent: needsVision
-      }];
-
-      if (pageCount > 1) {
-        for (let i = 2; i <= pageCount; i++) {
-          pages.push({
-            pageNumber: i,
-            text: '',
-            contentType: 'text',
-            hasImages: false,
-            hasVisualContent: false
-          });
-        }
-      }
-
-      extractedText = contentText;
+      needsVision = false;
+      isMultimodalImage = false;
     }
 
     // 5. DOCX / XLSX / Binary Documents

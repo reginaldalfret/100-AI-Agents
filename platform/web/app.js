@@ -4234,10 +4234,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 data.models = [
                     { name: 'NVIDIA Nemotron 3 Nano', tag: 'nemotron-3-nano:latest', role: 'Reasoning & Orchestration', vram_mb: 2800, status: 'ready' },
                     { name: 'Qwen 2.5 Coder 1.5B', tag: 'qwen2.5-coder:1.5b', role: 'Code Synthesis & Sandbox', vram_mb: 986, status: 'ready' },
-                    { name: 'Google Gemma 4 E2B', tag: 'gemma4:e2b', role: 'Multimodal Reasoning & Evidence', vram_mb: 2400, status: 'ready' },
+                    { name: 'Google Gemma 3 1B', tag: 'gemma3:1b', role: 'Edge NLP & Semantic Synthesis', vram_mb: 815, status: 'ready' },
                     { name: 'Meta Llama 3.2 1B', tag: 'llama3.2:1b', role: 'Fast Lightweight General Text', vram_mb: 1300, status: 'ready' },
                     { name: 'IBM Granite 4 1B-H', tag: 'granite4:1b-h', role: 'Enterprise RAG & Tool Use', vram_mb: 1400, status: 'ready' },
-                    { name: 'Microsoft Phi-4 Mini', tag: 'phi4-mini', role: 'Reasoning, Mathematics & Logic', vram_mb: 2500, status: 'ready' }
+                    { name: 'Microsoft Phi-4 Mini', tag: 'phi4-mini', role: 'Reasoning, Mathematics & Logic', vram_mb: 2500, status: 'ready' },
+                    { name: 'DeepSeek-R1 1.5B', tag: 'deepseek-r1:1.5b', role: 'Deep Reasoning & Logic Specialist', vram_mb: 1100, status: 'ready' }
                 ];
             }
             

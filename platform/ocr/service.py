@@ -36,16 +36,35 @@ def handle_ocr_image(payload: Dict[str, Any]) -> Dict[str, Any]:
         raise ValueError("Missing 'image_path' or 'image_base64' in payload.")
 
 def handle_ocr_document(payload: Dict[str, Any]) -> Dict[str, Any]:
-    """Handles multi-page document (PDF/Image) OCR request."""
+    """Handles multi-page document (PDF/Image) OCR request via path or base64."""
     file_path = payload.get("file_path") or payload.get("document_path")
+    file_base64 = payload.get("file_base64") or payload.get("data") or payload.get("content")
+    file_name = payload.get("file_name") or payload.get("filename") or "document.pdf"
     lang = payload.get("lang", "en")
     options = {"lang": lang, **payload.get("options", {})}
 
-    if not file_path:
-        raise ValueError("Missing 'file_path' in payload.")
-
-    res = process_document(file_path, options=options)
-    return res.to_dict()
+    if file_base64:
+        if "," in file_base64:
+            file_base64 = file_base64.split(",", 1)[1]
+        ext = Path(file_name).suffix or ".pdf"
+        temp_dir = tempfile.gettempdir()
+        temp_file = Path(temp_dir) / f"doc_{uuid.uuid4().hex}{ext}"
+        try:
+            with open(temp_file, "wb") as f:
+                f.write(base64.b64decode(file_base64))
+            res = process_document(str(temp_file), options=options)
+            return res.to_dict()
+        finally:
+            if temp_file.exists():
+                try:
+                    temp_file.unlink()
+                except Exception:
+                    pass
+    elif file_path:
+        res = process_document(file_path, options=options)
+        return res.to_dict()
+    else:
+        raise ValueError("Missing 'file_path' or 'file_base64' in payload.")
 
 def handle_ocr_table(payload: Dict[str, Any]) -> Dict[str, Any]:
     """Extracts tables specifically from image or PDF."""

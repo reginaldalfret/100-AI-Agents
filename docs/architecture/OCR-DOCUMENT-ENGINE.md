@@ -1,53 +1,63 @@
-# OCR & Document Intelligence Engine
+# OCR & Document Intelligence Engine Architecture
 
-> **Engine**: PaddleOCR 3.7.0 · PP-OCRv6 Small · PP-StructureV3
-> **Mode**: 100% Offline · CPU-Primary · Optional GPU Acceleration
+> **Engine**: PaddleOCR 3.7.0 · PP-OCRv6 Small · PP-StructureV3 · RapidOCR ONNX  
+> **Python Compute**: `platform/ocr/`, `platform/python-compute/` (Port 8305)  
+> **Node.js Client**: `platform/multimodal/ocr-engine.js`, `platform/multimodal/document-extractor.js`  
+> **Mode**: 100% Offline · Air-Gapped · CPU-Primary with Dynamic CUDA Acceleration  
 > **Status**: Production
 
 ---
 
-## Architecture Overview
+## 1. Architecture Overview
+
+The Sovereign AI Workbench incorporates a dedicated, high-throughput on-premise Document Intelligence & OCR Engine designed for industrial schematics, scanned refinery inspection reports, NDT ultrasonic logs, tax invoices, academic papers, and multi-page technical PDFs.
+
+Because lightweight on-device LLMs (such as Google Gemma 3 1B and Meta Llama 3.2 1B) operate strictly in text mode, optical character recognition and document layout decomposition are handled prior to language model reasoning by this specialized vision subsystem.
 
 ```
-INPUT (Image / PDF / Screenshot / Receipt / Invoice / Form)
-  ↓
-Local Preprocessing (Orientation, Deskew, Denoise, CLAHE)
-  ↓
-PP-DocLayout-S (23-class Document Layout Analysis)
-  ↓
-PP-OCRv6 Small (Text Detection + Recognition, 50 Languages)
-  ↓
-SLANet (Table Structure Recognition)
-  ↓
-PP-FormulaNet-S (Formula → LaTeX) [Optional]
-  ↓
-Reading Order Reconstruction
-  ↓
-Canonical Structured Document (JSON / Markdown)
-  ↓
-Local LLM Reasoning (Nemotron / Granite / Phi / Gemma / DeepSeek)
+INPUT (Scanned PDF / P&ID Drawing / Photograph / Invoice / Form / Screenshot)
+  │
+  ▼
+Local Preprocessing & Normalization (Orientation Correction, Deskew, Denoise, CLAHE)
+  │
+  ▼
+PP-DocLayout-S (23-Class Document Layout & Structural Block Segmentation)
+  │
+  ├────── Text Regions ────────> PP-OCRv6 Small (50 Languages + Tamil + Hindi)
+  │                                    │
+  ├────── Table Regions ───────> SLANet (Table Structure → HTML / Markdown / JSON)
+  │                                    │
+  └────── Formula Regions ─────> PP-FormulaNet-S (Math Expressions → LaTeX)
+                                       │
+                                       ▼
+Topological Reading Order Reconstruction & Spatial Bounding Box Alignment
+  │
+  ▼
+Canonical Structured Document Payload (JSON Schema / Markdown Tables / Citations)
+  │
+  ▼
+Local LLM Reasoning & Synthesis (Nemotron 3 / Granite 4 / Qwen 2.5 / Gemma 3 / Phi-4 / DeepSeek-R1)
 ```
 
 ---
 
-## Model Inventory
+## 2. Model Inventory & Local Weight Manifest
 
-| Model | Purpose | Size | Required | Languages |
+All model weights are pre-bundled in the local application package with cryptographic SHA-256 verification at startup. **Zero runtime downloads or external network connections are permitted.**
+
+| Model Component | Architecture / Purpose | Size | Execution Target | Language Scope |
 | :--- | :--- | :--- | :--- | :--- |
-| **PP-OCRv6 Small Detection** | Text region detection | 9.6 MB | Yes | 50 languages |
-| **PP-OCRv6 Small Recognition** | Character recognition | 14.5 MB | Yes | 50 languages |
-| **Text Orientation Classifier** | 0°/180° angle correction | 1.4 MB | Yes | Universal |
-| **PP-DocLayout-S** | Document layout analysis | 15 MB | Yes | Universal |
-| **SLANet** | Table structure recognition | 9 MB | Yes | Universal |
-| **PP-FormulaNet-S** | Formula → LaTeX | 12 MB | No | Universal |
+| **PP-OCRv6 Small Det** | DBNet++ Text Region Detection | 9.6 MB | CPU / CUDA | Universal |
+| **PP-OCRv6 Small Rec** | SVTR-LCNet Multi-Script Recognition | 14.5 MB | CPU / CUDA | 50 Latin & Common Scripts |
+| **Text Orientation Cls** | MobileNetV2 0° / 180° Angle Classifier | 1.4 MB | CPU | Universal |
+| **PP-DocLayout-S** | YOLO-based 23-Class Document Layout | 15.0 MB | CPU / CUDA | Universal Document Layouts |
+| **SLANet** | Spatial Layout Attention Table Recognizer | 9.0 MB | CPU / CUDA | Universal Grid & Borderless Tables |
+| **PP-FormulaNet-S** | Mathematical Expression to LaTeX | 12.0 MB | CPU / CUDA | Math & Scientific Notation |
+| **Tamil Recognition** | `ta_PP-OCRv4_mobile_rec` (Dedicated) | 4.8 MB | CPU | Tamil Script |
+| **Hindi Recognition** | `devanagari_PP-OCRv5_mobile_rec` (Dedicated) | 5.2 MB | CPU | Devanagari / Hindi Script |
 
-**Total Required**: ~49.5 MB · **Total with Optional**: ~61.5 MB
-
----
-
-## Offline Deployment
-
-All OCR model weights are bundled locally at installation time:
+- **Total Required Footprint**: ~49.5 MB
+- **Total Footprint with Multi-Script Extensions**: ~71.5 MB
 
 ```
 platform/ocr/models/
@@ -57,91 +67,138 @@ platform/ocr/models/
 ├── layout/PP-DocLayout-S/
 ├── table/SLANet/
 ├── formula/PP-FormulaNet-S/
+├── languages/
+│   ├── ta_PP-OCRv4_mobile_rec/
+│   └── devanagari_PP-OCRv5_mobile_rec/
 └── manifest.json
 ```
 
-### Zero Runtime Downloads
+---
 
-- Models verified via SHA-256 checksums at startup
-- If any required model is missing: `"Required offline OCR model is missing or corrupted"`
-- **No internet connection required during normal operation**
-- **No cloud OCR API calls** (Google Vision, Azure, OpenAI — NONE)
+## 3. Two-Stage OCR → LLM Integration Pipeline
+
+The workbench enforces a strict separation between **optical sensory perception** (Stage 1) and **epistemic reasoning** (Stage 2):
+
+```mermaid
+flowchart TD
+    subgraph Stage 1: Optical Extraction Subsystem
+        A[Visual Input: PDF / Drawing / Image] --> B[Preprocessing: Denoise & Deskew]
+        B --> C[PP-DocLayout-S: Layout Analysis]
+        C --> D[PP-OCRv6: Multi-Script Text OCR]
+        C --> E[SLANet: Tabular Data Extraction]
+        C --> F[PP-FormulaNet: LaTeX Extraction]
+        D & E & F --> G[Structured Evidence JSON + Markdown Tables]
+    end
+
+    subgraph Stage 2: Local Open-Weight LLM Reasoning
+        G --> H{Task Classifier & Model Router}
+        H -->|Multi-Agent Orchestration & SOPs| M1[NVIDIA Nemotron 3 Nano]
+        H -->|Code Gen & Telemetry Scripts| M2[Qwen 2.5 Coder 1.5B]
+        H -->|Enterprise RAG & Structured Data| M3[IBM Granite 4 1B-H]
+        H -->|Text Summarization & Rewriting| M4[Google Gemma 3 1B]
+        H -->|Mathematical Proofs & STEM Logic| M5[Microsoft Phi-4 Mini]
+        H -->|Chain-of-Thought & Arithmetic| M6[DeepSeek-R1 1.5B]
+        H -->|Fast Conversational Assistance| M7[Meta Llama 3.2 1B]
+    end
+
+    M1 & M2 & M3 & M4 & M5 & M6 & M7 --> I[Universal Backend Execution Trace + User Output]
+```
+
+> [!IMPORTANT]
+> **Gemma 3 1B and Llama 3.2 1B are text-only models**. They do not process raw pixel tensors. The Stage 1 PaddleOCR pipeline converts visual documents into deterministic, high-accuracy textual and tabular evidence tokens before language model prompting.
 
 ---
 
-## Supported Document Types
+## 4. Hardware Scheduling & Single GPU Mutex
 
-| Type | Extension | Processing |
-| :--- | :--- | :--- |
-| Image | `.png`, `.jpg`, `.jpeg`, `.bmp`, `.tiff` | Direct OCR |
-| PDF (text-based) | `.pdf` | Text extraction + OCR fallback |
-| PDF (scanned) | `.pdf` | Page rasterization → OCR |
-| Multi-page PDF | `.pdf` | Page-by-page processing |
-| Screenshot | `.png`, `.jpg` | Direct OCR |
-| Receipt / Invoice | Any image | OCR + Layout + Tables |
-| Form | Any image / PDF | OCR + Layout |
-| Academic Paper | PDF | OCR + Layout + Formulas |
+Operating on consumer hardware (NVIDIA GeForce RTX 2050 with 4GB VRAM) requires deterministic resource allocation:
 
----
+| Operational Mode | OCR Device | LLM Device | Scheduling Guarantee |
+| :--- | :--- | :--- | :--- |
+| **Default Pipeline** | CPU (Multi-threaded OpenMP) | GPU (Ollama VRAM) | **Zero VRAM competition**. OCR runs on CPU while LLM is resident in GPU VRAM. |
+| **Accelerated Batch OCR** | GPU (CUDA 12.5) | Unloaded / Idle | OCR utilizes CUDA for sub-second page batching when LLM inference is not in flight. |
+| **Fallback Mode** | CPU (SIMD / AVX2) | CPU | 100% functional on non-CUDA systems. |
 
-## GPU / CPU Behavior
-
-| Scenario | Behavior |
-| :--- | :--- |
-| GPU available + no LLM loaded | OCR uses GPU (fastest) |
-| GPU available + LLM loaded | OCR uses CPU (safe, avoids VRAM conflict) |
-| GPU unavailable | OCR uses CPU (automatic fallback) |
-| CUDA initialization fails | OCR uses CPU (silent fallback) |
-| Insufficient VRAM | OCR uses CPU (automatic) |
-
-**GPU concurrency**: MAX_GPU_CONCURRENCY = 1. OCR and LLM never use GPU simultaneously.
+**Concurrency Mutex (`MAX_GPU_CONCURRENCY = 1`)**:
+The workflow scheduler guarantees that GPU-heavy OCR kernels and Ollama LLM forward passes never contend for VRAM simultaneously, eliminating Out-Of-Memory (OOM) fatal crashes.
 
 ---
 
-## Output Schema
+## 5. Supported Document Types & Processing Pipelines
+
+| Document Type | Extensions | Processing Strategy | Output Formats |
+| :--- | :--- | :--- | :--- |
+| **Scanned PDF Reports** | `.pdf` | PyMuPDF page rasterization (300 DPI) → PP-DocLayout-S → PP-OCRv6 | Multi-page text, layout blocks, confidence scores |
+| **Native Text PDFs** | `.pdf` | Multi-strategy Tj/TJ operator extraction with OCR image fallback | Clean content text (metadata and XMP filtered) |
+| **P&ID / Engineering Schematics** | `.png`, `.jpg`, `.dwg`, `.dxf` | Adaptive CLAHE enhancement → High-res OCR → Instrument tag isolation (`TK-101`, `PSV-402`) | Tag maps, line connections, defect callouts |
+| **Spreadsheets & Tables** | `.csv`, `.xlsx`, `.tsv` | Native parsing + SLANet visual table extraction | Markdown tables, JSON row arrays |
+| **Industrial Inspection Forms** | Any image / PDF | Layout bounding box matching → Key-value field extraction | Key-value pairs (`Equipment ID`, `Thickness`, `Corrosion Rate`) |
+| **Academic & Technical Papers** | `.pdf` | Document layout + SLANet tables + PP-FormulaNet LaTeX | Markdown with embedded LaTeX formulas and tables |
+
+---
+
+## 6. Python OCR Service API Contracts
+
+The local Python compute server (`platform/ocr/service.py` / `platform/python-compute/` on port 8305) exposes high-speed REST endpoints:
+
+### 6.1 Endpoints
+
+| Route | Method | Payload | Purpose |
+| :--- | :--- | :--- | :--- |
+| `/ocr/image` | `POST` | `{ image_path?, image_base64?, lang?, options? }` | Single image text and block extraction |
+| `/ocr/document` | `POST` | `{ file_path?, file_base64?, file_name?, lang?, options? }` | Multi-page document and PDF layout parsing |
+| `/ocr/table` | `POST` | `{ image_base64?, options? }` | SLANet table structure recognition only |
+| `/ocr/parse` | `POST` | `{ file_base64?, file_name?, extract_formulas: true }` | Full multi-modal document understanding |
+| `/ocr/health` | `GET` | _None_ | Engine health, model integrity, and device status |
+
+### 6.2 Authoritative Response Schema
 
 ```json
 {
-  "document": {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "type": "pdf",
-    "filename": "invoice.pdf",
-    "pages": 3,
-    "processingTimeMs": 4200,
-    "device": "cpu",
-    "engine": "PP-OCRv6-Small + PP-StructureV3"
-  },
+  "success": true,
+  "documentId": "doc-1787555015294",
+  "fileName": "API-653-Inspection-Report.pdf",
+  "mimeType": "application/pdf",
   "pages": [
     {
       "pageNumber": 1,
-      "text": [
-        {
-          "text": "Invoice Number: INV-2026-001",
-          "confidence": 0.98,
-          "bbox": [120, 240, 720, 285],
-          "order": 1,
-          "confidenceLevel": "HIGH"
-        }
-      ],
+      "confidence": 0.962,
+      "text": "EQUIPMENT INSPECTION REPORT\nTag No: TK-101\nMinimum Measured Thickness: 5.90 mm\nRetirement Limit: 6.80 mm",
       "blocks": [
         {
-          "type": "title",
+          "type": "header",
           "bbox": [50, 30, 750, 80],
-          "content": "TAX INVOICE",
+          "content": "EQUIPMENT INSPECTION REPORT",
+          "confidence": 0.98
+        },
+        {
+          "type": "key_value",
+          "bbox": [50, 90, 400, 140],
+          "key": "Tag No",
+          "value": "TK-101",
           "confidence": 0.97
         }
       ],
-      "tables": [],
-      "formulas": [],
-      "charts": [],
-      "confidence": 0.96
+      "tables": [
+        {
+          "pageNumber": 1,
+          "tableName": "Ultrasonic Thickness Measurements",
+          "headers": ["Course", "Nominal (mm)", "Actual (mm)", "Status"],
+          "rows": [
+            { "Course": "Course 1", "Nominal (mm)": "12.0", "Actual (mm)": "11.8", "Status": "PASS" },
+            { "Course": "Course 3", "Nominal (mm)": "8.0", "Actual (mm)": "5.9", "Status": "CRITICAL" }
+          ],
+          "markdown": "| Course | Nominal (mm) | Actual (mm) | Status |\n| --- | --- | --- | --- |\n| Course 1 | 12.0 | 11.8 | PASS |\n| Course 3 | 8.0 | 5.9 | CRITICAL |"
+        }
+      ]
     }
   ],
-  "fullText": "TAX INVOICE\nInvoice Number: INV-2026-001\n...",
-  "markdown": "# TAX INVOICE\n\n**Invoice Number**: INV-2026-001\n...",
+  "fullText": "EQUIPMENT INSPECTION REPORT\nTag No: TK-101...",
+  "confidence": 0.962,
   "metadata": {
-    "languages": ["en"],
-    "orientation": 0,
+    "pageCount": 1,
+    "ocrEngine": "PaddleOCR 3.7.0 / PP-OCRv6 Small + SLANet",
+    "device": "cpu",
     "isAirGapped": true,
     "externalCalls": 0
   }
@@ -150,111 +207,20 @@ platform/ocr/models/
 
 ---
 
-## Confidence System
+## 7. Confidence Calibration & Thresholding
 
-| Level | Threshold | Visual |
-| :--- | :--- | :--- |
-| **HIGH** | ≥ 0.90 | Green |
-| **MEDIUM** | 0.70 – 0.89 | Yellow |
-| **LOW** | < 0.70 | Red |
+Every recognized character, line, and table bounding box is scored against calibrated confidence thresholds:
 
-Low-confidence text is preserved (not discarded) for downstream validation.
-
----
-
-## API Endpoints
-
-| Endpoint | Method | Description |
-| :--- | :--- | :--- |
-| `/api/ocr/image` | POST | Single image OCR |
-| `/api/ocr/document` | POST | Full document parsing (PDF/image) |
-| `/api/ocr/table` | POST | Table-only extraction |
-| `/api/ocr/parse` | POST | Full document understanding |
-| `/api/ocr/health` | GET | OCR engine health check |
+| Level | Threshold | Action | Visual Representation |
+| :--- | :--- | :--- | :--- |
+| **HIGH** | $\text{Confidence} \ge 0.90$ | Direct ingestion into LLM context without caveats. | Green Badge |
+| **MEDIUM** | $0.70 \le \text{Confidence} < 0.90$ | Retained with soft verification flag in evidence graph. | Yellow Badge |
+| **LOW** | $\text{Confidence} < 0.70$ | Preserved with low-confidence warning for human-in-the-loop review. | Red Badge |
 
 ---
 
-## OCR Task Types
+## 8. Security & Sovereign Isolation
 
-| Task Type | Pipeline |
-| :--- | :--- |
-| `OCR_TEXT` | PP-OCRv6 only (fast text extraction) |
-| `DOCUMENT_PARSE` | Layout + OCR + Tables |
-| `TABLE_EXTRACTION` | Table regions → SLANet |
-| `FORMULA_EXTRACTION` | Formula regions → PP-FormulaNet |
-| `LAYOUT_ANALYSIS` | PP-DocLayout only |
-| `FULL_DOCUMENT_UNDERSTANDING` | All pipelines combined |
-
----
-
-## Language Support
-
-| Language | Status | Model |
-| :--- | :--- | :--- |
-| **English** | ✅ Production | PP-OCRv6 unified (50 languages) |
-| **Tamil** | ✅ Supported | `ta_PP-OCRv4_mobile_rec` (dedicated) |
-| **Hindi / Devanagari** | ✅ Supported | `devanagari_PP-OCRv5_mobile_rec` (dedicated) |
-| **Latin languages (50)** | ✅ Supported | PP-OCRv6 unified |
-
----
-
-## OCR → LLM Integration Architecture
-
-```
-IMAGE / DOCUMENT
-        ↓
-PP-StructureV3 (Layout + Tables + Formulas)
-        ↓
-PP-OCRv6 (Text Detection + Recognition)
-        ↓
-STRUCTURED DOCUMENT (JSON)
-        ↓
-LOCAL LLM SELECTION
-        ↓
-├─ Gemma 3 1B      → Text reasoning on extracted content
-├─ Granite 4 1B-H  → RAG extraction / structured tasks
-├─ Phi-4 Mini      → Mathematical reasoning on formulas
-├─ DeepSeek-R1     → Step-by-step logic on OCR results
-├─ Nemotron 3 Nano → Orchestration & synthesis
-└─ Qwen 2.5 Coder  → Code/data extraction
-```
-
-**IMPORTANT**: Gemma 3 1B is TEXT-ONLY. It does NOT perform OCR.
-The OCR pipeline (PaddleOCR) extracts text first, then LLMs reason on the extracted text.
-
----
-
-## Installation
-
-All OCR components are bundled in the desktop installer:
-
-1. Python 3.11 runtime (venv)
-2. PaddlePaddle (CPU)
-3. PaddleOCR 3.7.0
-4. All model weights (~62 MB)
-5. OpenCV, PyMuPDF, dependencies
-
-User experience: **Install → Open → OCR Ready**. No manual setup required.
-
----
-
-## Troubleshooting
-
-| Issue | Resolution |
-| :--- | :--- |
-| "Required offline OCR model is missing" | Reinstall application or restore model files |
-| OCR is slow | CPU mode is normal (~2-5s/page). Close LLMs to enable GPU mode |
-| Blank OCR result | Check image quality. Try preprocessing options |
-| PDF fails | Ensure PDF is not password-protected |
-| CUDA error | OCR automatically falls back to CPU |
-| Out of memory | Reduce PDF DPI or process fewer pages at once |
-
----
-
-## Security
-
-- Documents processed **locally only** — never uploaded externally
-- Temporary files cleaned after processing
-- Filename sanitization prevents path traversal
-- Configurable file size limits
-- No credentials logged
+1. **Zero Data Egress**: All rasterization, OpenCV image processing, neural inference, and bounding box math occur inside local memory (`127.0.0.1:8305`).
+2. **Path Traversal Protection**: Filenames and paths are sanitized using strict basename resolution to prevent arbitrary file read attacks.
+3. **Transient File Lifecycle**: Ephemeral image rasters generated during PDF parsing are scrubbed from system memory immediately following feature extraction.

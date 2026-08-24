@@ -19,7 +19,7 @@ describe('Model Routing & Task Dispatch Test Suite', () => {
       const res = await routeTaskToLocalModel({
         prompt: 'Analyze photograph of pump casing crack defect and assess corrosion severity'
       });
-      assert.equal(res.selected_model, 'nemotron-3-nano');
+      assert.equal(res.selected_model, 'local-vision-ocr');
       assert.equal(res.modality, 'vision');
     });
 
@@ -44,7 +44,7 @@ describe('Model Routing & Task Dispatch Test Suite', () => {
         task: 'Assess condition',
         attachments: [{ name: 'heat_exchanger_flange.png', type: 'image/png' }]
       });
-      assert.equal(imageTask.preferred_model_id, 'gemma4-e2b');
+      assert.equal(imageTask.preferred_model_id, 'local-vision-ocr');
       assert.equal(imageTask.task_type, TaskType.VISION_MULTIMODAL);
 
       const codeTask = classifyTask({
@@ -121,7 +121,7 @@ describe('Model Routing & Task Dispatch Test Suite', () => {
 
   describe('Sovereign Egress & Air-Gapped Guarantees', () => {
     it('verifies all routing responses maintain 0 external calls and air-gapped isolation', async () => {
-      const modelsToTest = ['gemma4-e2b', 'local-code-specialist', 'nemotron-3-nano', 'llama3.2-1b', 'granite4-1b-h', 'phi4-mini'];
+      const modelsToTest = ['gemma3-1b', 'local-code-specialist', 'nemotron-3-nano', 'llama3.2-1b', 'granite4-1b-h', 'phi4-mini', 'deepseek-r1-1.5b'];
       for (const modelId of modelsToTest) {
         const res = await routeTaskToLocalModel({ model_override: modelId, prompt: 'Verification ping' });
         assert.equal(res.external_calls, 0);
