@@ -29,6 +29,18 @@ export async function routeTaskToLocalModel(taskInput = {}) {
       selectedModelId = 'phi4-mini';
     } else if (taskInput.model_override === 'smollm2:1.7b' || taskInput.model_override === 'smollm2-1.7b' || taskInput.model_override === 'smollm2' || taskInput.model_override === 'smollm') {
       selectedModelId = 'smollm2-1.7b';
+    } else if (taskInput.model_override === 'LiquidAI/lfm2.5-350m' || taskInput.model_override === 'LiquidAI/lfm2.5-350m:latest' || taskInput.model_override === 'lfm2.5-350m' || taskInput.model_override === 'lfm' || taskInput.model_override === 'lfm2.5' || taskInput.model_override === 'lfm-350m') {
+      selectedModelId = 'lfm2.5-350m';
+    } else if (taskInput.model_override === 'mollysama/rwkv-7-g1d:0.4b' || taskInput.model_override === 'rwkv7-0.4b' || taskInput.model_override === 'rwkv' || taskInput.model_override === 'rwkv7' || taskInput.model_override === 'rwkv-7') {
+      selectedModelId = 'rwkv7-0.4b';
+    } else if (taskInput.model_override === 'mobilellm-pro-1b' || taskInput.model_override === 'mobilellm-pro' || taskInput.model_override === 'mobilellm-1b' || taskInput.model_override === 'facebook/MobileLLM-Pro-1B') {
+      selectedModelId = 'mobilellm-pro-1b';
+    } else if (taskInput.model_override === 'mobilellm-350m' || taskInput.model_override === 'mobilellm' || taskInput.model_override === 'facebook/MobileLLM-350M') {
+      selectedModelId = 'mobilellm-350m';
+    } else if (taskInput.model_override === 'openelm-450m' || taskInput.model_override === 'openelm' || taskInput.model_override === 'apple/OpenELM-450M-Instruct' || taskInput.model_override === 'apple/OpenELM-450M') {
+      selectedModelId = 'openelm-450m';
+    } else if (taskInput.model_override === 'openelm-1.1b' || taskInput.model_override === 'apple/OpenELM-1_1B-Instruct' || taskInput.model_override === 'apple/OpenELM-1.1B') {
+      selectedModelId = 'openelm-1.1b';
     }
   } else if (taskInput.modelMode && taskInput.modelMode !== 'auto') {
     if (taskInput.modelMode === 'gemma' || taskInput.modelMode === 'gemma3') selectedModelId = 'gemma3-1b';
@@ -38,6 +50,12 @@ export async function routeTaskToLocalModel(taskInput = {}) {
     else if (taskInput.modelMode === 'granite') selectedModelId = 'granite4-1b-h';
     else if (taskInput.modelMode === 'phi') selectedModelId = 'phi4-mini';
     else if (taskInput.modelMode === 'smollm2' || taskInput.modelMode === 'smollm') selectedModelId = 'smollm2-1.7b';
+    else if (taskInput.modelMode === 'lfm' || taskInput.modelMode === 'lfm2.5' || taskInput.modelMode === 'lfm2.5-350m' || taskInput.modelMode === 'lfm-350m') selectedModelId = 'lfm2.5-350m';
+    else if (taskInput.modelMode === 'rwkv' || taskInput.modelMode === 'rwkv7' || taskInput.modelMode === 'rwkv7-0.4b') selectedModelId = 'rwkv7-0.4b';
+    else if (taskInput.modelMode === 'mobilellm-pro' || taskInput.modelMode === 'mobilellm-pro-1b') selectedModelId = 'mobilellm-pro-1b';
+    else if (taskInput.modelMode === 'mobilellm' || taskInput.modelMode === 'mobilellm-350m') selectedModelId = 'mobilellm-350m';
+    else if (taskInput.modelMode === 'openelm' || taskInput.modelMode === 'openelm-450m') selectedModelId = 'openelm-450m';
+    else if (taskInput.modelMode === 'openelm-1.1b') selectedModelId = 'openelm-1.1b';
   }
 
   const modelSpec = getModelById(selectedModelId) || LOCAL_MODELS[0];

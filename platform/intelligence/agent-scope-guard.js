@@ -249,6 +249,9 @@ export class AgentScopeGuard {
       if (DOMAIN_PROFILES.quiz.patterns.some(p => p.test(lowerTask))) {
         return this._buildOutOfScopeResponse(agent, cleanTask, 'quiz', 'writing articles, essays, and editorial content');
       }
+      if (DOMAIN_PROFILES.email.patterns.some(p => p.test(lowerTask))) {
+        return this._buildOutOfScopeResponse(agent, cleanTask, 'email', 'writing articles, essays, and editorial content');
+      }
     }
 
     // Case 5: Coding / Backend Agent
@@ -334,10 +337,36 @@ export class AgentScopeGuard {
     // Polite, non-judgmental, professional wording (strictly avoids harsh words: cannot, not my job, wrong agent, rejected, error)
     const politeMessage = `This request is outside my specialization.\n\nI'm specialized in ${specialtyDescription}. This request is better handled by the **${primaryRec.displayName}**.`;
 
+    const reasonKeyMap = {
+      quiz: 'quiz_generation',
+      email: 'email_writing',
+      study: 'study_planning',
+      writing: 'writing_editorial',
+      backend: 'backend_development',
+      database: 'database_sql',
+      devops: 'devops_infrastructure',
+      image: 'image_analysis',
+      spreadsheet: 'spreadsheet_analytics',
+      research: 'research_intelligence'
+    };
+
+    const structuredReason = reasonKeyMap[targetDomainKey] || `${domain.name} is outside the ${curName} domain boundary.`;
+
     return {
+      type: 'agent_redirect',
       inScope: false,
       status: 'out_of_scope',
       confidence: 0.98,
+      sourceAgent: {
+        id: curId,
+        number: curNum,
+        name: curName
+      },
+      targetAgent: {
+        id: primaryRec.id,
+        number: primaryRec.displayNumber,
+        name: primaryRec.displayName
+      },
       currentAgentId: curNum,
       currentAgentName: curName,
       recommendedAgentId: primaryRec.displayNumber,
@@ -351,7 +380,7 @@ export class AgentScopeGuard {
       recommendedAgent: primaryRec,
       recommendedAgents: recommendedAgents.slice(0, 2),
       detectedDomain: domain.name,
-      reason: `${domain.name} is outside the ${curName} domain boundary.`,
+      reason: structuredReason,
       originalPrompt: userPrompt,
       userPrompt,
       politeMessage

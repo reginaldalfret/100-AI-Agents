@@ -2256,21 +2256,120 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    window.switchAgentAndRetainPrompt = function(targetAgentId, promptText) {
-        // Switch active agent preserving current chat view
-        selectAgent(targetAgentId, false);
+    function renderAgentRedirectCard({ sourceAgent, targetAgent, originalPrompt, reason, politeMessage }) {
+        const srcId = sourceAgent?.id || (state.selectedAgent?.id || 'agent-001');
+        const srcName = sourceAgent?.name || (state.selectedAgent?.name || 'Writing AI Agent');
         
-        // Restore original prompt in composer
-        if (elements.chatInput && promptText) {
-            elements.chatInput.value = promptText;
-            elements.chatInput.focus();
-            elements.chatInput.dispatchEvent(new Event('input'));
-            updateSendButtonState();
+        let targetId = targetAgent?.id || targetAgent?.agent_id;
+        if (!targetId && targetAgent?.displayNumber) {
+            targetId = `agent-${targetAgent.displayNumber}`;
+        }
+        if (!targetId && targetAgent?.number) {
+            targetId = `agent-${targetAgent.number}`;
+        }
+        if (!targetId) targetId = 'agent-004';
+
+        const targetName = targetAgent?.name || targetAgent?.displayName || 'Quiz AI Agent';
+        const promptText = originalPrompt || '';
+        const rawMessage = politeMessage || `This request is outside my specialization.\n\nI'm specialized in writing articles, essays, and editorial content. This request is better handled by the **${escapeHtml(targetName)}**.`;
+        const bodyHtml = formatResponse(rawMessage);
+
+        return `
+            <div class="scope-redirect-card" data-source-id="${escapeHtml(srcId)}" data-target-id="${escapeHtml(targetId)}">
+                <div class="scope-redirect-header">
+                    <span class="sparkle">✦</span>
+                    <span>Outside My Specialization</span>
+                </div>
+                <div class="scope-redirect-body">
+                    ${bodyHtml}
+                </div>
+                <div class="scope-redirect-action">
+                    <button class="btn-switch-agent"
+                            role="button"
+                            aria-label="Switch to ${escapeHtml(targetName)}"
+                            data-target-id="${escapeHtml(targetId)}"
+                            data-prompt="${escapeHtml(promptText)}"
+                            onclick="window.executeAgentSwitch(this, '${escapeHtml(targetId)}', '${escapeHtml(promptText).replace(/'/g, "\\'")}')">
+                        <span class="switch-icon">↗</span>
+                        <span class="switch-label">Switch to ${escapeHtml(targetName)}</span>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    window.executeAgentSwitch = async function(btnEl, targetAgentId, promptText) {
+        if (!targetAgentId) return;
+
+        let targetName = 'Specialist AI Agent';
+
+        // 1. Locate destination agent in canonical registry
+        const targetAgent = (state.agents || []).find(a => 
+            a.id === targetAgentId || 
+            a.agent_id === targetAgentId || 
+            a.displayNumber === targetAgentId.replace(/\D/g, '').padStart(3, '0') ||
+            a.id === `agent-${targetAgentId.replace(/\D/g, '').padStart(3, '0')}` ||
+            (a.displayNumber && targetAgentId.includes(a.displayNumber))
+        );
+
+        if (targetAgent) {
+            targetName = targetAgent.name || targetAgent.displayName || targetName;
         }
 
-        const agentName = state.selectedAgent?.name || targetAgentId;
-        const num = state.selectedAgent?.displayNumber || targetAgentId.replace(/\D/g, '');
-        appendSystemEvent(`Switched active specialist to [${num}] ${agentName}`);
+        // Prevent duplicate clicks & set loading state
+        if (btnEl) {
+            if (btnEl.disabled || btnEl.classList.contains('loading')) return;
+            btnEl.disabled = true;
+            btnEl.classList.add('loading');
+            btnEl.innerHTML = `<span class="switch-spinner"></span> <span class="switch-label">Switching to ${escapeHtml(targetName)}...</span>`;
+        }
+
+        if (!targetAgent) {
+            if (btnEl) {
+                btnEl.disabled = false;
+                btnEl.classList.remove('loading');
+                btnEl.classList.add('error');
+                btnEl.innerHTML = `<span class="switch-icon">⚠</span> <span class="switch-label">Unable to switch to ${escapeHtml(targetAgentId)}</span>`;
+            }
+            appendSystemEvent(`Unable to switch to ${targetAgentId}. Agent not found in registry.`);
+            return;
+        }
+
+        // 2. Switch active agent in workspace (preserving conversation & chat view)
+        selectAgent(targetAgent.id, false);
+
+        // 3. Update main header & placeholder immediately
+        updateAgentHeader(targetAgent);
+        updatePlaceholder(targetAgent);
+
+        // 4. Update left sidebar visual selection
+        document.querySelectorAll('.agent-row').forEach(row => {
+            row.classList.toggle('active', row.dataset.id === targetAgent.id);
+        });
+
+        const agentNum = targetAgent.displayNumber || targetAgent.id.replace(/\D/g, '').padStart(3, '0');
+        appendSystemEvent(`Handoff: Switched to [${agentNum}] ${targetAgent.name}`);
+
+        // 5. Automatic retry: re-run the original user prompt with the new specialist agent
+        if (promptText && promptText.trim()) {
+            try {
+                await sendToBackend(targetAgent.id, promptText.trim(), [], null, 'text', { isHandoffRetry: true });
+            } catch (err) {
+                console.error('[HANDOFF_ERROR]', err);
+                appendSystemEvent(`Failed to execute request with ${targetAgent.name}: ${err.message}`);
+            }
+        }
+
+        // 6. Set button state to completed
+        if (btnEl) {
+            btnEl.classList.remove('loading');
+            btnEl.classList.add('completed');
+            btnEl.innerHTML = `<span class="switch-icon">✓</span> <span class="switch-label">Switched to ${escapeHtml(targetAgent.name)}</span>`;
+        }
+    };
+
+    window.switchAgentAndRetainPrompt = function(targetAgentId, promptText) {
+        window.executeAgentSwitch(null, targetAgentId, promptText);
     };
 
     function showEmptyState(agent) {
@@ -3049,29 +3148,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const div = document.createElement('div');
         div.className = 'msg-row ai';
         
-        if (msg.status === 'out_of_scope' || msg.scopeDecision) {
-            const scopeDec = msg.scopeDecision || {};
-            const rec = scopeDec.recommendedAgent || (scopeDec.recommendedAgents && scopeDec.recommendedAgents[0]) || { id: 'agent-002', displayNumber: '002', displayName: 'Email AI Agent' };
-            const targetId = rec.id || `agent-${rec.displayNumber || rec.id}`;
+        if (msg.status === 'out_of_scope' || msg.scopeDecision || msg.type === 'agent_redirect') {
+            const scopeDec = msg.scopeDecision || msg || {};
+            const sourceAgent = scopeDec.sourceAgent || scopeDec.currentAgent || state.selectedAgent;
+            const targetAgent = scopeDec.targetAgent || scopeDec.recommendedAgent || (scopeDec.recommendedAgents && scopeDec.recommendedAgents[0]) || { id: 'agent-004', displayNumber: '004', displayName: 'Quiz AI Agent', name: 'Quiz AI Agent' };
             const promptToRetain = scopeDec.originalPrompt || scopeDec.userPrompt || '';
-            const recName = rec.displayName || rec.name || 'Specialist AI Agent';
+            const politeMessage = msg.content || scopeDec.politeMessage || 'This request is outside my specialization.';
 
             div.innerHTML = `
                 <div class="msg-bubble" style="background:transparent;border:none;padding:0;box-shadow:none;">
-                    <div class="scope-redirect-card">
-                        <div class="scope-redirect-header">
-                            <span class="sparkle">✦</span>
-                            <span>Outside My Specialization</span>
-                        </div>
-                        <div class="scope-redirect-body">
-                            ${formatResponse(msg.content || scopeDec.politeMessage || 'This request is outside my specialization.')}
-                        </div>
-                        <div class="scope-redirect-action">
-                            <button class="btn-switch-agent" aria-label="Switch to ${escapeHtml(recName)}" onclick="window.switchAgentAndRetainPrompt('${escapeHtml(targetId)}', '${escapeHtml(promptToRetain).replace(/'/g, "\\'")}')">
-                                <span>↗ Switch to ${escapeHtml(recName)}</span>
-                            </button>
-                        </div>
-                    </div>
+                    ${renderAgentRedirectCard({
+                        sourceAgent,
+                        targetAgent,
+                        originalPrompt: promptToRetain,
+                        reason: scopeDec.reason || 'specialization_mismatch',
+                        politeMessage
+                    })}
                 </div>
             `;
             elements.chatMessages.appendChild(div);
@@ -3122,6 +3214,11 @@ document.addEventListener('DOMContentLoaded', () => {
             msg.tokensPerSec ? `${msg.tokensPerSec} t/s` : null
         ].filter(Boolean).join(' · ');
         
+        const isCpuModel = actualRuntime.toLowerCase().includes('lfm') || actualRuntime.toLowerCase().includes('liquid') || (LOCAL_MODEL_DEFS[msg.modelMode]?.execution_target === 'CPU');
+        const hwCompute = isCpuModel 
+            ? 'CPU ONLY (Intel Core i5-11400H · 0 GPU VRAM · GPU: NOT USED)'
+            : 'NVIDIA RTX 2050 (4GB VRAM · Max GPU Concurrency = 1)';
+        
         const backendFlowHtml = `
             <div class="backend-flow-card">
                 <div class="backend-flow-header">
@@ -3139,11 +3236,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="backend-flow-item">
                         <span class="backend-flow-check">✓</span>
-                        <span><strong>3. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
+                        <span><strong>3. Hardware Compute:</strong> <code>${escapeHtml(hwCompute)}</code></span>
                     </div>
                     <div class="backend-flow-item">
                         <span class="backend-flow-check">✓</span>
-                        <span><strong>4. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
+                        <span><strong>4. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
+                    </div>
+                    <div class="backend-flow-item">
+                        <span class="backend-flow-check">✓</span>
+                        <span><strong>5. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
                     </div>
                 </div>
             </div>
@@ -3384,18 +3485,22 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'auto',
             internalId: 'auto',
             displayName: 'Auto (Intelligent Routing)',
+            execution_target: 'AUTO',
             badge: 'Intelligent',
             speed: 'Dynamic',
-            description: 'Dynamic routing across 6 local models based on task intent',
+            description: 'Dynamic routing across GPU & CPU local models based on task intent',
             runtime: 'Local Orchestration Router',
-            hardware: 'RTX 2050 (Optimized VRAM)'
+            hardware: 'RTX 2050 / Intel i5-11400H'
         },
         'nemotron': {
             id: 'nemotron',
             internalId: 'nemotron-3-nano:latest',
             displayName: 'NVIDIA Nemotron 3 Nano',
+            provider: 'NVIDIA',
+            execution_target: 'GPU',
             badge: 'Reasoning',
             speed: 'High Speed',
+            size: '2.8 GB',
             description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
@@ -3404,8 +3509,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'nemotron',
             internalId: 'nemotron-3-nano:latest',
             displayName: 'NVIDIA Nemotron 3 Nano',
+            provider: 'NVIDIA',
+            execution_target: 'GPU',
             badge: 'Reasoning',
             speed: 'High Speed',
+            size: '2.8 GB',
             description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
@@ -3414,8 +3522,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'nemotron',
             internalId: 'nemotron-3-nano:latest',
             displayName: 'NVIDIA Nemotron 3 Nano',
+            provider: 'NVIDIA',
+            execution_target: 'GPU',
             badge: 'Reasoning',
             speed: 'High Speed',
+            size: '2.8 GB',
             description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
@@ -3424,8 +3535,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'qwen',
             internalId: 'qwen2.5-coder:1.5b',
             displayName: 'Qwen 2.5 Coder 1.5B',
+            provider: 'Alibaba Cloud',
+            execution_target: 'GPU',
             badge: 'Code',
             speed: 'Ultra Fast',
+            size: '986 MB',
             description: 'Code Synthesis & Sandbox',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~986MB VRAM)'
@@ -3434,8 +3548,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'qwen',
             internalId: 'qwen2.5-coder:1.5b',
             displayName: 'Qwen 2.5 Coder 1.5B',
+            provider: 'Alibaba Cloud',
+            execution_target: 'GPU',
             badge: 'Code',
             speed: 'Ultra Fast',
+            size: '986 MB',
             description: 'Code Synthesis & Sandbox',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~986MB VRAM)'
@@ -3444,8 +3561,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'gemma',
             internalId: 'gemma3:1b',
             displayName: 'Google Gemma 3 1B',
+            provider: 'Google',
+            execution_target: 'GPU',
             badge: 'Edge NLP',
             speed: 'Ultra Fast',
+            size: '815 MB',
             description: 'On-Device NLP & Semantic Synthesis',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~815MB VRAM)'
@@ -3454,8 +3574,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'gemma',
             internalId: 'gemma3:1b',
             displayName: 'Google Gemma 3 1B',
+            provider: 'Google',
+            execution_target: 'GPU',
             badge: 'Edge NLP',
             speed: 'Ultra Fast',
+            size: '815 MB',
             description: 'On-Device NLP & Semantic Synthesis',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~815MB VRAM)'
@@ -3464,8 +3587,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'llama',
             internalId: 'llama3.2:1b',
             displayName: 'Meta Llama 3.2 1B',
+            provider: 'Meta',
+            execution_target: 'GPU',
             badge: 'Fast Text',
             speed: 'Ultra Fast',
+            size: '1.3 GB',
             description: 'Fast Lightweight General Text',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.3GB VRAM)'
@@ -3474,8 +3600,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'llama',
             internalId: 'llama3.2:1b',
             displayName: 'Meta Llama 3.2 1B',
+            provider: 'Meta',
+            execution_target: 'GPU',
             badge: 'Fast Text',
             speed: 'Ultra Fast',
+            size: '1.3 GB',
             description: 'Fast Lightweight General Text',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.3GB VRAM)'
@@ -3484,8 +3613,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'granite',
             internalId: 'granite4:1b-h',
             displayName: 'IBM Granite 4 1B-H',
+            provider: 'IBM',
+            execution_target: 'GPU',
             badge: 'Enterprise',
             speed: 'Ultra Fast',
+            size: '1.4 GB',
             description: 'Enterprise RAG & Tool Use',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.4GB VRAM)'
@@ -3494,8 +3626,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'granite',
             internalId: 'granite4:1b-h',
             displayName: 'IBM Granite 4 1B-H',
+            provider: 'IBM',
+            execution_target: 'GPU',
             badge: 'Enterprise',
             speed: 'Ultra Fast',
+            size: '1.4 GB',
             description: 'Enterprise RAG & Tool Use',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.4GB VRAM)'
@@ -3504,8 +3639,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'phi4',
             internalId: 'phi4-mini',
             displayName: 'Microsoft Phi-4 Mini',
+            provider: 'Microsoft',
+            execution_target: 'GPU',
             badge: 'Logic',
             speed: 'High Speed',
+            size: '2.5 GB',
             description: 'Reasoning, Mathematics & Logic',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.5GB VRAM)'
@@ -3514,8 +3652,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'phi4',
             internalId: 'phi4-mini',
             displayName: 'Microsoft Phi-4 Mini',
+            provider: 'Microsoft',
+            execution_target: 'GPU',
             badge: 'Logic',
             speed: 'High Speed',
+            size: '2.5 GB',
             description: 'Reasoning, Mathematics & Logic',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.5GB VRAM)'
@@ -3524,8 +3665,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'smollm2',
             internalId: 'smollm2:1.7b',
             displayName: 'SmolLM2 1.7B',
+            provider: 'Hugging Face',
+            execution_target: 'GPU',
             badge: 'Text',
             speed: 'Ultra Fast',
+            size: '1.8 GB',
             description: 'Lightweight general text model',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.8GB VRAM)'
@@ -3534,11 +3678,248 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'smollm2',
             internalId: 'smollm2:1.7b',
             displayName: 'SmolLM2 1.7B',
+            provider: 'Hugging Face',
+            execution_target: 'GPU',
             badge: 'Text',
             speed: 'Ultra Fast',
+            size: '1.8 GB',
             description: 'Lightweight general text model',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.8GB VRAM)'
+        },
+        'lfm': {
+            id: 'lfm',
+            internalId: 'LiquidAI/lfm2.5-350m',
+            displayName: 'LFM2.5-350M',
+            provider: 'Liquid AI',
+            execution_target: 'CPU',
+            badge: 'CPU ONLY',
+            speed: 'Fast CPU',
+            size: '379 MB',
+            description: 'Edge / Extraction / Tools / Structured Output',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'lfm2.5': {
+            id: 'lfm',
+            internalId: 'LiquidAI/lfm2.5-350m',
+            displayName: 'LFM2.5-350M',
+            provider: 'Liquid AI',
+            execution_target: 'CPU',
+            badge: 'CPU ONLY',
+            speed: 'Fast CPU',
+            size: '379 MB',
+            description: 'Edge / Extraction / Tools / Structured Output',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'lfm2.5-350m': {
+            id: 'lfm',
+            internalId: 'LiquidAI/lfm2.5-350m',
+            displayName: 'LFM2.5-350M',
+            provider: 'Liquid AI',
+            execution_target: 'CPU',
+            badge: 'CPU ONLY',
+            speed: 'Fast CPU',
+            size: '379 MB',
+            description: 'Edge / Extraction / Tools / Structured Output',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'LiquidAI/lfm2.5-350m': {
+            id: 'lfm',
+            internalId: 'LiquidAI/lfm2.5-350m',
+            displayName: 'LFM2.5-350M',
+            provider: 'Liquid AI',
+            execution_target: 'CPU',
+            badge: 'CPU ONLY',
+            speed: 'Fast CPU',
+            size: '379 MB',
+            description: 'Edge / Extraction / Tools / Structured Output',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'LiquidAI/lfm2.5-350m:latest': {
+            id: 'lfm',
+            internalId: 'LiquidAI/lfm2.5-350m',
+            displayName: 'LFM2.5-350M',
+            provider: 'Liquid AI',
+            execution_target: 'CPU',
+            badge: 'CPU ONLY',
+            speed: 'Fast CPU',
+            size: '379 MB',
+            description: 'Edge / Extraction / Tools / Structured Output',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'rwkv': {
+            id: 'rwkv',
+            internalId: 'mollysama/rwkv-7-g1d:0.4b',
+            displayName: 'RWKV-7 0.4B',
+            provider: 'RWKV',
+            execution_target: 'CPU',
+            badge: 'TEXT',
+            speed: 'Fast CPU',
+            size: '501 MB',
+            description: 'Lightweight General Text / Rewriting / Summary',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'rwkv7': {
+            id: 'rwkv',
+            internalId: 'mollysama/rwkv-7-g1d:0.4b',
+            displayName: 'RWKV-7 0.4B',
+            provider: 'RWKV',
+            execution_target: 'CPU',
+            badge: 'TEXT',
+            speed: 'Fast CPU',
+            size: '501 MB',
+            description: 'Lightweight General Text / Rewriting / Summary',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'rwkv7-0.4b': {
+            id: 'rwkv',
+            internalId: 'mollysama/rwkv-7-g1d:0.4b',
+            displayName: 'RWKV-7 0.4B',
+            provider: 'RWKV',
+            execution_target: 'CPU',
+            badge: 'TEXT',
+            speed: 'Fast CPU',
+            size: '501 MB',
+            description: 'Lightweight General Text / Rewriting / Summary',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'mollysama/rwkv-7-g1d:0.4b': {
+            id: 'rwkv',
+            internalId: 'mollysama/rwkv-7-g1d:0.4b',
+            displayName: 'RWKV-7 0.4B',
+            provider: 'RWKV',
+            execution_target: 'CPU',
+            badge: 'TEXT',
+            speed: 'Fast CPU',
+            size: '501 MB',
+            description: 'Lightweight General Text / Rewriting / Summary',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'mobilellm-pro': {
+            id: 'mobilellm-pro',
+            internalId: 'facebook/MobileLLM-Pro-1B',
+            displayName: 'MobileLLM-Pro 1B',
+            provider: 'Meta Reality Labs',
+            execution_target: 'CPU',
+            badge: 'ASSISTANT',
+            speed: 'Fast CPU',
+            size: '580 MB',
+            description: 'General Assistant / QA / Lightweight Reasoning',
+            runtime: 'Local ExecuTorch (127.0.0.1:8305)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'mobilellm-pro-1b': {
+            id: 'mobilellm-pro',
+            internalId: 'facebook/MobileLLM-Pro-1B',
+            displayName: 'MobileLLM-Pro 1B',
+            provider: 'Meta Reality Labs',
+            execution_target: 'CPU',
+            badge: 'ASSISTANT',
+            speed: 'Fast CPU',
+            size: '580 MB',
+            description: 'General Assistant / QA / Lightweight Reasoning',
+            runtime: 'Local ExecuTorch (127.0.0.1:8305)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'facebook/MobileLLM-Pro-1B': {
+            id: 'mobilellm-pro',
+            internalId: 'facebook/MobileLLM-Pro-1B',
+            displayName: 'MobileLLM-Pro 1B',
+            provider: 'Meta Reality Labs',
+            execution_target: 'CPU',
+            badge: 'ASSISTANT',
+            speed: 'Fast CPU',
+            size: '580 MB',
+            description: 'General Assistant / QA / Lightweight Reasoning',
+            runtime: 'Local ExecuTorch (127.0.0.1:8305)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'mobilellm': {
+            id: 'mobilellm',
+            internalId: 'facebook/MobileLLM-350M',
+            displayName: 'MobileLLM 350M',
+            provider: 'Meta',
+            execution_target: 'CPU',
+            badge: 'EDGE',
+            speed: 'Ultra Fast CPU',
+            size: '210 MB',
+            description: 'Ultra-Light Assistant / Classification / Routing',
+            runtime: 'Local ExecuTorch (127.0.0.1:8305)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'mobilellm-350m': {
+            id: 'mobilellm',
+            internalId: 'facebook/MobileLLM-350M',
+            displayName: 'MobileLLM 350M',
+            provider: 'Meta',
+            execution_target: 'CPU',
+            badge: 'EDGE',
+            speed: 'Ultra Fast CPU',
+            size: '210 MB',
+            description: 'Ultra-Light Assistant / Classification / Routing',
+            runtime: 'Local ExecuTorch (127.0.0.1:8305)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'facebook/MobileLLM-350M': {
+            id: 'mobilellm',
+            internalId: 'facebook/MobileLLM-350M',
+            displayName: 'MobileLLM 350M',
+            provider: 'Meta',
+            execution_target: 'CPU',
+            badge: 'EDGE',
+            speed: 'Ultra Fast CPU',
+            size: '210 MB',
+            description: 'Ultra-Light Assistant / Classification / Routing',
+            runtime: 'Local ExecuTorch (127.0.0.1:8305)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'openelm': {
+            id: 'openelm',
+            internalId: 'apple/OpenELM-450M-Instruct',
+            displayName: 'OpenELM 450M',
+            provider: 'Apple',
+            execution_target: 'CPU',
+            badge: 'TEXT',
+            speed: 'Fast CPU',
+            size: '450 MB',
+            description: 'Lightweight General Text / Summarization / Transformation',
+            runtime: 'Local PyTorch/ONNX (127.0.0.1:8305)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'openelm-450m': {
+            id: 'openelm',
+            internalId: 'apple/OpenELM-450M-Instruct',
+            displayName: 'OpenELM 450M',
+            provider: 'Apple',
+            execution_target: 'CPU',
+            badge: 'TEXT',
+            speed: 'Fast CPU',
+            size: '450 MB',
+            description: 'Lightweight General Text / Summarization / Transformation',
+            runtime: 'Local PyTorch/ONNX (127.0.0.1:8305)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'apple/OpenELM-450M-Instruct': {
+            id: 'openelm',
+            internalId: 'apple/OpenELM-450M-Instruct',
+            displayName: 'OpenELM 450M',
+            provider: 'Apple',
+            execution_target: 'CPU',
+            badge: 'TEXT',
+            speed: 'Fast CPU',
+            size: '450 MB',
+            description: 'Lightweight General Text / Summarization / Transformation',
+            runtime: 'Local PyTorch/ONNX (127.0.0.1:8305)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
         }
     };
 
@@ -3601,6 +3982,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function openModelDropdown() {
         elements.modelDropdown.style.display = 'block';
         elements.modelSelectorBtn.setAttribute('aria-expanded', 'true');
+        setTimeout(() => {
+            const activeItem = elements.modelDropdown.querySelector('.model-option-item.active');
+            if (activeItem) {
+                activeItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }, 20);
     }
 
     function closeModelDropdown() {
@@ -3808,6 +4195,7 @@ document.addEventListener('DOMContentLoaded', () => {
             : text;
 
         let isScopeRedirect = false;
+        let scopeRedirectMeta = null;
         let renderRafPending = false;
 
         // Process attachments to base64
@@ -3911,31 +4299,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         const parsed = JSON.parse(eventData);
                         console.log('[SSE_EVENT]', eventType, eventType === 'token' ? `text_len=${(parsed.text||'').length}` : '');
 
-                        if (eventType === 'scope_redirect') {
+                        if (eventType === 'scope_redirect' || eventType === 'agent_redirect') {
                             isScopeRedirect = true;
                             if (statusPill && statusPill.parentNode) statusPill.remove();
-                            const rec = parsed.recommendedAgent || (parsed.recommendedAgents && parsed.recommendedAgents[0]) || { id: 'agent-002', displayNumber: '002', displayName: 'Email AI Agent' };
-                            const targetId = rec.id || `agent-${rec.displayNumber || rec.id}`;
-                            const promptToRetain = parsed.originalPrompt || parsed.userPrompt || text || '';
-                            const recName = rec.displayName || rec.name || 'Specialist AI Agent';
+                            const scopeDec = parsed.scopeDecision || parsed;
+                            const sourceAgent = scopeDec.sourceAgent || scopeDec.currentAgent || state.selectedAgent;
+                            const targetAgent = scopeDec.targetAgent || scopeDec.recommendedAgent || (scopeDec.recommendedAgents && scopeDec.recommendedAgents[0]) || { id: 'agent-004', displayNumber: '004', displayName: 'Quiz AI Agent', name: 'Quiz AI Agent' };
+                            const promptToRetain = scopeDec.originalPrompt || scopeDec.userPrompt || text || '';
+                            const politeMessage = scopeDec.politeMessage || parsed.text || 'This request is outside my specialization.';
 
-                            textTarget.innerHTML = `
-                                <div class="scope-redirect-card">
-                                    <div class="scope-redirect-header">
-                                        <span class="sparkle">✦</span>
-                                        <span>Outside My Specialization</span>
-                                    </div>
-                                    <div class="scope-redirect-body">
-                                        ${formatResponse(parsed.politeMessage || 'This request is outside my specialization.')}
-                                    </div>
-                                    <div class="scope-redirect-action">
-                                        <button class="btn-switch-agent" aria-label="Switch to ${escapeHtml(recName)}" onclick="window.switchAgentAndRetainPrompt('${escapeHtml(targetId)}', '${escapeHtml(promptToRetain).replace(/'/g, "\\'")}')">
-                                            <span>↗ Switch to ${escapeHtml(recName)}</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
-                            accumulatedText = parsed.politeMessage || '';
+                            scopeRedirectMeta = scopeDec;
+                            textTarget.innerHTML = renderAgentRedirectCard({
+                                sourceAgent,
+                                targetAgent,
+                                originalPrompt: promptToRetain,
+                                reason: scopeDec.reason || 'specialization_mismatch',
+                                politeMessage
+                            });
+                            accumulatedText = politeMessage;
                         } else if (eventType === 'workflow_created' || eventType === 'workflow_planned') {
                             if (statusPill && statusPill.parentNode) statusPill.remove();
                             let wfCard = streamMsgDiv.querySelector('.workflow-live-card');
@@ -4020,7 +4401,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 });
                             }
                         } else if (eventType === 'complete') {
-                            textTarget.innerHTML = formatResponse(accumulatedText);
+                            if (!isScopeRedirect) {
+                                textTarget.innerHTML = formatResponse(accumulatedText);
+                            }
                             actualModelTag = parsed.actual_model || actualModelTag;
                             durationMs = parsed.duration_ms || null;
                             tokensPerSec = parsed.tokens_per_sec || null;
@@ -4099,6 +4482,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
                 } else {
+                    const isCpuModel = actualModelTag.toLowerCase().includes('lfm') || actualModelTag.toLowerCase().includes('liquid') || (LOCAL_MODEL_DEFS[state.selectedModelMode]?.execution_target === 'CPU');
+                    const hwCompute = isCpuModel 
+                        ? 'CPU ONLY (Intel Core i5-11400H · 0 GPU VRAM · GPU: NOT USED)'
+                        : 'NVIDIA RTX 2050 (4GB VRAM · Max GPU Concurrency = 1)';
+
                     workflowStepsHtml = `
                         <div class="backend-flow-item">
                             <span class="backend-flow-check">✓</span>
@@ -4110,11 +4498,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="backend-flow-item">
                             <span class="backend-flow-check">✓</span>
-                            <span><strong>3. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
+                            <span><strong>3. Hardware Compute:</strong> <code>${escapeHtml(hwCompute)}</code></span>
                         </div>
                         <div class="backend-flow-item">
                             <span class="backend-flow-check">✓</span>
-                            <span><strong>4. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
+                            <span><strong>4. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
+                        </div>
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>5. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
                         </div>
                     `;
                 }
@@ -4142,6 +4534,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 id: `msg-${Date.now()}`,
                 role: 'assistant',
                 content: accumulatedText || (isStopped ? 'Generation stopped.' : 'No response text received.'),
+                status: isScopeRedirect ? 'out_of_scope' : 'success',
+                type: isScopeRedirect ? 'agent_redirect' : 'message',
+                scopeDecision: scopeRedirectMeta,
                 model: modelDisplayName,
                 actualModel: actualModelTag,
                 modelMode: currentModelMode,
