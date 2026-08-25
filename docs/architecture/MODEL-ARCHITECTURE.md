@@ -7,8 +7,7 @@
 
 ---
 
-## 1. Production Model Stack & Specializations
-
+### GPU Models (RTX 2050 4GB VRAM · Max GPU Concurrency = 1)
 | Subsystem / Model | Canonical Runtime Tag | Primary Specialization | Memory Footprint | Air-Gap Mode |
 | :--- | :--- | :--- | :--- | :--- |
 | **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | **Super AI Orchestration & Epistemic Reasoning**<br>Autonomous task decomposition, epistemic verification, multi-agent synthesis | 2.8 GB VRAM / Q4_K_M | Local Ollama |
@@ -18,6 +17,11 @@
 | **IBM Granite 4 1B-H** | `granite4:1b-h` | **Enterprise RAG, Extraction & Tool-Use**<br>Structured extraction, classification, tool invocation, enterprise workflows | 1.2 GB VRAM / Q4_K_M | Local Ollama |
 | **Microsoft Phi-4 Mini** | `phi4-mini` | **Advanced Reasoning, Mathematics & STEM Logic**<br>Complex algorithmic proofs, mathematical deductions, long-context logic | 2.4 GB VRAM / Q4_K_M | Local Ollama |
 | **SmolLM2 1.7B** | `smollm2:1.7b` | **Lightweight General Text, Rewriting & Summarization**<br>General text generation, rewriting, summarization, lightweight conversational tasks | 1.8 GB VRAM / Q8_0 | Local Ollama |
+
+### CPU Models (Intel Core i5-11400H · Zero GPU VRAM · Independent Compute)
+| Subsystem / Model | Canonical Runtime Tag | Primary Specialization | Memory Footprint | Air-Gap Mode |
+| :--- | :--- | :--- | :--- | :--- |
+| **Liquid AI LFM2.5 1.2B Instruct** | `LiquidAI/lfm2.5-1.2b-instruct:latest` | **On-Device Agentic Tasks, Data Extraction & RAG**<br>100% CPU-only liquid neural network execution, tool use, structured extraction | 730 MB disk / 846 MB RAM (**0 MB VRAM**) | Local Ollama (`num_gpu: 0`) |
 | **OCR & Document Intelligence** | `paddleocr-engine` | **Production Offline Document Intelligence**<br>PaddleOCR 3.7.0 / PP-OCRv6 Small / PP-StructureV3 / SLANet Tables / PP-FormulaNet LaTeX | ~62 MB models / CPU+GPU | PaddleOCR Local |
 | **Faster-Whisper Tiny** | `tiny.en` | **100% Offline Speech-to-Text (Voice Input)**<br>Local audio capture, int8 CPU inference, zero cloud streaming | 78 MB RAM | Local Python / ONNX |
 

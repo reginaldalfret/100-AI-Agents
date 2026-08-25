@@ -60,7 +60,11 @@ describe('Model Registry Specification & Integrity Test Suite', () => {
         assert.ok(typeof model.endpoint === 'string', 'endpoint must be a string');
         assert.ok(model.endpoint.startsWith('http://127.0.0.1') || model.endpoint.startsWith('http://localhost'), 'endpoint must be local loopback');
         assert.ok(typeof model.quantization === 'string', 'quantization must be a string');
-        assert.ok(typeof model.vram_mb === 'number' && model.vram_mb > 0, 'vram_mb must be a positive number');
+        if (model.execution_target === 'CPU') {
+          assert.ok(typeof model.vram_mb === 'number' && model.vram_mb === 0, 'CPU model vram_mb must be 0');
+        } else {
+          assert.ok(typeof model.vram_mb === 'number' && model.vram_mb > 0, 'GPU model vram_mb must be a positive number');
+        }
         assert.ok(typeof model.ram_mb === 'number' && model.ram_mb > 0, 'ram_mb must be a positive number');
         assert.ok(typeof model.context_length === 'number' && model.context_length > 0, 'context_length must be positive');
         assert.ok(Array.isArray(model.supported_modalities) && model.supported_modalities.length > 0, 'supported_modalities must be a non-empty array');

@@ -310,15 +310,96 @@
         </section>
 
         <section id="modelsView" class="view-panel">
-          <h2>Models</h2>
-          <div class="models-grid">
-            <div class="model-card">NVIDIA Nemotron 3 Nano (nemotron-3-nano:latest)</div>
-            <div class="model-card">Qwen 2.5 Coder 1.5B (qwen2.5-coder:1.5b)</div>
-            <div class="model-card">Google Gemma 3 1B (gemma3:1b)</div>
-            <div class="model-card">Meta Llama 3.2 1B (llama3.2:1b)</div>
-            <div class="model-card">IBM Granite 4 1B-H (granite4:1b-h)</div>
-            <div class="model-card">Microsoft Phi-4 Mini (phi4-mini)</div>
-            <div class="model-card">SmolLM2 1.7B (smollm2:1.7b)</div>
+          <h2>Local AI Models</h2>
+          
+          <div class="model-tier-section">
+            <div class="tier-section-header gpu-header">
+              <div class="tier-header-left">
+                <span class="tier-dot gpu-dot">●</span>
+                <span class="tier-title">GPU LLM MODELS</span>
+                <span class="tier-badge badge-gpu">NVIDIA RTX 2050 · 4GB VRAM</span>
+              </div>
+              <span class="tier-policy">Max Concurrency = 1 (VRAM Mutex Guard)</span>
+            </div>
+            <div class="models-grid" id="gpuModelsGrid">
+              <div class="model-card tier-gpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">NVIDIA Nemotron 3 Nano</span>
+                  <span class="model-badge badge-reasoning">Reasoning</span>
+                </div>
+                <div class="model-card-meta"><code>nemotron-3-nano:latest</code> · 2.8 GB · Q4_K_M</div>
+                <div class="model-card-desc">Super AI master orchestration, deep epistemic reasoning &amp; synthesis</div>
+              </div>
+              <div class="model-card tier-gpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">Qwen 2.5 Coder 1.5B</span>
+                  <span class="model-badge badge-code">Code</span>
+                </div>
+                <div class="model-card-meta"><code>qwen2.5-coder:1.5b</code> · 986 MB · Q4_K_M</div>
+                <div class="model-card-desc">Local code generation, AST refactoring, script synthesis &amp; sandbox</div>
+              </div>
+              <div class="model-card tier-gpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">Google Gemma 3 1B</span>
+                  <span class="model-badge badge-text">Edge NLP</span>
+                </div>
+                <div class="model-card-meta"><code>gemma3:1b</code> · 815 MB · Q4_K_M</div>
+                <div class="model-card-desc">High-throughput NLP, text summarization &amp; syntactic analysis</div>
+              </div>
+              <div class="model-card tier-gpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">Meta Llama 3.2 1B</span>
+                  <span class="model-badge badge-text">Fast Text</span>
+                </div>
+                <div class="model-card-meta"><code>llama3.2:1b</code> · 1.3 GB · Q4_K_M</div>
+                <div class="model-card-desc">Fast conversational assistant, text formatting &amp; prompt rewrites</div>
+              </div>
+              <div class="model-card tier-gpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">IBM Granite 4 1B-H</span>
+                  <span class="model-badge badge-enterprise">Enterprise</span>
+                </div>
+                <div class="model-card-meta"><code>granite4:1b-h</code> · 1.4 GB · Q4_K_M</div>
+                <div class="model-card-desc">Enterprise RAG, tabular data processing &amp; deterministic tool execution</div>
+              </div>
+              <div class="model-card tier-gpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">Microsoft Phi-4 Mini</span>
+                  <span class="model-badge badge-logic">Logic</span>
+                </div>
+                <div class="model-card-meta"><code>phi4-mini</code> · 2.5 GB · Q4_K_M</div>
+                <div class="model-card-desc">Advanced STEM reasoning, mathematical logic &amp; algorithmic proofs</div>
+              </div>
+              <div class="model-card tier-gpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">SmolLM2 1.7B</span>
+                  <span class="model-badge badge-smollm">Text</span>
+                </div>
+                <div class="model-card-meta"><code>smollm2:1.7b</code> · 1.8 GB · Q4_K_M</div>
+                <div class="model-card-desc">High-throughput compact model for lightweight general text generation</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="model-tier-section" style="margin-top: 28px;">
+            <div class="tier-section-header cpu-header">
+              <div class="tier-header-left">
+                <span class="tier-dot cpu-dot">●</span>
+                <span class="tier-title">CPU LLM MODELS (ZERO VRAM)</span>
+                <span class="tier-badge badge-cpu">Intel Core i5-11400H · CPU ONLY</span>
+              </div>
+              <span class="tier-policy">0 GPU Layers Offloaded · Independent Parallel Compute</span>
+            </div>
+            <div class="models-grid" id="cpuModelsGrid">
+              <div class="model-card tier-cpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">Liquid AI LFM2.5-1.2B-Instruct</span>
+                  <span class="model-badge badge-cpu">CPU ONLY</span>
+                </div>
+                <div class="model-card-meta"><code>LiquidAI/lfm2.5-1.2b-instruct:latest</code> · 731 MB · Q4_K_M</div>
+                <div class="model-card-desc">100% CPU-only liquid foundation model for on-device agentic workflows, data extraction, RAG synthesis &amp; tool use</div>
+              </div>
+            </div>
           </div>
         </section>
         
@@ -425,7 +506,7 @@
               <div id="modelDropdown" class="model-dropdown-menu" style="display:none;" role="menu" aria-label="Local AI Models">
                 <div class="model-dropdown-header">
                   <span class="dropdown-header-title">Model</span>
-                  <span class="dropdown-header-badge">7 Local Models</span>
+                  <span class="dropdown-header-badge">8 Local Models</span>
                 </div>
                 
                 <div class="model-options-list">
@@ -440,12 +521,18 @@
                           <span class="model-name">Auto</span>
                           <span class="model-badge badge-auto">Intelligent</span>
                         </div>
-                        <span class="model-desc">Dynamic routing across 7 local models</span>
+                        <span class="model-desc">Dynamic routing across 8 local models (GPU &amp; CPU)</span>
                       </div>
                     </div>
                     <div class="model-option-right">
                       <span class="model-check">✓</span>
                     </div>
+                  </div>
+
+                  <!-- GPU LLM SECTION HEADER -->
+                  <div class="dropdown-section-divider">
+                    <span class="section-badge gpu-pill">🟢 GPU LLM</span>
+                    <span class="section-note">RTX 2050 · 4GB VRAM</span>
                   </div>
 
                   <!-- Option 1: NVIDIA Nemotron 3 Nano -->
@@ -585,6 +672,32 @@
                     <div class="model-option-right">
                       <span class="model-check">✓</span>
                       <button class="btn-model-info" title="View SmolLM2 1.7B Specifications" aria-label="SmolLM2 1.7B Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- CPU LLM SECTION HEADER -->
+                  <div class="dropdown-section-divider cpu-divider">
+                    <span class="section-badge cpu-pill">🔵 CPU LLM</span>
+                    <span class="section-note">Intel i5-11400H · Zero VRAM</span>
+                  </div>
+
+                  <!-- Option 8: Liquid AI LFM2.5 1.2B Instruct (CPU ONLY) -->
+                  <div class="model-option-item cpu-item" data-model-id="lfm" data-internal-id="LiquidAI/lfm2.5-1.2b-instruct:latest" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-cpu">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">LFM2.5-1.2B-Instruct</span>
+                          <span class="model-badge badge-cpu">CPU ONLY</span>
+                        </div>
+                        <span class="model-desc">Liquid AI · 731 MB · Agentic Tasks, RAG &amp; Extraction</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View Liquid AI LFM2.5 Specifications" aria-label="Liquid AI LFM2.5 Info">›</button>
                     </div>
                   </div>
                 </div>

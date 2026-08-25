@@ -3214,6 +3214,11 @@ document.addEventListener('DOMContentLoaded', () => {
             msg.tokensPerSec ? `${msg.tokensPerSec} t/s` : null
         ].filter(Boolean).join(' · ');
         
+        const isCpuModel = actualRuntime.toLowerCase().includes('lfm') || actualRuntime.toLowerCase().includes('liquid') || (LOCAL_MODEL_DEFS[msg.modelMode]?.execution_target === 'CPU');
+        const hwCompute = isCpuModel 
+            ? 'CPU ONLY (Intel Core i5-11400H · 0 GPU VRAM · GPU: NOT USED)'
+            : 'NVIDIA RTX 2050 (4GB VRAM · Max GPU Concurrency = 1)';
+        
         const backendFlowHtml = `
             <div class="backend-flow-card">
                 <div class="backend-flow-header">
@@ -3231,11 +3236,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     <div class="backend-flow-item">
                         <span class="backend-flow-check">✓</span>
-                        <span><strong>3. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
+                        <span><strong>3. Hardware Compute:</strong> <code>${escapeHtml(hwCompute)}</code></span>
                     </div>
                     <div class="backend-flow-item">
                         <span class="backend-flow-check">✓</span>
-                        <span><strong>4. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
+                        <span><strong>4. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
+                    </div>
+                    <div class="backend-flow-item">
+                        <span class="backend-flow-check">✓</span>
+                        <span><strong>5. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
                     </div>
                 </div>
             </div>
@@ -3476,18 +3485,22 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'auto',
             internalId: 'auto',
             displayName: 'Auto (Intelligent Routing)',
+            execution_target: 'AUTO',
             badge: 'Intelligent',
             speed: 'Dynamic',
-            description: 'Dynamic routing across 6 local models based on task intent',
+            description: 'Dynamic routing across GPU & CPU local models based on task intent',
             runtime: 'Local Orchestration Router',
-            hardware: 'RTX 2050 (Optimized VRAM)'
+            hardware: 'RTX 2050 / Intel i5-11400H'
         },
         'nemotron': {
             id: 'nemotron',
             internalId: 'nemotron-3-nano:latest',
             displayName: 'NVIDIA Nemotron 3 Nano',
+            provider: 'NVIDIA',
+            execution_target: 'GPU',
             badge: 'Reasoning',
             speed: 'High Speed',
+            size: '2.8 GB',
             description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
@@ -3496,8 +3509,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'nemotron',
             internalId: 'nemotron-3-nano:latest',
             displayName: 'NVIDIA Nemotron 3 Nano',
+            provider: 'NVIDIA',
+            execution_target: 'GPU',
             badge: 'Reasoning',
             speed: 'High Speed',
+            size: '2.8 GB',
             description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
@@ -3506,8 +3522,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'nemotron',
             internalId: 'nemotron-3-nano:latest',
             displayName: 'NVIDIA Nemotron 3 Nano',
+            provider: 'NVIDIA',
+            execution_target: 'GPU',
             badge: 'Reasoning',
             speed: 'High Speed',
+            size: '2.8 GB',
             description: 'Reasoning & Orchestration',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.8GB VRAM)'
@@ -3516,8 +3535,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'qwen',
             internalId: 'qwen2.5-coder:1.5b',
             displayName: 'Qwen 2.5 Coder 1.5B',
+            provider: 'Alibaba Cloud',
+            execution_target: 'GPU',
             badge: 'Code',
             speed: 'Ultra Fast',
+            size: '986 MB',
             description: 'Code Synthesis & Sandbox',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~986MB VRAM)'
@@ -3526,8 +3548,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'qwen',
             internalId: 'qwen2.5-coder:1.5b',
             displayName: 'Qwen 2.5 Coder 1.5B',
+            provider: 'Alibaba Cloud',
+            execution_target: 'GPU',
             badge: 'Code',
             speed: 'Ultra Fast',
+            size: '986 MB',
             description: 'Code Synthesis & Sandbox',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~986MB VRAM)'
@@ -3536,8 +3561,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'gemma',
             internalId: 'gemma3:1b',
             displayName: 'Google Gemma 3 1B',
+            provider: 'Google',
+            execution_target: 'GPU',
             badge: 'Edge NLP',
             speed: 'Ultra Fast',
+            size: '815 MB',
             description: 'On-Device NLP & Semantic Synthesis',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~815MB VRAM)'
@@ -3546,8 +3574,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'gemma',
             internalId: 'gemma3:1b',
             displayName: 'Google Gemma 3 1B',
+            provider: 'Google',
+            execution_target: 'GPU',
             badge: 'Edge NLP',
             speed: 'Ultra Fast',
+            size: '815 MB',
             description: 'On-Device NLP & Semantic Synthesis',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~815MB VRAM)'
@@ -3556,8 +3587,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'llama',
             internalId: 'llama3.2:1b',
             displayName: 'Meta Llama 3.2 1B',
+            provider: 'Meta',
+            execution_target: 'GPU',
             badge: 'Fast Text',
             speed: 'Ultra Fast',
+            size: '1.3 GB',
             description: 'Fast Lightweight General Text',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.3GB VRAM)'
@@ -3566,8 +3600,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'llama',
             internalId: 'llama3.2:1b',
             displayName: 'Meta Llama 3.2 1B',
+            provider: 'Meta',
+            execution_target: 'GPU',
             badge: 'Fast Text',
             speed: 'Ultra Fast',
+            size: '1.3 GB',
             description: 'Fast Lightweight General Text',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.3GB VRAM)'
@@ -3576,8 +3613,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'granite',
             internalId: 'granite4:1b-h',
             displayName: 'IBM Granite 4 1B-H',
+            provider: 'IBM',
+            execution_target: 'GPU',
             badge: 'Enterprise',
             speed: 'Ultra Fast',
+            size: '1.4 GB',
             description: 'Enterprise RAG & Tool Use',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.4GB VRAM)'
@@ -3586,8 +3626,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'granite',
             internalId: 'granite4:1b-h',
             displayName: 'IBM Granite 4 1B-H',
+            provider: 'IBM',
+            execution_target: 'GPU',
             badge: 'Enterprise',
             speed: 'Ultra Fast',
+            size: '1.4 GB',
             description: 'Enterprise RAG & Tool Use',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.4GB VRAM)'
@@ -3596,8 +3639,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'phi4',
             internalId: 'phi4-mini',
             displayName: 'Microsoft Phi-4 Mini',
+            provider: 'Microsoft',
+            execution_target: 'GPU',
             badge: 'Logic',
             speed: 'High Speed',
+            size: '2.5 GB',
             description: 'Reasoning, Mathematics & Logic',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.5GB VRAM)'
@@ -3606,8 +3652,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'phi4',
             internalId: 'phi4-mini',
             displayName: 'Microsoft Phi-4 Mini',
+            provider: 'Microsoft',
+            execution_target: 'GPU',
             badge: 'Logic',
             speed: 'High Speed',
+            size: '2.5 GB',
             description: 'Reasoning, Mathematics & Logic',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~2.5GB VRAM)'
@@ -3616,8 +3665,11 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'smollm2',
             internalId: 'smollm2:1.7b',
             displayName: 'SmolLM2 1.7B',
+            provider: 'Hugging Face',
+            execution_target: 'GPU',
             badge: 'Text',
             speed: 'Ultra Fast',
+            size: '1.8 GB',
             description: 'Lightweight general text model',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.8GB VRAM)'
@@ -3626,11 +3678,66 @@ document.addEventListener('DOMContentLoaded', () => {
             id: 'smollm2',
             internalId: 'smollm2:1.7b',
             displayName: 'SmolLM2 1.7B',
+            provider: 'Hugging Face',
+            execution_target: 'GPU',
             badge: 'Text',
             speed: 'Ultra Fast',
+            size: '1.8 GB',
             description: 'Lightweight general text model',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'RTX 2050 (~1.8GB VRAM)'
+        },
+        'lfm': {
+            id: 'lfm',
+            internalId: 'LiquidAI/lfm2.5-1.2b-instruct:latest',
+            displayName: 'LFM2.5-1.2B-Instruct',
+            provider: 'Liquid AI',
+            execution_target: 'CPU',
+            badge: 'CPU ONLY',
+            speed: 'Fast CPU',
+            size: '731 MB',
+            description: 'On-Device / Agentic / Data Extraction / RAG',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'lfm2.5': {
+            id: 'lfm',
+            internalId: 'LiquidAI/lfm2.5-1.2b-instruct:latest',
+            displayName: 'LFM2.5-1.2B-Instruct',
+            provider: 'Liquid AI',
+            execution_target: 'CPU',
+            badge: 'CPU ONLY',
+            speed: 'Fast CPU',
+            size: '731 MB',
+            description: 'On-Device / Agentic / Data Extraction / RAG',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'lfm2.5-1.2b-instruct': {
+            id: 'lfm',
+            internalId: 'LiquidAI/lfm2.5-1.2b-instruct:latest',
+            displayName: 'LFM2.5-1.2B-Instruct',
+            provider: 'Liquid AI',
+            execution_target: 'CPU',
+            badge: 'CPU ONLY',
+            speed: 'Fast CPU',
+            size: '731 MB',
+            description: 'On-Device / Agentic / Data Extraction / RAG',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'LiquidAI/lfm2.5-1.2b-instruct:latest': {
+            id: 'lfm',
+            internalId: 'LiquidAI/lfm2.5-1.2b-instruct:latest',
+            displayName: 'LFM2.5-1.2B-Instruct',
+            provider: 'Liquid AI',
+            execution_target: 'CPU',
+            badge: 'CPU ONLY',
+            speed: 'Fast CPU',
+            size: '731 MB',
+            description: 'On-Device / Agentic / Data Extraction / RAG',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
         }
     };
 
@@ -4187,6 +4294,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     `;
                 } else {
+                    const isCpuModel = actualModelTag.toLowerCase().includes('lfm') || actualModelTag.toLowerCase().includes('liquid') || (LOCAL_MODEL_DEFS[state.selectedModelMode]?.execution_target === 'CPU');
+                    const hwCompute = isCpuModel 
+                        ? 'CPU ONLY (Intel Core i5-11400H · 0 GPU VRAM · GPU: NOT USED)'
+                        : 'NVIDIA RTX 2050 (4GB VRAM · Max GPU Concurrency = 1)';
+
                     workflowStepsHtml = `
                         <div class="backend-flow-item">
                             <span class="backend-flow-check">✓</span>
@@ -4198,11 +4310,15 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="backend-flow-item">
                             <span class="backend-flow-check">✓</span>
-                            <span><strong>3. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
+                            <span><strong>3. Hardware Compute:</strong> <code>${escapeHtml(hwCompute)}</code></span>
                         </div>
                         <div class="backend-flow-item">
                             <span class="backend-flow-check">✓</span>
-                            <span><strong>4. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
+                            <span><strong>4. Air-Gap Sovereignty:</strong> 0 external network requests (Strict zero cloud egress)</span>
+                        </div>
+                        <div class="backend-flow-item">
+                            <span class="backend-flow-check">✓</span>
+                            <span><strong>5. Execution Trace:</strong> Verified with audit ID <code>${escapeHtml(traceId)}</code></span>
                         </div>
                     `;
                 }
