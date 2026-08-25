@@ -394,10 +394,47 @@
               <div class="model-card tier-cpu-card">
                 <div class="model-card-top">
                   <span class="model-card-name">Liquid AI LFM2.5 350M</span>
+                  <span class="model-badge badge-extraction">EXTRACTION</span>
                   <span class="model-badge badge-cpu">CPU ONLY</span>
                 </div>
                 <div class="model-card-meta"><code>LiquidAI/lfm2.5-350m</code> · 379 MB · Q8_0 · 350M Params</div>
                 <div class="model-card-desc">100% CPU-only liquid neural network model for structured data extraction, classification, lightweight tool routing &amp; short text processing</div>
+              </div>
+              <div class="model-card tier-cpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">RWKV-7 0.4B</span>
+                  <span class="model-badge badge-text">TEXT</span>
+                  <span class="model-badge badge-cpu">CPU ONLY</span>
+                </div>
+                <div class="model-card-meta"><code>mollysama/rwkv-7-g1d:0.4b</code> · 501 MB · Q8_0 · 450M Params</div>
+                <div class="model-card-desc">100% CPU-only RWKV-7 RNN architecture for lightweight general text, summarization, rewriting &amp; fallback tasks</div>
+              </div>
+              <div class="model-card tier-cpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">Meta MobileLLM-Pro 1B</span>
+                  <span class="model-badge badge-assistant">ASSISTANT</span>
+                  <span class="model-badge badge-cpu">CPU ONLY</span>
+                </div>
+                <div class="model-card-meta"><code>facebook/MobileLLM-Pro-1B</code> · 580 MB · INT4 · 1B Params · ExecuTorch</div>
+                <div class="model-card-desc">100% CPU-only on-device assistant for general QA, lightweight reasoning, and tool-oriented tasks</div>
+              </div>
+              <div class="model-card tier-cpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">Meta MobileLLM 350M</span>
+                  <span class="model-badge badge-edge">EDGE</span>
+                  <span class="model-badge badge-cpu">CPU ONLY</span>
+                </div>
+                <div class="model-card-meta"><code>facebook/MobileLLM-350M</code> · 210 MB · INT4 · 350M Params · ExecuTorch</div>
+                <div class="model-card-desc">100% CPU-only ultra-lightweight edge model for intent classification, query routing &amp; fallback assistance</div>
+              </div>
+              <div class="model-card tier-cpu-card">
+                <div class="model-card-top">
+                  <span class="model-card-name">Apple OpenELM 450M</span>
+                  <span class="model-badge badge-text">TEXT</span>
+                  <span class="model-badge badge-cpu">CPU ONLY</span>
+                </div>
+                <div class="model-card-meta"><code>apple/OpenELM-450M-Instruct</code> · 450 MB · FP16/INT8 · 450M Params · PyTorch/ONNX</div>
+                <div class="model-card-desc">100% CPU-only Apple OpenELM model with layer-wise parameter scaling for concise text summarization &amp; transformation</div>
               </div>
             </div>
           </div>
@@ -506,7 +543,7 @@
               <div id="modelDropdown" class="model-dropdown-menu" style="display:none;" role="menu" aria-label="Local AI Models">
                 <div class="model-dropdown-header">
                   <span class="dropdown-header-title">Model</span>
-                  <span class="dropdown-header-badge">8 Local Models</span>
+                  <span class="dropdown-header-badge">12 Local Models</span>
                 </div>
                 
                 <div class="model-options-list">
@@ -521,7 +558,7 @@
                           <span class="model-name">Auto</span>
                           <span class="model-badge badge-auto">Intelligent</span>
                         </div>
-                        <span class="model-desc">Dynamic routing across 8 local models (GPU &amp; CPU)</span>
+                        <span class="model-desc">Dynamic routing across 12 local models (GPU &amp; CPU)</span>
                       </div>
                     </div>
                     <div class="model-option-right">
@@ -681,7 +718,7 @@
                     <span class="section-note">Intel i5-11400H · Zero VRAM</span>
                   </div>
 
-                  <!-- Option 8: Liquid AI LFM2.5 350M (CPU ONLY) -->
+                                    <!-- Option 8: Liquid AI LFM2.5 350M (CPU ONLY) -->
                   <div class="model-option-item cpu-item" data-model-id="lfm" data-internal-id="LiquidAI/lfm2.5-350m" role="menuitem" tabindex="0">
                     <div class="model-option-left">
                       <div class="model-option-icon icon-cpu">
@@ -690,6 +727,7 @@
                       <div class="model-option-meta">
                         <div class="model-option-title-row">
                           <span class="model-name">LFM2.5-350M</span>
+                          <span class="model-badge badge-extraction">EXTRACTION</span>
                           <span class="model-badge badge-cpu">CPU ONLY</span>
                         </div>
                         <span class="model-desc">Liquid AI · 379 MB · Extraction, Tools &amp; Structured Output</span>
@@ -698,6 +736,90 @@
                     <div class="model-option-right">
                       <span class="model-check">✓</span>
                       <button class="btn-model-info" title="View Liquid AI LFM2.5 350M Specifications" aria-label="Liquid AI LFM2.5 350M Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- Option 9: RWKV-7 0.4B (CPU ONLY) -->
+                  <div class="model-option-item cpu-item" data-model-id="rwkv" data-internal-id="mollysama/rwkv-7-g1d:0.4b" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-cpu">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">RWKV-7 0.4B</span>
+                          <span class="model-badge badge-text">TEXT</span>
+                          <span class="model-badge badge-cpu">CPU ONLY</span>
+                        </div>
+                        <span class="model-desc">RWKV · 501 MB · General Text, Rewriting &amp; Summary</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View RWKV-7 0.4B Specifications" aria-label="RWKV-7 0.4B Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- Option 10: Meta MobileLLM-Pro 1B (CPU ONLY) -->
+                  <div class="model-option-item cpu-item" data-model-id="mobilellm-pro" data-internal-id="facebook/MobileLLM-Pro-1B" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-cpu">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">MobileLLM-Pro 1B</span>
+                          <span class="model-badge badge-assistant">ASSISTANT</span>
+                          <span class="model-badge badge-cpu">CPU ONLY</span>
+                        </div>
+                        <span class="model-desc">Meta Reality Labs · 580 MB · General Assistant &amp; QA</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View MobileLLM-Pro 1B Specifications" aria-label="MobileLLM-Pro 1B Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- Option 11: Meta MobileLLM 350M (CPU ONLY) -->
+                  <div class="model-option-item cpu-item" data-model-id="mobilellm" data-internal-id="facebook/MobileLLM-350M" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-cpu">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">MobileLLM 350M</span>
+                          <span class="model-badge badge-edge">EDGE</span>
+                          <span class="model-badge badge-cpu">CPU ONLY</span>
+                        </div>
+                        <span class="model-desc">Meta · 210 MB · Ultra-Light Classification &amp; Routing</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View MobileLLM 350M Specifications" aria-label="MobileLLM 350M Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- Option 12: Apple OpenELM 450M (CPU ONLY) -->
+                  <div class="model-option-item cpu-item" data-model-id="openelm" data-internal-id="apple/OpenELM-450M-Instruct" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-cpu">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">OpenELM 450M</span>
+                          <span class="model-badge badge-text">TEXT</span>
+                          <span class="model-badge badge-cpu">CPU ONLY</span>
+                        </div>
+                        <span class="model-desc">Apple · 450 MB · General Text &amp; Summarization</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View OpenELM 450M Specifications" aria-label="OpenELM 450M Info">›</button>
                     </div>
                   </div>
                 </div>

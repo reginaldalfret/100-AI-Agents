@@ -23,7 +23,12 @@ describe('Model Registry Specification & Integrity Test Suite', () => {
       'granite4-1b-h',
       'phi4-mini',
       'smollm2-1.7b',
-      'lfm2.5-350m'
+      'lfm2.5-350m',
+      'rwkv7-0.4b',
+      'mobilellm-pro-1b',
+      'mobilellm-350m',
+      'openelm-450m',
+      'openelm-1.1b'
     ];
 
     it('contains all required production models in LOCAL_MODELS', () => {

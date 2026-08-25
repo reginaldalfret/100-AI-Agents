@@ -323,7 +323,7 @@ const server = http.createServer(async (req, res) => {
           ollama: {
             status: ollamaHealthy ? "ready" : "offline",
             port: 11434,
-            models: ["nemotron-3-nano:latest", "qwen2.5-coder:1.5b", "gemma3:1b", "llama3.2:1b", "granite4:1b-h", "phi4-mini", "smollm2:1.7b", "LiquidAI/lfm2.5-350m"]
+            models: ["nemotron-3-nano:latest", "qwen2.5-coder:1.5b", "gemma3:1b", "llama3.2:1b", "granite4:1b-h", "phi4-mini", "smollm2:1.7b", "LiquidAI/lfm2.5-350m", "mollysama/rwkv-7-g1d:0.4b"]
           },
           python: pyStatus,
           gateway: {
@@ -677,7 +677,19 @@ const server = http.createServer(async (req, res) => {
         "lfm2.5": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" },
         "lfm2.5-350m": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" },
         "LiquidAI/lfm2.5-350m": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" },
-        "LiquidAI/lfm2.5-350m:latest": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" }
+        "LiquidAI/lfm2.5-350m:latest": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" },
+        "rwkv": { tag: "mollysama/rwkv-7-g1d:0.4b", displayName: "RWKV-7 0.4B", role: "cpu-lightweight-general-text", execution_target: "CPU" },
+        "rwkv7": { tag: "mollysama/rwkv-7-g1d:0.4b", displayName: "RWKV-7 0.4B", role: "cpu-lightweight-general-text", execution_target: "CPU" },
+        "rwkv-7": { tag: "mollysama/rwkv-7-g1d:0.4b", displayName: "RWKV-7 0.4B", role: "cpu-lightweight-general-text", execution_target: "CPU" },
+        "rwkv7-0.4b": { tag: "mollysama/rwkv-7-g1d:0.4b", displayName: "RWKV-7 0.4B", role: "cpu-lightweight-general-text", execution_target: "CPU" },
+        "mollysama/rwkv-7-g1d:0.4b": { tag: "mollysama/rwkv-7-g1d:0.4b", displayName: "RWKV-7 0.4B", role: "cpu-lightweight-general-text", execution_target: "CPU" },
+        "mobilellm-pro": { tag: "facebook/MobileLLM-Pro-1B", displayName: "Meta MobileLLM-Pro 1B", provider: "Meta Reality Labs", role: "cpu-general-assistant", execution_target: "CPU", runtime_type: "EXECUTORCH" },
+        "mobilellm-pro-1b": { tag: "facebook/MobileLLM-Pro-1B", displayName: "Meta MobileLLM-Pro 1B", provider: "Meta Reality Labs", role: "cpu-general-assistant", execution_target: "CPU", runtime_type: "EXECUTORCH" },
+        "mobilellm": { tag: "facebook/MobileLLM-350M", displayName: "Meta MobileLLM 350M", provider: "Meta", role: "cpu-ultra-light-edge", execution_target: "CPU", runtime_type: "EXECUTORCH" },
+        "mobilellm-350m": { tag: "facebook/MobileLLM-350M", displayName: "Meta MobileLLM 350M", provider: "Meta", role: "cpu-ultra-light-edge", execution_target: "CPU", runtime_type: "EXECUTORCH" },
+        "openelm": { tag: "apple/OpenELM-450M-Instruct", displayName: "Apple OpenELM 450M", provider: "Apple", role: "cpu-lightweight-text", execution_target: "CPU", runtime_type: "PYTORCH" },
+        "openelm-450m": { tag: "apple/OpenELM-450M-Instruct", displayName: "Apple OpenELM 450M", provider: "Apple", role: "cpu-lightweight-text", execution_target: "CPU", runtime_type: "PYTORCH" },
+        "openelm-1.1b": { tag: "apple/OpenELM-1_1B-Instruct", displayName: "Apple OpenELM 1.1B", provider: "Apple", role: "cpu-extended-text", execution_target: "CPU", runtime_type: "PYTORCH" }
       };
 
       const requestedMode = payload.modelMode || "auto";

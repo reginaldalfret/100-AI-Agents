@@ -22,18 +22,19 @@ To maximize resource efficiency and guarantee absolute zero VRAM overflow on 4GB
              GPU MODEL TIER                                CPU MODEL TIER
      (execution_target: "GPU")                      (execution_target: "CPU")
   ┌─────────────────────────────────┐           ┌─────────────────────────────────┐
-  │ • NVIDIA Nemotron 3 Nano        │           │ • Liquid AI LFM2.5 350M         │
-  │ • Qwen 2.5 Coder 1.5B           │           │   (LiquidAI/lfm2.5-350m:latest) │
-  │ • IBM Granite 4 1B-H            │           │ • Future CPU Models             │
-  │ • Microsoft Phi-4 Mini          │           │   (auto-rendered via registry)  │
-  │ • Meta Llama 3.2 1B             │           └────────────────┬────────────────┘
-  │ • Google Gemma 3 1B             │                            │
-  │ • SmolLM2 1.7B                  │                            │
-  └────────────────┬────────────────┘                            │
-                   │ Lock (RTX 2050 Mutex)                       │ Lock-Free / Parallel
-                   ▼                                             ▼
-          NVIDIA RTX 2050 (4GB)                        Intel Core i5-11400H
-        num_gpu: default (CUDA)                        num_gpu: 0 (100% CPU)
+  │ • NVIDIA Nemotron 3 Nano (2.8GB)│           │ • Liquid AI LFM2.5 350M         │
+  │ • Qwen 2.5 Coder 1.5B (986MB)   │           │   (LiquidAI/lfm2.5-350m · 379MB)│
+  │ • IBM Granite 4 1B-H (1.4GB)    │           │ • RWKV-7 0.4B                   │
+  │ • Microsoft Phi-4 Mini (2.5GB)  │           │   (mollysama/rwkv-7-g1d:0.4b    │
+  │ • Meta Llama 3.2 1B (1.3GB)     │           │    · 501MB)                     │
+  │ • Google Gemma 3 1B (815MB)     │           │ • Meta MobileLLM-Pro 1B (580MB) │
+  │ • SmolLM2 1.7B (1.8GB)          │           │ • Meta MobileLLM 350M (210MB)   │
+  └────────────────┬────────────────┘           │ • Apple OpenELM 450M (450MB)    │
+                   │ Lock (RTX 2050 Mutex)      └────────────────┬────────────────┘
+                   ▼                                             │ Lock-Free / Parallel
+          NVIDIA RTX 2050 (4GB)                                  ▼
+        num_gpu: default (CUDA)                        Intel Core i5-11400H
+                                                       num_gpu: 0 (100% CPU)
 ```
 
 ---
@@ -56,28 +57,17 @@ All GPU models are managed under a strict single-model concurrency mutex (`MAX_G
 ### Tier 2: CPU-Only Models (`execution_target: "CPU"`)
 CPU-only models run strictly on the Intel Core i5-11400H CPU with `num_gpu: 0` (0 GPU layers offloaded), allocating 0 MB of GPU VRAM:
 
-| Model | Ollama Tag | Parameters | Quantization | Size | RAM Footprint | VRAM | Specialization |
+| Model | Identifier / Checkpoint | Provider | Parameters | Size | Runtime | Badge | Specialization |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Liquid AI LFM2.5 350M** | `LiquidAI/lfm2.5-350m:latest` | 354M | Q8_0 | 379 MB | ~466 MB | **0 MB** | Lightweight CPU data extraction, structured output, classification, tool routing |
+| **Liquid AI LFM2.5 350M** | `LiquidAI/lfm2.5-350m:latest` | Liquid AI | 354M | 379 MB | `Ollama` | `[EXTRACTION]` | Data extraction, structured output, tool routing |
+| **RWKV-7 0.4B** | `mollysama/rwkv-7-g1d:0.4b` | RWKV | 450M | 501 MB | `Ollama` | `[TEXT]` | Fast general text, rewriting, summarization |
+| **Meta MobileLLM-Pro 1B** | `facebook/MobileLLM-Pro-1B` | Meta Reality Labs | 1.0B | 580 MB | `ExecuTorch` | `[ASSISTANT]` | General on-device assistant, QA, reasoning |
+| **Meta MobileLLM 350M** | `facebook/MobileLLM-350M` | Meta | 350M | 210 MB | `ExecuTorch` | `[EDGE]` | Ultra-light edge routing, classification |
+| **Apple OpenELM 450M** | `apple/OpenELM-450M-Instruct` | Apple | 450M | 450 MB | `PyTorch` | `[TEXT]` | Layer-wise scaled text summarization |
 
 ---
 
-## 3. CPU Execution Enforcement & Telemetry Proof
+## 3. Extensibility & Scrollable UI Support
 
-When any CPU-only model is invoked, the platform streamer (`platform/models/model-streamer.js`) and gateway enforce:
-
-1. **Option Guard**: `options: { num_gpu: 0 }` is attached to all Ollama payload requests.
-2. **Lock Bypass**: CPU models do not block GPU inference, allowing parallel CPU processing.
-3. **Execution Telemetry**:
-   - `Execution: CPU ONLY`
-   - `Hardware Compute: Intel Core i5-11400H`
-   - `GPU: NOT USED (0 MB VRAM Allocated)`
-   - `0 External Calls (Air-Gapped Sovereign Stream)`
-
----
-
-## 4. Extensibility: Adding Future CPU Models
-
-The UI and backend are completely **data-driven**:
-- Adding a new CPU model only requires registering its definition in `platform/models/model-registry.js` and `platform/web/app.js` with `execution_target: "CPU"`.
-- The UI dynamically categorizes and renders it into the **CPU LLM** section without requiring any template refactoring.
+- Adding a new CPU or GPU model only requires registering its definition with `execution_target: "CPU"` or `"GPU"`.
+- The UI dynamically renders it into the **CPU LLM** or **GPU LLM** section within the scrollable Liquid Glass dropdown (`max-height: 70vh`).

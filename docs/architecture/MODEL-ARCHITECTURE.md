@@ -1,59 +1,34 @@
-# 301 Super AI — Production Model Stack Architecture
+# 301 Super AI — Local Model Architecture & Hardware Tiering
 
-**Product**: 301 Super AI — Sovereign AI Workbench  
-**Platform**: On-Premise Industrial AI System  
-**Hardware Baseline**: NVIDIA RTX 2050 (4 GB VRAM), 16 GB System RAM, Windows 10/11 x64  
+**Platform**: 301 Super AI Sovereign AI Workbench  
+**Hardware Specifications**:
+- **CPU**: Intel Core i5-11400H (6 Cores / 12 Threads)
+- **GPU**: NVIDIA GeForce RTX 2050 (4 GB VRAM)
+- **System Memory**: 16 GB DDR4 RAM
 **Air-Gap Guarantee**: 100% On-Premise Execution · 0 External Network Calls
 
 ---
 
-### GPU Models (RTX 2050 4GB VRAM · Max GPU Concurrency = 1)
-| Subsystem / Model | Canonical Runtime Tag | Primary Specialization | Memory Footprint | Air-Gap Mode |
-| :--- | :--- | :--- | :--- | :--- |
-| **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | **Super AI Orchestration & Epistemic Reasoning**<br>Autonomous task decomposition, epistemic verification, multi-agent synthesis | 2.8 GB VRAM / Q4_K_M | Local Ollama |
-| **Qwen 2.5 Coder 1.5B** | `qwen2.5-coder:1.5b` | **Coding & Deterministic Sandbox Execution**<br>Python, C++, Java, JS, Rust, SQL, AST parsing & refactoring | 986 MB VRAM / Q4_K_M | Local Ollama |
-| **Google Gemma 3 1B** | `gemma3:1b` | **Edge NLP & Semantic Synthesis**<br>High-throughput dense transformer, syntactic parsing, semantic summarization | 815 MB / Q4_K_M | Local Ollama |
-| **Meta Llama 3.2 1B** | `llama3.2:1b` | **Fast Lightweight General Text**<br>Low-latency rewriting, summarization, simple Q&A, fast responses | 1.3 GB VRAM / Q4_K_M | Local Ollama |
-| **IBM Granite 4 1B-H** | `granite4:1b-h` | **Enterprise RAG, Extraction & Tool-Use**<br>Structured extraction, classification, tool invocation, enterprise workflows | 1.2 GB VRAM / Q4_K_M | Local Ollama |
-| **Microsoft Phi-4 Mini** | `phi4-mini` | **Advanced Reasoning, Mathematics & STEM Logic**<br>Complex algorithmic proofs, mathematical deductions, long-context logic | 2.4 GB VRAM / Q4_K_M | Local Ollama |
-| **SmolLM2 1.7B** | `smollm2:1.7b` | **Lightweight General Text, Rewriting & Summarization**<br>General text generation, rewriting, summarization, lightweight conversational tasks | 1.8 GB VRAM / Q8_0 | Local Ollama |
+## 1. Complete Dual-Tier Local Model Stack
 
-### CPU Models (Intel Core i5-11400H · Zero GPU VRAM · Independent Compute)
-| Subsystem / Model | Canonical Runtime Tag | Primary Specialization | Memory Footprint | Air-Gap Mode |
-| **Liquid AI LFM2.5 350M** | `LiquidAI/lfm2.5-350m:latest` | **Lightweight CPU Extraction & Tool Model**<br>100% CPU-only liquid neural network execution, structured data extraction, classification, tool routing | 379 MB disk / 466 MB RAM (**0 MB VRAM**) | Local Ollama (`num_gpu: 0`) |
-| **OCR & Document Intelligence** | `paddleocr-engine` | **Production Offline Document Intelligence**<br>PaddleOCR 3.7.0 / PP-OCRv6 Small / PP-StructureV3 / SLANet Tables / PP-FormulaNet LaTeX | ~62 MB models / CPU+GPU | PaddleOCR Local |
-| **Faster-Whisper Tiny** | `tiny.en` | **100% Offline Speech-to-Text (Voice Input)**<br>Local audio capture, int8 CPU inference, zero cloud streaming | 78 MB RAM | Local Python / ONNX |
+### Tier 1: GPU Models (RTX 2050 4GB · Concurrency Mutex Protected)
+| Model | Tag | Parameters | Quantization | Size | VRAM | Specialization |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **NVIDIA Nemotron 3 Nano** | `nemotron-3-nano:latest` | 3.8B | Q4_K_M | 2.8 GB | ~2.8 GB | Master Orchestration & Reasoning |
+| **Qwen 2.5 Coder 1.5B** | `qwen2.5-coder:1.5b` | 1.5B | Q4_K_M | 986 MB | ~1.2 GB | Multi-Language Code Synthesis & AST |
+| **Google Gemma 3 1B** | `gemma3:1b` | 1.0B | Q4_K_M | 815 MB | ~1.1 GB | Dense Transformer Edge NLP |
+| **Meta Llama 3.2 1B** | `llama3.2:1b` | 1.2B | Q4_K_M | 1.3 GB | ~900 MB | Fast Lightweight General Text |
+| **IBM Granite 4 1B-H** | `granite4:1b-h` | 1.0B | Q4_K_M | 1.4 GB | ~1.1 GB | Enterprise RAG & Tool Execution |
+| **Microsoft Phi-4 Mini** | `phi4-mini` | 3.8B | Q4_K_M | 2.5 GB | ~2.6 GB | STEM Reasoning & Mathematical Logic |
+| **SmolLM2 1.7B** | `smollm2:1.7b` | 1.7B | Q8_0 | 1.8 GB | ~1.8 GB | High-Throughput Reasoning & Transformation |
 
----
-
-## 2. Dedicated Document Intelligence Pipeline
-
-Because **Gemma 3 1B** and lightweight models are strictly text-only, all images, scanned engineering drawings, and PDFs are processed through the dedicated high-performance OCR engine:
-
-```
-Scanned Document / Engineering PDF
-             │
-             ▼
-┌──────────────────────────────────────────────┐
-│ Stage 1: Dedicated OCR & Document Engine     │
-│ (PyMuPDF / Tesseract / Structured Tables)    │
-│ • Deterministic character extraction         │
-│ • Spatial bounding boxes & tabular alignment │
-│ • P&ID instrument tag isolation              │
-└──────────────────────┬───────────────────────┘
-                       │ Structured Character Evidence
-                       ▼
-┌──────────────────────────────────────────────┐
-│ Stage 2: Nemotron 3 Nano / Granite 4 1B-H / SmolLM2 1.7B       │
-│ • Deep semantic interpretation               │
-│ • Evidence synthesis & hazard assessment     │
-│ • Engineering recommendation drafting        │
-└──────────────────────────────────────────────┘
-```
-
----
-
-## 3. GPU Scheduling & Concurrency Safety
-
-- **Max GPU Concurrency**: $1$ (Strict single active CUDA kernel execution to prevent VRAM thrashing on 4 GB GPUs).
-- **Graceful Warm-Resident Fallback**: Models stay resident in Ollama memory with automatic eviction upon priority swap.
+### Tier 2: CPU Models (Intel Core i5-11400H · 0 GPU VRAM · Multi-Runtime)
+| Model | Checkpoint | Provider | Size | Runtime | Badge | Specialization |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Liquid AI LFM2.5 350M** | `LiquidAI/lfm2.5-350m:latest` | Liquid AI | 379 MB | `Ollama` | `[EXTRACTION]` | Data extraction, structured output, tool routing |
+| **RWKV-7 0.4B** | `mollysama/rwkv-7-g1d:0.4b` | RWKV | 501 MB | `Ollama` | `[TEXT]` | Low-latency RNN text generation & summary |
+| **Meta MobileLLM-Pro 1B** | `facebook/MobileLLM-Pro-1B` | Meta Reality Labs | 580 MB | `ExecuTorch` | `[ASSISTANT]` | General on-device assistant, QA & reasoning |
+| **Meta MobileLLM 350M** | `facebook/MobileLLM-350M` | Meta | 210 MB | `ExecuTorch` | `[EDGE]` | Ultra-light edge routing & intent classification |
+| **Apple OpenELM 450M** | `apple/OpenELM-450M-Instruct` | Apple | 450 MB | `PyTorch` | `[TEXT]` | Layer-wise scaled text summarization |
+| **PaddleOCR 3.7.0 Engine** | `paddleocr-engine` | PaddleOCR | 62 MB | `ONNX` | `[OCR]` | Production Offline Document Intelligence |
+| **Faster-Whisper Tiny** | `tiny.en` | SYSTRAN | 78 MB | `ONNX` | `[VOICE]` | 100% Offline Speech-to-Text |
