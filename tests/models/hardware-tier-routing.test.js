@@ -9,7 +9,7 @@ test('Hardware Tier Routing & Partitioning', async (t) => {
     const cpuModels = getCpuModels();
 
     assert.ok(gpuModels.length >= 7, 'Should have at least 7 GPU models');
-    assert.ok(cpuModels.length >= 1, 'Should have at least 1 CPU model (LFM2.5)');
+    assert.ok(cpuModels.length >= 1, 'Should have at least 1 CPU model (LFM2.5 350M)');
 
     gpuModels.forEach(m => {
       assert.strictEqual(m.execution_target, 'GPU', `Model ${m.model_id} should be GPU`);
@@ -22,12 +22,12 @@ test('Hardware Tier Routing & Partitioning', async (t) => {
     });
   });
 
-  await t.test('Manual override routes to LFM2.5 CPU model', async () => {
+  await t.test('Manual override routes to LFM2.5 350M CPU model', async () => {
     const result = await routeTaskToLocalModel({
-      model_override: 'lfm2.5-1.2b-instruct',
-      task: 'Explain RAG in three concise points'
+      model_override: 'lfm2.5-350m',
+      task: 'Extract the main points from the inspection report'
     });
-    assert.strictEqual(result.selected_model, 'lfm2.5-1.2b-instruct');
+    assert.strictEqual(result.selected_model, 'lfm2.5-350m');
     assert.strictEqual(result.hardware_footprint.vram_mb, 0);
   });
 });

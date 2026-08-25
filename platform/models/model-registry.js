@@ -252,36 +252,39 @@ export const LOCAL_MODELS = [
     status: "ready"
   },
   {
-    model_id: "lfm2.5-1.2b-instruct",
-    ollama_name: "LiquidAI/lfm2.5-1.2b-instruct:latest",
-    name: "Liquid AI LFM2.5 1.2B Instruct",
+    model_id: "lfm2.5-350m",
+    ollama_name: "LiquidAI/lfm2.5-350m",
+    name: "Liquid AI LFM2.5 350M",
     provider: "Liquid AI",
+    role: "Lightweight CPU Extraction & Tool Model",
     runtime: "local-ollama",
     endpoint: "http://127.0.0.1:11434",
     execution_target: "CPU",
-    quantization: "Q4_K_M",
+    quantization: "Q8_0",
     vram_mb: 0,
-    ram_mb: 850,
+    ram_mb: 466,
     context_length: 128000,
     endpoint_options: {
       num_gpu: 0
     },
     supported_modalities: [ModelModality.TEXT],
     capabilities: [
-      "on-device-assistant",
-      "agentic-tasks",
       "data-extraction",
-      "rag-retrieval",
-      "tool-use",
-      "short-text-transformation",
+      "structured-output",
+      "classification",
+      "lightweight-tool-use",
+      "simple-transformations",
+      "routing-support",
+      "short-text-processing",
       "cpu-only-inference"
     ],
     recommended_tasks: [
-      "general-assistant",
-      "agentic-tasks",
       "data-extraction",
-      "rag-synthesis",
-      "cpu-edge-computation"
+      "structured-output",
+      "classification",
+      "lightweight-tool-routing",
+      "simple-rag-preprocessing",
+      "short-text-transformations"
     ],
     priority: 3,
     status: "ready"

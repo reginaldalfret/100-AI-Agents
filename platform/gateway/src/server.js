@@ -323,7 +323,7 @@ const server = http.createServer(async (req, res) => {
           ollama: {
             status: ollamaHealthy ? "ready" : "offline",
             port: 11434,
-            models: ["nemotron-3-nano:latest", "qwen2.5-coder:1.5b", "gemma3:1b", "llama3.2:1b", "granite4:1b-h", "phi4-mini", "smollm2:1.7b", "LiquidAI/lfm2.5-1.2b-instruct:latest"]
+            models: ["nemotron-3-nano:latest", "qwen2.5-coder:1.5b", "gemma3:1b", "llama3.2:1b", "granite4:1b-h", "phi4-mini", "smollm2:1.7b", "LiquidAI/lfm2.5-350m"]
           },
           python: pyStatus,
           gateway: {
@@ -672,11 +672,12 @@ const server = http.createServer(async (req, res) => {
         "smollm2": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" },
         "smollm2:1.7b": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" },
         "smollm2-1.7b": { tag: "smollm2:1.7b", displayName: "SmolLM2 1.7B", role: "lightweight-general-text" },
-        "lfm": { tag: "LiquidAI/lfm2.5-1.2b-instruct:latest", displayName: "Liquid AI LFM2.5 1.2B Instruct", role: "cpu-edge-assistant", execution_target: "CPU" },
-        "lfm2": { tag: "LiquidAI/lfm2.5-1.2b-instruct:latest", displayName: "Liquid AI LFM2.5 1.2B Instruct", role: "cpu-edge-assistant", execution_target: "CPU" },
-        "lfm2.5": { tag: "LiquidAI/lfm2.5-1.2b-instruct:latest", displayName: "Liquid AI LFM2.5 1.2B Instruct", role: "cpu-edge-assistant", execution_target: "CPU" },
-        "lfm2.5-1.2b-instruct": { tag: "LiquidAI/lfm2.5-1.2b-instruct:latest", displayName: "Liquid AI LFM2.5 1.2B Instruct", role: "cpu-edge-assistant", execution_target: "CPU" },
-        "LiquidAI/lfm2.5-1.2b-instruct:latest": { tag: "LiquidAI/lfm2.5-1.2b-instruct:latest", displayName: "Liquid AI LFM2.5 1.2B Instruct", role: "cpu-edge-assistant", execution_target: "CPU" }
+        "lfm": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" },
+        "lfm2": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" },
+        "lfm2.5": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" },
+        "lfm2.5-350m": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" },
+        "LiquidAI/lfm2.5-350m": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" },
+        "LiquidAI/lfm2.5-350m:latest": { tag: "LiquidAI/lfm2.5-350m", displayName: "Liquid AI LFM2.5 350M", role: "cpu-lightweight-extraction-tools", execution_target: "CPU" }
       };
 
       const requestedMode = payload.modelMode || "auto";

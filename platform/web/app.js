@@ -3689,53 +3689,66 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         'lfm': {
             id: 'lfm',
-            internalId: 'LiquidAI/lfm2.5-1.2b-instruct:latest',
-            displayName: 'LFM2.5-1.2B-Instruct',
+            internalId: 'LiquidAI/lfm2.5-350m',
+            displayName: 'LFM2.5-350M',
             provider: 'Liquid AI',
             execution_target: 'CPU',
             badge: 'CPU ONLY',
             speed: 'Fast CPU',
-            size: '731 MB',
-            description: 'On-Device / Agentic / Data Extraction / RAG',
+            size: '379 MB',
+            description: 'Edge / Extraction / Tools / Structured Output',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
         },
         'lfm2.5': {
             id: 'lfm',
-            internalId: 'LiquidAI/lfm2.5-1.2b-instruct:latest',
-            displayName: 'LFM2.5-1.2B-Instruct',
+            internalId: 'LiquidAI/lfm2.5-350m',
+            displayName: 'LFM2.5-350M',
             provider: 'Liquid AI',
             execution_target: 'CPU',
             badge: 'CPU ONLY',
             speed: 'Fast CPU',
-            size: '731 MB',
-            description: 'On-Device / Agentic / Data Extraction / RAG',
+            size: '379 MB',
+            description: 'Edge / Extraction / Tools / Structured Output',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
         },
-        'lfm2.5-1.2b-instruct': {
+        'lfm2.5-350m': {
             id: 'lfm',
-            internalId: 'LiquidAI/lfm2.5-1.2b-instruct:latest',
-            displayName: 'LFM2.5-1.2B-Instruct',
+            internalId: 'LiquidAI/lfm2.5-350m',
+            displayName: 'LFM2.5-350M',
             provider: 'Liquid AI',
             execution_target: 'CPU',
             badge: 'CPU ONLY',
             speed: 'Fast CPU',
-            size: '731 MB',
-            description: 'On-Device / Agentic / Data Extraction / RAG',
+            size: '379 MB',
+            description: 'Edge / Extraction / Tools / Structured Output',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
         },
-        'LiquidAI/lfm2.5-1.2b-instruct:latest': {
+        'LiquidAI/lfm2.5-350m': {
             id: 'lfm',
-            internalId: 'LiquidAI/lfm2.5-1.2b-instruct:latest',
-            displayName: 'LFM2.5-1.2B-Instruct',
+            internalId: 'LiquidAI/lfm2.5-350m',
+            displayName: 'LFM2.5-350M',
             provider: 'Liquid AI',
             execution_target: 'CPU',
             badge: 'CPU ONLY',
             speed: 'Fast CPU',
-            size: '731 MB',
-            description: 'On-Device / Agentic / Data Extraction / RAG',
+            size: '379 MB',
+            description: 'Edge / Extraction / Tools / Structured Output',
+            runtime: 'Local Ollama (127.0.0.1:11434)',
+            hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
+        },
+        'LiquidAI/lfm2.5-350m:latest': {
+            id: 'lfm',
+            internalId: 'LiquidAI/lfm2.5-350m',
+            displayName: 'LFM2.5-350M',
+            provider: 'Liquid AI',
+            execution_target: 'CPU',
+            badge: 'CPU ONLY',
+            speed: 'Fast CPU',
+            size: '379 MB',
+            description: 'Edge / Extraction / Tools / Structured Output',
             runtime: 'Local Ollama (127.0.0.1:11434)',
             hardware: 'CPU ONLY (Intel Core i5-11400H · 0 VRAM)'
         }
@@ -3800,6 +3813,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function openModelDropdown() {
         elements.modelDropdown.style.display = 'block';
         elements.modelSelectorBtn.setAttribute('aria-expanded', 'true');
+        setTimeout(() => {
+            const activeItem = elements.modelDropdown.querySelector('.model-option-item.active');
+            if (activeItem) {
+                activeItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }, 20);
     }
 
     function closeModelDropdown() {

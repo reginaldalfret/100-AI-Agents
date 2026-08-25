@@ -22,12 +22,12 @@ To maximize resource efficiency and guarantee absolute zero VRAM overflow on 4GB
              GPU MODEL TIER                                CPU MODEL TIER
      (execution_target: "GPU")                      (execution_target: "CPU")
   ┌─────────────────────────────────┐           ┌─────────────────────────────────┐
-  │ • NVIDIA Nemotron 3 Nano        │           │ • Liquid AI LFM2.5 1.2B Instruct│
-  │ • Qwen 2.5 Coder 1.5B           │           │   (LiquidAI/lfm2.5-1.2b-instruct│
-  │ • IBM Granite 4 1B-H            │           │    :latest)                     │
-  │ • Microsoft Phi-4 Mini          │           │ • Future CPU Models             │
-  │ • Meta Llama 3.2 1B             │           │   (auto-rendered via registry)  │
-  │ • Google Gemma 3 1B             │           └────────────────┬────────────────┘
+  │ • NVIDIA Nemotron 3 Nano        │           │ • Liquid AI LFM2.5 350M         │
+  │ • Qwen 2.5 Coder 1.5B           │           │   (LiquidAI/lfm2.5-350m:latest) │
+  │ • IBM Granite 4 1B-H            │           │ • Future CPU Models             │
+  │ • Microsoft Phi-4 Mini          │           │   (auto-rendered via registry)  │
+  │ • Meta Llama 3.2 1B             │           └────────────────┬────────────────┘
+  │ • Google Gemma 3 1B             │                            │
   │ • SmolLM2 1.7B                  │                            │
   └────────────────┬────────────────┘                            │
                    │ Lock (RTX 2050 Mutex)                       │ Lock-Free / Parallel
@@ -51,14 +51,14 @@ All GPU models are managed under a strict single-model concurrency mutex (`MAX_G
 | **Meta Llama 3.2 1B** | `llama3.2:1b` | 1.2B | Q4_K_M | 1.3 GB | ~900 MB | Fast general text & conversational prompts |
 | **IBM Granite 4 1B-H** | `granite4:1b-h` | 1.0B | Q4_K_M | 1.4 GB | ~1.1 GB | Enterprise RAG, structured tool execution |
 | **Microsoft Phi-4 Mini** | `phi4-mini` | 3.8B | Q4_K_M | 2.5 GB | ~2.6 GB | STEM reasoning, mathematical logic |
-| **SmolLM2 1.7B** | `smollm2:1.7b` | 1.7B | Q4_K_M | 1.8 GB | ~1.8 GB | High-throughput compact text transformation |
+| **SmolLM2 1.7B** | `smollm2:1.7b` | 1.7B | Q8_0 | 1.8 GB | ~1.8 GB | High-throughput compact text transformation |
 
 ### Tier 2: CPU-Only Models (`execution_target: "CPU"`)
 CPU-only models run strictly on the Intel Core i5-11400H CPU with `num_gpu: 0` (0 GPU layers offloaded), allocating 0 MB of GPU VRAM:
 
 | Model | Ollama Tag | Parameters | Quantization | Size | RAM Footprint | VRAM | Specialization |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Liquid AI LFM2.5 1.2B Instruct** | `LiquidAI/lfm2.5-1.2b-instruct:latest` | 1.2B | Q4_K_M | 730 MB | ~846 MB | **0 MB** | On-device agentic workflows, data extraction, RAG synthesis |
+| **Liquid AI LFM2.5 350M** | `LiquidAI/lfm2.5-350m:latest` | 354M | Q8_0 | 379 MB | ~466 MB | **0 MB** | Lightweight CPU data extraction, structured output, classification, tool routing |
 
 ---
 

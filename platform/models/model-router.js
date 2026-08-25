@@ -29,8 +29,8 @@ export async function routeTaskToLocalModel(taskInput = {}) {
       selectedModelId = 'phi4-mini';
     } else if (taskInput.model_override === 'smollm2:1.7b' || taskInput.model_override === 'smollm2-1.7b' || taskInput.model_override === 'smollm2' || taskInput.model_override === 'smollm') {
       selectedModelId = 'smollm2-1.7b';
-    } else if (taskInput.model_override === 'LiquidAI/lfm2.5-1.2b-instruct:latest' || taskInput.model_override === 'lfm2.5-1.2b-instruct' || taskInput.model_override === 'lfm' || taskInput.model_override === 'lfm2.5') {
-      selectedModelId = 'lfm2.5-1.2b-instruct';
+    } else if (taskInput.model_override === 'LiquidAI/lfm2.5-350m' || taskInput.model_override === 'LiquidAI/lfm2.5-350m:latest' || taskInput.model_override === 'lfm2.5-350m' || taskInput.model_override === 'lfm' || taskInput.model_override === 'lfm2.5' || taskInput.model_override === 'lfm-350m') {
+      selectedModelId = 'lfm2.5-350m';
     }
   } else if (taskInput.modelMode && taskInput.modelMode !== 'auto') {
     if (taskInput.modelMode === 'gemma' || taskInput.modelMode === 'gemma3') selectedModelId = 'gemma3-1b';
@@ -40,7 +40,7 @@ export async function routeTaskToLocalModel(taskInput = {}) {
     else if (taskInput.modelMode === 'granite') selectedModelId = 'granite4-1b-h';
     else if (taskInput.modelMode === 'phi') selectedModelId = 'phi4-mini';
     else if (taskInput.modelMode === 'smollm2' || taskInput.modelMode === 'smollm') selectedModelId = 'smollm2-1.7b';
-    else if (taskInput.modelMode === 'lfm' || taskInput.modelMode === 'lfm2.5' || taskInput.modelMode === 'lfm2.5-1.2b-instruct') selectedModelId = 'lfm2.5-1.2b-instruct';
+    else if (taskInput.modelMode === 'lfm' || taskInput.modelMode === 'lfm2.5' || taskInput.modelMode === 'lfm2.5-350m' || taskInput.modelMode === 'lfm-350m') selectedModelId = 'lfm2.5-350m';
   }
 
   const modelSpec = getModelById(selectedModelId) || LOCAL_MODELS[0];

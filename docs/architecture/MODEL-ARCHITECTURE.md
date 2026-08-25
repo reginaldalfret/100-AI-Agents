@@ -20,8 +20,7 @@
 
 ### CPU Models (Intel Core i5-11400H · Zero GPU VRAM · Independent Compute)
 | Subsystem / Model | Canonical Runtime Tag | Primary Specialization | Memory Footprint | Air-Gap Mode |
-| :--- | :--- | :--- | :--- | :--- |
-| **Liquid AI LFM2.5 1.2B Instruct** | `LiquidAI/lfm2.5-1.2b-instruct:latest` | **On-Device Agentic Tasks, Data Extraction & RAG**<br>100% CPU-only liquid neural network execution, tool use, structured extraction | 730 MB disk / 846 MB RAM (**0 MB VRAM**) | Local Ollama (`num_gpu: 0`) |
+| **Liquid AI LFM2.5 350M** | `LiquidAI/lfm2.5-350m:latest` | **Lightweight CPU Extraction & Tool Model**<br>100% CPU-only liquid neural network execution, structured data extraction, classification, tool routing | 379 MB disk / 466 MB RAM (**0 MB VRAM**) | Local Ollama (`num_gpu: 0`) |
 | **OCR & Document Intelligence** | `paddleocr-engine` | **Production Offline Document Intelligence**<br>PaddleOCR 3.7.0 / PP-OCRv6 Small / PP-StructureV3 / SLANet Tables / PP-FormulaNet LaTeX | ~62 MB models / CPU+GPU | PaddleOCR Local |
 | **Faster-Whisper Tiny** | `tiny.en` | **100% Offline Speech-to-Text (Voice Input)**<br>Local audio capture, int8 CPU inference, zero cloud streaming | 78 MB RAM | Local Python / ONNX |
 

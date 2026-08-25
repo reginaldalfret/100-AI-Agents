@@ -94,17 +94,17 @@
       "description": "High-throughput compact model for general text generation, rewriting, summarization, and lightweight conversational tasks"
     },
     {
-      "id": "LiquidAI/lfm2.5-1.2b-instruct:latest",
-      "name": "Liquid AI LFM2.5 1.2B Instruct",
-      "tag": "LiquidAI/lfm2.5-1.2b-instruct:latest",
-      "role": "cpu_edge_assistant",
-      "specialization": "CPU-Only Agentic Tasks & RAG",
+      "id": "LiquidAI/lfm2.5-350m",
+      "name": "Liquid AI LFM2.5 350M",
+      "tag": "LiquidAI/lfm2.5-350m",
+      "role": "cpu_extraction_tools",
+      "specialization": "Lightweight CPU Extraction & Tool Model",
       "execution_target": "CPU",
       "required": false,
-      "sizeBytes": 730000000,
-      "sizeDisplay": "730 MB",
+      "sizeBytes": 379000000,
+      "sizeDisplay": "379 MB",
       "vramMinMb": 0,
-      "description": "100% CPU-only liquid foundation model for on-device agentic workflows, data extraction, and RAG synthesis with zero GPU footprint"
+      "description": "100% CPU-only liquid neural network model for structured data extraction, classification, lightweight tool routing, and simple text transformations with zero GPU VRAM footprint"
     },
     {
       "id": "paddleocr-engine",
