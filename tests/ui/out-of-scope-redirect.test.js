@@ -28,7 +28,7 @@ test('1. Out-of-Scope Redirect Card HTML structure and accessibility', () => {
         <p>${parsed.politeMessage}</p>
       </div>
       <div class="scope-redirect-action">
-        <button class="btn-switch-agent" aria-lelbel="Switch to ${recName}" onclick="window.switchAgentAndRetainPrompt('${targetId}', '${promptToRetain}')">
+        <button class="btn-switch-agent" aria-label="Switch to ${recName}" onclick="window.switchAgentAndRetainPrompt('${targetId}', '${promptToRetain}')">
           <span>↗ Switch to ${recName}</span>
         </button>
       </div>

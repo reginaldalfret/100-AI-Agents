@@ -36,7 +36,8 @@ Enterprises operating in oil & gas, defense, power grids, manufacturing, and cri
 8. **Universal Backend Execution Trace**: Every completed response displays truthful hardware execution metrics (`Ran on NVIDIA RTX 2050`), model engine, exact runtime model, air-gap status, and subtask telemetry.
 9. **Real Indian English Female Voice**: Sweet, articulate, natural `en-IN` female voice persona (`Microsoft Heera - en-IN`) with conversational humanized sentence pacing and speech sanitization.
 10. **Liquid Glass UI & Visual Architecture**: Translucent glassmorphism interface with real-time Mermaid diagrams, SVG charts, and Markdown rendering.
-11. **Cryptographic Artifact Workspace**: All generated code files (`.cpp`, `.java`, `.py`, `.html`, `.css`, `.js`) are isolated, syntax-validated, and stamped with SHA-256 checksums.
+11. **Smart Agent Handoff & Auto-Rerouting (1-Click Specialization Switch)**: When an agent detects a prompt outside its domain (e.g. asking Writing AI Agent 001 to generate a multiple-choice quiz), the system renders a polite Smart Redirect Card with a 1-click `[ Switch to Quiz AI Agent ]` button. Clicking switches the active workspace, updates headers and sidebar, preserves conversation history, and automatically re-executes the original prompt with the target specialist without manual retyping.
+12. **Cryptographic Artifact Workspace**: All generated code files (`.cpp`, `.java`, `.py`, `.html`, `.css`, `.js`) are isolated, syntax-validated, and stamped with SHA-256 checksums.
 
 ---
 
