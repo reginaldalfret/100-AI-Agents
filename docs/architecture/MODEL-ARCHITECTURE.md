@@ -21,14 +21,14 @@
 | **IBM Granite 4 1B-H** | `granite4:1b-h` | 1.0B | Q4_K_M | 1.4 GB | ~1.1 GB | Enterprise RAG & Tool Execution |
 | **Microsoft Phi-4 Mini** | `phi4-mini` | 3.8B | Q4_K_M | 2.5 GB | ~2.6 GB | STEM Reasoning & Mathematical Logic |
 | **SmolLM2 1.7B** | `smollm2:1.7b` | 1.7B | Q8_0 | 1.8 GB | ~1.8 GB | High-Throughput Reasoning & Transformation |
+| **Falcon3 1B** | `falcon3:1b-instruct-q4_K_M` | 1.67B | Q4_K_M | 1.1 GB | ~1.3 GB | Science, Mathematics & Lightweight Coding |
 
 ### Tier 2: CPU Models (Intel Core i5-11400H · 0 GPU VRAM · Multi-Runtime)
 | Model | Checkpoint | Provider | Size | Runtime | Badge | Specialization |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Liquid AI LFM2.5 350M** | `LiquidAI/lfm2.5-350m:latest` | Liquid AI | 379 MB | `Ollama` | `[EXTRACTION]` | Data extraction, structured output, tool routing |
 | **RWKV-7 0.4B** | `mollysama/rwkv-7-g1d:0.4b` | RWKV | 501 MB | `Ollama` | `[TEXT]` | Low-latency RNN text generation & summary |
-| **Meta MobileLLM-Pro 1B** | `facebook/MobileLLM-Pro-1B` | Meta Reality Labs | 580 MB | `ExecuTorch` | `[ASSISTANT]` | General on-device assistant, QA & reasoning |
-| **Meta MobileLLM 350M** | `facebook/MobileLLM-350M` | Meta | 210 MB | `ExecuTorch` | `[EDGE]` | Ultra-light edge routing & intent classification |
-| **Apple OpenELM 450M** | `apple/OpenELM-450M-Instruct` | Apple | 450 MB | `PyTorch` | `[TEXT]` | Layer-wise scaled text summarization |
+| **TinyLlama 1.1B** | `tinyllama:1.1b-chat` | TinyLlama | 637 MB | `Ollama` | `[GENERAL]` | Lightweight general chat, short rewriting & simple Q&A |
+| **Stable LM 2 1.6B** | `stablelm2:1.6b` | Stability AI | 982 MB | `Ollama` | `[GENERAL]` | General text generation, summarization & rewriting |
 | **PaddleOCR 3.7.0 Engine** | `paddleocr-engine` | PaddleOCR | 62 MB | `ONNX` | `[OCR]` | Production Offline Document Intelligence |
 | **Faster-Whisper Tiny** | `tiny.en` | SYSTRAN | 78 MB | `ONNX` | `[VOICE]` | 100% Offline Speech-to-Text |

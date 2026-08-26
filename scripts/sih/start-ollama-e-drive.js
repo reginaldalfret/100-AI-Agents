@@ -3,7 +3,7 @@ import path from "node:path";
 import http from "node:http";
 
 const ollamaPath = path.join(process.env.LOCALAPPDATA || "C:\\Users\\ASUS\\AppData\\Local", "Programs", "Ollama", "ollama.exe");
-const modelsDir = "E:\\Smart Automation\\AI\\Models\\Ollama";
+const modelsDir = "E:\\Smart Automation\\100-AI-Agents\\models\\ollama";
 
 console.log(`Starting Ollama with OLLAMA_MODELS=${modelsDir}`);
 

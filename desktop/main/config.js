@@ -8,10 +8,9 @@ const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '../../');
 
 const isProduction = process.env.NODE_ENV === 'production' || Boolean(process.resourcesPath && !process.defaultApp);
-const appDataRoot = process.env.LOCALAPPDATA
-  ? path.join(process.env.LOCALAPPDATA, '301SuperAI')
-  : path.join(os.homedir(), '.301superai');
-
+const appDataRoot = process.env.PROJECT_ROOT
+  ? path.join(process.env.PROJECT_ROOT, 'desktop-data')
+  : path.join(projectRoot, 'desktop-data');
 if (!fs.existsSync(appDataRoot)) {
   try {
     fs.mkdirSync(appDataRoot, { recursive: true });

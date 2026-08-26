@@ -7,11 +7,7 @@ test('CPU Runtime Selection and Concurrency Lock Bypass', async (t) => {
   await t.test('All 5 CPU models bypass GPU mutex lock', async () => {
     const models = [
       'LiquidAI/lfm2.5-350m',
-      'mollysama/rwkv-7-g1d:0.4b',
-      'mobilellm-pro-1b',
-      'mobilellm-350m',
-      'openelm-450m'
-    ];
+      'mollysama/rwkv-7-g1d:0.4b'    ];
 
     for (const model of models) {
       const lock = await modelStreamer.acquireExecutionLock(model);
