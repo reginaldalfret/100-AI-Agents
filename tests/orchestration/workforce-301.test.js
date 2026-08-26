@@ -109,6 +109,6 @@ test('301 Workforce Registry Integrity', async (t) => {
     // 11. Engineering/Release: 291-301
     assert.equal(agents[290].name, 'Repository Architecture AI Agent');
     assert.equal(agents[291].name, 'Monorepo Architecture AI Agent');
-    assert.equal(agents[300].name, 'Engineering Workflow AI Agent');
+    assert.equal(agents[300].name, 'Super AI Agent');
   });
 });

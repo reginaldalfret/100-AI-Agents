@@ -18338,9 +18338,9 @@
     {
       "day": 301,
       "agent_id": "agent-301",
-      "name": "Engineering Workflow AI Agent",
-      "slug": "engineering-workflow-ai-agent",
-      "category": "Automation & Productivity",
+      "name": "Super AI Agent",
+      "slug": "super-ai-agent",
+      "category": "Orchestrator",
       "status": "ready",
       "github_repo": "",
       "vercel_project": "",
@@ -18350,55 +18350,53 @@
       "model": "nemotron-3-nano",
       "backend": "http://127.0.0.1:11434",
       "port": 8401,
-      "educational_name": "Engineering Workflow AI Agent",
-      "educational_domain": "software-engineering-workflows",
-      "domain_name": "Software Engineering Workflows",
-      "classification": "SPECIALIST",
+      "educational_name": "Super AI Agent",
+      "educational_domain": "master-orchestration",
+      "domain_name": "Master Orchestrator",
+      "classification": "ORCHESTRATOR",
       "allowed_tools": [
-        "record_agent_action",
-        "read_file",
-        "inspect_code",
-        "run_verification"
+        "delegate_subtask",
+        "synthesize_evidence",
+        "query_knowledge_base",
+        "route_model"
       ],
       "workflow_roles": [
-        "task-execution",
-        "domain-specialist"
+        "master-orchestration",
+        "multi-agent-planning"
       ],
-      "displayName": "Engineering Workflow AI Agent",
+      "displayName": "Super AI Agent",
       "displayNumber": "301",
-      "domain": "Software Engineering Workflows",
-      "description": "Specialized in PR templates, issue templates, RFC technical review workflows, design document templates, and engineering process standards.",
+      "domain": "Master Orchestrator",
+      "description": "The master AI orchestrator that coordinates the 300 specialist AI agents to solve complex multi-step industrial and enterprise objectives.",
       "capabilities": [
-        "github-pr-issue-templates",
-        "rfc-technical-review-process",
-        "design-doc-template-architecture",
-        "team-coding-standards-handbook",
-        "postmortem-blameless-template"
+        "Autonomous Task Planning",
+        "Dynamic Multi-Model Routing",
+        "Evidence Synthesis",
+        "Specialist Fleet Orchestration"
       ],
       "allowed_operations": [
         "READ",
         "ANALYZE",
-        "EDIT",
-        "TEST"
+        "PLAN",
+        "DELEGATE",
+        "SYNTHESIZE"
       ],
       "forbidden_operations": [
-        "PRODUCTION_DEPLOY",
-        "SELF_MERGE",
-        "PRIVILEGED_MIGRATION_GEN"
+        "EXTERNAL_EGRESS",
+        "UNAUDITED_MUTATION"
       ],
       "risk_level": "LOW",
       "trigger_conditions": [
-        "engineering workflow",
-        "pull request template",
-        "rfc template",
-        "design doc",
-        "postmortem template",
-        "coding standards"
+        "complex task",
+        "multi-agent workflow",
+        "end-to-end investigation",
+        "full project planning"
       ],
       "examples": [
-        "Analyze and optimize Software Engineering Workflows tasks",
-        "Investigate potential bottlenecks and vulnerabilities in Software Engineering Workflows",
-        "Provide step-by-step implementation for Software Engineering Workflows"
+        "Build me a complete full-stack web application with database and tests",
+        "Perform end-to-end investigation, analyze data, and prepare deliverables",
+        "Coordinate research, coding, documentation, and testing for this project",
+        "Analyze this complex problem using multiple specialized AI agents"
       ]
     }
   ]

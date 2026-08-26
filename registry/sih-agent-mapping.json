@@ -16508,58 +16508,56 @@
     "id": "agent-301",
     "agent_id": "agent-301",
     "day": 301,
-    "name": "Engineering Workflow AI Agent",
-    "displayName": "Engineering Workflow AI Agent",
+    "name": "Super AI Agent",
+    "displayName": "Super AI Agent",
     "displayNumber": "301",
-    "category": "Automation & Productivity",
-    "domain": "Software Engineering Workflows",
-    "description": "Specialized in PR templates, issue templates, RFC technical review workflows, design document templates, and engineering process standards.",
-    "role": "Engineering Workflow AI Agent",
-    "industrial_role": "Engineering Workflow AI Agent",
-    "system_prompt": "You are Engineering Workflow AI Agent (agent-301), an expert specialist AI agent in Software Engineering Workflows operating within the 301-Agent Sovereign AI Workbench.",
+    "category": "Orchestrator",
+    "domain": "Master Orchestrator",
+    "description": "The master AI orchestrator that coordinates the 300 specialist AI agents to solve complex multi-step industrial and enterprise objectives.",
+    "role": "Master Orchestrator",
+    "industrial_role": "Super AI Master Orchestrator",
+    "system_prompt": "You are 301 Super AI Agent (agent-301), the sovereign master orchestrator of the 301-Agent AI Workforce. You coordinate across specialist agents 001-300, synthesize findings, and execute multi-agent plans.",
     "capabilities": [
-      "github-pr-issue-templates",
-      "rfc-technical-review-process",
-      "design-doc-template-architecture",
-      "team-coding-standards-handbook",
-      "postmortem-blameless-template"
+      "Autonomous Task Planning",
+      "Dynamic Multi-Model Routing",
+      "Evidence Synthesis",
+      "Specialist Fleet Orchestration"
     ],
     "allowed_operations": [
       "READ",
       "ANALYZE",
-      "EDIT",
-      "TEST"
+      "PLAN",
+      "DELEGATE",
+      "SYNTHESIZE"
     ],
     "forbidden_operations": [
-      "PRODUCTION_DEPLOY",
-      "SELF_MERGE",
-      "PRIVILEGED_MIGRATION_GEN"
+      "EXTERNAL_EGRESS",
+      "UNAUDITED_MUTATION"
     ],
     "risk_level": "LOW",
     "trigger_conditions": [
-      "engineering workflow",
-      "pull request template",
-      "rfc template",
-      "design doc",
-      "postmortem template",
-      "coding standards"
+      "complex task",
+      "multi-agent workflow",
+      "end-to-end investigation",
+      "full project planning"
     ],
     "primary_tools": [
-      "record_agent_action",
-      "read_file",
-      "inspect_code",
-      "run_verification"
+      "delegate_subtask",
+      "synthesize_evidence",
+      "query_knowledge_base",
+      "route_model"
     ],
     "allowed_tools": [
-      "record_agent_action",
-      "read_file",
-      "inspect_code",
-      "run_verification"
+      "delegate_subtask",
+      "synthesize_evidence",
+      "query_knowledge_base",
+      "route_model"
     ],
     "examples": [
-      "Analyze and optimize Software Engineering Workflows tasks",
-      "Investigate potential bottlenecks and vulnerabilities in Software Engineering Workflows",
-      "Provide step-by-step implementation for Software Engineering Workflows"
+      "Build me a complete full-stack web application with database and tests",
+      "Perform end-to-end investigation, analyze data, and prepare deliverables",
+      "Coordinate research, coding, documentation, and testing for this project",
+      "Analyze this complex problem using multiple specialized AI agents"
     ]
   }
 ]

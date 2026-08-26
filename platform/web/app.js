@@ -2031,7 +2031,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const specialistAgents = (data.agents || [])
                 .filter(a => {
                     const rawId = a.agent_id || a.id || '';
-                    return a.id !== 'auto' && a.name !== 'Super AI Agent';
+                    const rawName = a.displayName || a.name || '';
+                    return a.id !== 'auto' && 
+                           rawId !== 'agent-301' && 
+                           rawId !== 'super-orchestrator' && 
+                           a.category !== 'Orchestrator' && 
+                           rawName !== 'Super AI Agent' && 
+                           !rawName.includes('Engineering Workflow');
                 })
                 .map(a => {
                     const num = parseInt((a.agent_id || a.id || '').replace(/\D/g, ''), 10);
