@@ -1,0 +1,2 @@
+model,provider,runtime,parameters,quantization,model_size_mb,ttft_ms,latency_ms,tokens_per_sec,gpu_vram_before_mb,gpu_vram_after_mb,gpu_vram_delta_mb,gpu_utilization,gpu_temperature,external_calls,status
+falcon3-1b-instruct,"Technology Innovation Institute",Ollama,1.67B,Q4_K_M,1100,4408,4753,105.12,1027,2323,1296,94,58,0,SUCCESS

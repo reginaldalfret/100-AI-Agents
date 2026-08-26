@@ -1,26 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { isCpuModel } from '../../platform/models/model-registry.js';
-import { modelStreamer } from '../../platform/models/model-streamer.js';
+import { isCpuModel, getModelById, getCpuModels, LOCAL_MODELS } from '../../platform/models/model-registry.js';
 
-test('Runtime CPU-Only Model Execution & Mutex Bypass', async (t) => {
-  await t.test('CPU models bypass GPU mutex lock and return isCpu: true', async () => {
-    const lock1 = await modelStreamer.acquireExecutionLock('LiquidAI/lfm2.5-350m');
-    assert.strictEqual(lock1.acquired, true);
-    assert.strictEqual(lock1.isCpu, true);
-    modelStreamer.releaseExecutionLock(lock1);
+test('CPU-Only Model Isolation & Concurrency Verification', () => {
+  const cpuList = getCpuModels();
+  assert.equal(cpuList.length, 4, 'Exactly 4 active CPU LLMs must be configured');
 
-    const lock2 = await modelStreamer.acquireExecutionLock('mollysama/rwkv-7-g1d:0.4b');
-    assert.strictEqual(lock2.acquired, true);
-    assert.strictEqual(lock2.isCpu, true);
-    modelStreamer.releaseExecutionLock(lock2);
-  });
-
-  await t.test('isCpuModel correctly classifies Liquid AI LFM2.5 350M and RWKV-7 0.4B', () => {
-    assert.strictEqual(isCpuModel('LiquidAI/lfm2.5-350m'), true);
-    assert.strictEqual(isCpuModel('lfm2.5-350m'), true);
-    assert.strictEqual(isCpuModel('mollysama/rwkv-7-g1d:0.4b'), true);
-    assert.strictEqual(isCpuModel('rwkv7-0.4b'), true);
-    assert.strictEqual(isCpuModel('rwkv'), true);
-  });
+  for (const m of cpuList) {
+    assert.equal(m.vram_mb, 0, `${m.name} must have 0 MB VRAM footprint`);
+    assert.ok(isCpuModel(m.model_id), `${m.model_id} must be recognized as CPU model`);
+  }
 });

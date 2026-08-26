@@ -24,7 +24,7 @@ test('RWKV-7 0.4B Model Registry and CPU Tiering', async (t) => {
 
   await t.test('getCpuModels contains RWKV-7 0.4B and LFM2.5 350M', () => {
     const cpuModels = getCpuModels();
-    assert.strictEqual(cpuModels.length, 5, 'CPU models tier must contain 5 active models');
+    assert.strictEqual(cpuModels.length, 4, 'CPU models tier must contain 4 active models');
     const rwkv = cpuModels.find(m => m.model_id === 'rwkv7-0.4b');
     const lfm = cpuModels.find(m => m.model_id === 'lfm2.5-350m');
     assert.ok(rwkv, 'CPU models list must contain RWKV-7');

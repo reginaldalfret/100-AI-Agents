@@ -99,7 +99,7 @@ describe('True Real-Time Token Streaming Test Suite', async () => {
     let receivedComplete = null;
 
     await readSSE({
-      agent_id: 'agent-101',
+      agent_id: 'agent-001',
       task: 'Write a 1-line Python hello world function.',
       modelMode: 'qwen',
       model_override: 'qwen2.5-coder:1.5b',
@@ -132,7 +132,7 @@ describe('True Real-Time Token Streaming Test Suite', async () => {
     const tokenChunks = [];
 
     await readSSE({
-      agent_id: 'agent-101',
+      agent_id: 'agent-001',
       task: 'def compute_discount(price, pct): return price * (1 - pct)',
       modelMode: 'auto',
       parameters: { max_tokens: 30 }
@@ -158,7 +158,7 @@ describe('True Real-Time Token Streaming Test Suite', async () => {
     let aborted = false;
 
     await readSSE({
-      agent_id: 'agent-101',
+      agent_id: 'agent-001',
       task: 'List numbers from 1 to 20 slowly.',
       modelMode: 'qwen',
       model_override: 'qwen2.5-coder:1.5b',

@@ -4,7 +4,7 @@ $ProjectRoot = (Resolve-Path (Join-Path $ScriptDir "..")).Path
 $env:PROJECT_ROOT = $ProjectRoot
 $env:OLLAMA_MODEL = if ($env:OLLAMA_MODEL) { $env:OLLAMA_MODEL } else { "nemotron-3-nano" }
 $env:OLLAMA_BASE_URL = if ($env:OLLAMA_BASE_URL) { $env:OLLAMA_BASE_URL } else { "http://127.0.0.1:11434" }
-$env:OLLAMA_MODELS = "E:\Smart Automation\AI\Models\Ollama"
+$env:OLLAMA_MODELS = "E:\Smart Automation\100-AI-Agents\models\ollama"
 
 $agents = @(
     "agents\agent-001-writing-agent\backend\src\server.js",

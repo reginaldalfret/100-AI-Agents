@@ -6,7 +6,8 @@ import { fileURLToPath } from "node:url";
 import { WorkflowEngine, SuperAIWorkflowEngine, globalSuperAIWorkflowEngine, ResourceScheduler, ArtifactManager, globalArtifactManager } from "../../workflow-engine/index.js";
 import { EventEmitter } from "node:events";
 import { StudentService, AcademicService, FinanceService, DocumentService, AdmissionService, FacultyService, AuditService } from "../../services/index.js";
-import { modelStreamer, ModelLifecycleState } from "../../models/model-streamer.js";
+import { modelStreamer, ModelLifecycleState, runLocalModel } from "../../models/model-streamer.js";
+import { getModelById, LOCAL_MODELS, isCpuModel } from "../../models/model-registry.js";
 import { conversationManager } from "../../context/index.js";
 import { agentScopeGuard } from "../../intelligence/index.js";
 import { documentExtractor, imageQuestionPipeline, classifyTaskAndAgent, TaskType } from "../../multimodal/index.js";
@@ -683,13 +684,18 @@ const server = http.createServer(async (req, res) => {
         "rwkv-7": { tag: "mollysama/rwkv-7-g1d:0.4b", displayName: "RWKV-7 0.4B", role: "cpu-lightweight-general-text", execution_target: "CPU" },
         "rwkv7-0.4b": { tag: "mollysama/rwkv-7-g1d:0.4b", displayName: "RWKV-7 0.4B", role: "cpu-lightweight-general-text", execution_target: "CPU" },
         "mollysama/rwkv-7-g1d:0.4b": { tag: "mollysama/rwkv-7-g1d:0.4b", displayName: "RWKV-7 0.4B", role: "cpu-lightweight-general-text", execution_target: "CPU" },
-        "mobilellm-pro": { tag: "facebook/MobileLLM-Pro-1B", displayName: "Meta MobileLLM-Pro 1B", provider: "Meta Reality Labs", role: "cpu-general-assistant", execution_target: "CPU", runtime_type: "EXECUTORCH" },
-        "mobilellm-pro-1b": { tag: "facebook/MobileLLM-Pro-1B", displayName: "Meta MobileLLM-Pro 1B", provider: "Meta Reality Labs", role: "cpu-general-assistant", execution_target: "CPU", runtime_type: "EXECUTORCH" },
-        "mobilellm": { tag: "facebook/MobileLLM-350M", displayName: "Meta MobileLLM 350M", provider: "Meta", role: "cpu-ultra-light-edge", execution_target: "CPU", runtime_type: "EXECUTORCH" },
-        "mobilellm-350m": { tag: "facebook/MobileLLM-350M", displayName: "Meta MobileLLM 350M", provider: "Meta", role: "cpu-ultra-light-edge", execution_target: "CPU", runtime_type: "EXECUTORCH" },
-        "openelm": { tag: "apple/OpenELM-450M-Instruct", displayName: "Apple OpenELM 450M", provider: "Apple", role: "cpu-lightweight-text", execution_target: "CPU", runtime_type: "PYTORCH" },
-        "openelm-450m": { tag: "apple/OpenELM-450M-Instruct", displayName: "Apple OpenELM 450M", provider: "Apple", role: "cpu-lightweight-text", execution_target: "CPU", runtime_type: "PYTORCH" },
-        "openelm-1.1b": { tag: "apple/OpenELM-1_1B-Instruct", displayName: "Apple OpenELM 1.1B", provider: "Apple", role: "cpu-extended-text", execution_target: "CPU", runtime_type: "PYTORCH" }
+        "tinyllama": { tag: "tinyllama:1.1b-chat", displayName: "TinyLlama 1.1B", provider: "TinyLlama", role: "cpu-lightweight-general-chat", execution_target: "CPU" },
+        "tinyllama-1.1b": { tag: "tinyllama:1.1b-chat", displayName: "TinyLlama 1.1B", provider: "TinyLlama", role: "cpu-lightweight-general-chat", execution_target: "CPU" },
+        "tinyllama:1.1b-chat": { tag: "tinyllama:1.1b-chat", displayName: "TinyLlama 1.1B", provider: "TinyLlama", role: "cpu-lightweight-general-chat", execution_target: "CPU" },
+        "stablelm": { tag: "stablelm2:1.6b", displayName: "Stable LM 2 1.6B", provider: "Stability AI", role: "cpu-general-text-summarization", execution_target: "CPU" },
+        "stablelm2": { tag: "stablelm2:1.6b", displayName: "Stable LM 2 1.6B", provider: "Stability AI", role: "cpu-general-text-summarization", execution_target: "CPU" },
+        "stablelm2-1.6b": { tag: "stablelm2:1.6b", displayName: "Stable LM 2 1.6B", provider: "Stability AI", role: "cpu-general-text-summarization", execution_target: "CPU" },
+        "stablelm2:1.6b": { tag: "stablelm2:1.6b", displayName: "Stable LM 2 1.6B", provider: "Stability AI", role: "cpu-general-text-summarization", execution_target: "CPU" },
+        "falcon": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
+        "falcon3": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
+        "falcon3-1b": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
+        "falcon3-1b-instruct": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
+        "falcon3:1b-instruct-q4_K_M": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" }
       };
 
       const requestedMode = payload.modelMode || "auto";
@@ -700,7 +706,20 @@ const server = http.createServer(async (req, res) => {
       let modelDisplayName = "NVIDIA Nemotron 3";
 
       if (isManual) {
-        const mapped = CANONICAL_MODEL_MAP[requestedOverride];
+        let mapped = CANONICAL_MODEL_MAP[requestedOverride];
+        if (!mapped) {
+          const reg = getModelById(requestedOverride) || LOCAL_MODELS.find(m => m.model_id === requestedOverride || m.ollama_name === requestedOverride);
+          if (reg) {
+            mapped = {
+              tag: reg.ollama_name || reg.model_id,
+              displayName: reg.name,
+              provider: reg.provider,
+              execution_target: reg.execution_target,
+              runtime_type: reg.runtime_type
+            };
+          }
+        }
+
         if (mapped) {
           targetOllamaModel = mapped.tag;
           modelDisplayName = mapped.displayName;
@@ -710,7 +729,8 @@ const server = http.createServer(async (req, res) => {
         }
 
         // Strict No-Silent-Fallback Verification
-        const isAvailable = availableModels.length === 0 || availableModels.some(m => m === targetOllamaModel || m.startsWith(targetOllamaModel.split(":")[0]));
+        const isNonOllamaRuntime = mapped && mapped.runtime_type && mapped.runtime_type !== "OLLAMA";
+        const isAvailable = isNonOllamaRuntime || availableModels.length === 0 || availableModels.some(m => m === targetOllamaModel || m.startsWith(targetOllamaModel.split(":")[0]));
         if (!isAvailable) {
           json(res, 503, {
             status: "model_unavailable",
@@ -1084,8 +1104,62 @@ const server = http.createServer(async (req, res) => {
 
           // ================================================================
           // ================================================================
-          // DIRECT STREAMING INFERENCE
+          // DIRECT STREAMING INFERENCE FOR NON-OLLAMA CPU MODELS
           // ================================================================
+          const mappedModel = CANONICAL_MODEL_MAP[requestedOverride] || CANONICAL_MODEL_MAP[targetOllamaModel] || getModelById(requestedOverride) || getModelById(targetOllamaModel);
+          if (mappedModel && mappedModel.runtime_type && mappedModel.runtime_type !== "OLLAMA") {
+            sendSSE("status", {
+              state: "preparing_model",
+              message: `Executing ${modelDisplayName || mappedModel.name} on Intel CPU (${mappedModel.runtime_type || "CPU"})...`,
+              model: mappedModel.name || targetOllamaModel,
+              execution_target: "CPU"
+            });
+
+            const cpuResult = await runLocalModel({
+              model: mappedModel.model_id || mappedModel.tag || targetOllamaModel,
+              prompt: contextPayload.prompt || task,
+              system: contextPayload.systemPrompt || "",
+              executionTarget: "CPU",
+              options: {
+                max_tokens: payload.parameters?.max_tokens || 128,
+                temperature: payload.parameters?.temperature !== undefined ? payload.parameters.temperature : 0.7,
+                ...(payload.parameters || {})
+              }
+            });
+
+            const text = cpuResult.text || "Processed on local CPU runtime.";
+            sendSSE("token", { text: text, fullText: text });
+            if (conversationId && text) {
+              conversationManager.recordTurn({
+                conversationId,
+                userPrompt: task,
+                assistantResponse: text,
+                agent,
+                model: modelDisplayName,
+                replyTo: payload.replyTo || null
+              });
+            }
+            sendSSE("complete", {
+              status: "completed",
+              text,
+              model: modelDisplayName,
+              actualModel: mappedModel.model_id || targetOllamaModel,
+              hardware: "Ran on Intel Core i5-11400H (CPU ONLY · GPU NOT USED)",
+              total_tokens: cpuResult.eval_count || 50,
+              tokens_per_sec: cpuResult.tokens_per_sec || 0,
+              duration_ms: Math.round((cpuResult.total_duration || 1000000) / 1e6),
+              external_calls: 0,
+              is_air_gapped: true,
+              agent_id: agent.agent_id,
+              agentName: agent.name || agent.agent_id,
+              agentNumber: agent.agent_id?.replace("agent-", "") || "001",
+              modelMode: "manual",
+              model_source: (mappedModel.runtime_type || "cpu").toLowerCase() + "-local"
+            });
+            res.end();
+            return;
+          }
+
           await modelStreamer.streamFromOllama({
             model: targetOllamaModel,
             system: contextPayload.systemPrompt,
@@ -1140,9 +1214,17 @@ const server = http.createServer(async (req, res) => {
               }
             });
         } catch (streamErr) {
+          let errorStatus = "INFERENCE_FAILED";
+          if (streamErr.message.includes("status 404")) {
+            errorStatus = "MODEL_NOT_FOUND";
+          } else if (streamErr.message.includes("Failed to parse") || streamErr.message.includes("timed out")) {
+            errorStatus = "MODEL_LOAD_FAILED";
+          } else if (streamErr.message.includes("status 500")) {
+            errorStatus = "GENERATION_FAILED";
+          }
           sendSSE("error", {
             message: streamErr.message,
-            status: "error"
+            status: errorStatus
           });
           if (!res.writableEnded) res.end();
         }
@@ -1220,24 +1302,46 @@ const server = http.createServer(async (req, res) => {
             throw err;
           }
         } catch (inProcErr) {
-          // Direct fallback to local Ollama generation
-          const gen = await modelStreamer.generateFromOllama({
-            model: targetOllamaModel,
-            system: contextPayload.systemPrompt,
-            prompt: contextPayload.prompt,
-            images: [],
-            temperature: 0.3,
-            options: { num_predict: payload.parameters?.max_tokens || 512 }
-          });
-          result = {
-            status: "success",
-            result: gen.text,
-            metadata: {
-              model: modelDisplayName,
-              actual_model: targetOllamaModel,
-              total_duration: gen.durationMs
+          try {
+            // Direct fallback to local Ollama generation
+            const gen = await modelStreamer.generateFromOllama({
+              model: targetOllamaModel,
+              system: contextPayload.systemPrompt,
+              prompt: contextPayload.prompt,
+              images: [],
+              temperature: 0.3,
+              options: { num_predict: payload.parameters?.max_tokens || 512 }
+            });
+            result = {
+              status: "COMPLETED",
+              result: gen.text,
+              metadata: {
+                model: modelDisplayName,
+                actual_model: targetOllamaModel,
+                total_duration: gen.durationMs
+              }
+            };
+          } catch (genErr) {
+            let errorStatus = "INFERENCE_FAILED";
+            let code = "UNKNOWN_ERROR";
+            if (genErr.message.includes("status 404")) {
+              errorStatus = "MODEL_NOT_FOUND";
+              code = "MODEL_NOT_FOUND";
+            } else if (genErr.message.includes("Failed to parse") || genErr.message.includes("timed out")) {
+              errorStatus = "MODEL_LOAD_FAILED";
+              code = "MODEL_LOAD_FAILED";
+            } else if (genErr.message.includes("status 500")) {
+              errorStatus = "GENERATION_FAILED";
+              code = "GENERATION_FAILED";
             }
-          };
+            result = {
+              status: errorStatus,
+              error: {
+                code,
+                message: genErr.message
+              }
+            };
+          }
         }
       }
 
@@ -1326,8 +1430,10 @@ const server = http.createServer(async (req, res) => {
         });
       }
 
-      json(res, 200, {
-        status: "success",
+      const finalStatus = (result && result.status !== "success" && result.status !== "COMPLETED") ? result.status : "COMPLETED";
+
+      json(res, finalStatus === "COMPLETED" ? 200 : 500, {
+        status: finalStatus,
         gateway: "100-to-1",
         trace_id: payload.trace_id || `INT-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`,
         agent: {

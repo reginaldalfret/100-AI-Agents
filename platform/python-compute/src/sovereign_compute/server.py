@@ -8,10 +8,11 @@ from pathlib import Path
 
 # Ensure venv site-packages and platform directory take top priority in sys.path
 _PLATFORM_DIR = str(Path(__file__).resolve().parents[3])
-_VENV_SITE = str(Path(__file__).resolve().parents[3] / "ocr" / ".venv" / "Lib" / "site-packages")
+_COMPUTE_VENV = str(Path(__file__).resolve().parents[2] / ".venv" / "Lib" / "site-packages")
+_OCR_VENV = str(Path(__file__).resolve().parents[3] / "ocr" / ".venv" / "Lib" / "site-packages")
 _SRC_DIR = str(Path(__file__).resolve().parents[1])
 
-for _p in [_SRC_DIR, _PLATFORM_DIR, _VENV_SITE]:
+for _p in [_OCR_VENV, _PLATFORM_DIR, _SRC_DIR, _COMPUTE_VENV]:
     if os.path.exists(_p):
         while _p in sys.path:
             sys.path.remove(_p)
@@ -32,6 +33,7 @@ try:
     from sovereign_compute.embeddings.engine import generate_embedding
     from sovereign_compute.reranking.engine import rerank_documents
     from sovereign_compute.stt.engine import transcribe_audio, get_stt_health
+    from sovereign_compute.llm.engine import generate_text, get_llm_health
 except ImportError:
     from .config import HOST, PORT
     from .schemas import success_response, error_response
@@ -47,6 +49,7 @@ except ImportError:
     from .embeddings.engine import generate_embedding
     from .reranking.engine import rerank_documents
     from .stt.engine import transcribe_audio, get_stt_health
+    from .llm.engine import generate_text, get_llm_health
 
 class ReusableTCPServer(socketserver.TCPServer):
     allow_reuse_address = True
@@ -73,6 +76,8 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
             }))
         elif self.path in ["/stt/health", "/api/stt/health"]:
             self._send_json(200, success_response(get_stt_health()))
+        elif self.path in ["/llm/health", "/api/llm/health"]:
+            self._send_json(200, success_response(get_llm_health()))
         elif self.path in ["/ocr/health", "/api/ocr/health"]:
             try:
                 from ocr.service import handle_ocr_health
@@ -172,6 +177,19 @@ class ComputeHandler(http.server.BaseHTTPRequestHandler):
                     locale=payload.get("locale", "en-IN")
                 )
                 self._send_json(200, success_response(res))
+            elif path in ["/llm/generate", "/api/llm/generate"]:
+                res = generate_text(
+                    model_name=payload.get("model", "decommissioned"),
+                    prompt=payload.get("prompt", ""),
+                    system=payload.get("system"),
+                    max_tokens=payload.get("max_tokens", payload.get("num_predict", 256)),
+                    temperature=payload.get("temperature", 0.7),
+                    top_p=payload.get("top_p", 0.9),
+                    repetition_penalty=payload.get("repetition_penalty", 1.1)
+                )
+                self._send_json(200, success_response(res))
+            elif path in ["/llm/health", "/api/llm/health"]:
+                self._send_json(200, success_response(get_llm_health()))
             else:
                 self._send_json(404, error_response("NOT_FOUND", f"POST endpoint {self.path} not found"))
         except Exception as e:

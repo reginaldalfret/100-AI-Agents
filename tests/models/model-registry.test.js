@@ -25,10 +25,9 @@ describe('Model Registry Specification & Integrity Test Suite', () => {
       'smollm2-1.7b',
       'lfm2.5-350m',
       'rwkv7-0.4b',
-      'mobilellm-pro-1b',
-      'mobilellm-350m',
-      'openelm-450m',
-      'openelm-1.1b'
+      'tinyllama-1.1b',
+      'stablelm2-1.6b',
+      'falcon3-1b-instruct'
     ];
 
     it('contains all required production models in LOCAL_MODELS', () => {

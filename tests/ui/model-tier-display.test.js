@@ -20,12 +20,16 @@ test('UI Model Tier Display and Data-Driven Architecture', async (t) => {
     assert.ok(appJs.includes('RWKV'), 'app.js must declare RWKV provider');
   });
 
-  await t.test('index.html contains separated GPU LLM and CPU LLM sections with 2 CPU models', () => {
+  await t.test('index.html contains separated GPU LLM and CPU LLM sections with 4 CPU models', () => {
     assert.ok(indexHtml.includes('GPU LLM MODELS'), 'index.html must contain GPU LLM MODELS section');
     assert.ok(indexHtml.includes('CPU LLM MODELS (ZERO VRAM)'), 'index.html must contain CPU LLM MODELS section');
     assert.ok(indexHtml.includes('Liquid AI LFM2.5 350M'), 'index.html must contain LFM2.5 350M in model view');
     assert.ok(indexHtml.includes('RWKV-7 0.4B'), 'index.html must contain RWKV-7 0.4B in model view');
-    assert.ok(indexHtml.includes('CPU ONLY'), 'index.html must display CPU ONLY badge');
+    assert.ok(indexHtml.includes('TinyLlama 1.1B'), 'index.html must contain TinyLlama 1.1B in model view');
+    assert.ok(indexHtml.includes('Stable LM 2 1.6B'), 'index.html must contain Stable LM 2 1.6B in model view');
+    assert.ok(indexHtml.includes('Falcon3 1B'), 'index.html must contain Falcon3 1B in model view');
+    assert.ok(indexHtml.includes('SCIENCE'), 'index.html must contain SCIENCE badge for Falcon3');
+    assert.ok(indexHtml.includes('CPU ONLY'), 'index.html must display CPU ONLY badge in section header');
   });
 
   await t.test('styles.css contains styling for tier sections and badges', () => {

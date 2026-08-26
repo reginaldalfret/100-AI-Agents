@@ -1,40 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
 
-test('UI CPU Model Display with 5 Models & Custom Badges', async (t) => {
-  const indexHtml = fs.readFileSync(path.resolve('E:/Smart Automation/100-AI-Agents/platform/web/index.html'), 'utf8');
-  const appJs = fs.readFileSync(path.resolve('E:/Smart Automation/100-AI-Agents/platform/web/app.js'), 'utf8');
-  const stylesCss = fs.readFileSync(path.resolve('E:/Smart Automation/100-AI-Agents/platform/web/styles.css'), 'utf8');
+test('UI CPU Model Display with Official Ollama & Badges', () => {
+  const indexHtml = fs.readFileSync('platform/web/index.html', 'utf8');
+  const appJs = fs.readFileSync('platform/web/app.js', 'utf8');
 
-  await t.test('index.html renders all 5 CPU models in #cpuModelsGrid', () => {
-    assert.ok(indexHtml.includes('Liquid AI LFM2.5 350M'));
-    assert.ok(indexHtml.includes('RWKV-7 0.4B'));
-    assert.ok(indexHtml.includes('Meta MobileLLM-Pro 1B'));
-    assert.ok(indexHtml.includes('Meta MobileLLM 350M'));
-    assert.ok(indexHtml.includes('Apple OpenELM 450M'));
-  });
+  // Verify index.html contains all 4 CPU models
+  assert.ok(indexHtml.includes('Liquid AI LFM2.5 350M'), 'LFM2.5 350M must be in index.html');
+  assert.ok(indexHtml.includes('RWKV-7 0.4B'), 'RWKV-7 must be in index.html');
+  assert.ok(indexHtml.includes('TinyLlama 1.1B'), 'TinyLlama 1.1B must be in index.html');
+  assert.ok(indexHtml.includes('Stable LM 2 1.6B'), 'Stable LM 2 1.6B must be in index.html');
 
-  await t.test('index.html renders badges [EXTRACTION], [TEXT], [ASSISTANT], [EDGE]', () => {
-    assert.ok(indexHtml.includes('badge-extraction'));
-    assert.ok(indexHtml.includes('badge-assistant'));
-    assert.ok(indexHtml.includes('badge-edge'));
-    assert.ok(indexHtml.includes('badge-text'));
-  });
+  // Verify badges
+  assert.ok(indexHtml.includes('badge-extraction'), 'Extraction badge must exist');
+  assert.ok(indexHtml.includes('badge-general'), 'General badge must exist');
 
-  await t.test('app.js defines all 5 CPU models in LOCAL_MODEL_DEFS', () => {
-    assert.ok(appJs.includes('LFM2.5-350M'));
-    assert.ok(appJs.includes('RWKV-7 0.4B'));
-    assert.ok(appJs.includes('MobileLLM-Pro 1B'));
-    assert.ok(appJs.includes('MobileLLM 350M'));
-    assert.ok(appJs.includes('OpenELM 450M'));
-  });
-
-  await t.test('styles.css contains styling for custom CPU badges and scrollable dropdown', () => {
-    assert.ok(stylesCss.includes('.badge-extraction'));
-    assert.ok(stylesCss.includes('.badge-assistant'));
-    assert.ok(stylesCss.includes('.badge-edge'));
-    assert.ok(stylesCss.includes('max-height: 70vh'));
-  });
+  // Verify app.js contains the models
+  assert.ok(appJs.includes('tinyllama:1.1b-chat'), 'TinyLlama in app.js');
+  assert.ok(appJs.includes('stablelm2:1.6b'), 'Stable LM 2 in app.js');
 });

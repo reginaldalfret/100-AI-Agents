@@ -33,14 +33,12 @@ export async function routeTaskToLocalModel(taskInput = {}) {
       selectedModelId = 'lfm2.5-350m';
     } else if (taskInput.model_override === 'mollysama/rwkv-7-g1d:0.4b' || taskInput.model_override === 'rwkv7-0.4b' || taskInput.model_override === 'rwkv' || taskInput.model_override === 'rwkv7' || taskInput.model_override === 'rwkv-7') {
       selectedModelId = 'rwkv7-0.4b';
-    } else if (taskInput.model_override === 'mobilellm-pro-1b' || taskInput.model_override === 'mobilellm-pro' || taskInput.model_override === 'mobilellm-1b' || taskInput.model_override === 'facebook/MobileLLM-Pro-1B') {
-      selectedModelId = 'mobilellm-pro-1b';
-    } else if (taskInput.model_override === 'mobilellm-350m' || taskInput.model_override === 'mobilellm' || taskInput.model_override === 'facebook/MobileLLM-350M') {
-      selectedModelId = 'mobilellm-350m';
-    } else if (taskInput.model_override === 'openelm-450m' || taskInput.model_override === 'openelm' || taskInput.model_override === 'apple/OpenELM-450M-Instruct' || taskInput.model_override === 'apple/OpenELM-450M') {
-      selectedModelId = 'openelm-450m';
-    } else if (taskInput.model_override === 'openelm-1.1b' || taskInput.model_override === 'apple/OpenELM-1_1B-Instruct' || taskInput.model_override === 'apple/OpenELM-1.1B') {
-      selectedModelId = 'openelm-1.1b';
+    } else if (taskInput.model_override === 'tinyllama:1.1b-chat' || taskInput.model_override === 'tinyllama-1.1b' || taskInput.model_override === 'tinyllama' || taskInput.model_override === 'tinyllama:1.1b') {
+      selectedModelId = 'tinyllama-1.1b';
+    } else if (taskInput.model_override === 'stablelm2:1.6b' || taskInput.model_override === 'stablelm2-1.6b' || taskInput.model_override === 'stablelm' || taskInput.model_override === 'stablelm2') {
+      selectedModelId = 'stablelm2-1.6b';
+    } else if (taskInput.model_override === 'falcon3:1b-instruct-q4_K_M' || taskInput.model_override === 'falcon3-1b-instruct' || taskInput.model_override === 'falcon3' || taskInput.model_override === 'falcon' || taskInput.model_override === 'falcon-1b') {
+      selectedModelId = 'falcon3-1b-instruct';
     }
   } else if (taskInput.modelMode && taskInput.modelMode !== 'auto') {
     if (taskInput.modelMode === 'gemma' || taskInput.modelMode === 'gemma3') selectedModelId = 'gemma3-1b';
@@ -50,12 +48,11 @@ export async function routeTaskToLocalModel(taskInput = {}) {
     else if (taskInput.modelMode === 'granite') selectedModelId = 'granite4-1b-h';
     else if (taskInput.modelMode === 'phi') selectedModelId = 'phi4-mini';
     else if (taskInput.modelMode === 'smollm2' || taskInput.modelMode === 'smollm') selectedModelId = 'smollm2-1.7b';
+    else if (taskInput.modelMode === 'falcon' || taskInput.modelMode === 'falcon3' || taskInput.modelMode === 'falcon3-1b-instruct') selectedModelId = 'falcon3-1b-instruct';
     else if (taskInput.modelMode === 'lfm' || taskInput.modelMode === 'lfm2.5' || taskInput.modelMode === 'lfm2.5-350m' || taskInput.modelMode === 'lfm-350m') selectedModelId = 'lfm2.5-350m';
     else if (taskInput.modelMode === 'rwkv' || taskInput.modelMode === 'rwkv7' || taskInput.modelMode === 'rwkv7-0.4b') selectedModelId = 'rwkv7-0.4b';
-    else if (taskInput.modelMode === 'mobilellm-pro' || taskInput.modelMode === 'mobilellm-pro-1b') selectedModelId = 'mobilellm-pro-1b';
-    else if (taskInput.modelMode === 'mobilellm' || taskInput.modelMode === 'mobilellm-350m') selectedModelId = 'mobilellm-350m';
-    else if (taskInput.modelMode === 'openelm' || taskInput.modelMode === 'openelm-450m') selectedModelId = 'openelm-450m';
-    else if (taskInput.modelMode === 'openelm-1.1b') selectedModelId = 'openelm-1.1b';
+    else if (taskInput.modelMode === 'tinyllama' || taskInput.modelMode === 'tinyllama-1.1b' || taskInput.modelMode === 'tinyllama:1.1b-chat') selectedModelId = 'tinyllama-1.1b';
+    else if (taskInput.modelMode === 'stablelm' || taskInput.modelMode === 'stablelm2' || taskInput.modelMode === 'stablelm2-1.6b' || taskInput.modelMode === 'stablelm2:1.6b') selectedModelId = 'stablelm2-1.6b';
   }
 
   const modelSpec = getModelById(selectedModelId) || LOCAL_MODELS[0];

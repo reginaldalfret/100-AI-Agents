@@ -13,9 +13,8 @@
 ## 1. Multi-Runtime Abstraction Architecture
 
 In enterprise and industrial deployments, different model families and architectures are optimized for specialized runtime engines:
-- **Ollama**: C++ llama.cpp wrapper for GGUF models.
-- **ExecuTorch**: Meta's on-device runtime for MobileLLM models.
-- **PyTorch / Transformers / ONNX Runtime**: High-throughput layer-scaled model inference (e.g. Apple OpenELM, Faster-Whisper, PaddleOCR).
+- **Ollama**: C++ llama.cpp wrapper for GGUF models on CPU (e.g. Liquid AI LFM2.5 350M, RWKV-7 0.4B).
+- **Python Compute / ONNX Runtime**: High-throughput CPU inference for Document Intelligence (PaddleOCR 3.7.0, RapidOCR) and Voice STT (Faster-Whisper).
 
 To prevent vendor lock-in and support diverse open-weight CPU models without forcing them into Ollama, 301 Super AI provides the **`runLocalModel` multi-runtime interface**:
 
@@ -34,31 +33,27 @@ To prevent vendor lock-in and support diverse open-weight CPU models without for
                     ▼                                             ▼
           OLLAMA RUNTIME (11434)                       MULTI-RUNTIME CPU LAYER
       • Nemotron 3 Nano (2.8GB)                 ┌─────────────────────────────────┐
-      • Qwen 2.5 Coder 1.5B (986MB)             │ 1. Ollama CPU (11434, num_gpu:0)│
-      • Gemma 3 1B (815MB)                      │    • Liquid AI LFM2.5 350M      │
-      • Llama 3.2 1B (1.3GB)                    │    • RWKV-7 0.4B                │
-      • Granite 4 1B-H (1.4GB)                  │ 2. ExecuTorch (Port 8305)       │
-      • Phi-4 Mini (2.5GB)                      │    • Meta MobileLLM-Pro 1B      │
-      • SmolLM2 1.7B (1.8GB)                    │    • Meta MobileLLM 350M        │
-                                                │ 3. PyTorch / ONNX (Port 8305)   │
-                                                │    • Apple OpenELM 450M         │
-                                                │    • (Apple OpenELM 1.1B)       │
+                                                │ 1. Ollama CPU (11434, num_gpu:0)│
+                                                │    • Liquid AI LFM2.5 350M      │
+                                                │    • RWKV-7 0.4B                │
+                                                │    • TinyLlama 1.1B             │
+                                                │    • Stable LM 2 1.6B           │
+                                                │ 2. Python Compute (Port 8305)   │
+                                                │    • PaddleOCR / RapidOCR       │
+                                                │    • Faster-Whisper             │
                                                 └─────────────────────────────────┘
 ```
 
 ---
 
-## 2. The 5 Active CPU Models & Roles
+## 2. The Active CPU Models & Roles
 
 | Model | Provider | Params | Quantization | Size | Runtime Type | Badge | Primary Specialization |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Liquid AI LFM2.5 350M** | Liquid AI | 354M | Q8_0 | 379 MB | `OLLAMA` | `[EXTRACTION]` | Structured data extraction, classification, lightweight tool routing |
 | **RWKV-7 0.4B** | RWKV | 450M | Q8_0 | 501 MB | `OLLAMA` | `[TEXT]` | Fast RNN text generation, rewriting, simple summarization, fallback |
-| **Meta MobileLLM-Pro 1B** | Meta Reality Labs | 1.0B | INT4 | 580 MB | `EXECUTORCH` | `[ASSISTANT]` | General on-device assistant, QA, lightweight reasoning, tool use |
-| **Meta MobileLLM 350M** | Meta | 350M | INT4 | 210 MB | `EXECUTORCH` | `[EDGE]` | Ultra-lightweight edge routing, intent classification, quick fallback |
-| **Apple OpenELM 450M** | Apple | 450M | FP16/INT8 | 450 MB | `PYTORCH` | `[TEXT]` | Layer-wise parameter scaled summarization & text transformation |
-
-*Optional Future CPU Candidate*: **Apple OpenELM 1.1B** (`apple/OpenELM-1_1B-Instruct`, 1.1B params, 1.1 GB).
+| **TinyLlama 1.1B** | TinyLlama | 1.1B | Q4_0 | 637 MB | `OLLAMA` | `[GENERAL]` | Lightweight general chat, short rewriting, simple Q&A |
+| **Stable LM 2 1.6B** | Stability AI | 1.6B | Q4_0 | 982 MB | `OLLAMA` | `[GENERAL]` | General text generation, summarization, multilingual text |
 
 ---
 

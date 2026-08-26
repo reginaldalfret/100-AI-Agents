@@ -17,14 +17,22 @@ async function isGatewayAvailable() {
   }
 }
 
-async function sendChat(payload) {
-  const res = await fetch(`${GATEWAY_URL}/api/chat`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  const data = await res.json();
-  return { status: res.status, data };
+async function sendChat(payload, retries = 3) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(`${GATEWAY_URL}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(45000)
+      });
+      const data = await res.json();
+      return { status: res.status, data };
+    } catch (err) {
+      if (attempt === retries) throw err;
+      await new Promise(r => setTimeout(r, 1000 * attempt));
+    }
+  }
 }
 
 describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
@@ -37,7 +45,7 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
       return;
     }
     const { status, data } = await sendChat({
-      agent_id: 'agent-101',
+      agent_id: 'agent-001',
       task: 'Reply with the word "READY" only.',
       modelMode: 'gemma',
       model_override: 'gemma3:1b'
@@ -54,7 +62,7 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
       return;
     }
     const { status, data } = await sendChat({
-      agent_id: 'agent-101',
+      agent_id: 'agent-001',
       task: 'Reply with the word "READY" only.',
       modelMode: 'nemotron',
       model_override: 'nemotron-3-nano'
@@ -71,7 +79,7 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
       return;
     }
     const { status, data } = await sendChat({
-      agent_id: 'agent-101',
+      agent_id: 'agent-001',
       task: 'Write: def ping(): return True',
       modelMode: 'qwen',
       model_override: 'qwen2.5-coder:1.5b'
@@ -88,7 +96,7 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
       return;
     }
     const codeTask = await sendChat({
-      agent_id: 'agent-101',
+      agent_id: 'agent-001',
       task: 'Write a Python script function to parse JSON string',
       modelMode: 'auto'
     });
@@ -96,7 +104,7 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
     assert(codeTask.data.actual_model.includes('qwen') || codeTask.data.actual_model.includes('coder'), `Code task should auto-route to Qwen Coder, got ${codeTask.data.actual_model}`);
 
     const nlpTask = await sendChat({
-      agent_id: 'agent-101',
+      agent_id: 'agent-001',
       task: 'Rewrite this short sentence to be more polite: Send me the file right now',
       modelMode: 'auto'
     });
@@ -118,7 +126,7 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
     for (let i = 0; i < seq.length; i++) {
       const step = seq[i];
       const res = await sendChat({
-        agent_id: 'agent-101',
+        agent_id: 'agent-001',
         task: `Ping step ${i + 1}`,
         modelMode: step.mode,
         model_override: step.override
@@ -133,7 +141,7 @@ describe('Real Multi-Model Execution & Fingerprint Test Suite', async () => {
       return;
     }
     const { status, data } = await sendChat({
-      agent_id: 'agent-101',
+      agent_id: 'agent-001',
       task: 'Test hypothetical missing model',
       modelMode: 'manual',
       model_override: 'non-existent-model-xyz:99b'

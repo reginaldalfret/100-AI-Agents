@@ -307,6 +307,43 @@ export const LOCAL_MODELS = [
     status: "ready"
   },
   {
+    model_id: "falcon3-1b-instruct",
+    ollama_name: "falcon3:1b-instruct-q4_K_M",
+    name: "Falcon3 1B",
+    display_name: "Falcon3 1B",
+    provider: "Technology Innovation Institute",
+    role: "Science, Mathematics & Lightweight Coding Specialist",
+    badge: "SCIENCE",
+    primaryTag: "SCIENCE",
+    runtime: "local-ollama",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: "http://127.0.0.1:11434",
+    execution_target: "GPU",
+    quantization: "Q4_K_M",
+    vram_mb: 1300,
+    ram_mb: 2048,
+    context_length: 8192,
+    supported_modalities: [ModelModality.TEXT, ModelModality.CODE],
+    capabilities: [
+      "science",
+      "mathematics",
+      "coding",
+      "technical",
+      "stem-reasoning",
+      "scientific-analysis",
+      "algorithmic-problem-solving"
+    ],
+    recommended_tasks: [
+      "science-qa",
+      "mathematical-calculations",
+      "lightweight-coding",
+      "technical-inquiries",
+      "stem-analysis"
+    ],
+    priority: 2,
+    status: "ready"
+  },
+  {
     model_id: "lfm2.5-350m",
     ollama_name: "LiquidAI/lfm2.5-350m",
     name: "Liquid AI LFM2.5 350M",
@@ -386,149 +423,98 @@ export const LOCAL_MODELS = [
     status: "ready"
   },
   {
-    model_id: "mobilellm-pro-1b",
-    name: "Meta MobileLLM-Pro 1B",
-    provider: "Meta Reality Labs",
-    role: "General Assistant, QA & Lightweight Reasoning",
-    badge: "ASSISTANT",
-    runtime: "local-executorch",
-    runtime_type: RuntimeType.EXECUTORCH,
-    endpoint: "http://127.0.0.1:8305",
+    model_id: "tinyllama-1.1b",
+    ollama_name: "tinyllama:1.1b-chat",
+    name: "TinyLlama 1.1B",
+    provider: "TinyLlama",
+    distribution: "Official Ollama",
+    role: "Lightweight General Chat, Short Rewriting & Q&A",
+    badge: "GENERAL",
+    primaryTag: "GENERAL",
+    runtime: "tinyllama:1.1b-chat",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: "http://127.0.0.1:11434",
     execution_target: "CPU",
-    quantization: "INT4",
+    quantization: "Q4_0",
     vram_mb: 0,
-    ram_mb: 580,
-    context_length: 4096,
-    endpoint_options: {
-      num_gpu: 0
-    },
-    supported_modalities: [ModelModality.TEXT],
-    capabilities: [
-      "general-assistant",
-      "qa",
-      "lightweight-reasoning",
-      "tool-oriented-tasks",
-      "on-device-inference",
-      "cpu-only-inference"
-    ],
-    recommended_tasks: [
-      "general-assistant",
-      "question-answering",
-      "lightweight-reasoning",
-      "tool-use",
-      "on-device-assistance"
-    ],
-    priority: 3,
-    status: "ready"
-  },
-  {
-    model_id: "mobilellm-350m",
-    name: "Meta MobileLLM 350M",
-    provider: "Meta",
-    role: "Ultra-Light Assistant, Classification & Routing",
-    badge: "EDGE",
-    runtime: "local-executorch",
-    runtime_type: RuntimeType.EXECUTORCH,
-    endpoint: "http://127.0.0.1:8305",
-    execution_target: "CPU",
-    quantization: "INT4",
-    vram_mb: 0,
-    ram_mb: 210,
-    context_length: 4096,
-    endpoint_options: {
-      num_gpu: 0
-    },
-    supported_modalities: [ModelModality.TEXT],
-    capabilities: [
-      "ultra-light-assistant",
-      "classification",
-      "routing",
-      "simple-extraction",
-      "short-text-generation",
-      "lightweight-fallback",
-      "cpu-only-inference"
-    ],
-    recommended_tasks: [
-      "intent-classification",
-      "routing-support",
-      "simple-extraction",
-      "short-text-generation",
-      "lightweight-fallback"
-    ],
-    priority: 3,
-    status: "ready"
-  },
-  {
-    model_id: "openelm-450m",
-    name: "Apple OpenELM 450M",
-    provider: "Apple",
-    role: "Lightweight General Text, Summarization & Transformation",
-    badge: "TEXT",
-    runtime: "local-transformers",
-    runtime_type: RuntimeType.PYTORCH,
-    endpoint: "http://127.0.0.1:8305",
-    execution_target: "CPU",
-    quantization: "FP16 / INT8",
-    vram_mb: 0,
-    ram_mb: 450,
+    ram_mb: 637,
     context_length: 2048,
     endpoint_options: {
       num_gpu: 0
     },
     supported_modalities: [ModelModality.TEXT],
     capabilities: [
-      "lightweight-general-text",
+      "general-chat",
+      "rewriting",
       "summarization",
-      "classification",
-      "short-text-transformation",
-      "on-device-assistance",
+      "simple-qa",
       "cpu-only-inference"
     ],
     recommended_tasks: [
-      "short-summarization",
-      "text-transformation",
-      "classification",
-      "on-device-text-assistance"
+      "general-chat",
+      "short-rewriting",
+      "simple-summarization",
+      "simple-qa",
+      "general-fallback"
     ],
     priority: 3,
     status: "ready"
   },
   {
-    model_id: "openelm-1.1b",
-    name: "Apple OpenELM 1.1B",
-    provider: "Apple",
-    role: "General Text & Long-Context Summarization",
-    badge: "TEXT",
-    runtime: "local-transformers",
-    runtime_type: RuntimeType.PYTORCH,
-    endpoint: "http://127.0.0.1:8305",
+    model_id: "stablelm2-1.6b",
+    ollama_name: "stablelm2:1.6b",
+    name: "Stable LM 2 1.6B",
+    provider: "Stability AI",
+    distribution: "Official Ollama",
+    role: "General Text Generation, Summarization & Rewriting",
+    badge: "GENERAL",
+    primaryTag: "GENERAL",
+    runtime: "stablelm2:1.6b",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: "http://127.0.0.1:11434",
     execution_target: "CPU",
-    quantization: "FP16 / INT8",
+    quantization: "Q4_0",
     vram_mb: 0,
-    ram_mb: 1100,
-    context_length: 2048,
+    ram_mb: 982,
+    context_length: 4096,
     endpoint_options: {
       num_gpu: 0
     },
     supported_modalities: [ModelModality.TEXT],
     capabilities: [
-      "general-text",
-      "summarization",
-      "instruction-following",
-      "cpu-only-inference"
-    ],
-    recommended_tasks: [
-      "extended-summarization",
       "general-text-generation",
-      "offline-assistance"
+      "summarization",
+      "rewriting",
+      "multilingual-text",
+      "cpu-only-inference"
     ],
-    priority: 4,
+    recommended_tasks: [
+      "text-generation",
+      "summarization",
+      "rewriting",
+      "multilingual-text-tasks",
+      "fallback-assistant"
+    ],
+    priority: 3,
     status: "ready"
   }
 ];
 
 export function getModelById(modelId) {
-  return LOCAL_MODELS.find(m => m.model_id === modelId || m.ollama_name === modelId) || null;
+  if (!modelId) return null;
+  const direct = LOCAL_MODELS.find(m => m.model_id === modelId || m.ollama_name === modelId || m.name === modelId);
+  if (direct) return direct;
+  const lower = String(modelId).toLowerCase();
+  return LOCAL_MODELS.find(m =>
+    m.model_id.toLowerCase() === lower ||
+    (m.ollama_name && m.ollama_name.toLowerCase() === lower) ||
+    (m.name && m.name.toLowerCase() === lower) ||
+    (lower.includes("lfm2.5-350m") && m.model_id === "lfm2.5-350m") ||
+    (lower.includes("rwkv") && m.model_id === "rwkv7-0.4b") ||
+    (lower.includes("tinyllama") && m.model_id === "tinyllama-1.1b") ||
+    (lower.includes("stablelm") && m.model_id === "stablelm2-1.6b") ||
+    (lower.includes("falcon") && m.model_id === "falcon3-1b-instruct")
+  ) || null;
 }
 
 export function listAvailableModels() {
@@ -540,7 +526,7 @@ export function getGpuModels() {
 }
 
 export function getCpuModels() {
-  return LOCAL_MODELS.filter(m => m.execution_target === "CPU" && m.model_id !== "local-vision-ocr" && m.model_id !== "openelm-1.1b");
+  return LOCAL_MODELS.filter(m => m.execution_target === "CPU" && m.model_id !== "local-vision-ocr");
 }
 
 export function getAllCpuModels() {
@@ -557,9 +543,8 @@ export function isCpuModel(modelIdOrName) {
       lower.includes("liquid") ||
       lower.includes("rwkv") ||
       lower.includes("mollysama") ||
-      lower.includes("mobilellm") ||
-      lower.includes("openelm") ||
-      lower.includes("apple") ||
+      lower.includes("tinyllama") ||
+      lower.includes("stablelm") ||
       lower === "cpu" ||
       lower.includes("ocr")
     ) {

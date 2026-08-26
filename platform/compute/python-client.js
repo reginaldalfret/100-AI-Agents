@@ -86,6 +86,24 @@ export class PythonComputeClient {
     }
   }
 
+  async generateLLM(payload, timeoutMs = 60000) {
+    try {
+      const res = await fetch(`${this.baseUrl}/llm/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(timeoutMs)
+      });
+      const data = await res.json();
+      if (data.success && data.data) {
+        return data.data;
+      }
+      throw new Error(data.error?.message || 'LLM compute error');
+    } catch (err) {
+      throw new Error(`Python LLM Engine Error: ${err.message}`);
+    }
+  }
+
   _executeNodeFallback(endpoint, payload) {
     if (endpoint.includes('pdf')) {
       return {

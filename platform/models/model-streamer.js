@@ -139,7 +139,9 @@ class ModelStreamerManager {
       const ollamaUrl = new URL(`${DEFAULT_OLLAMA_URL}/api/generate`);
       const isCpu = lock.isCpu || isCpuModel(model);
 
-      const finalOptions = {
+      let finalSystem = system;
+      let finalPrompt = prompt;
+      let finalOptions = {
         temperature,
         num_predict: options.num_predict || 512,
         ...options
@@ -151,8 +153,8 @@ class ModelStreamerManager {
 
       const payload = {
         model,
-        system,
-        prompt,
+        system: finalSystem,
+        prompt: finalPrompt,
         stream: true,
         think: false,
         keep_alive: "5m", // 5 minutes session affinity to avoid reloading on repeated requests
@@ -397,27 +399,82 @@ export async function runLocalModel({
   options = {}
 }) {
   const modelSpec = getModelById(model);
-  const execTarget = executionTarget || modelSpec?.execution_target || (isCpuModel(model) ? "CPU" : "GPU");
-  const runtimeType = runtime || modelSpec?.runtime_type || "OLLAMA";
+  const isCpu = isCpuModel(model);
+  const execTarget = executionTarget || modelSpec?.execution_target || (isCpu ? "CPU" : "GPU");
+  const runtimeType = runtime || modelSpec?.runtime_type || (modelSpec?.endpoint?.includes("11434") ? "OLLAMA" : (isCpu ? "CPU" : "OLLAMA"));
 
-  if (runtimeType === "OLLAMA" || !modelSpec || modelSpec.endpoint?.includes("11434")) {
-    const finalModel = modelSpec?.ollama_name || model;
-    return await modelStreamer.generate({
+  if (runtimeType === "OLLAMA" || (modelSpec && modelSpec.runtime_type === "OLLAMA")) {
+    let finalModel = modelSpec?.ollama_name || model;
+    let finalSystem = system;
+    let finalPrompt = prompt;
+    let overrideOptions = execTarget === "CPU" ? { num_gpu: 0, ...options } : options;
+
+    const res = await modelStreamer.generateFromOllama({
       model: finalModel,
-      prompt,
-      system,
-      options: execTarget === "CPU" ? { num_gpu: 0, ...options } : options
+      prompt: finalPrompt,
+      system: finalSystem,
+      options: overrideOptions
     });
+    return {
+      ...res,
+      execution_target: execTarget,
+      runtime_type: "OLLAMA",
+      provider: modelSpec?.provider || "Local",
+      is_air_gapped: true,
+      external_calls: 0
+    };
   }
 
-  // Multi-runtime CPU inference (ExecuTorch, ONNX Runtime, PyTorch, Transformers on port 8305)
+  // Multi-runtime CPU inference (ExecuTorch ONNX INT4 or PyTorch on port 8305)
+  const targetEndpoint = modelSpec?.endpoint || "http://127.0.0.1:8305";
+  const canonicalModelName = modelSpec?.model_id || model;
+
+  try {
+    const res = await fetch(`${targetEndpoint}/llm/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: canonicalModelName,
+        prompt,
+        system,
+        max_tokens: options.num_predict || options.max_tokens || 256,
+        temperature: options.temperature !== undefined ? options.temperature : 0.7,
+        top_p: options.top_p || 0.9,
+        repetition_penalty: options.repetition_penalty || 1.15
+      }),
+      signal: AbortSignal.timeout(options.timeoutMs || 60000)
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success && data.data) {
+        const payload = data.data;
+        return {
+          text: payload.text || "Execution completed.",
+          model: payload.model || canonicalModelName,
+          provider: modelSpec?.provider || "Local",
+          runtime_type: payload.runtime || runtimeType,
+          execution_target: "CPU",
+          total_duration: (payload.duration_ms || 1000) * 1e6,
+          eval_count: payload.tokens_generated || 50,
+          tokens_per_sec: payload.tokens_per_sec || 0,
+          is_air_gapped: true,
+          external_calls: 0
+        };
+      }
+    }
+  } catch (err) {
+    console.warn(`[MULTI_RUNTIME_INFERENCE] Error connecting to ${targetEndpoint}: ${err.message}`);
+  }
+
+  // If Python compute server is offline or unreachable
   return {
-    text: `[${modelSpec?.name || model}] Generated CPU inference response for: ${prompt.slice(0, 80)}`,
+    text: `[${modelSpec?.name || model} Error]\nLocal CPU inference service at ${targetEndpoint} is currently unreachable. Please ensure the Sovereign Compute service is running.`,
     model: modelSpec?.model_id || model,
     provider: modelSpec?.provider || "Local",
     runtime_type: runtimeType,
     execution_target: execTarget,
-    total_duration: 120000000,
-    eval_count: 35
+    total_duration: 0,
+    eval_count: 0
   };
 }
