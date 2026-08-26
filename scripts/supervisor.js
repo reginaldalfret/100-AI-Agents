@@ -192,15 +192,32 @@ function safelyKillPid(pid, serviceName) {
 
 // Ollama Controller (Port 11434)
 async function checkOllama() {
-  const healthy = await pingUrl('http://127.0.0.1:11434/api/tags', 3000);
-  state.ollama.running = healthy;
-  if (healthy) {
+  let hasModels = false;
+  try {
+    const res = await fetch('http://127.0.0.1:11434/api/tags', { signal: AbortSignal.timeout(3000) });
+    if (res.ok) {
+      const data = await res.json();
+      hasModels = Array.isArray(data.models) && data.models.length > 0;
+    }
+  } catch {}
+
+  if (hasModels) {
+    state.ollama.running = true;
     transitionState('ollama', 'READY');
     state.ollama.failures = 0;
     const pid = getPortOwningPid(11434);
     if (pid) state.ollama.pid = pid;
+    return true;
+  } else {
+    // If port is listening but 0 models loaded, kill process so it can be restarted with correct OLLAMA_MODELS
+    const pid = getPortOwningPid(11434);
+    if (pid) {
+      log('warn', `[OLLAMA] Port 11434 responding with 0 models. Terminating PID ${pid} to restart with authoritative OLLAMA_MODELS.`);
+      killProcessTree(pid);
+    }
+    state.ollama.running = false;
+    return false;
   }
-  return healthy;
 }
 
 function startOllama() {

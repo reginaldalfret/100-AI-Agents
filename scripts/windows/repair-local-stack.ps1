@@ -14,4 +14,4 @@ if (Test-Path $stateDir) {
 }
 
 Write-Host '[REPAIR] Checking and restarting supervisor...' -ForegroundColor Cyan
-& powershell -ExecutionPolicy Bypass -File (Join-Path $winDir 'restart-local-stack.ps1')
+& powershell -ExecutionPolicy Bypass -File (Join-Path $ScriptDir 'restart-local-stack.ps1')

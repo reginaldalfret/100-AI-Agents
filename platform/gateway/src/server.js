@@ -856,7 +856,7 @@ const server = http.createServer(async (req, res) => {
           } else if (taskLower.includes("rewrite") || taskLower.includes("rephrase") || taskLower.includes("proofread") || taskLower.includes("summarize") || taskLower.includes("summary") || taskLower.includes("explain simply") || taskLower.includes("explain this concept")) {
             targetOllamaModel = "smollm2:1.7b";
             modelDisplayName = "SmolLM2 1.7B";
-          } else if (taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi") {
+          } else if (taskLower.includes("quick question") || taskLower.includes("hello") || taskLower.includes("hi ") || taskLower === "hi" || taskLower === "hii" || /\b(hi|hii|hello|hey|greetings|howdy|good morning|good evening)\b/i.test(taskLower)) {
             targetOllamaModel = "llama3.2:1b";
             modelDisplayName = "Meta Llama 3.2 1B";
           } else {
@@ -1431,6 +1431,10 @@ const server = http.createServer(async (req, res) => {
       }
 
       const finalStatus = (result && result.status !== "success" && result.status !== "COMPLETED") ? result.status : "COMPLETED";
+      const isCpu = isCpuModel(actualModel);
+      const hardwareTrace = isCpu 
+        ? "Ran on Intel Core i5-11400H (CPU ONLY · GPU NOT USED)"
+        : "Ran on NVIDIA RTX 2050";
 
       json(res, finalStatus === "COMPLETED" ? 200 : 500, {
         status: finalStatus,
@@ -1446,6 +1450,8 @@ const server = http.createServer(async (req, res) => {
         model_mode: isManual ? "manual" : "auto",
         model_source: "ollama-local",
         model: modelDisplayName,
+        hardware: hardwareTrace,
+        hardware_trace: hardwareTrace,
         ocrTrace: imageQuestionResult?.backendTrace || null,
         ocrResult: imageQuestionResult?.text || null,
         detectedTask: imageQuestionResult?.classification?.taskLabel || null,
@@ -1463,6 +1469,8 @@ const server = http.createServer(async (req, res) => {
           actual_model: actualModel,
           requested_model: isManual ? targetOllamaModel : "auto",
           model: modelDisplayName,
+          hardware: hardwareTrace,
+          hardware_trace: hardwareTrace,
           evidence,
           deliverables,
           plan,

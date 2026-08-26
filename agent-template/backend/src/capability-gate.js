@@ -387,7 +387,8 @@ export function checkCapability(task, config = {}) {
   }
 
   // 6. Benign / Conversational Fallback -> ALLOW
-  if (words.length >= 2 && !matchesPhrase(normalizedTask, "capital of") && !matchesPhrase(normalizedTask, "weather in")) {
+  const GREETING_WORDS = new Set(["hi", "hii", "hiii", "hello", "hey", "heyy", "greetings", "howdy", "hola", "yo", "thanks", "thank you", "ok", "okay", "help"]);
+  if (words.length >= 1 && (GREETING_WORDS.has(words[0]) || (words.length >= 2 && !matchesPhrase(normalizedTask, "capital of") && !matchesPhrase(normalizedTask, "weather in")))) {
     return {
       allowed: true,
       decision: DecisionType.ALLOW,
