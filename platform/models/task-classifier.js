@@ -7,6 +7,8 @@ export const TaskType = {
   REASONING: "reasoning",
   VISION_MULTIMODAL: "vision-multimodal",
   CODING_SANDBOX: "coding-sandbox",
+  CYBERSECURITY: "cybersecurity",
+  HEALTHCARE: "healthcare",
   ORCHESTRATION: "orchestration",
   RAG_KNOWLEDGE: "rag-knowledge"
 };
@@ -19,7 +21,55 @@ export function classifyTask(input = {}, maybeAttachments = []) {
   const hasPDF = attachments.some(a => /\.(pdf)$/i.test(a.name || ""));
   const hasDataOrCode = attachments.some(a => /\.(csv|xlsx|json|py|js|sql)$/i.test(a.name || ""));
 
-  // 1. Coding & Sandbox Automation Triggers
+  // 1. Healthcare, Clinical, Medical & Bio-AI Triggers
+  const healthKeywords = [
+    "healthcare", "medical", "doctor", "hypertension", "diabetes", "cardiovascular",
+    "disease", "ecg", "ekg", "symptom", "symptoms", "clinical", "patient", "pathology",
+    "radiology", "x-ray", "mri", "ct scan", "anatomy", "pharmacology", "dosage",
+    "cardiac", "oncology", "neurology", "blood pressure", "infection", "asthma",
+    "vital signs", "hospital", "diagnosis assistance", "medical image"
+  ];
+
+  const isHealth = healthKeywords.some(k => prompt.includes(k));
+
+  if (isHealth) {
+    return {
+      task_type: TaskType.HEALTHCARE,
+      primary_modality: hasImage ? "vision" : "text",
+      preferred_model_id: "medgemma-4b",
+      recommended_model_id: "medgemma-4b",
+      preferred_model_name: "MedGemma 4B (Google Healthcare Specialist)",
+      confidence: 0.96,
+      reason: "Healthcare clinical decision support, medical explanation, or medical document/image interpretation",
+      recommended_agents: ["agent-084", "agent-055", "agent-101"]
+    };
+  }
+
+  // 1. Cybersecurity, SOC, DFIR, OWASP, Threat Analysis & Secure Coding Triggers
+  const cyberKeywords = [
+    "cybersecurity", "cyber", "owasp", "sql injection", "sqli", "xss", "csrf", "soc",
+    "dfir", "vulnerability", "vulnerabilities", "auth log", "ssh login", "failed login",
+    "security weakness", "security flaw", "security issue", "penetration testing", "pentest",
+    "threat intelligence", "malware", "incident response", "firewall", "port scan",
+    "siem", "cve", "brute force", "privilege escalation", "secure coding", "unsanitized"
+  ];
+
+  const isCyber = cyberKeywords.some(k => prompt.includes(k));
+
+  if (isCyber) {
+    return {
+      task_type: TaskType.CYBERSECURITY,
+      primary_modality: "text",
+      preferred_model_id: "qwen3-1.7b-cyber",
+      recommended_model_id: "qwen3-1.7b-cyber",
+      preferred_model_name: "Qwen3 1.7B Cyber (Fine-Tuned Cybersecurity Specialist)",
+      confidence: 0.95,
+      reason: "Cybersecurity analysis, OWASP, SOC/DFIR, or defensive security task",
+      recommended_agents: ["agent-084", "agent-055", "agent-101"]
+    };
+  }
+
+  // 2. Coding & Sandbox Automation Triggers
   const codeKeywords = [
     "python", "script", "code", "debug", "program", "function", "formula",
     "csv analysis", "sandbox", "algorithm", "regex", "sql query", "pandas",

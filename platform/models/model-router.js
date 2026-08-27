@@ -39,6 +39,10 @@ export async function routeTaskToLocalModel(taskInput = {}) {
       selectedModelId = 'stablelm2-1.6b';
     } else if (taskInput.model_override === 'falcon3:1b-instruct-q4_K_M' || taskInput.model_override === 'falcon3-1b-instruct' || taskInput.model_override === 'falcon3' || taskInput.model_override === 'falcon' || taskInput.model_override === 'falcon-1b') {
       selectedModelId = 'falcon3-1b-instruct';
+    } else if (taskInput.model_override === 'qwen3-1.7b-cyber' || taskInput.model_override === 'babar_jamali/qwen3-1.7b-cyber:latest' || taskInput.model_override === 'cyber' || taskInput.model_override === 'qwen3-cyber' || taskInput.model_override === 'qwen-cyber') {
+      selectedModelId = 'qwen3-1.7b-cyber';
+    } else if (taskInput.model_override === 'medgemma-4b' || taskInput.model_override === 'medgemma:4b-it-q4_K_M' || taskInput.model_override === 'medgemma' || taskInput.model_override === 'medical' || taskInput.model_override === 'healthcare') {
+      selectedModelId = 'medgemma-4b';
     }
   } else if (taskInput.modelMode && taskInput.modelMode !== 'auto') {
     if (taskInput.modelMode === 'gemma' || taskInput.modelMode === 'gemma3') selectedModelId = 'gemma3-1b';
@@ -53,6 +57,8 @@ export async function routeTaskToLocalModel(taskInput = {}) {
     else if (taskInput.modelMode === 'rwkv' || taskInput.modelMode === 'rwkv7' || taskInput.modelMode === 'rwkv7-0.4b') selectedModelId = 'rwkv7-0.4b';
     else if (taskInput.modelMode === 'tinyllama' || taskInput.modelMode === 'tinyllama-1.1b' || taskInput.modelMode === 'tinyllama:1.1b-chat') selectedModelId = 'tinyllama-1.1b';
     else if (taskInput.modelMode === 'stablelm' || taskInput.modelMode === 'stablelm2' || taskInput.modelMode === 'stablelm2-1.6b' || taskInput.modelMode === 'stablelm2:1.6b') selectedModelId = 'stablelm2-1.6b';
+    else if (taskInput.modelMode === 'cyber' || taskInput.modelMode === 'qwen3-1.7b-cyber' || taskInput.modelMode === 'qwen3-cyber') selectedModelId = 'qwen3-1.7b-cyber';
+    else if (taskInput.modelMode === 'medgemma' || taskInput.modelMode === 'medgemma-4b' || taskInput.modelMode === 'medical' || taskInput.modelMode === 'healthcare') selectedModelId = 'medgemma-4b';
   }
 
   const modelSpec = getModelById(selectedModelId) || LOCAL_MODELS[0];

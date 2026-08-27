@@ -483,7 +483,201 @@ export const LOCAL_MODELS = [
     supported_modalities: [ModelModality.TEXT],
     capabilities: [
       "general-text-generation",
+      "rewriting",
+      "multilingual-text",
+      "cpu-only-inference"
+    ],
+    recommended_tasks: [
+      "text-generation",
       "summarization",
+      "rewriting",
+      "multilingual-text-tasks",
+      "text-rewriting",
+      "concise-summarization",
+      "general-inquiries",
+      "lightweight-text-transformation",
+      "conversational-response"
+    ],
+    priority: 2,
+    status: "ready"
+  },
+  {
+    model_id: "falcon3-1b-instruct",
+    ollama_name: "falcon3:1b-instruct-q4_K_M",
+    name: "Falcon3 1B",
+    display_name: "Falcon3 1B",
+    provider: "Technology Innovation Institute",
+    role: "Science, Mathematics & Lightweight Coding Specialist",
+    badge: "SCIENCE",
+    primaryTag: "SCIENCE",
+    runtime: "local-ollama",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: "http://127.0.0.1:11434",
+    execution_target: "GPU",
+    quantization: "Q4_K_M",
+    vram_mb: 1300,
+    ram_mb: 2048,
+    context_length: 8192,
+    supported_modalities: [ModelModality.TEXT, ModelModality.CODE],
+    capabilities: [
+      "science",
+      "mathematics",
+      "coding",
+      "technical",
+      "stem-reasoning",
+      "scientific-analysis",
+      "algorithmic-problem-solving"
+    ],
+    recommended_tasks: [
+      "science-qa",
+      "mathematical-calculations",
+      "lightweight-coding",
+      "technical-inquiries",
+      "stem-analysis"
+    ],
+    priority: 2,
+    status: "ready"
+  },
+  {
+    model_id: "lfm2.5-350m",
+    ollama_name: "LiquidAI/lfm2.5-350m",
+    name: "Liquid AI LFM2.5 350M",
+    provider: "Liquid AI",
+    role: "Lightweight CPU Extraction & Tool Model",
+    badge: "EXTRACTION",
+    runtime: "local-ollama",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: "http://127.0.0.1:11434",
+    execution_target: "CPU",
+    quantization: "Q8_0",
+    vram_mb: 0,
+    ram_mb: 466,
+    context_length: 128000,
+    endpoint_options: {
+      num_gpu: 0
+    },
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "data-extraction",
+      "structured-output",
+      "classification",
+      "lightweight-tool-use",
+      "simple-transformations",
+      "routing-support",
+      "short-text-processing",
+      "cpu-only-inference"
+    ],
+    recommended_tasks: [
+      "data-extraction",
+      "structured-output",
+      "classification",
+      "lightweight-tool-routing",
+      "simple-rag-preprocessing",
+      "short-text-transformations"
+    ],
+    priority: 3,
+    status: "ready"
+  },
+  {
+    model_id: "rwkv7-0.4b",
+    ollama_name: "mollysama/rwkv-7-g1d:0.4b",
+    name: "RWKV-7 0.4B",
+    provider: "RWKV",
+    role: "Lightweight General Text & Rewriting",
+    badge: "TEXT",
+    runtime: "local-ollama",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: "http://127.0.0.1:11434",
+    execution_target: "CPU",
+    quantization: "Q8_0",
+    vram_mb: 0,
+    ram_mb: 547,
+    context_length: 1048576,
+    endpoint_options: {
+      num_gpu: 0
+    },
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "general-qa",
+      "lightweight-text-generation",
+      "simple-rewriting",
+      "classification",
+      "simple-summarization",
+      "cpu-fallback",
+      "cpu-only-inference"
+    ],
+    recommended_tasks: [
+      "short-general-questions",
+      "lightweight-text-generation",
+      "simple-rewriting",
+      "classification",
+      "simple-summarization",
+      "cpu-edge-computation"
+    ],
+    priority: 3,
+    status: "ready"
+  },
+  {
+    model_id: "tinyllama-1.1b",
+    ollama_name: "tinyllama:1.1b-chat",
+    name: "TinyLlama 1.1B",
+    provider: "TinyLlama",
+    distribution: "Official Ollama",
+    role: "Lightweight General Chat, Short Rewriting & Q&A",
+    badge: "GENERAL",
+    primaryTag: "GENERAL",
+    runtime: "tinyllama:1.1b-chat",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: "http://127.0.0.1:11434",
+    execution_target: "CPU",
+    quantization: "Q4_0",
+    vram_mb: 0,
+    ram_mb: 637,
+    context_length: 2048,
+    endpoint_options: {
+      num_gpu: 0
+    },
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "general-chat",
+      "rewriting",
+      "summarization",
+      "simple-qa",
+      "cpu-only-inference"
+    ],
+    recommended_tasks: [
+      "general-chat",
+      "short-rewriting",
+      "simple-summarization",
+      "simple-qa",
+      "general-fallback"
+    ],
+    priority: 3,
+    status: "ready"
+  },
+  {
+    model_id: "stablelm2-1.6b",
+    ollama_name: "stablelm2:1.6b",
+    name: "Stable LM 2 1.6B",
+    provider: "Stability AI",
+    distribution: "Official Ollama",
+    role: "General Text Generation, Summarization & Rewriting",
+    badge: "GENERAL",
+    primaryTag: "GENERAL",
+    runtime: "stablelm2:1.6b",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: "http://127.0.0.1:11434",
+    execution_target: "CPU",
+    quantization: "Q4_0",
+    vram_mb: 0,
+    ram_mb: 982,
+    context_length: 4096,
+    endpoint_options: {
+      num_gpu: 0
+    },
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "general-text-generation",
       "rewriting",
       "multilingual-text",
       "cpu-only-inference"
@@ -497,6 +691,94 @@ export const LOCAL_MODELS = [
     ],
     priority: 3,
     status: "ready"
+  },
+  {
+    model_id: "qwen3-1.7b-cyber",
+    ollama_name: "babar_jamali/qwen3-1.7b-cyber:latest",
+    name: "Qwen3 1.7B Cyber",
+    display_name: "Qwen3 1.7B Cyber",
+    provider: "Babar Ali Jamali",
+    base_family: "Qwen3 1.7B",
+    distribution: "Community Fine-Tuned Model",
+    role: "Fine-Tuned Cybersecurity, SOC, DFIR & Vulnerability Analysis",
+    badge: "CYBERSECURITY",
+    primaryTag: "CYBERSECURITY",
+    secondaryTag: "FINE-TUNED",
+    category: "DOMAIN_SPECIALIST",
+    runtime: "ollama",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: "http://127.0.0.1:11434",
+    execution_target: "AUTO_GPU_CPU",
+    quantization: "Q4_K_M",
+    parameters: "1.72B",
+    model_size: "~1.1GB",
+    vram_mb: 1536,
+    ram_mb: 2048,
+    context_length: 40960,
+    supported_modalities: [ModelModality.TEXT, ModelModality.CODE],
+    capabilities: [
+      "cybersecurity",
+      "soc",
+      "dfir",
+      "vulnerability_analysis",
+      "secure_coding",
+      "malware_analysis",
+      "owasp",
+      "security_scripting"
+    ],
+    recommended_tasks: [
+      "cybersecurity-investigation",
+      "owasp-vulnerability-assessment",
+      "auth-log-parsing",
+      "ssh-intrusion-analysis",
+      "secure-code-review"
+    ],
+    priority: 2,
+    status: "ready"
+  },
+  {
+    model_id: "medgemma-4b",
+    ollama_name: "medgemma:4b-it-q4_K_M",
+    name: "MedGemma 4B",
+    display_name: "MedGemma 4B",
+    provider: "Google",
+    domain: "HEALTHCARE",
+    type: "DOMAIN_SPECIALIST",
+    category: "DOMAIN_SPECIALIST",
+    distribution: "Official Google Health Model",
+    role: "Healthcare & Medical Clinical Decision Support (Text + Image)",
+    badge: "HEALTHCARE",
+    primaryTag: "HEALTHCARE",
+    secondaryTag: "MEDICAL_AI",
+    runtime: "ollama",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: "http://127.0.0.1:11434",
+    execution_target: "GPU",
+    quantization: "Q4_K_M",
+    parameters: "4.3B",
+    model_size: "3.3GB",
+    vram_mb: 2800,
+    ram_mb: 4096,
+    context_length: 131072,
+    input_modalities: ["text", "image"],
+    supported_modalities: [ModelModality.TEXT, ModelModality.VISION],
+    capabilities: [
+      "medical_text",
+      "medical_image",
+      "healthcare_information",
+      "clinical_decision_support",
+      "medical_summarization"
+    ],
+    recommended_tasks: [
+      "medical-explanation",
+      "healthcare-symptom-analysis",
+      "medical-image-interpretation",
+      "clinical-text-summarization",
+      "ecg-concept-explanation"
+    ],
+    disclaimer: "For informational/decision-support use. Not a substitute for a qualified healthcare professional.",
+    priority: 2,
+    status: "ready"
   }
 ];
 
@@ -509,6 +791,12 @@ export function getModelById(modelId) {
     m.model_id.toLowerCase() === lower ||
     (m.ollama_name && m.ollama_name.toLowerCase() === lower) ||
     (m.name && m.name.toLowerCase() === lower) ||
+    (lower.includes("medgemma") && m.model_id === "medgemma-4b") ||
+    (lower.includes("medical") && m.model_id === "medgemma-4b") ||
+    (lower.includes("healthcare") && m.model_id === "medgemma-4b") ||
+    (lower.includes("cyber") && m.model_id === "qwen3-1.7b-cyber") ||
+    (lower.includes("qwen3-1.7b-cyber") && m.model_id === "qwen3-1.7b-cyber") ||
+    (lower.includes("babar_jamali") && m.model_id === "qwen3-1.7b-cyber") ||
     (lower.includes("jetson") && m.model_id === "jetson-qwen3.8") ||
     (lower.includes("qwen3.8") && m.model_id === "jetson-qwen3.8") ||
     (lower.includes("lfm2.5-350m") && m.model_id === "lfm2.5-350m") ||
@@ -523,6 +811,28 @@ export function listAvailableModels() {
   return LOCAL_MODELS;
 }
 
+export function getAllModels() {
+  return [...LOCAL_MODELS];
+}
+
+export function getProductionModels() {
+  return LOCAL_MODELS.filter(m => m.status === "ready" && m.model_id !== "local-vision-ocr");
+}
+
+export function getDomainSpecialistModels() {
+  return LOCAL_MODELS.filter(m => m.category === "DOMAIN_SPECIALIST" || m.type === "DOMAIN_SPECIALIST" || m.category === "FINE-TUNED");
+}
+
+export function isDomainSpecialistModel(modelIdOrName) {
+  const m = getModelById(modelIdOrName);
+  if (m) return m.category === "DOMAIN_SPECIALIST" || m.type === "DOMAIN_SPECIALIST" || m.category === "FINE-TUNED";
+  if (typeof modelIdOrName === "string") {
+    const lower = modelIdOrName.toLowerCase();
+    return lower.includes("medgemma") || lower.includes("medical") || lower.includes("healthcare") || lower.includes("cyber");
+  }
+  return false;
+}
+
 export function getGpuModels() {
   return LOCAL_MODELS.filter(m => m.execution_target === "GPU" || m.execution_target === "JETSON_GPU");
 }
@@ -533,6 +843,20 @@ export function getCpuModels() {
 
 export function getAllCpuModels() {
   return LOCAL_MODELS.filter(m => m.execution_target === "CPU" && m.model_id !== "local-vision-ocr");
+}
+
+export function getFineTunedModels() {
+  return LOCAL_MODELS.filter(m => m.category === "FINE-TUNED" || m.secondaryTag === "FINE-TUNED" || m.model_id === "qwen3-1.7b-cyber");
+}
+
+export function isFineTunedModel(modelIdOrName) {
+  const m = getModelById(modelIdOrName);
+  if (m) return m.category === "FINE-TUNED" || m.secondaryTag === "FINE-TUNED" || m.model_id === "qwen3-1.7b-cyber";
+  if (typeof modelIdOrName === "string") {
+    const lower = modelIdOrName.toLowerCase();
+    return lower.includes("cyber") || lower.includes("babar_jamali");
+  }
+  return false;
 }
 
 export function isJetsonModel(modelIdOrName) {

@@ -761,7 +761,16 @@ const server = http.createServer(async (req, res) => {
         "falcon3": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
         "falcon3-1b": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
         "falcon3-1b-instruct": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
-        "falcon3:1b-instruct-q4_K_M": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" }
+        "falcon3:1b-instruct-q4_K_M": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
+        "cyber": { tag: "babar_jamali/qwen3-1.7b-cyber:latest", displayName: "Qwen3 1.7B Cyber", provider: "Babar Ali Jamali", role: "cybersecurity-soc-dfir", execution_target: "AUTO_GPU_CPU", category: "FINE-TUNED" },
+        "qwen3-cyber": { tag: "babar_jamali/qwen3-1.7b-cyber:latest", displayName: "Qwen3 1.7B Cyber", provider: "Babar Ali Jamali", role: "cybersecurity-soc-dfir", execution_target: "AUTO_GPU_CPU", category: "FINE-TUNED" },
+        "qwen3-1.7b-cyber": { tag: "babar_jamali/qwen3-1.7b-cyber:latest", displayName: "Qwen3 1.7B Cyber", provider: "Babar Ali Jamali", role: "cybersecurity-soc-dfir", execution_target: "AUTO_GPU_CPU", category: "FINE-TUNED" },
+        "babar_jamali/qwen3-1.7b-cyber:latest": { tag: "babar_jamali/qwen3-1.7b-cyber:latest", displayName: "Qwen3 1.7B Cyber", provider: "Babar Ali Jamali", role: "cybersecurity-soc-dfir", execution_target: "AUTO_GPU_CPU", category: "FINE-TUNED" },
+        "medgemma": { tag: "medgemma:4b-it-q4_K_M", displayName: "MedGemma 4B", provider: "Google", role: "healthcare-medical-clinical-support", execution_target: "GPU", category: "DOMAIN_SPECIALIST", input_modalities: ["text", "image"] },
+        "medgemma-4b": { tag: "medgemma:4b-it-q4_K_M", displayName: "MedGemma 4B", provider: "Google", role: "healthcare-medical-clinical-support", execution_target: "GPU", category: "DOMAIN_SPECIALIST", input_modalities: ["text", "image"] },
+        "medgemma:4b-it-q4_K_M": { tag: "medgemma:4b-it-q4_K_M", displayName: "MedGemma 4B", provider: "Google", role: "healthcare-medical-clinical-support", execution_target: "GPU", category: "DOMAIN_SPECIALIST", input_modalities: ["text", "image"] },
+        "medical": { tag: "medgemma:4b-it-q4_K_M", displayName: "MedGemma 4B", provider: "Google", role: "healthcare-medical-clinical-support", execution_target: "GPU", category: "DOMAIN_SPECIALIST", input_modalities: ["text", "image"] },
+        "healthcare": { tag: "medgemma:4b-it-q4_K_M", displayName: "MedGemma 4B", provider: "Google", role: "healthcare-medical-clinical-support", execution_target: "GPU", category: "DOMAIN_SPECIALIST", input_modalities: ["text", "image"] }
       };
 
       const requestedMode = payload.modelMode || "auto";
@@ -906,7 +915,15 @@ const server = http.createServer(async (req, res) => {
         } else {
           // Intelligent Auto routing based on task specialization, context, and document evidence
           const taskLower = effectiveTask.toLowerCase();
-          if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("java") || taskLower.includes("c++") || taskLower.includes("rust") || taskLower.includes("sql") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv")) {
+          const isHealthTask = taskLower.includes("healthcare") || taskLower.includes("medical") || taskLower.includes("doctor") || taskLower.includes("hypertension") || taskLower.includes("diabetes") || taskLower.includes("cardiovascular") || taskLower.includes("disease") || taskLower.includes("ecg") || taskLower.includes("ekg") || taskLower.includes("symptom") || taskLower.includes("symptoms") || taskLower.includes("clinical") || taskLower.includes("patient") || taskLower.includes("pathology") || taskLower.includes("radiology") || taskLower.includes("x-ray") || taskLower.includes("mri") || taskLower.includes("ct scan") || taskLower.includes("anatomy") || taskLower.includes("pharmacology") || taskLower.includes("dosage") || taskLower.includes("cardiac") || taskLower.includes("oncology") || taskLower.includes("neurology") || taskLower.includes("blood pressure") || taskLower.includes("asthma");
+          const isCyberTask = taskLower.includes("cybersecurity") || taskLower.includes("owasp") || taskLower.includes("sql injection") || taskLower.includes("sqli") || taskLower.includes("soc") || taskLower.includes("dfir") || taskLower.includes("vulnerability") || taskLower.includes("vulnerabilities") || taskLower.includes("auth log") || taskLower.includes("ssh login") || taskLower.includes("failed login") || taskLower.includes("security weakness") || taskLower.includes("penetration testing") || taskLower.includes("malware") || taskLower.includes("threat intelligence") || taskLower.includes("incident response") || taskLower.includes("secure coding");
+          if (isHealthTask) {
+            targetOllamaModel = "medgemma:4b-it-q4_K_M";
+            modelDisplayName = "MedGemma 4B";
+          } else if (isCyberTask) {
+            targetOllamaModel = "babar_jamali/qwen3-1.7b-cyber:latest";
+            modelDisplayName = "Qwen3 1.7B Cyber";
+          } else if (taskLower.includes("code") || taskLower.includes("script") || taskLower.includes("python") || taskLower.includes("java") || taskLower.includes("c++") || taskLower.includes("rust") || taskLower.includes("sql") || taskLower.includes("debug") || taskLower.includes("function") || taskLower.includes("def ") || taskLower.includes("return ") || taskLower.includes("const ") || taskLower.includes("class ") || taskLower.includes("=>") || taskLower.includes("regex") || taskLower.includes("json") || taskLower.includes(".csv")) {
             targetOllamaModel = "qwen2.5-coder:1.5b";
             modelDisplayName = "Qwen 2.5 Coder";
           } else if (hasAttachments && (taskLower.includes("rag") || taskLower.includes("extract table") || taskLower.includes("parse invoice") || taskLower.includes("extract entities"))) {
