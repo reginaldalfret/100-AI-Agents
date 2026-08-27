@@ -3645,45 +3645,6 @@ document.addEventListener('DOMContentLoaded', () => {
             runtime: 'Local Orchestration Router',
             hardware: 'RTX 2050 / Intel i5-11400H'
         },
-        'jetson': {
-            id: 'jetson',
-            internalId: 'Qwen3.8_Unsloth:latest',
-            displayName: 'NVIDIA Jetson Qwen 3.8 27B',
-            provider: 'NVIDIA Jetson',
-            execution_target: 'JETSON_GPU',
-            badge: 'JETSON GPU',
-            speed: 'High Capacity',
-            size: '27.3 GB',
-            description: 'NVIDIA Jetson Node (10.226.242.101) · 27.3B Q8_0 · 262k Context',
-            runtime: 'Jetson Remote Ollama (10.226.242.101:11434)',
-            hardware: 'NVIDIA Jetson GPU (32GB VRAM)'
-        },
-        'jetson-qwen3.8': {
-            id: 'jetson',
-            internalId: 'Qwen3.8_Unsloth:latest',
-            displayName: 'NVIDIA Jetson Qwen 3.8 27B',
-            provider: 'NVIDIA Jetson',
-            execution_target: 'JETSON_GPU',
-            badge: 'JETSON GPU',
-            speed: 'High Capacity',
-            size: '27.3 GB',
-            description: 'NVIDIA Jetson Node (10.226.242.101) · 27.3B Q8_0 · 262k Context',
-            runtime: 'Jetson Remote Ollama (10.226.242.101:11434)',
-            hardware: 'NVIDIA Jetson GPU (32GB VRAM)'
-        },
-        'Qwen3.8_Unsloth:latest': {
-            id: 'jetson',
-            internalId: 'Qwen3.8_Unsloth:latest',
-            displayName: 'NVIDIA Jetson Qwen 3.8 27B',
-            provider: 'NVIDIA Jetson',
-            execution_target: 'JETSON_GPU',
-            badge: 'JETSON GPU',
-            speed: 'High Capacity',
-            size: '27.3 GB',
-            description: 'NVIDIA Jetson Node (10.226.242.101) · 27.3B Q8_0 · 262k Context',
-            runtime: 'Jetson Remote Ollama (10.226.242.101:11434)',
-            hardware: 'NVIDIA Jetson GPU (32GB VRAM)'
-        },
         'nemotron': {
             id: 'nemotron',
             internalId: 'nemotron-3-nano:latest',
@@ -5296,36 +5257,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         initAgentSelector();
         fetchAgentIntegrations();
-        initJetsonStatusPoller();
-    }
-
-    function initJetsonStatusPoller() {
-        const pill = document.getElementById('jetsonStatusPill');
-        if (!pill) return;
-
-        async function pollJetson() {
-            try {
-                const res = await fetch('/api/compute/nodes/jetson/health');
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.health && data.health.status === 'ONLINE') {
-                        pill.className = 'status-pill status-glow-green';
-                        pill.innerHTML = `<span class="dot">●</span> Jetson LAN (${data.health.latencyMs}ms)`;
-                        pill.title = `NVIDIA Jetson Compute Node (10.226.242.101) · Latency: ${data.health.latencyMs}ms · Models: ${(data.health.availableModels || []).join(', ')}`;
-                    } else {
-                        pill.className = 'status-pill';
-                        pill.innerHTML = `<span class="dot" style="color:#f59e0b;">●</span> Jetson Standby`;
-                        pill.title = `NVIDIA Jetson (${data.health?.error || 'Standby'})`;
-                    }
-                }
-            } catch {
-                pill.className = 'status-pill';
-                pill.innerHTML = `<span class="dot" style="color:#f59e0b;">●</span> Jetson Standby`;
-            }
-        }
-
-        pollJetson();
-        setInterval(pollJetson, 20000);
     }
 
 });

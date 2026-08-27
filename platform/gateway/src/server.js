@@ -761,11 +761,7 @@ const server = http.createServer(async (req, res) => {
         "falcon3": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
         "falcon3-1b": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
         "falcon3-1b-instruct": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
-        "falcon3:1b-instruct-q4_K_M": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" },
-        "jetson": { tag: "Qwen3.8_Unsloth:latest", displayName: "NVIDIA Jetson Qwen 3.8 27B", provider: "NVIDIA Jetson", role: "deep-reasoning-coding", execution_target: "JETSON_GPU" },
-        "jetson-qwen3.8": { tag: "Qwen3.8_Unsloth:latest", displayName: "NVIDIA Jetson Qwen 3.8 27B", provider: "NVIDIA Jetson", role: "deep-reasoning-coding", execution_target: "JETSON_GPU" },
-        "Qwen3.8_Unsloth:latest": { tag: "Qwen3.8_Unsloth:latest", displayName: "NVIDIA Jetson Qwen 3.8 27B", provider: "NVIDIA Jetson", role: "deep-reasoning-coding", execution_target: "JETSON_GPU" },
-        "qwen3.8": { tag: "Qwen3.8_Unsloth:latest", displayName: "NVIDIA Jetson Qwen 3.8 27B", provider: "NVIDIA Jetson", role: "deep-reasoning-coding", execution_target: "JETSON_GPU" }
+        "falcon3:1b-instruct-q4_K_M": { tag: "falcon3:1b-instruct-q4_K_M", displayName: "Falcon3 1B", provider: "Technology Innovation Institute", role: "science-math-coding", execution_target: "GPU" }
       };
 
       const requestedMode = payload.modelMode || "auto";
@@ -798,29 +794,20 @@ const server = http.createServer(async (req, res) => {
           modelDisplayName = requestedOverride;
         }
 
-        // Strict No-Silent-Fallback Verification (Supporting both Laptop Ollama and Jetson Node)
-        const isJetsonTarget = mapped?.execution_target === "JETSON_GPU" || isJetsonModel(targetOllamaModel) || isJetsonModel(requestedOverride);
-        let isAvailable = false;
-
-        if (isJetsonTarget) {
-          const jetsonNode = nodeManager.getJetsonNode();
-          isAvailable = Boolean(jetsonNode);
-        } else {
-          const isNonOllamaRuntime = mapped && mapped.runtime_type && mapped.runtime_type !== "OLLAMA";
-          isAvailable = isNonOllamaRuntime || availableModels.length === 0 || availableModels.some(m => m === targetOllamaModel || m.startsWith(targetOllamaModel.split(":")[0]));
-        }
-
+        // Strict No-Silent-Fallback Verification
+        const isNonOllamaRuntime = mapped && mapped.runtime_type && mapped.runtime_type !== "OLLAMA";
+        const isAvailable = isNonOllamaRuntime || availableModels.length === 0 || availableModels.some(m => m === targetOllamaModel || m.startsWith(targetOllamaModel.split(":")[0]));
         if (!isAvailable) {
           json(res, 503, {
             status: "model_unavailable",
             requested_model: targetOllamaModel,
             actual_model: null,
             model_mode: "manual",
-            model_source: isJetsonTarget ? "jetson-lan" : "ollama-local",
+            model_source: "ollama-local",
             external_calls: 0,
             error: {
               code: "MODEL_NOT_FOUND",
-              message: `${modelDisplayName} (${targetOllamaModel}) is currently unavailable in ${isJetsonTarget ? "NVIDIA Jetson LAN" : "local Ollama"} runtime.`
+              message: `${modelDisplayName} (${targetOllamaModel}) is currently unavailable in local Ollama runtime.`
             }
           });
           return;
@@ -1275,8 +1262,7 @@ const server = http.createServer(async (req, res) => {
                   requested_model: isManual ? targetOllamaModel : "auto",
                   actual_model: targetOllamaModel,
                   model_mode: isManual ? "manual" : "auto",
-                  model_source: isJetsonModel(targetOllamaModel) ? "jetson-lan" : "ollama-local",
-                  hardware: isJetsonModel(targetOllamaModel) ? "Ran on NVIDIA Jetson Compute Node (LAN GPU)" : (metrics.hardware || "Ran on NVIDIA RTX 2050"),
+                  model_source: "ollama-local",
                   model: modelDisplayName,
                   ocrTrace: imageQuestionResult?.backendTrace || null,
                   ocrResult: imageQuestionResult?.text || null,

@@ -2723,12 +2723,6 @@ html, body {
   text-transform: uppercase;
 }
 
-.section-badge.jetson-pill {
-  background: rgba(168, 85, 247, 0.20);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.45);
-}
-
 .section-badge.gpu-pill {
   background: rgba(16, 185, 129, 0.15);
   color: #34d399;
@@ -2739,17 +2733,6 @@ html, body {
   background: rgba(6, 182, 212, 0.18);
   color: #38bdf8;
   border: 1px solid rgba(6, 182, 212, 0.45);
-}
-
-.badge-jetson {
-  background: rgba(168, 85, 247, 0.20);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.40);
-}
-
-.icon-jetson {
-  color: #c084fc;
-  background: rgba(168, 85, 247, 0.15);
 }
 
 .section-note {
