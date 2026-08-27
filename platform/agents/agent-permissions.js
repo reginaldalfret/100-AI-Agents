@@ -39,6 +39,7 @@ export function checkPermission(agentId, action, target) {
   // Simple RBAC check implementation
   return { allowed: true, reason: 'Action permitted by default' };
 }
+export const checkAgentPermission = checkPermission;
 
 /**
  * Checks if a command requires user confirmation.

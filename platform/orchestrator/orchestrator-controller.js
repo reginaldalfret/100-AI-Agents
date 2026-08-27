@@ -6,6 +6,8 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { routeAgentToModel } from '../models/model-router.js';
+import { routeAgentToTool } from '../tools/tool-router.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,24 +29,36 @@ export class OrchestratorController extends EventEmitter {
     
     const intent = this._classifyIntent(userInput);
     const executionPath = this._selectExecutionPath(intent, context);
+    const isManualSelection = Boolean(context.agentId && context.agentId !== 'auto');
     
     let routeResult;
     if (executionPath.type === 'integration') {
-      routeResult = await this.routeToAgentIntegration(executionPath.agentId, userInput);
+      routeResult = await this.routeToAgentIntegration(executionPath.agentId, userInput, context);
     } else {
-      routeResult = await this.routeToSpecialist(executionPath.agentId, userInput);
+      routeResult = await this.routeToSpecialist(executionPath.agentId, userInput, context);
     }
     
     const trace = {
       requestId,
       timestamp: new Date().toISOString(),
-      userInputSummary: userInput.substring(0, 50) + (userInput.length > 50 ? '...' : ''),
+      userInputSummary: userInput.substring(0, 60) + (userInput.length > 60 ? '...' : ''),
       intent,
-      candidatesConsidered: ['coder-agent', 'research-agent', 'general-agent', 'external-agent-integration'],
+      selectionType: isManualSelection ? 'MANUAL' : 'AUTO',
+      selectionReason: isManualSelection 
+        ? `Direct user selection of agent '${routeResult.agentId}'` 
+        : `Autonomous 301 Orchestrator matched intent '${intent}'`,
+      candidatesConsidered: isManualSelection 
+        ? [routeResult.agentId] 
+        : ['hermes', 'opencode', 'codex', 'openclaw', 'pi', 'copilot-cli', '301-specialists'],
       selectedAgent: routeResult.agentId,
+      agentName: routeResult.agentName || routeResult.agentId,
       selectedModel: routeResult.modelId,
-      executionTarget: 'GPU', // Simplified for prototype
+      modelName: routeResult.modelName || routeResult.modelId,
+      executionTarget: routeResult.executionTarget || 'GPU',
+      hardware: routeResult.executionTarget === 'CPU' ? 'Intel Core i5 (CPU)' : 'RTX 2050 (4GB VRAM)',
       selectedTools: routeResult.tools || [],
+      network_mode: 'LOCAL_ONLY',
+      external_calls: 0,
       routingDurationMs: Date.now() - startTime
     };
     
@@ -53,7 +67,9 @@ export class OrchestratorController extends EventEmitter {
     return {
       intent,
       selectedAgent: routeResult.agentId,
+      agentName: routeResult.agentName || routeResult.agentId,
       selectedModel: routeResult.modelId,
+      modelName: routeResult.modelName || routeResult.modelId,
       selectedTools: routeResult.tools || [],
       executionTarget: trace.executionTarget,
       routingTrace: trace
@@ -63,24 +79,57 @@ export class OrchestratorController extends EventEmitter {
   /**
    * Routes to an external agent integration.
    */
-  async routeToAgentIntegration(agentId, task) {
-    // Uses the agent router and model router to spin up the external integration
+  async routeToAgentIntegration(agentId, task, context = {}) {
+    const intent = this._classifyIntent(task);
+    const modelRoute = routeAgentToModel(agentId, intent, {
+      modelMode: context.modelMode,
+      model_override: context.model_override
+    });
+
+    let tools = [];
+    try {
+      tools = routeAgentToTool(agentId, intent);
+    } catch {
+      tools = ['filesystem', 'terminal'];
+    }
+
     return {
       agentId,
-      modelId: 'llama3.2-1b',
-      tools: ['search_knowledge']
+      agentName: agentId.toUpperCase(),
+      modelId: modelRoute.model_id,
+      modelName: modelRoute.model_name,
+      executionTarget: modelRoute.execution_target,
+      reason: modelRoute.reason,
+      tools
     };
   }
 
   /**
    * Routes to an existing 301 specialist agent.
    */
-  async routeToSpecialist(agentId, task) {
-    // Routes to internal 301 AI Agent specialists
+  async routeToSpecialist(agentId, task, context = {}) {
+    const intent = this._classifyIntent(task);
+    let modelId = 'nemotron-3-nano';
+    let modelName = 'NVIDIA Nemotron 3 Nano';
+    let tools = ['search_knowledge'];
+
+    if (intent === 'CODING' || intent === 'DEBUGGING') {
+      modelId = 'local-code-specialist';
+      modelName = 'Qwen 2.5 Coder 1.5B';
+      tools = ['execute_python_sandbox', 'rag_query_codebase'];
+    } else if (intent === 'MATH' || intent === 'SCIENCE') {
+      modelId = 'phi4-mini';
+      modelName = 'Microsoft Phi-4 Mini';
+      tools = ['calculate_step_by_step'];
+    }
+
     return {
       agentId,
-      modelId: 'qwen2.5-coder:1.5b',
-      tools: ['execute_python_sandbox', 'rag_query_codebase']
+      agentName: '301 Specialist Fleet',
+      modelId,
+      modelName,
+      executionTarget: 'GPU',
+      tools
     };
   }
 
@@ -95,29 +144,37 @@ export class OrchestratorController extends EventEmitter {
    * Classifies user intent into categories.
    */
   _classifyIntent(userInput) {
-    const input = userInput.toLowerCase();
-    if (input.includes('code') || input.includes('debug') || input.includes('bug')) return 'CODING';
-    if (input.includes('math') || input.includes('calculate')) return 'MATH';
-    if (input.includes('research') || input.includes('find')) return 'RESEARCH';
-    if (input.includes('file') || input.includes('directory')) return 'FILE_OPERATIONS';
-    if (input.includes('terminal') || input.includes('run')) return 'TERMINAL_COMMANDS';
-    if (input.includes('science')) return 'SCIENCE';
-    if (input.includes('write') || input.includes('draft')) return 'WRITING';
+    const input = (userInput || '').toLowerCase();
+    if (input.includes('code') || input.includes('debug') || input.includes('bug') || input.includes('function') || input.includes('script') || input.includes('python') || input.includes('javascript') || input.includes('refactor')) return 'CODING';
+    if (input.includes('math') || input.includes('calculate') || input.includes('equation') || input.includes('integral') || input.includes('algebra')) return 'MATH';
+    if (input.includes('research') || input.includes('find') || input.includes('search') || input.includes('investigate')) return 'RESEARCH';
+    if (input.includes('file') || input.includes('directory') || input.includes('folder') || input.includes('path')) return 'FILE_OPERATIONS';
+    if (input.includes('terminal') || input.includes('command') || input.includes('shell') || input.includes('powershell') || input.includes('bash')) return 'TERMINAL_COMMANDS';
+    if (input.includes('science') || input.includes('physics') || input.includes('chemistry') || input.includes('biology')) return 'SCIENCE';
+    if (input.includes('write') || input.includes('draft') || input.includes('essay') || input.includes('email') || input.includes('letter')) return 'WRITING';
     return 'GENERAL_CHAT';
   }
 
   /**
    * Determines whether to use agent integration or specialist.
    */
-  _selectExecutionPath(intent, context) {
-    // Check if any agent integrations are RUNNING and capable
+  _selectExecutionPath(intent, context = {}) {
+    // 1. Explicit Manual Agent Override
+    if (context.agentId && context.agentId !== 'auto') {
+      const isIntegration = ['hermes', 'opencode', 'codex', 'openclaw', 'pi', 'copilot-cli'].includes(context.agentId.toLowerCase());
+      return {
+        type: isIntegration ? 'integration' : 'specialist',
+        agentId: context.agentId
+      };
+    }
+
+    // 2. Check if any agent integrations are running and capable
     const runningIntegrations = context.integrationsRunning || [];
     if (runningIntegrations.length > 0) {
-      // Pick first suitable integration
       return { type: 'integration', agentId: runningIntegrations[0] };
     }
     
-    // Otherwise fall through to existing 301 specialist routing
+    // 3. Otherwise fall through to existing 301 specialist routing
     return { type: 'specialist', agentId: `301-${intent.toLowerCase()}-specialist` };
   }
 }

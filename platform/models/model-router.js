@@ -95,19 +95,67 @@ export async function routeTaskToLocalModel(taskInput = {}) {
 
 // === Agent Integration Model Routing ===
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filenameRouter = fileURLToPath(import.meta.url);
+const __dirnameRouter = path.dirname(__filenameRouter);
+const ROOT_ROUTER = path.resolve(__dirnameRouter, '../..');
+
 /**
  * Routes an agent integration to the optimal local model.
  * Agents don't hardcode models — the router decides.
  */
 export function routeAgentToModel(agentId, taskType, constraints = {}) {
-  // Mock implementation for loading agent-integrations.json
-  // In a real implementation this would read from a config and use task classifier
+  let defaultModelId = 'nemotron-3-nano';
+  let supportedModels = ['nemotron-3-nano', 'qwen2.5-coder:1.5b', 'llama3.2:1b'];
+  let agentName = agentId;
+
+  try {
+    const regPath = path.join(ROOT_ROUTER, 'registry', 'agent-integrations.json');
+    if (fs.existsSync(regPath)) {
+      const data = JSON.parse(fs.readFileSync(regPath, 'utf8'));
+      const agent = (data.integrations || []).find(a => a.id === agentId);
+      if (agent) {
+        defaultModelId = agent.default_model || defaultModelId;
+        supportedModels = agent.supported_models || supportedModels;
+        agentName = agent.name || agentId;
+      }
+    }
+  } catch {}
+
+  let chosenModelId = defaultModelId;
+
+  if (constraints.model_override || (constraints.modelMode && constraints.modelMode !== 'auto')) {
+    const requested = constraints.model_override || constraints.modelMode;
+    if (requested.includes('qwen') || requested.includes('code')) chosenModelId = 'local-code-specialist';
+    else if (requested.includes('nemotron')) chosenModelId = 'nemotron-3-nano';
+    else if (requested.includes('gemma')) chosenModelId = 'gemma3-1b';
+    else if (requested.includes('llama')) chosenModelId = 'llama3.2-1b';
+    else if (requested.includes('granite')) chosenModelId = 'granite4-1b-h';
+    else if (requested.includes('phi')) chosenModelId = 'phi4-mini';
+    else if (requested.includes('smollm')) chosenModelId = 'smollm2-1.7b';
+    else if (requested.includes('falcon')) chosenModelId = 'falcon3-1b-instruct';
+    else if (requested.includes('lfm')) chosenModelId = 'lfm2.5-350m';
+    else if (requested.includes('rwkv')) chosenModelId = 'rwkv7-0.4b';
+    else if (requested.includes('tinyllama')) chosenModelId = 'tinyllama-1.1b';
+    else if (requested.includes('stablelm')) chosenModelId = 'stablelm2-1.6b';
+  } else if (taskType === 'CODING' || agentId === 'opencode' || agentId === 'codex' || agentId === 'openclaw') {
+    chosenModelId = 'local-code-specialist';
+  } else if (agentId === 'pi') {
+    chosenModelId = 'llama3.2-1b';
+  }
+
+  const spec = getModelById(chosenModelId) || LOCAL_MODELS[0];
+
   return {
-    model_id: 'llama3.2-1b',
-    model_name: 'Llama 3.2 1B (Local)',
-    reason: 'Matched task capabilities and privacy constraints',
-    execution_target: 'GPU',
-    vram_mb: 2048
+    model_id: spec.model_id,
+    model_name: spec.name,
+    reason: `Selected for ${agentName} based on capability requirements & RTX 2050 footprint`,
+    execution_target: spec.execution_target || 'GPU',
+    vram_mb: spec.vram_mb || 2048,
+    is_compatible: true
   };
 }
 
@@ -115,13 +163,38 @@ export function routeAgentToModel(agentId, taskType, constraints = {}) {
  * Returns model recommendation based on capabilities and VRAM.
  */
 export function getModelRecommendation(capabilities = [], vramAvailable = 4096) {
-  // Match capabilities to model strengths
+  const caps = Array.isArray(capabilities) ? capabilities : [];
+  const isCoding = caps.some(c => c.includes('CODE'));
+
+  if (isCoding) {
+    return [
+      {
+        model_id: 'local-code-specialist',
+        model_name: 'Qwen 2.5 Coder 1.5B',
+        score: 0.98,
+        reason: 'Specialized code generation and syntax tree reasoning'
+      },
+      {
+        model_id: 'nemotron-3-nano',
+        model_name: 'NVIDIA Nemotron 3 Nano',
+        score: 0.90,
+        reason: 'General reasoning fallback'
+      }
+    ];
+  }
+
   return [
     {
       model_id: 'llama3.2-1b',
-      model_name: 'Llama 3.2',
+      model_name: 'Llama 3.2 1B',
       score: 0.95,
       reason: `Fits well within ${vramAvailable}MB constraint`
+    },
+    {
+      model_id: 'nemotron-3-nano',
+      model_name: 'NVIDIA Nemotron 3 Nano',
+      score: 0.92,
+      reason: 'Deep reasoning and orchestration'
     }
   ];
 }
@@ -131,13 +204,15 @@ export function getModelRecommendation(capabilities = [], vramAvailable = 4096) 
  */
 export function getRoutingExplanation(routingResult) {
   return {
-    summary: 'Selected best local model based on intent and VRAM limits.',
+    summary: routingResult?.reason || 'Selected best local model based on intent and VRAM limits.',
     factors: [
-      { factor: 'Data Sovereignty', value: 'Local Only', weight: 1.0 },
-      { factor: 'VRAM Available', value: '4096MB', weight: 0.8 }
+      { factor: 'Data Sovereignty', value: 'Local Only (100% Air-Gapped)', weight: 1.0 },
+      { factor: 'Model Execution Target', value: routingResult?.execution_target || 'GPU', weight: 0.9 },
+      { factor: 'Hardware Limit', value: 'RTX 2050 (4GB VRAM)', weight: 0.8 }
     ],
     alternatives: [
-      { model_id: 'qwen2.5-coder:1.5b', reason: 'Better at coding, but task was general' }
+      { model_id: 'nemotron-3-nano', reason: 'High precision epistemic reasoning' },
+      { model_id: 'qwen2.5-coder:1.5b', reason: 'Specialized coding fallback' }
     ]
   };
 }

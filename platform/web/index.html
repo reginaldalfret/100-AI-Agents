@@ -535,6 +535,39 @@
             <button id="btnCancelRecording" class="btn-voice-cancel" title="Cancel voice input" aria-label="Cancel recording">×</button>
           </div>
 
+          <!-- Active Session & Routing Telemetry Bar -->
+          <div id="sessionIndicatorBar" class="session-indicator-bar" role="status" aria-label="Active Session Status">
+            <div class="session-indicator-item">
+              <span class="session-indicator-label">AGENT:</span>
+              <span id="sessionActiveAgent" class="session-indicator-val">301 Orchestrator</span>
+            </div>
+            <div class="session-indicator-separator">·</div>
+            <div class="session-indicator-item">
+              <span class="session-indicator-label">MODEL:</span>
+              <span id="sessionActiveModel" class="session-indicator-val">Auto — Recommended</span>
+            </div>
+            <div class="session-indicator-separator">·</div>
+            <div class="session-indicator-item">
+              <span class="session-indicator-label">RUNTIME:</span>
+              <span id="sessionActiveRuntime" class="session-indicator-val">Ollama</span>
+            </div>
+            <div class="session-indicator-separator">·</div>
+            <div class="session-indicator-item">
+              <span class="session-indicator-label">HARDWARE:</span>
+              <span id="sessionActiveHardware" class="session-indicator-val">RTX 2050 (4GB)</span>
+            </div>
+            <div class="session-indicator-separator">·</div>
+            <div class="session-indicator-item">
+              <span class="session-indicator-label">NETWORK:</span>
+              <span id="sessionActiveNetwork" class="session-indicator-val badge-sovereign">LOCAL ONLY</span>
+            </div>
+            <div class="session-indicator-separator">·</div>
+            <div class="session-indicator-item">
+              <span class="session-indicator-label">EXT CALLS:</span>
+              <span id="sessionActiveCalls" class="session-indicator-val">0</span>
+            </div>
+          </div>
+
           <div id="attachmentArea" class="attachment-area" style="display:none;"></div>
           <div class="composer-input-row">
             <button id="attachBtn" class="btn-attach-icon" title="Attach confidential files (PDF, PNG, JPG, DOCX, XLSX, CSV, TXT)" aria-label="Attach files">
@@ -549,11 +582,114 @@
             </button>
           </div>
           <div class="composer-toolbar">
+            <!-- Agent Selector Trigger & Floating Liquid Glass Dropdown -->
+            <div class="agent-selector-wrapper" id="agentSelectorWrapper">
+              <button id="agentSelectorBtn" class="btn-agent-selector" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Select AI Agent">
+                <span class="agent-active-dot"></span>
+                <span class="selector-field-label">AGENT:</span>
+                <span id="agentSelectorLabel" class="agent-btn-label">Auto — 301 Orchestrator</span>
+                <svg class="chevron-down" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+
+              <!-- Floating Liquid Glass Agent Dropdown -->
+              <div id="agentDropdown" class="agent-dropdown-menu" style="display:none;" role="menu" aria-label="Local AI Agents">
+                <div class="agent-dropdown-header">
+                  <span class="dropdown-header-title">Agent</span>
+                  <span class="dropdown-header-badge">6 Local Agents</span>
+                </div>
+                <div class="agent-options-list">
+                  <!-- Option: Auto (301 Orchestrator) -->
+                  <div class="agent-option-item active" data-agent-id="auto" role="menuitem" tabindex="0">
+                    <div class="agent-option-left">
+                      <span class="agent-option-icon">⚡</span>
+                      <div class="agent-option-meta">
+                        <span class="agent-name">Auto — 301 Orchestrator</span>
+                        <span class="agent-desc">Autonomous capability-based specialist selection</span>
+                      </div>
+                    </div>
+                    <span class="agent-badge badge-auto">ORCHESTRATOR</span>
+                  </div>
+
+                  <div class="dropdown-section-divider">
+                    <span class="section-badge agent-pill">LOCAL AGENTS</span>
+                  </div>
+
+                  <!-- 6 Local Agents -->
+                  <div class="agent-option-item" data-agent-id="hermes" role="menuitem" tabindex="0">
+                    <div class="agent-option-left">
+                      <span class="agent-option-icon">🤖</span>
+                      <div class="agent-option-meta">
+                        <span class="agent-name">Hermes Agent</span>
+                        <span class="agent-desc">TII · Multi-tool autonomous reasoning</span>
+                      </div>
+                    </div>
+                    <span class="agent-badge badge-general">GENERAL AGENT</span>
+                  </div>
+
+                  <div class="agent-option-item" data-agent-id="opencode" role="menuitem" tabindex="0">
+                    <div class="agent-option-left">
+                      <span class="agent-option-icon">💻</span>
+                      <div class="agent-option-meta">
+                        <span class="agent-name">OpenCode</span>
+                        <span class="agent-desc">Open Source · Terminal coding assistant</span>
+                      </div>
+                    </div>
+                    <span class="agent-badge badge-code">CODING</span>
+                  </div>
+
+                  <div class="agent-option-item" data-agent-id="codex" role="menuitem" tabindex="0">
+                    <div class="agent-option-left">
+                      <span class="agent-option-icon">🧬</span>
+                      <div class="agent-option-meta">
+                        <span class="agent-name">Codex</span>
+                        <span class="agent-desc">OpenAI CLI · Code generation & refactoring</span>
+                      </div>
+                    </div>
+                    <span class="agent-badge badge-code">CODING</span>
+                  </div>
+
+                  <div class="agent-option-item" data-agent-id="openclaw" role="menuitem" tabindex="0">
+                    <div class="agent-option-left">
+                      <span class="agent-option-icon">🦀</span>
+                      <div class="agent-option-meta">
+                        <span class="agent-name">OpenClaw</span>
+                        <span class="agent-desc">Community · Claude Code open alternative</span>
+                      </div>
+                    </div>
+                    <span class="agent-badge badge-logic">AUTOMATION</span>
+                  </div>
+
+                  <div class="agent-option-item" data-agent-id="pi" role="menuitem" tabindex="0">
+                    <div class="agent-option-left">
+                      <span class="agent-option-icon">🥧</span>
+                      <div class="agent-option-meta">
+                        <span class="agent-name">Pi</span>
+                        <span class="agent-desc">Inflection AI · Lightweight conversational agent</span>
+                      </div>
+                    </div>
+                    <span class="agent-badge badge-assistant">LIGHTWEIGHT AGENT</span>
+                  </div>
+
+                  <div class="agent-option-item" data-agent-id="copilot-cli" role="menuitem" tabindex="0">
+                    <div class="agent-option-left">
+                      <span class="agent-option-icon">✈️</span>
+                      <div class="agent-option-meta">
+                        <span class="agent-name">GitHub Copilot CLI</span>
+                        <span class="agent-desc">GitHub / Microsoft · Terminal automation</span>
+                      </div>
+                    </div>
+                    <span class="agent-badge badge-enterprise">TERMINAL / CODING</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Model Selector Trigger & Floating Liquid Glass Dropdown -->
             <div class="model-selector-wrapper" id="modelSelectorWrapper">
               <button id="modelSelectorBtn" class="btn-model-selector" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Select AI Model">
                 <span class="model-active-dot"></span>
-                <span id="modelSelectorLabel" class="model-btn-label">Auto</span>
+                <span class="selector-field-label">MODEL:</span>
+                <span id="modelSelectorLabel" class="model-btn-label">Auto — Recommended</span>
                 <svg class="chevron-down" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </button>
 

@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const state = {
         agents: [],
         selectedAgent: null,
+        selectedAgentMode: 'auto',
         selectedModelMode: 'auto',
         selectedCategory: 'all',
         conversations: [],
@@ -64,6 +65,21 @@ document.addEventListener('DOMContentLoaded', () => {
         voiceStatusText: getEl('voiceStatusText'),
         voiceWaveform: getEl('voiceWaveform'),
         btnCancelRecording: getEl('btnCancelRecording'),
+        
+        // Agent Selector
+        agentSelectorWrapper: getEl('agentSelectorWrapper'),
+        agentSelectorBtn: getEl('agentSelectorBtn'),
+        agentSelectorLabel: getEl('agentSelectorLabel'),
+        agentDropdown: getEl('agentDropdown'),
+        
+        // Session Indicator Bar
+        sessionIndicatorBar: getEl('sessionIndicatorBar'),
+        sessionActiveAgent: getEl('sessionActiveAgent'),
+        sessionActiveModel: getEl('sessionActiveModel'),
+        sessionActiveRuntime: getEl('sessionActiveRuntime'),
+        sessionActiveHardware: getEl('sessionActiveHardware'),
+        sessionActiveNetwork: getEl('sessionActiveNetwork'),
+        sessionActiveCalls: getEl('sessionActiveCalls'),
         
         // Model Selector
         modelSelectorWrapper: getEl('modelSelectorWrapper'),
@@ -3485,6 +3501,137 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.sendBtn.setAttribute('aria-disabled', String(!canSend));
     }
 
+    // ============================================================
+    // AGENT SELECTOR CONTROLLER & TELEMETRY
+    // ============================================================
+
+    const LOCAL_AGENT_DEFS = {
+        'auto': { id: 'auto', name: 'Auto — 301 Orchestrator', shortName: 'Auto — 301 Orchestrator', category: 'Orchestrator', badge: 'ORCHESTRATOR', icon: '⚡', desc: 'Autonomous capability-based specialist selection' },
+        'hermes': { id: 'hermes', name: 'Hermes Agent', shortName: 'Hermes Agent', category: 'General Agent', badge: 'GENERAL AGENT', icon: '🤖', desc: 'TII · Multi-tool autonomous reasoning', defaultModel: 'nemotron-3-nano' },
+        'opencode': { id: 'opencode', name: 'OpenCode', shortName: 'OpenCode', category: 'Coding', badge: 'CODING', icon: '💻', desc: 'Open Source · Terminal coding assistant', defaultModel: 'qwen2.5-coder:1.5b' },
+        'codex': { id: 'codex', name: 'Codex', shortName: 'Codex', category: 'Coding', badge: 'CODING', icon: '🧬', desc: 'OpenAI CLI · Code generation & refactoring', defaultModel: 'nemotron-3-nano' },
+        'openclaw': { id: 'openclaw', name: 'OpenClaw', shortName: 'OpenClaw', category: 'Automation', badge: 'AUTOMATION', icon: '🦀', desc: 'Community · Claude Code open alternative', defaultModel: 'qwen2.5-coder:1.5b' },
+        'pi': { id: 'pi', name: 'Pi', shortName: 'Pi', category: 'Lightweight Agent', badge: 'LIGHTWEIGHT AGENT', icon: '🥧', desc: 'Inflection AI · Lightweight conversational agent', defaultModel: 'llama3.2:1b' },
+        'copilot-cli': { id: 'copilot-cli', name: 'GitHub Copilot CLI', shortName: 'Copilot CLI', category: 'Terminal / Coding', badge: 'TERMINAL / CODING', icon: '✈️', desc: 'GitHub / Microsoft · Terminal automation', defaultModel: 'nemotron-3-nano' }
+    };
+
+    function initAgentSelector() {
+        if (!elements.agentSelectorBtn || !elements.agentDropdown) return;
+
+        elements.agentSelectorBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleAgentDropdown();
+        });
+
+        document.querySelectorAll('.agent-option-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const agentId = item.dataset.agentId;
+                if (agentId) selectAgentMode(agentId);
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (elements.agentSelectorWrapper && !elements.agentSelectorWrapper.contains(e.target)) {
+                closeAgentDropdown();
+            }
+        });
+
+        updateAgentSelectorUI();
+        updateSessionIndicatorBar();
+    }
+
+    function toggleAgentDropdown() {
+        const isClosed = !elements.agentDropdown || elements.agentDropdown.style.display === 'none';
+        if (isClosed) {
+            closeModelDropdown();
+            openAgentDropdown();
+        } else {
+            closeAgentDropdown();
+        }
+    }
+
+    function openAgentDropdown() {
+        if (!elements.agentDropdown || !elements.agentSelectorBtn) return;
+        elements.agentDropdown.style.display = 'block';
+        elements.agentSelectorBtn.setAttribute('aria-expanded', 'true');
+        setTimeout(() => {
+            const activeItem = elements.agentDropdown.querySelector('.agent-option-item.active');
+            if (activeItem) {
+                activeItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }, 20);
+    }
+
+    function closeAgentDropdown() {
+        if (elements.agentDropdown) elements.agentDropdown.style.display = 'none';
+        if (elements.agentSelectorBtn) elements.agentSelectorBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    function updateAgentSelectorUI() {
+        const def = LOCAL_AGENT_DEFS[state.selectedAgentMode] || LOCAL_AGENT_DEFS['auto'];
+        if (elements.agentSelectorLabel) {
+            elements.agentSelectorLabel.textContent = def.shortName || def.name;
+        }
+        document.querySelectorAll('.agent-option-item').forEach(opt => {
+            const optId = opt.dataset.agentId;
+            opt.classList.toggle('active', optId === state.selectedAgentMode);
+        });
+
+        // Update sidebar cards selected highlight
+        document.querySelectorAll('.integration-card').forEach(card => {
+            const isSelected = card.dataset.agentId === state.selectedAgentMode;
+            card.classList.toggle('selected', isSelected);
+            const badge = card.querySelector('.badge-selected');
+            if (isSelected && !badge) {
+                const selSpan = document.createElement('span');
+                selSpan.className = 'integration-status-badge badge-selected';
+                selSpan.textContent = 'SELECTED';
+                card.querySelector('.integration-meta-row')?.appendChild(selSpan);
+            } else if (!isSelected && badge) {
+                badge.remove();
+            }
+        });
+
+        updateSessionIndicatorBar();
+    }
+
+    function selectAgentMode(agentId, silent = false) {
+        if (!LOCAL_AGENT_DEFS[agentId]) return;
+        state.selectedAgentMode = agentId;
+        updateAgentSelectorUI();
+        closeAgentDropdown();
+
+        if (!silent && agentId !== 'auto') {
+            const def = LOCAL_AGENT_DEFS[agentId];
+            appendSystemEvent(`Active Agent switched to ${def.name}`);
+        }
+    }
+
+    function updateSessionIndicatorBar(telemetry = {}) {
+        const agentDef = LOCAL_AGENT_DEFS[state.selectedAgentMode] || LOCAL_AGENT_DEFS['auto'];
+        const modelDef = LOCAL_MODEL_DEFS[state.selectedModelMode] || LOCAL_MODEL_DEFS['auto'];
+
+        if (elements.sessionActiveAgent) {
+            elements.sessionActiveAgent.textContent = telemetry.agent || (state.selectedAgentMode === 'auto' ? (state.selectedAgent?.name || '301 Orchestrator') : agentDef.name.replace('Auto — ', ''));
+        }
+        if (elements.sessionActiveModel) {
+            elements.sessionActiveModel.textContent = telemetry.model || (modelDef.id === 'auto' ? 'Auto — Recommended' : modelDef.displayName);
+        }
+        if (elements.sessionActiveRuntime) {
+            elements.sessionActiveRuntime.textContent = telemetry.runtime || 'Ollama';
+        }
+        if (elements.sessionActiveHardware) {
+            elements.sessionActiveHardware.textContent = telemetry.hardware || (modelDef.hardware?.includes('CPU') ? 'Intel Core i5 (CPU)' : 'RTX 2050 (4GB)');
+        }
+        if (elements.sessionActiveNetwork) {
+            elements.sessionActiveNetwork.textContent = telemetry.network_mode || 'LOCAL ONLY';
+        }
+        if (elements.sessionActiveCalls) {
+            elements.sessionActiveCalls.textContent = String(telemetry.external_calls ?? 0);
+        }
+    }
+
     // MODEL SELECTOR LOGIC
     const LOCAL_MODEL_DEFS = {
         'auto': {
@@ -4976,10 +5123,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const badgeEl = document.getElementById('integrationsCountBadge');
         if (!listEl || !badgeEl) return;
 
+        const items = Array.isArray(integrations) ? integrations : (integrations.integrations || []);
         let activeCount = 0;
         listEl.innerHTML = '';
 
-        integrations.slice(0, 6).forEach(integration => {
+        items.slice(0, 6).forEach(integration => {
             const isInstalled = integration.status !== 'NOT_INSTALLED';
             if (integration.status === 'AVAILABLE' || integration.status === 'RUNNING') {
                 activeCount++;
@@ -4991,9 +5139,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (integration.status === 'STOPPED') statusClass = 'stopped';
             if (integration.status === 'ERROR') statusClass = 'error';
 
+            const isSelected = state.selectedAgentMode === integration.id;
             const card = document.createElement('div');
-            card.className = `integration-card ${statusClass}`;
-            if (!isInstalled) card.title = 'Not installed';
+            card.className = `integration-card ${statusClass} ${isSelected ? 'selected' : ''}`;
+            card.dataset.agentId = integration.id;
+            if (!isInstalled) card.title = 'Not installed · Click to select';
+
+            // Click to select in main dropdown (does not auto-launch)
+            card.addEventListener('click', () => {
+                selectAgentMode(integration.id);
+            });
 
             let actionBtns = '';
             if (isInstalled) {
@@ -5011,6 +5166,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="integration-info">
                     <div class="integration-name">${escapeHtml(integration.name)}</div>
                     <div class="integration-provider">${escapeHtml(integration.provider)}</div>
+                    <div class="integration-meta-row" style="display:flex;align-items:center;gap:4px;margin-top:2px;">
+                        <span class="integration-cap-badge" style="font-size:9px;color:rgba(255,255,255,0.45);background:rgba(255,255,255,0.06);padding:1px 4px;border-radius:3px;">${escapeHtml(integration.category || 'Agent')}</span>
+                        ${isSelected ? '<span class="integration-status-badge badge-selected" style="font-size:9px;padding:1px 5px;border-radius:3px;">SELECTED</span>' : ''}
+                    </div>
                 </div>
                 <div class="integration-status-dot ${statusClass}"></div>
                 <div class="integration-actions">${actionBtns}</div>
@@ -5044,7 +5203,7 @@ document.addEventListener('DOMContentLoaded', () => {
             await fetch('/api/network-policy', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ policy: mode })
+                body: JSON.stringify({ mode: mode, policy: mode })
             });
             document.querySelectorAll('.policy-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.policy === mode);
@@ -5066,10 +5225,10 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="routing-trace-body">
                 <div class="routing-trace-row"><span class="routing-trace-label">Intent</span><span class="routing-trace-value">${escapeHtml(trace.intent || '')}</span></div>
-                <div class="routing-trace-row"><span class="routing-trace-label">Agent</span><span class="routing-trace-value">${escapeHtml(trace.agent || '')}</span></div>
-                <div class="routing-trace-row"><span class="routing-trace-label">Model</span><span class="routing-trace-value">${escapeHtml(trace.model || '')}</span></div>
-                <div class="routing-trace-row"><span class="routing-trace-label">Target</span><span class="routing-trace-value">${escapeHtml(trace.target || '')}</span></div>
-                <div class="routing-trace-row"><span class="routing-trace-label">Reason</span><span class="routing-trace-value">${escapeHtml(trace.reason || '')}</span></div>
+                <div class="routing-trace-row"><span class="routing-trace-label">Agent</span><span class="routing-trace-value">${escapeHtml(trace.agent || trace.selectedAgent || '')}</span></div>
+                <div class="routing-trace-row"><span class="routing-trace-label">Model</span><span class="routing-trace-value">${escapeHtml(trace.model || trace.selectedModel || '')}</span></div>
+                <div class="routing-trace-row"><span class="routing-trace-label">Target</span><span class="routing-trace-value">${escapeHtml(trace.target || trace.executionTarget || '')}</span></div>
+                <div class="routing-trace-row"><span class="routing-trace-label">Reason</span><span class="routing-trace-value">${escapeHtml(trace.reason || trace.selectionReason || 'Capability match')}</span></div>
             </div>
         `;
         container.appendChild(panel);
@@ -5096,6 +5255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        initAgentSelector();
         fetchAgentIntegrations();
     }
 

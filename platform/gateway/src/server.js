@@ -609,6 +609,22 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
+      const isExternalIntegration = ['hermes', 'opencode', 'codex', 'openclaw', 'pi', 'copilot-cli'].includes(rawAgentId.toLowerCase());
+      if (isExternalIntegration) {
+        const disc = await discoverAgent(rawAgentId.toLowerCase());
+        const isRunning = agentLauncher.getAgentStatus(rawAgentId.toLowerCase())?.status === 'RUNNING';
+        if (!disc.installed && !isRunning) {
+          json(res, 400, {
+            status: "error",
+            error_code: "AGENT_UNAVAILABLE",
+            agent: rawAgentId,
+            agent_status: "NOT_INSTALLED",
+            message: `Agent '${rawAgentId}' is not installed on this local system. Please select 'Auto — 301 Orchestrator' or an available agent.`
+          });
+          return;
+        }
+      }
+
       if (!task && hasAttachments) {
         const attNames = payload.attachments.map(a => a.name || "file").join(", ");
         const hasPdf = payload.attachments.some(a => (a.name || "").toLowerCase().endsWith(".pdf") || a.type === "application/pdf");

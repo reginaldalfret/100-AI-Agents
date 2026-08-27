@@ -3,8 +3,7 @@
  * Agent→tool routing layer.
  */
 import { TOOL_DEFINITIONS, isToolAllowed } from "./tool-registry.js";
-// Using dynamic import or mock import for agent-permissions.js as instructed
-import { checkAgentPermission } from "../agents/agent-permissions.js";
+import { checkPermission, checkPermission as checkAgentPermission } from "../agents/agent-permissions.js";
 
 /**
  * Determines tools available to an agent.
