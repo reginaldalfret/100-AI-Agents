@@ -38,6 +38,13 @@ class ModelStreamerManager {
       return { acquired: true, isSwitch: false, isCpu: true };
     }
 
+    // Auto-heal orphaned locks if held > 25 seconds with 0 active streams
+    const now = Date.now();
+    if (this.isInferencing && this.activeStreams.size === 0 && this.lastUsedAt && (now - this.lastUsedAt > 25000)) {
+      console.warn(`[VRAM_LOCK_WATCHDOG] Force-recovering orphaned GPU execution lock after 25s idle.`);
+      this.isInferencing = false;
+    }
+
     if (!this.isInferencing) {
       this.isInferencing = true;
       const isSwitch = this.activeModel && this.activeModel !== targetModel;
@@ -46,12 +53,30 @@ class ModelStreamerManager {
       return { acquired: true, isSwitch, isCpu: false };
     }
 
-    // Queue request if another GPU model inference is in flight
+    // Queue request if another GPU model inference is in flight (with 12s safety timeout)
     return new Promise((resolve) => {
-      this.inferenceQueue.push({
+      let timeoutId = null;
+      const queueItem = {
         targetModel,
-        resolve
-      });
+        resolve: (val) => {
+          if (timeoutId) clearTimeout(timeoutId);
+          resolve(val);
+        }
+      };
+
+      timeoutId = setTimeout(() => {
+        const idx = this.inferenceQueue.indexOf(queueItem);
+        if (idx !== -1) {
+          this.inferenceQueue.splice(idx, 1);
+        }
+        console.warn(`[VRAM_LOCK_TIMEOUT] Queue wait timed out for model '${targetModel}'. Force-acquiring lock.`);
+        this.isInferencing = true;
+        this.activeModel = targetModel;
+        this.lastUsedAt = Date.now();
+        resolve({ acquired: true, isSwitch: false, isCpu: false, forceAcquired: true });
+      }, 12000);
+
+      this.inferenceQueue.push(queueItem);
     });
   }
 
@@ -86,6 +111,9 @@ class ModelStreamerManager {
         // Ignored
       }
       this.activeStreams.delete(requestId);
+      if (this.activeStreams.size === 0) {
+        this.releaseExecutionLock();
+      }
       return true;
     }
     return false;
