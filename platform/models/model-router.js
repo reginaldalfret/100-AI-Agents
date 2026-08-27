@@ -39,6 +39,8 @@ export async function routeTaskToLocalModel(taskInput = {}) {
       selectedModelId = 'stablelm2-1.6b';
     } else if (taskInput.model_override === 'falcon3:1b-instruct-q4_K_M' || taskInput.model_override === 'falcon3-1b-instruct' || taskInput.model_override === 'falcon3' || taskInput.model_override === 'falcon' || taskInput.model_override === 'falcon-1b') {
       selectedModelId = 'falcon3-1b-instruct';
+    } else if (taskInput.model_override === 'jetson-qwen3.8' || taskInput.model_override === 'jetson' || taskInput.model_override === 'Qwen3.8_Unsloth:latest' || taskInput.model_override === 'qwen3.8') {
+      selectedModelId = 'jetson-qwen3.8';
     }
   } else if (taskInput.modelMode && taskInput.modelMode !== 'auto') {
     if (taskInput.modelMode === 'gemma' || taskInput.modelMode === 'gemma3') selectedModelId = 'gemma3-1b';
@@ -53,6 +55,7 @@ export async function routeTaskToLocalModel(taskInput = {}) {
     else if (taskInput.modelMode === 'rwkv' || taskInput.modelMode === 'rwkv7' || taskInput.modelMode === 'rwkv7-0.4b') selectedModelId = 'rwkv7-0.4b';
     else if (taskInput.modelMode === 'tinyllama' || taskInput.modelMode === 'tinyllama-1.1b' || taskInput.modelMode === 'tinyllama:1.1b-chat') selectedModelId = 'tinyllama-1.1b';
     else if (taskInput.modelMode === 'stablelm' || taskInput.modelMode === 'stablelm2' || taskInput.modelMode === 'stablelm2-1.6b' || taskInput.modelMode === 'stablelm2:1.6b') selectedModelId = 'stablelm2-1.6b';
+    else if (taskInput.modelMode === 'jetson' || taskInput.modelMode === 'jetson-qwen3.8' || taskInput.modelMode === 'qwen3.8') selectedModelId = 'jetson-qwen3.8';
   }
 
   const modelSpec = getModelById(selectedModelId) || LOCAL_MODELS[0];

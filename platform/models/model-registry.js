@@ -497,6 +497,41 @@ export const LOCAL_MODELS = [
     ],
     priority: 3,
     status: "ready"
+  },
+  {
+    model_id: "jetson-qwen3.8",
+    ollama_name: "Qwen3.8_Unsloth:latest",
+    name: "NVIDIA Jetson Qwen 3.8 27B",
+    provider: "NVIDIA Jetson",
+    distribution: "LAN Remote Compute Node",
+    role: "High-Capacity Heavy Reasoning & Complex Tasks",
+    badge: "JETSON GPU",
+    primaryTag: "JETSON",
+    node_id: "node-jetson-01",
+    runtime: "remote-ollama",
+    runtime_type: RuntimeType.OLLAMA,
+    endpoint: process.env.JETSON_HOST ? `http://${process.env.JETSON_HOST}:${process.env.JETSON_PORT || 11434}` : "http://10.226.242.101:11434",
+    execution_target: "JETSON_GPU",
+    quantization: "Q8_0",
+    vram_mb: 28000,
+    ram_mb: 32768,
+    context_length: 262144,
+    supported_modalities: [ModelModality.TEXT, ModelModality.CODE],
+    capabilities: [
+      "deep-reasoning",
+      "multi-language-coding",
+      "complex-agent-workflows",
+      "long-context-262k",
+      "sovereign-lan-inference"
+    ],
+    recommended_tasks: [
+      "complex-decomposition",
+      "dense-code-analysis",
+      "heavy-reasoning",
+      "long-document-synthesis"
+    ],
+    priority: 1,
+    status: "ready"
   }
 ];
 
@@ -509,6 +544,8 @@ export function getModelById(modelId) {
     m.model_id.toLowerCase() === lower ||
     (m.ollama_name && m.ollama_name.toLowerCase() === lower) ||
     (m.name && m.name.toLowerCase() === lower) ||
+    (lower.includes("jetson") && m.model_id === "jetson-qwen3.8") ||
+    (lower.includes("qwen3.8") && m.model_id === "jetson-qwen3.8") ||
     (lower.includes("lfm2.5-350m") && m.model_id === "lfm2.5-350m") ||
     (lower.includes("rwkv") && m.model_id === "rwkv7-0.4b") ||
     (lower.includes("tinyllama") && m.model_id === "tinyllama-1.1b") ||
@@ -522,7 +559,7 @@ export function listAvailableModels() {
 }
 
 export function getGpuModels() {
-  return LOCAL_MODELS.filter(m => m.execution_target === "GPU");
+  return LOCAL_MODELS.filter(m => m.execution_target === "GPU" || m.execution_target === "JETSON_GPU");
 }
 
 export function getCpuModels() {
@@ -531,6 +568,16 @@ export function getCpuModels() {
 
 export function getAllCpuModels() {
   return LOCAL_MODELS.filter(m => m.execution_target === "CPU" && m.model_id !== "local-vision-ocr");
+}
+
+export function isJetsonModel(modelIdOrName) {
+  const m = getModelById(modelIdOrName);
+  if (m) return m.execution_target === "JETSON_GPU" || m.node_id === "node-jetson-01";
+  if (typeof modelIdOrName === "string") {
+    const lower = modelIdOrName.toLowerCase();
+    return lower.includes("jetson") || lower.includes("qwen3.8");
+  }
+  return false;
 }
 
 export function isCpuModel(modelIdOrName) {

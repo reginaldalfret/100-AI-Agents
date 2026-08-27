@@ -6,7 +6,9 @@
 
 import http from "node:http";
 import { StreamSanitizer } from "./stream-sanitizer.js";
-import { isCpuModel, getModelById } from "./model-registry.js";
+import { isCpuModel, isJetsonModel, getModelById } from "./model-registry.js";
+import { jetsonProvider } from "./providers/jetson-provider.js";
+import { laptopProvider } from "./providers/laptop-provider.js";
 
 const DEFAULT_OLLAMA_URL = process.env.OLLAMA_URL || "http://127.0.0.1:11434";
 
@@ -31,11 +33,14 @@ class ModelStreamerManager {
 
   /**
    * Acquire execution lock for RTX 2050 (Single GPU-heavy model at a time).
-   * CPU-only models bypass the GPU lock to run concurrently on Intel CPU without consuming VRAM.
+   * CPU-only models and Jetson LAN models bypass the local laptop GPU lock.
    */
   async acquireExecutionLock(targetModel, reqId = `lock_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`) {
     if (isCpuModel(targetModel)) {
       return { acquired: true, isSwitch: false, isCpu: true, lockId: reqId };
+    }
+    if (isJetsonModel(targetModel)) {
+      return { acquired: true, isSwitch: false, isJetson: true, lockId: reqId };
     }
 
     // Auto-heal orphaned locks if held > 20 seconds with 0 active streams
@@ -89,8 +94,8 @@ class ModelStreamerManager {
    * Release execution lock and process next queued request.
    */
   releaseExecutionLock(lockContext = {}) {
-    if (lockContext.isCpu) {
-      return; // CPU models don't hold the GPU mutex lock
+    if (lockContext.isCpu || lockContext.isJetson) {
+      return; // CPU & Jetson models don't hold the Laptop GPU mutex lock
     }
 
     // If caller provided lockId, ensure it matches current holder
@@ -149,6 +154,36 @@ class ModelStreamerManager {
     const lock = await this.acquireExecutionLock(model, requestId);
 
     try {
+      if (isJetsonModel(model)) {
+        try {
+          return await jetsonProvider.stream({
+            model: "Qwen3.8_Unsloth:latest",
+            system,
+            prompt,
+            images,
+            options,
+            onToken,
+            onStatus,
+            onComplete: (res) => {
+              this.releaseExecutionLock(lock);
+              onComplete(res);
+            },
+            onError: (err) => {
+              console.warn(`[JETSON_FALLBACK] Error during Jetson streaming: ${err.message}. Transitioning to local fallback.`);
+            }
+          });
+        } catch (jetsonErr) {
+          console.warn(`[JETSON_FAILOVER] Jetson unreachable (${jetsonErr.message}). Gracefully falling back to Laptop Local Model (nemotron-3-nano).`);
+          onStatus({
+            state: "fallback",
+            message: `NVIDIA Jetson unavailable (${jetsonErr.message}). Gracefully falling back to Laptop Local Model...`,
+            model: "nemotron-3-nano",
+            execution_target: "GPU"
+          });
+          model = "nemotron-3-nano";
+        }
+      }
+
       if (lock.isCpu) {
         onStatus({
           state: ModelLifecycleState.PREPARING,

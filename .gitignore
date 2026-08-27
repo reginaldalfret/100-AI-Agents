@@ -19,7 +19,8 @@ credentials/
 blobs/
 AI/Models/
 data/models/
-models/
+/models/
+!platform/models/**
 release/offline-payload/
 
 # Local Runtime Data and Caches

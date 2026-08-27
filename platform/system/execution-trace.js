@@ -15,6 +15,7 @@ export function buildExecutionTrace({
   modelName = 'Qwen 2.5 Coder',
   runtimeModel = 'qwen2.5-coder:1.5b',
   executionType = 'gpu',
+  node = null,
   hardware = null,
   workflow = null,
   auditId = null,
@@ -22,7 +23,7 @@ export function buildExecutionTrace({
   tokensPerSec = null,
   externalCalls = 0
 }) {
-  const hw = hardware || getHardwareInfo({ executionType });
+  const hw = hardware || getHardwareInfo({ executionType, node });
   const finalAuditId = auditId || ('req_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7));
 
   const rawNum = agent?.displayNumber || (agent?.agent_id ? agent.agent_id.replace('agent-', '') : '301');

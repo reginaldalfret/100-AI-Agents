@@ -114,7 +114,19 @@ export function detectHardware() {
  */
 export function getHardwareInfo(options = {}) {
   const hw = detectHardware();
-  const executionType = options.executionType || 'gpu';
+  const executionType = (options.executionType || 'gpu').toLowerCase();
+
+  if (executionType === 'jetson_gpu' || options.node === 'node-jetson-01' || options.executionType === 'JETSON_GPU') {
+    return {
+      executionType: 'jetson_gpu',
+      name: 'NVIDIA Jetson Compute Node',
+      displayText: 'Ran on NVIDIA Jetson Compute Node (LAN GPU)',
+      details: 'NVIDIA Jetson GPU (Private LAN 10.226.242.101, CUDA)',
+      isGPU: true,
+      vramGB: 32,
+      node: 'node-jetson-01'
+    };
+  }
 
   if (executionType === 'cpu' || !hw.gpu.detected) {
     return {

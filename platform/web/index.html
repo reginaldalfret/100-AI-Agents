@@ -171,6 +171,7 @@
         <div class="agent-status">
           <span class="status-pill status-glow-blue"><span class="dot">●</span> Gateway active</span>
           <span class="status-pill status-glow-cyan"><span class="dot">●</span> 301 agents active</span>
+          <span id="jetsonStatusPill" class="status-pill status-glow-green" title="NVIDIA Jetson Node (10.226.242.101) · LAN GPU"><span class="dot">●</span> Jetson LAN Node</span>
           <span class="sovereignty-indicator"><span class="dot">●</span> Local & Secure</span>
         </div>
       </header>
@@ -883,6 +884,32 @@
                     <div class="model-option-right">
                       <span class="model-check">✓</span>
                       <button class="btn-model-info" title="View Falcon3 1B Specifications" aria-label="Falcon3 1B Info">›</button>
+                    </div>
+                  </div>
+
+                  <!-- NVIDIA JETSON LAN COMPUTE NODE SECTION HEADER -->
+                  <div class="dropdown-section-divider jetson-divider">
+                    <span class="section-badge jetson-pill">⚡ NVIDIA JETSON NODE</span>
+                    <span class="section-note">10.226.242.101 · LAN GPU</span>
+                  </div>
+
+                  <!-- Option: NVIDIA Jetson Qwen 3.8 27B -->
+                  <div class="model-option-item jetson-item" data-model-id="jetson" data-internal-id="Qwen3.8_Unsloth:latest" role="menuitem" tabindex="0">
+                    <div class="model-option-left">
+                      <div class="model-option-icon icon-jetson">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+                      </div>
+                      <div class="model-option-meta">
+                        <div class="model-option-title-row">
+                          <span class="model-name">NVIDIA Jetson Qwen 3.8 27B</span>
+                          <span class="model-badge badge-jetson">JETSON GPU</span>
+                        </div>
+                        <span class="model-desc">NVIDIA Jetson Node (10.226.242.101) · 27.3B Q8_0 · 262k Context</span>
+                      </div>
+                    </div>
+                    <div class="model-option-right">
+                      <span class="model-check">✓</span>
+                      <button class="btn-model-info" title="View NVIDIA Jetson Qwen 3.8 27B Specifications" aria-label="NVIDIA Jetson Qwen 3.8 27B Info">›</button>
                     </div>
                   </div>
 
