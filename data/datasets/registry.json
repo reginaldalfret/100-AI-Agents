@@ -1,0 +1,88 @@
+[
+  {
+    "dataset_id": "ds_33382141f60a",
+    "filename": "sample_exec_test.csv",
+    "path": "E:\\Smart Automation\\100-AI-Agents\\data\\datasets\\ds_33382141f60a_sample_exec_test.csv",
+    "storage_path": "E:\\Smart Automation\\100-AI-Agents\\data\\datasets\\ds_33382141f60a_sample_exec_test.csv",
+    "format": "CSV",
+    "rows": 5,
+    "columns": 3,
+    "schema": {
+      "rowCount": 5,
+      "columnCount": 3,
+      "duplicateRows": 0,
+      "columnMapping": {
+        "plant": "plant",
+        "product": "product",
+        "production_tons": "production_tons"
+      },
+      "columns": [
+        {
+          "originalName": "plant",
+          "sqlName": "plant",
+          "type": "TEXT",
+          "nullCount": 0,
+          "nullPercentage": "0.0",
+          "distinctCount": 3,
+          "min": "Plant A",
+          "max": "Plant C",
+          "avg": null,
+          "sampleValues": [
+            "Plant A",
+            "Plant B",
+            "Plant C"
+          ]
+        },
+        {
+          "originalName": "product",
+          "sqlName": "product",
+          "type": "TEXT",
+          "nullCount": 0,
+          "nullPercentage": "0.0",
+          "distinctCount": 2,
+          "min": "Diesel",
+          "max": "Diesel",
+          "avg": null,
+          "sampleValues": [
+            "Diesel",
+            "Petrol"
+          ]
+        },
+        {
+          "originalName": "production_tons",
+          "sqlName": "production_tons",
+          "type": "INTEGER",
+          "nullCount": 0,
+          "nullPercentage": "0.0",
+          "distinctCount": 5,
+          "min": 500,
+          "max": 2000,
+          "avg": "1150.00",
+          "sampleValues": [
+            "1000",
+            "500",
+            "1500",
+            "750",
+            "2000"
+          ]
+        }
+      ],
+      "summary": {
+        "totalRows": 5,
+        "totalColumns": 3,
+        "duplicateRows": 0,
+        "numericColumns": [
+          "production_tons"
+        ],
+        "textColumns": [
+          "plant",
+          "product"
+        ],
+        "dateColumns": []
+      }
+    },
+    "created_at": "2026-08-27T22:19:16.281Z",
+    "updated_at": "2026-08-27T22:19:16.281Z",
+    "status": "READY"
+  }
+]

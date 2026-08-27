@@ -20,6 +20,9 @@ import { superOrchestrator } from "../../orchestration/super-orchestrator.js";
 import { routingRegistry } from "../../intelligence/routing-registry.js";
 import { discoverAllAgents, discoverAgent, AgentLauncher, AgentSessionManager, networkPolicy, getCapabilityMatrix } from "../../agents/index.js";
 import { orchestratorController } from "../../orchestrator/index.js";
+import { ingestDatasetFile, getDatasetById, listAllDatasets, deleteDataset } from "../../datasets/dataset-registry.js";
+import { analyzeDatasetQuestion } from "../../datasets/dataset-analyst-agent.js";
+import { executeDatasetSQL, validateReadOnlySQL } from "../../datasets/sql-engine.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -343,6 +346,72 @@ const server = http.createServer(async (req, res) => {
         nodes: nodeManager.getNodes(),
         timestamp: new Date().toISOString()
       });
+      return;
+    }
+
+    // ==========================================================================
+    // DATASET INTELLIGENCE & DETERMINISTIC SQL QUERYING ROUTES
+    // ==========================================================================
+    if (req.method === "GET" && url.pathname === "/api/datasets/list") {
+      const datasets = listAllDatasets();
+      json(res, 200, { status: "success", datasets, total: datasets.length });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/datasets/upload") {
+      const body = await parseBody(req);
+      const { filename, content, base64, originalName } = body;
+      let buffer = null;
+      if (base64) {
+        buffer = Buffer.from(base64, "base64");
+      } else if (content) {
+        buffer = Buffer.from(content, "utf8");
+      }
+      const record = await ingestDatasetFile({
+        filename: filename || originalName || "dataset.csv",
+        originalName: originalName || filename,
+        buffer
+      });
+      json(res, 200, { status: "success", dataset: record });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/datasets/query") {
+      const body = await parseBody(req);
+      const { dataset_id, datasetId, question, sql } = body;
+      const effectiveId = dataset_id || datasetId;
+      if (!effectiveId) {
+        json(res, 400, { status: "error", error: "Missing dataset_id" });
+        return;
+      }
+      try {
+        const result = await analyzeDatasetQuestion({
+          datasetId: effectiveId,
+          question: question || "Summarize this dataset",
+          sqlOverride: sql || null
+        });
+        json(res, 200, result);
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname.startsWith("/api/datasets/") && !url.pathname.includes("/query")) {
+      const dsId = url.pathname.replace("/api/datasets/", "");
+      const dataset = getDatasetById(dsId);
+      if (!dataset) {
+        json(res, 404, { status: "error", error: "Dataset not found" });
+        return;
+      }
+      json(res, 200, { status: "success", dataset });
+      return;
+    }
+
+    if (req.method === "DELETE" && url.pathname.startsWith("/api/datasets/")) {
+      const dsId = url.pathname.replace("/api/datasets/", "");
+      const ok = deleteDataset(dsId);
+      json(res, ok ? 200 : 404, { status: ok ? "success" : "error" });
       return;
     }
 
