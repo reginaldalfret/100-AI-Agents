@@ -129,6 +129,22 @@
           <!-- Dynamically populated 301 agents -->
         </div>
       </section>
+
+      <!-- AI Agent Integrations Section -->
+      <div class="sidebar-panel-divider"></div>
+      <div class="agent-integrations-section" id="agentIntegrationsSection">
+        <div class="integrations-header" id="integrationsHeader">
+          <div class="integrations-header-left">
+            <span class="integrations-icon">⚡</span>
+            <span class="integrations-title">AI Agent Integrations</span>
+          </div>
+          <span class="integrations-count-badge" id="integrationsCountBadge">0 / 6</span>
+          <span class="integrations-chevron" id="integrationsChevron">▾</span>
+        </div>
+        <div class="integrations-list" id="integrationsList">
+          <!-- Dynamically populated by app.js -->
+        </div>
+      </div>
     </aside>
 
     <!-- =======================================================
@@ -441,6 +457,13 @@
 
         <section id="systemView" class="view-panel">
           <h2>System Status & Sovereignty</h2>
+          <div class="sovereignty-control-row">
+            <span class="sovereignty-label">Network Policy</span>
+            <div class="network-policy-toggle" id="networkPolicyToggle">
+              <button class="policy-btn active" data-policy="LOCAL_ONLY">🔒 LOCAL ONLY</button>
+              <button class="policy-btn" data-policy="ALLOW_EXTERNAL">🌐 ALLOW EXTERNAL</button>
+            </div>
+          </div>
           <div class="status-cards-row">
             <div class="metric-card">
               <span class="m-val" style="color: #238636;">0</span>

@@ -17,6 +17,8 @@ import { voiceService, globalOfflineTTSEngine, globalOfflineSTTEngine } from "..
 import { pythonClient } from "../../compute/python-client.js";
 import { superOrchestrator } from "../../orchestration/super-orchestrator.js";
 import { routingRegistry } from "../../intelligence/routing-registry.js";
+import { discoverAllAgents, discoverAgent, AgentLauncher, AgentSessionManager, networkPolicy, getCapabilityMatrix } from "../../agents/index.js";
+import { orchestratorController } from "../../orchestrator/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,6 +31,9 @@ const PORT = Number(process.env.PORT || 8300);
 const SERVER_START_TIME = new Date().toISOString();
 const UI_BUILD_VERSION = "liquid-glass-v2.1";
 const GIT_COMMIT_SHA = "b4f89ac-forensic-repair";
+
+const agentLauncher = new AgentLauncher();
+const agentSessionManager = new AgentSessionManager();
 
 function loadRegistry() {
   return JSON.parse(fs.readFileSync(REGISTRY, "utf8"));
@@ -1957,6 +1962,224 @@ const server = http.createServer(async (req, res) => {
       json(res, 200, {
         status: "success",
         result
+      });
+      return;
+    }
+
+    // ============================================================
+    // AGENT INTEGRATION & ORCHESTRATOR ENDPOINTS
+    // ============================================================
+
+    // GET /api/agent-integrations — list all 6 integrations with live discovery status
+    if (req.method === "GET" && url.pathname === "/api/agent-integrations") {
+      try {
+        const integrationsPath = path.join(ROOT, "registry", "agent-integrations.json");
+        let integrationsData = { integrations: [] };
+        if (fs.existsSync(integrationsPath)) {
+          integrationsData = JSON.parse(fs.readFileSync(integrationsPath, "utf8"));
+        }
+        
+        const discoveryResults = await discoverAllAgents();
+        const discoveryMap = new Map(discoveryResults.map(d => [d.id, d]));
+        const runningAgents = agentLauncher.getRunningAgents();
+        const runningMap = new Map(runningAgents.map(r => [r.id, r]));
+
+        const list = integrationsData.integrations.map(agent => {
+          const disc = discoveryMap.get(agent.id) || { installed: false, path: null };
+          const run = runningMap.get(agent.id);
+          let liveStatus = "NOT_INSTALLED";
+          if (run) {
+            liveStatus = "RUNNING";
+          } else if (disc.installed) {
+            liveStatus = "AVAILABLE";
+          }
+
+          return {
+            ...agent,
+            installed: disc.installed,
+            binary_path: disc.path,
+            version: disc.version || null,
+            status: liveStatus,
+            pid: run ? run.pid : null,
+            uptime_seconds: run ? run.uptime : null
+          };
+        });
+
+        json(res, 200, {
+          status: "success",
+          total: list.length,
+          integrations: list
+        });
+      } catch (err) {
+        json(res, 500, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // GET /api/agent-integrations/:id — single agent integration details
+    if (req.method === "GET" && url.pathname.startsWith("/api/agent-integrations/") && !url.pathname.endsWith("/sessions")) {
+      const agentId = url.pathname.split("/")[3];
+      try {
+        const disc = await discoverAgent(agentId);
+        const status = agentLauncher.getAgentStatus(agentId);
+        const integrationsPath = path.join(ROOT, "registry", "agent-integrations.json");
+        let agentMeta = null;
+        if (fs.existsSync(integrationsPath)) {
+          const integrationsData = JSON.parse(fs.readFileSync(integrationsPath, "utf8"));
+          agentMeta = integrationsData.integrations.find(a => a.id === agentId);
+        }
+
+        if (!agentMeta) {
+          json(res, 404, { status: "error", error: `Agent integration '${agentId}' not found` });
+          return;
+        }
+
+        json(res, 200, {
+          status: "success",
+          agent: {
+            ...agentMeta,
+            installed: disc.installed,
+            binary_path: disc.path,
+            version: disc.version || null,
+            live_status: status.status,
+            pid: status.pid,
+            uptime: status.uptime
+          }
+        });
+      } catch (err) {
+        json(res, 500, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // POST /api/agent-integrations/:id/launch — launch agent process
+    if (req.method === "POST" && url.pathname.endsWith("/launch") && url.pathname.startsWith("/api/agent-integrations/")) {
+      const agentId = url.pathname.split("/")[3];
+      try {
+        const payload = await readBody(req).catch(() => ({}));
+        const child = agentLauncher.launchAgent(agentId, payload);
+        json(res, 200, {
+          status: "success",
+          agentId,
+          pid: child.pid,
+          live_status: "RUNNING"
+        });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // POST /api/agent-integrations/:id/stop — stop running agent
+    if (req.method === "POST" && url.pathname.endsWith("/stop") && url.pathname.startsWith("/api/agent-integrations/")) {
+      const agentId = url.pathname.split("/")[3];
+      try {
+        const stopped = agentLauncher.stopAgent(agentId);
+        json(res, 200, {
+          status: "success",
+          agentId,
+          stopped,
+          live_status: "STOPPED"
+        });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // POST /api/agent-integrations/:id/chat — send message to agent session
+    if (req.method === "POST" && url.pathname.endsWith("/chat") && url.pathname.startsWith("/api/agent-integrations/")) {
+      const agentId = url.pathname.split("/")[3];
+      try {
+        const payload = await readBody(req);
+        let sessionId = payload.sessionId;
+        if (!sessionId) {
+          sessionId = agentSessionManager.createSession(agentId, { model: payload.model });
+        }
+        const message = payload.message || payload.prompt || payload.task || "";
+        agentSessionManager.sendMessage(sessionId, message);
+        json(res, 200, {
+          status: "success",
+          sessionId,
+          agentId,
+          response: `Agent ${agentId} processed message in session ${sessionId}`
+        });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // GET /api/agent-integrations/:id/sessions — list sessions
+    if (req.method === "GET" && url.pathname.endsWith("/sessions") && url.pathname.startsWith("/api/agent-integrations/")) {
+      const agentId = url.pathname.split("/")[3];
+      try {
+        const sessions = agentSessionManager.listSessions(agentId);
+        json(res, 200, {
+          status: "success",
+          agentId,
+          sessions
+        });
+      } catch (err) {
+        json(res, 500, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // GET /api/network-policy — get current network policy
+    if (req.method === "GET" && url.pathname === "/api/network-policy") {
+      json(res, 200, {
+        status: "success",
+        mode: networkPolicy.getPolicy(),
+        isExternalAllowed: networkPolicy.isExternalAllowed(),
+        externalCallCount: networkPolicy.getExternalCallCount()
+      });
+      return;
+    }
+
+    // POST /api/network-policy — set network policy mode
+    if (req.method === "POST" && url.pathname === "/api/network-policy") {
+      try {
+        const payload = await readBody(req);
+        const prevMode = networkPolicy.getPolicy();
+        if (payload.mode) {
+          networkPolicy.setPolicy(payload.mode);
+        }
+        json(res, 200, {
+          status: "success",
+          mode: networkPolicy.getPolicy(),
+          previousMode: prevMode
+        });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // GET /api/orchestrator/trace — get routing trace
+    if (req.method === "GET" && url.pathname === "/api/orchestrator/trace") {
+      const requestId = url.searchParams.get("requestId");
+      if (requestId) {
+        const trace = orchestratorController.getRoutingTrace(requestId);
+        if (trace) {
+          json(res, 200, { status: "success", trace });
+        } else {
+          json(res, 404, { status: "error", error: `Trace for requestId '${requestId}' not found` });
+        }
+      } else {
+        json(res, 200, {
+          status: "success",
+          history: orchestratorController.routingHistory || []
+        });
+      }
+      return;
+    }
+
+    // GET /api/orchestrator/capabilities — get full capability matrix
+    if (req.method === "GET" && url.pathname === "/api/orchestrator/capabilities") {
+      json(res, 200, {
+        status: "success",
+        matrix: getCapabilityMatrix()
       });
       return;
     }

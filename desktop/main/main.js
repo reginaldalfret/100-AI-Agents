@@ -91,6 +91,46 @@ ipcMain.handle('services:repair', async () => {
   return { repaired: true };
 });
 
+// Agent Integration IPC Handlers
+ipcMain.handle('agents:list', async () => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/agent-integrations`);
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
+ipcMain.handle('agents:launch', async (_, agentId) => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/agent-integrations/${agentId}/launch`, { method: 'POST' });
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
+ipcMain.handle('agents:stop', async (_, agentId) => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/agent-integrations/${agentId}/stop`, { method: 'POST' });
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
+ipcMain.handle('network:getPolicy', async () => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/network-policy`);
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
+ipcMain.handle('network:setPolicy', async (_, mode) => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/network-policy`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode })
+    });
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
 app.whenReady().then(async () => {
   createSplashWindow();
 

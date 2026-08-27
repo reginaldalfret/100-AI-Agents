@@ -4927,6 +4927,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initModelSelector();
     selectModelMode('auto', true);
     fetchAgents();
+    initAgentIntegrations();
     loadConversations();
     
     // Health check polling
@@ -4951,5 +4952,151 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }, 30000);
+
+    // ============================================================
+    // AI AGENT INTEGRATIONS
+    // ============================================================
+
+    state.agentIntegrations = [];
+
+    async function fetchAgentIntegrations() {
+        try {
+            const res = await fetch('/api/agent-integrations');
+            if (res.ok) {
+                state.agentIntegrations = await res.json();
+                renderAgentIntegrations(state.agentIntegrations);
+            }
+        } catch (e) {
+            console.error('Failed to fetch agent integrations', e);
+        }
+    }
+
+    function renderAgentIntegrations(integrations) {
+        const listEl = document.getElementById('integrationsList');
+        const badgeEl = document.getElementById('integrationsCountBadge');
+        if (!listEl || !badgeEl) return;
+
+        let activeCount = 0;
+        listEl.innerHTML = '';
+
+        integrations.slice(0, 6).forEach(integration => {
+            const isInstalled = integration.status !== 'NOT_INSTALLED';
+            if (integration.status === 'AVAILABLE' || integration.status === 'RUNNING') {
+                activeCount++;
+            }
+
+            let statusClass = 'not-installed';
+            if (integration.status === 'AVAILABLE') statusClass = 'available';
+            if (integration.status === 'RUNNING') statusClass = 'running';
+            if (integration.status === 'STOPPED') statusClass = 'stopped';
+            if (integration.status === 'ERROR') statusClass = 'error';
+
+            const card = document.createElement('div');
+            card.className = `integration-card ${statusClass}`;
+            if (!isInstalled) card.title = 'Not installed';
+
+            let actionBtns = '';
+            if (isInstalled) {
+                if (integration.status === 'RUNNING') {
+                    actionBtns = `<button class="integration-action-btn stop" onclick="event.stopPropagation(); stopAgentIntegration('${integration.id}')" title="Stop">■</button>`;
+                } else if (integration.status === 'ERROR') {
+                    actionBtns = `<button class="integration-action-btn launch" onclick="event.stopPropagation(); launchAgentIntegration('${integration.id}')" title="Restart">↻</button>`;
+                } else {
+                    actionBtns = `<button class="integration-action-btn launch" onclick="event.stopPropagation(); launchAgentIntegration('${integration.id}')" title="Launch">▶</button>`;
+                }
+            }
+
+            card.innerHTML = `
+                <div class="integration-icon">${integration.icon || '⚡'}</div>
+                <div class="integration-info">
+                    <div class="integration-name">${escapeHtml(integration.name)}</div>
+                    <div class="integration-provider">${escapeHtml(integration.provider)}</div>
+                </div>
+                <div class="integration-status-dot ${statusClass}"></div>
+                <div class="integration-actions">${actionBtns}</div>
+            `;
+            listEl.appendChild(card);
+        });
+
+        badgeEl.textContent = `${activeCount} / 6`;
+    }
+
+    window.launchAgentIntegration = async function(agentId) {
+        try {
+            await fetch(`/api/agent-integrations/${agentId}/launch`, { method: 'POST' });
+            fetchAgentIntegrations();
+        } catch (e) {
+            console.error('Failed to launch integration', e);
+        }
+    };
+
+    window.stopAgentIntegration = async function(agentId) {
+        try {
+            await fetch(`/api/agent-integrations/${agentId}/stop`, { method: 'POST' });
+            fetchAgentIntegrations();
+        } catch (e) {
+            console.error('Failed to stop integration', e);
+        }
+    };
+
+    window.toggleNetworkPolicy = async function(mode) {
+        try {
+            await fetch('/api/network-policy', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ policy: mode })
+            });
+            document.querySelectorAll('.policy-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.policy === mode);
+            });
+        } catch (e) {
+            console.error('Failed to toggle network policy', e);
+        }
+    };
+
+    window.renderRoutingTrace = function(trace, container) {
+        if (!container) return;
+        const panel = document.createElement('div');
+        panel.className = 'routing-trace-panel';
+        panel.onclick = () => panel.classList.toggle('expanded');
+        
+        panel.innerHTML = `
+            <div class="routing-trace-header">
+                <span class="trace-icon">🔍</span> WHY THIS ROUTE?
+            </div>
+            <div class="routing-trace-body">
+                <div class="routing-trace-row"><span class="routing-trace-label">Intent</span><span class="routing-trace-value">${escapeHtml(trace.intent || '')}</span></div>
+                <div class="routing-trace-row"><span class="routing-trace-label">Agent</span><span class="routing-trace-value">${escapeHtml(trace.agent || '')}</span></div>
+                <div class="routing-trace-row"><span class="routing-trace-label">Model</span><span class="routing-trace-value">${escapeHtml(trace.model || '')}</span></div>
+                <div class="routing-trace-row"><span class="routing-trace-label">Target</span><span class="routing-trace-value">${escapeHtml(trace.target || '')}</span></div>
+                <div class="routing-trace-row"><span class="routing-trace-label">Reason</span><span class="routing-trace-value">${escapeHtml(trace.reason || '')}</span></div>
+            </div>
+        `;
+        container.appendChild(panel);
+    };
+
+    function initAgentIntegrations() {
+        const header = document.getElementById('integrationsHeader');
+        const list = document.getElementById('integrationsList');
+        const chevron = document.getElementById('integrationsChevron');
+        
+        if (header && list) {
+            header.addEventListener('click', () => {
+                list.classList.toggle('collapsed');
+                if (chevron) {
+                    chevron.style.transform = list.classList.contains('collapsed') ? 'rotate(-90deg)' : '';
+                }
+            });
+        }
+
+        document.querySelectorAll('.policy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const mode = e.target.dataset.policy;
+                if (mode) toggleNetworkPolicy(mode);
+            });
+        });
+
+        fetchAgentIntegrations();
+    }
 
 });

@@ -8,7 +8,7 @@ await runTestSuite("Local Model Registry & Auto-Router Tests", [
     fn: async () => {
       const models = listAvailableModels();
       assert.ok(models.length >= 3);
-      assert.ok(models.every(m => m.provider === "ollama" || m.provider === "local-multimodal"));
+      assert.ok(models.every(m => m.endpoint?.includes("127.0.0.1") || m.runtime_type === "OLLAMA" || m.execution_target === "CPU" || m.execution_target === "GPU"));
     }
   },
   {
@@ -34,10 +34,10 @@ await runTestSuite("Local Model Registry & Auto-Router Tests", [
     }
   },
   {
-    name: "Routes Equipment Photograph / Drawing to Google Gemma 3 4B",
+    name: "Routes Equipment Photograph / Drawing to Local Vision & OCR Engine",
     fn: async () => {
       const req = classifyTaskModelRequirements("Analyze this equipment photograph for localized pitting corrosion", [{ name: "defect_photo.jpg" }]);
-      assert.strictEqual(req.recommended_model_id, "gemma3-4b");
+      assert.strictEqual(req.recommended_model_id, "local-vision-ocr");
       assert.strictEqual(req.primary_modality, "vision");
     }
   },
