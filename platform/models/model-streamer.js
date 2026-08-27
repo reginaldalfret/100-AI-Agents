@@ -24,7 +24,7 @@ class ModelStreamerManager {
     this.activeModel = null;
     this.lastUsedAt = null;
     this.sessionAffinityModel = null;
-    this.isInferencing = false;
+    this.currentLockHolder = null;
     this.inferenceQueue = [];
     this.activeStreams = new Map(); // reqId -> http.ClientRequest
   }
@@ -33,48 +33,53 @@ class ModelStreamerManager {
    * Acquire execution lock for RTX 2050 (Single GPU-heavy model at a time).
    * CPU-only models bypass the GPU lock to run concurrently on Intel CPU without consuming VRAM.
    */
-  async acquireExecutionLock(targetModel) {
+  async acquireExecutionLock(targetModel, reqId = `lock_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`) {
     if (isCpuModel(targetModel)) {
-      return { acquired: true, isSwitch: false, isCpu: true };
+      return { acquired: true, isSwitch: false, isCpu: true, lockId: reqId };
     }
 
-    // Auto-heal orphaned locks if held > 25 seconds with 0 active streams
+    // Auto-heal orphaned locks if held > 20 seconds with 0 active streams
     const now = Date.now();
-    if (this.isInferencing && this.activeStreams.size === 0 && this.lastUsedAt && (now - this.lastUsedAt > 25000)) {
-      console.warn(`[VRAM_LOCK_WATCHDOG] Force-recovering orphaned GPU execution lock after 25s idle.`);
-      this.isInferencing = false;
+    if (this.currentLockHolder && this.activeStreams.size === 0 && this.lastUsedAt && (now - this.lastUsedAt > 20000)) {
+      console.warn(`[VRAM_LOCK_WATCHDOG] Force-recovering orphaned GPU lock '${this.currentLockHolder}' after 20s idle.`);
+      this.currentLockHolder = null;
     }
 
-    if (!this.isInferencing) {
-      this.isInferencing = true;
+    if (!this.currentLockHolder) {
+      this.currentLockHolder = reqId;
       const isSwitch = this.activeModel && this.activeModel !== targetModel;
       this.activeModel = targetModel;
       this.lastUsedAt = Date.now();
-      return { acquired: true, isSwitch, isCpu: false };
+      return { acquired: true, isSwitch, isCpu: false, lockId: reqId };
     }
 
-    // Queue request if another GPU model inference is in flight (with 12s safety timeout)
+    // Queue request if another GPU model inference is in flight
     return new Promise((resolve) => {
-      let timeoutId = null;
+      let resolved = false;
       const queueItem = {
         targetModel,
+        reqId,
         resolve: (val) => {
-          if (timeoutId) clearTimeout(timeoutId);
-          resolve(val);
+          if (!resolved) {
+            resolved = true;
+            if (queueItem.timeoutId) clearTimeout(queueItem.timeoutId);
+            this.currentLockHolder = reqId;
+            const isSwitch = this.activeModel && this.activeModel !== targetModel;
+            this.activeModel = targetModel;
+            this.lastUsedAt = Date.now();
+            resolve({ ...val, lockId: reqId, isSwitch });
+          }
         }
       };
 
-      timeoutId = setTimeout(() => {
+      queueItem.timeoutId = setTimeout(() => {
         const idx = this.inferenceQueue.indexOf(queueItem);
         if (idx !== -1) {
           this.inferenceQueue.splice(idx, 1);
         }
         console.warn(`[VRAM_LOCK_TIMEOUT] Queue wait timed out for model '${targetModel}'. Force-acquiring lock.`);
-        this.isInferencing = true;
-        this.activeModel = targetModel;
-        this.lastUsedAt = Date.now();
-        resolve({ acquired: true, isSwitch: false, isCpu: false, forceAcquired: true });
-      }, 12000);
+        queueItem.resolve({ acquired: true, isCpu: false, forceAcquired: true });
+      }, 6000);
 
       this.inferenceQueue.push(queueItem);
     });
@@ -88,14 +93,20 @@ class ModelStreamerManager {
       return; // CPU models don't hold the GPU mutex lock
     }
 
+    // If caller provided lockId, ensure it matches current holder
+    if (this.currentLockHolder && lockContext.lockId && this.currentLockHolder !== lockContext.lockId) {
+      return;
+    }
+
+    this.currentLockHolder = null;
     this.lastUsedAt = Date.now();
-    if (this.inferenceQueue.length > 0) {
+
+    while (this.inferenceQueue.length > 0) {
       const next = this.inferenceQueue.shift();
-      const isSwitch = this.activeModel && this.activeModel !== next.targetModel;
-      this.activeModel = next.targetModel;
-      next.resolve({ acquired: true, isSwitch, isCpu: false });
-    } else {
-      this.isInferencing = false;
+      if (next) {
+        next.resolve({ acquired: true, isCpu: false });
+        return;
+      }
     }
   }
 
@@ -135,7 +146,7 @@ class ModelStreamerManager {
     onComplete = () => {},
     onError = () => {}
   }) {
-    const lock = await this.acquireExecutionLock(model);
+    const lock = await this.acquireExecutionLock(model, requestId);
 
     try {
       if (lock.isCpu) {
