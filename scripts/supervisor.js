@@ -213,7 +213,7 @@ async function checkOllama() {
     const pid = getPortOwningPid(11434);
     if (pid) {
       log('warn', `[OLLAMA] Port 11434 responding with 0 models. Terminating PID ${pid} to restart with authoritative OLLAMA_MODELS.`);
-      killProcessTree(pid);
+      safelyKillPid(pid, 'ollama');
     }
     state.ollama.running = false;
     return false;

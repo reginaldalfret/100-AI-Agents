@@ -28,6 +28,14 @@ import { listTrainableModels, getAllTrainableModels } from "../../finetuning/tra
 import { fineTuneJobManager } from "../../finetuning/job-manager.js";
 import { evaluateJobPerformance } from "../../finetuning/evaluation-engine.js";
 import { packageAndRegisterModel } from "../../finetuning/model-packager.js";
+import {
+  detectDatasetDomain,
+  specialistSessionManager,
+  checkSpecialistModelsHealth,
+  querySpecialistModel,
+  SPECIALIST_REGISTRY,
+  SpecialistDomain
+} from "../../specialists/specialist-manager.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -550,6 +558,104 @@ const server = http.createServer(async (req, res) => {
       }
       const registered = packageAndRegisterModel(job);
       json(res, 200, { status: "success", registered_model: registered });
+      return;
+    }
+
+    // =========================================================================
+    // TWO-DOMAIN SPECIALIST ROUTES (CYBERSECURITY & HEALTHCARE)
+    // =========================================================================
+    if (req.method === "GET" && url.pathname === "/api/specialists/health") {
+      const health = await checkSpecialistModelsHealth();
+      json(res, 200, health);
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/specialists/detect-domain") {
+      const body = await parseJsonBody(req);
+      const detection = detectDatasetDomain(body.filename, body.columns || [], body.sample_rows || []);
+      json(res, 200, { status: "success", ...detection });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/specialists/session/create") {
+      const body = await parseJsonBody(req);
+      try {
+        const session = specialistSessionManager.createSession({
+          domain: body.domain,
+          dataset_id: body.dataset_id,
+          dataset_name: body.dataset_name
+        });
+        json(res, 200, { status: "success", session });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname.startsWith("/api/specialists/session/")) {
+      const sessionId = url.pathname.replace("/api/specialists/session/", "");
+      const session = specialistSessionManager.getSession(sessionId);
+      if (!session) {
+        json(res, 404, { status: "error", error: "Specialist session not found" });
+        return;
+      }
+      json(res, 200, { status: "success", session });
+      return;
+    }
+
+    if (req.method === "POST" && (url.pathname === "/api/specialists/chat" || url.pathname === "/api/specialists/cybersecurity/chat" || url.pathname === "/api/specialists/healthcare/chat")) {
+      const body = await parseJsonBody(req);
+      let domain = body.domain;
+      if (url.pathname.includes("/cybersecurity/")) domain = "cybersecurity";
+      else if (url.pathname.includes("/healthcare/")) domain = "healthcare";
+
+      if (!domain || !SPECIALIST_REGISTRY[domain.toLowerCase()]) {
+        json(res, 400, { status: "error", error: "Domain must be 'cybersecurity' or 'healthcare'." });
+        return;
+      }
+
+      const prompt = body.message || body.prompt || body.task;
+      if (!prompt) {
+        json(res, 400, { status: "error", error: "Message prompt is required." });
+        return;
+      }
+
+      let datasetContext = null;
+      if (body.dataset_id) {
+        const ds = getDatasetById(body.dataset_id);
+        if (ds) {
+          datasetContext = `Filename: ${ds.filename}\nRows: ${ds.rowCount}\nColumns: ${ds.columns.join(", ")}`;
+        }
+      }
+
+      try {
+        const result = await querySpecialistModel({
+          domain,
+          prompt,
+          datasetContext
+        });
+
+        if (body.session_id) {
+          specialistSessionManager.appendMessage(body.session_id, {
+            role: "user",
+            content: prompt
+          });
+          specialistSessionManager.appendMessage(body.session_id, {
+            role: "assistant",
+            content: result.response,
+            model: result.model,
+            specialist: result.specialist,
+            disclaimer: result.disclaimer
+          });
+        }
+
+        json(res, 200, {
+          status: "success",
+          ...result
+        });
+      } catch (err) {
+        json(res, 500, { status: "error", error: err.message });
+      }
       return;
     }
 

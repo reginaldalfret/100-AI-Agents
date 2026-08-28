@@ -41,7 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'models': getEl('modelsView'),
             'system': getEl('systemView'),
             'finetuning': getEl('finetuningView'),
-            'finetuningView': getEl('finetuningView')
+            'finetuningView': getEl('finetuningView'),
+            'specialistChat': getEl('specialistChatView'),
+            'specialistChatView': getEl('specialistChatView')
         },
         
         // Nav - sidebar secondary nav buttons
@@ -5377,6 +5379,11 @@ document.addEventListener('DOMContentLoaded', () => {
         lossHistory: [2.85, 2.60, 2.34, 2.10, 1.92, 1.76, 1.62, 1.51, 1.41],
 
         init() {
+            this.currentDomain = 'cybersecurity';
+            this.selectedDatasetId = null;
+            this.selectedDatasetName = null;
+            this.activeSpecialistSession = null;
+            this.currentStep = 1;
             this.bindEvents();
         },
 
@@ -5389,7 +5396,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            // Also support clicking New Chat button or conversation item to return to workspace
             const btnNewChat = document.getElementById('btnNewChat');
             if (btnNewChat) {
                 btnNewChat.addEventListener('click', () => {
@@ -5411,15 +5417,49 @@ document.addEventListener('DOMContentLoaded', () => {
                 fileInput.addEventListener('change', (e) => this.handleFile(e.target.files[0]));
             }
 
+            document.querySelectorAll('.ft-domain-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const dom = e.currentTarget.getAttribute('data-domain');
+                    this.setDomain(dom);
+                });
+            });
+
             const s1Next = document.getElementById('ftStep1Next');
             if (s1Next) s1Next.addEventListener('click', () => this.goToStep(2));
 
-            document.querySelectorAll('.model-select-card').forEach(card => {
-                card.addEventListener('click', () => {
-                    document.querySelectorAll('.model-select-card').forEach(c => c.classList.remove('selected'));
-                    card.classList.add('selected');
+            // Technical details accordion toggle
+            const techBtn = document.getElementById('btnToggleTechDetails');
+            const techContent = document.getElementById('techDetailsContent');
+            const techChevron = document.getElementById('techDetailsChevron');
+            if (techBtn && techContent) {
+                techBtn.addEventListener('click', () => {
+                    const isHidden = techContent.style.display === 'none';
+                    techContent.style.display = isHidden ? 'block' : 'none';
+                    if (techChevron) techChevron.textContent = isHidden ? '▾' : '▸';
                 });
-            });
+            }
+
+            // Open Dedicated Specialist LLM Button
+            const openSpecBtn = document.getElementById('ftOpenSpecialistBtn');
+            if (openSpecBtn) {
+                openSpecBtn.addEventListener('click', () => this.openSpecialistChat());
+            }
+
+            // Back button from specialist chat
+            const backBtn = document.getElementById('btnBackFromSpecialistChat');
+            if (backBtn) {
+                backBtn.addEventListener('click', () => switchMainView('finetuningView'));
+            }
+
+            // Specialist chat send
+            const specSendBtn = document.getElementById('btnSpecialistSend');
+            const specInput = document.getElementById('specialistInput');
+            if (specSendBtn && specInput) {
+                specSendBtn.addEventListener('click', () => this.sendSpecialistMessage());
+                specInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') this.sendSpecialistMessage();
+                });
+            }
         },
 
         switchTab(tabId) {
@@ -5430,6 +5470,69 @@ document.addEventListener('DOMContentLoaded', () => {
             const activeContent = document.getElementById(tabId);
             if (activeTabBtn) activeTabBtn.classList.add('active');
             if (activeContent) activeContent.classList.add('active');
+        },
+
+        setDomain(domain) {
+            this.currentDomain = domain === 'healthcare' ? 'healthcare' : 'cybersecurity';
+            const isHealth = this.currentDomain === 'healthcare';
+
+            // Step 1 badge
+            const badgeEl = document.getElementById('ftDetectedDomainBadge');
+            if (badgeEl) {
+                badgeEl.textContent = isHealth ? 'HEALTHCARE' : 'CYBERSECURITY';
+                badgeEl.className = isHealth ? 'model-badge badge-healthcare' : 'model-badge badge-cyber';
+            }
+
+            // Step 4 Specialist Card
+            const s4Title = document.getElementById('ftStep4DomainTitle');
+            const s4Name = document.getElementById('ftStep4SpecialistName');
+            if (s4Title) s4Title.textContent = isHealth ? 'Healthcare' : 'Cybersecurity';
+            if (s4Name) s4Name.textContent = isHealth ? 'Healthcare AI Specialist' : 'Cybersecurity AI Specialist';
+
+            // Step 8 Side-by-Side Evaluation
+            const evalBaseH = document.getElementById('ftEvalBaseHeader');
+            const evalBaseB = document.getElementById('ftBaseResponse');
+            const evalTunedH = document.getElementById('ftEvalTunedHeader');
+            const evalTunedB = document.getElementById('ftTunedResponse');
+
+            if (isHealth) {
+                if (evalBaseH) evalBaseH.textContent = 'Original Specialist (Healthcare AI Specialist)';
+                if (evalBaseB) evalBaseB.textContent = 'General healthcare reference and medical terminology definitions.';
+                if (evalTunedH) evalTunedH.textContent = 'Specialized Model (Healthcare Fine-Tuned LLM)';
+                if (evalTunedB) evalTunedB.innerHTML = '<strong>[MEDICAL-AI]</strong> Multi-modal clinical decision support, symptom triage synthesis, and non-diagnostic clinical context.';
+            } else {
+                if (evalBaseH) evalBaseH.textContent = 'Original Specialist (Cybersecurity AI Specialist)';
+                if (evalBaseB) evalBaseB.textContent = 'Standard SOC baseline protocol analysis and triage.';
+                if (evalTunedH) evalTunedH.textContent = 'Specialized Model (Cybersecurity Fine-Tuned LLM)';
+                if (evalTunedB) evalTunedB.innerHTML = '<strong>[SPECIALIZED-LLM]</strong> High-fidelity vulnerability mitigation, zero-day threat analysis, and automated firewall remediation rules.';
+            }
+
+            // Step 9 Publish / Open
+            const finalTitle = document.getElementById('ftFinalSpecialistTitle');
+            const finalDomainBadge = document.getElementById('ftFinalDomainBadge');
+            const finalTypeBadge = document.getElementById('ftFinalTypeBadge');
+            const finalName = document.getElementById('ftFinalSpecialistName');
+            const openBtnLabel = document.getElementById('ftOpenSpecialistBtnLabel');
+
+            if (isHealth) {
+                if (finalTitle) finalTitle.textContent = 'Healthcare Fine-Tuned LLM';
+                if (finalDomainBadge) { finalDomainBadge.textContent = 'HEALTHCARE'; finalDomainBadge.className = 'model-badge badge-healthcare'; }
+                if (finalTypeBadge) { finalTypeBadge.textContent = 'MEDICAL AI'; finalTypeBadge.className = 'model-badge badge-medical'; }
+                if (finalName) finalName.textContent = 'Healthcare AI Specialist';
+                if (openBtnLabel) openBtnLabel.textContent = 'Open Healthcare LLM';
+            } else {
+                if (finalTitle) finalTitle.textContent = 'Cyber Security Fine-Tuned LLM';
+                if (finalDomainBadge) { finalDomainBadge.textContent = 'CYBERSECURITY'; finalDomainBadge.className = 'model-badge badge-cyber'; }
+                if (finalTypeBadge) { finalTypeBadge.textContent = 'SPECIALIZED LLM'; finalTypeBadge.className = 'model-badge badge-finetuned'; }
+                if (finalName) finalName.textContent = 'Cybersecurity AI Specialist';
+                if (openBtnLabel) openBtnLabel.textContent = 'Open Cybersecurity LLM';
+            }
+
+            // Technical Details
+            if (document.getElementById('techDomain')) document.getElementById('techDomain').textContent = isHealth ? 'HEALTHCARE' : 'CYBERSECURITY';
+            if (document.getElementById('techSpecialist')) document.getElementById('techSpecialist').textContent = isHealth ? 'Healthcare AI Specialist' : 'Cybersecurity AI Specialist';
+            if (document.getElementById('techUnderlyingModel')) document.getElementById('techUnderlyingModel').textContent = isHealth ? 'MedGemma 4B' : 'Qwen3 1.7B Cyber';
+            if (document.getElementById('techOllamaTag')) document.getElementById('techOllamaTag').innerHTML = isHealth ? '<code>medgemma:4b-it-q4_K_M</code>' : '<code>babar_jamali/qwen3-1.7b-cyber:latest</code>';
         },
 
         goToStep(stepNum) {
@@ -5448,12 +5551,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         handleFile(file) {
             if (!file) return;
+            this.selectedDatasetName = file.name;
             const nameEl = document.getElementById('ftFileName');
             const sizeEl = document.getElementById('ftFileSize');
             const infoEl = document.getElementById('ftFileSelectedInfo');
             if (nameEl) nameEl.textContent = file.name;
             if (sizeEl) sizeEl.textContent = (file.size / 1024).toFixed(1) + ' KB';
             if (infoEl) infoEl.style.display = 'flex';
+
+            // Auto Domain Classification
+            const lower = file.name.toLowerCase();
+            if (lower.includes('health') || lower.includes('med') || lower.includes('patient') || lower.includes('ecg') || lower.includes('clinical')) {
+                this.setDomain('healthcare');
+            } else {
+                this.setDomain('cybersecurity');
+            }
         },
 
         startTraining() {
@@ -5501,10 +5613,128 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
 
-        publishModel() {
-            const nameEl = document.getElementById('ftPublishName');
-            const modelName = nameEl ? nameEl.value : 'custom-fine-tuned-model';
-            alert(`Model "${modelName}" registered into 301 Model Registry successfully!`);
+        openSpecialistChat() {
+            const isHealth = this.currentDomain === 'healthcare';
+            switchMainView('specialistChatView');
+
+            // Setup dedicated chat workspace
+            const titleEl = document.getElementById('specialistChatTitle');
+            const domainEl = document.getElementById('specChatDomain');
+            const modelEl = document.getElementById('specChatModel');
+            const disclaimerEl = document.getElementById('specialistHealthcareDisclaimer');
+            const inputEl = document.getElementById('specialistInput');
+
+            if (titleEl) titleEl.innerHTML = `<span class="gradient-text">${isHealth ? 'Healthcare Fine-Tuned LLM' : 'Cybersecurity Fine-Tuned LLM'}</span>`;
+            if (domainEl) {
+                domainEl.textContent = isHealth ? 'HEALTHCARE' : 'CYBERSECURITY';
+                domainEl.style.color = isHealth ? '#22d3ee' : '#f87171';
+            }
+            if (modelEl) modelEl.textContent = isHealth ? 'Healthcare Specialist' : 'Cybersecurity Specialist';
+            if (disclaimerEl) disclaimerEl.style.display = isHealth ? 'block' : 'none';
+            if (inputEl) inputEl.placeholder = isHealth ? 'Ask your healthcare question or query dataset...' : 'Ask your cybersecurity question or query dataset...';
+
+            // Populate Starter Prompts
+            const chipsContainer = document.getElementById('specStarterChips');
+            if (chipsContainer) {
+                const prompts = isHealth ? [
+                    'Summarize the healthcare dataset.',
+                    'What are the most common categories?',
+                    'Explain what an ECG measures.',
+                    'Summarize the synthetic healthcare cases.'
+                ] : [
+                    'Explain the security issue in this dataset.',
+                    'Summarize the most common incident categories.',
+                    'Explain the purpose of MFA.',
+                    'What defensive action should be prioritized?'
+                ];
+
+                chipsContainer.innerHTML = prompts.map(p => `
+                    <button class="chip spec-chip" style="background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#cbd5e1; border-radius:14px; padding:4px 10px; font-size:0.78rem; cursor:pointer;">${escapeHtml(p)}</button>
+                `).join('');
+
+                chipsContainer.querySelectorAll('.spec-chip').forEach(c => {
+                    c.addEventListener('click', (e) => {
+                        if (inputEl) {
+                            inputEl.value = e.target.textContent;
+                            this.sendSpecialistMessage();
+                        }
+                    });
+                });
+            }
+
+            // Reset message window
+            const msgBox = document.getElementById('specialistMessages');
+            if (msgBox) {
+                msgBox.innerHTML = `<div class="empty-spec-message" style="text-align:center; color:#64748b; padding:30px 0;">Specialist model locked and ready. Ask domain-specific questions or analyze dataset records.</div>`;
+            }
+        },
+
+        async sendSpecialistMessage() {
+            const inputEl = document.getElementById('specialistInput');
+            if (!inputEl) return;
+            const text = inputEl.value.trim();
+            if (!text) return;
+            inputEl.value = '';
+
+            const msgBox = document.getElementById('specialistMessages');
+            if (!msgBox) return;
+
+            // Remove empty placeholder
+            const emptyEl = msgBox.querySelector('.empty-spec-message');
+            if (emptyEl) emptyEl.remove();
+
+            // Append User Bubble
+            const userDiv = document.createElement('div');
+            userDiv.className = 'msg-row user';
+            userDiv.innerHTML = `<div class="msg-bubble user"><div class="msg-text">${escapeHtml(text)}</div></div>`;
+            msgBox.appendChild(userDiv);
+
+            // Append AI Thinking / Stream Bubble
+            const aiDiv = document.createElement('div');
+            aiDiv.className = 'msg-row ai';
+            aiDiv.innerHTML = `
+                <div class="msg-bubble">
+                    <div class="ai-header" style="margin-bottom:6px;">
+                        <span>● ${this.currentDomain === 'healthcare' ? 'medgemma:4b' : 'qwen3-1.7b-cyber'}</span>
+                        <span class="zero-egress-tag">⚡ Local Ollama · 0 External Calls</span>
+                    </div>
+                    <div class="msg-text ai-reply-content" style="color:#e2e8f0; line-height:1.65;">
+                        <span class="spin-icon" style="display:inline-block;width:10px;height:10px;border:1.5px solid currentColor;border-top-color:transparent;border-radius:50%;margin-right:6px;"></span>
+                        Thinking...
+                    </div>
+                </div>
+            `;
+            msgBox.appendChild(aiDiv);
+            msgBox.scrollTop = msgBox.scrollHeight;
+
+            const replyTarget = aiDiv.querySelector('.ai-reply-content');
+
+            try {
+                const res = await fetch('/api/specialists/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        domain: this.currentDomain,
+                        message: text,
+                        dataset_id: this.selectedDatasetId
+                    })
+                });
+
+                const data = await res.json();
+                if (data.status === 'success') {
+                    if (replyTarget) {
+                        replyTarget.innerHTML = formatResponse(data.response);
+                        if (data.disclaimer) {
+                            replyTarget.innerHTML += `<div style="margin-top:10px; font-size:0.78rem; color:#a5f3fc; border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">ℹ ${escapeHtml(data.disclaimer)}</div>`;
+                        }
+                    }
+                } else {
+                    if (replyTarget) replyTarget.innerHTML = `<span style="color:#ef4444;">⚠ ${escapeHtml(data.error || 'Specialist model error.')}</span>`;
+                }
+            } catch (err) {
+                if (replyTarget) replyTarget.innerHTML = `<span style="color:#ef4444;">⚠ Error: ${escapeHtml(err.message)}</span>`;
+            }
+            msgBox.scrollTop = msgBox.scrollHeight;
         }
     };
 

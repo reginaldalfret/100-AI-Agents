@@ -211,12 +211,12 @@
           <div class="ft-header-container">
             <div class="ft-title-group">
               <h2 style="font-size:1.6rem; margin:0;"><span class="gradient-text">Fine-Tuning LLM Factory</span></h2>
-              <p class="subtitle" style="color:#94a3b8; font-size:0.88rem; margin:4px 0 0;">Transform Raw Domain Data → Specialized High-Performance Local LLMs</p>
+              <p class="subtitle" style="color:#94a3b8; font-size:0.88rem; margin:4px 0 0;">Transform Domain Data → Specialized AI (Cybersecurity &amp; Healthcare)</p>
             </div>
             <div class="ft-global-stats" style="display:flex; gap:10px;">
-              <div class="stat-pill"><span class="label">VRAM Profile:</span> <strong id="ftVramProfile" style="color:#10b981;">RTX 2050 4GB (Safe)</strong></div>
-              <div class="stat-pill"><span class="label">Active Jobs:</span> <strong id="ftActiveJobsCount" style="color:#60a5fa;">0</strong></div>
-              <div class="stat-pill"><span class="label">Tuned Models:</span> <strong id="ftTunedModelsCount" style="color:#a855f7;">0</strong></div>
+              <div class="stat-pill"><span class="label">Hardware:</span> <strong style="color:#10b981;">RTX 2050 (4GB)</strong></div>
+              <div class="stat-pill"><span class="label">Sovereignty:</span> <strong style="color:#60a5fa;">Local &amp; Air-Gapped</strong></div>
+              <div class="stat-pill"><span class="label">External Calls:</span> <strong style="color:#a855f7;">0</strong></div>
             </div>
           </div>
 
@@ -226,7 +226,7 @@
             <button class="ft-tab" data-ft-tab="datasetsTab"><i class="icon">📁</i> My Datasets</button>
             <button class="ft-tab" data-ft-tab="jobsTab"><i class="icon">⚡</i> Training Jobs</button>
             <button class="ft-tab" data-ft-tab="evalTab"><i class="icon">⚖️</i> Evaluations</button>
-            <button class="ft-tab" data-ft-tab="modelsTab"><i class="icon">📦</i> Fine-Tuned Models</button>
+            <button class="ft-tab" data-ft-tab="modelsTab"><i class="icon">📦</i> Specialist Models</button>
           </div>
 
           <!-- Tab Content: Wizard -->
@@ -240,9 +240,9 @@
                 <div class="step-line"></div>
                 <div class="step-pill" data-step="3"><span>3</span><label>Quality Gate</label></div>
                 <div class="step-line"></div>
-                <div class="step-pill" data-step="4"><span>4</span><label>Base Model</label></div>
+                <div class="step-pill" data-step="4"><span>4</span><label>Specialist</label></div>
                 <div class="step-line"></div>
-                <div class="step-pill" data-step="5"><span>5</span><label>QLoRA</label></div>
+                <div class="step-pill" data-step="5"><span>5</span><label>Config</label></div>
                 <div class="step-line"></div>
                 <div class="step-pill" data-step="6"><span>6</span><label>Safety</label></div>
                 <div class="step-line"></div>
@@ -258,18 +258,36 @@
                 <!-- Step 1: Upload Dataset -->
                 <div class="ft-step-panel active" id="ftStep1">
                   <h3>Step 1: Upload Domain Dataset</h3>
-                  <p class="step-desc">Upload your raw instruction-tuning dataset in CSV, XLSX, or TSV format.</p>
+                  <p class="step-desc">Upload your domain dataset in CSV, XLSX, or TSV format to evaluate against our specialist local models.</p>
+                  
                   <div class="ft-dropzone" id="ftDropzone">
                     <div class="drop-icon">📤</div>
                     <p>Drag and drop your file here, or <label for="ftFileInput" class="btn-link" style="color:#60a5fa; cursor:pointer; text-decoration:underline;">browse</label></p>
                     <input type="file" id="ftFileInput" accept=".csv,.xlsx,.tsv,.jsonl" style="display:none;">
                     <span class="file-hint" style="color:#64748b; font-size:0.8rem;">Supported formats: .CSV, .XLSX, .TSV (Max 50MB)</span>
                   </div>
-                  <div id="ftFileSelectedInfo" class="selected-file-info" style="display:none;">
-                    <span class="file-name" id="ftFileName">synthetic_industrial_faq.csv</span>
-                    <span class="file-size" id="ftFileSize">1.2 KB</span>
-                    <span class="file-rows" id="ftFileRows">3 rows detected</span>
+
+                  <div id="ftFileSelectedInfo" class="selected-file-info" style="display:none; background:rgba(30,41,59,0.7); padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.08); margin-top:16px; flex-direction:column; gap:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                      <div><strong>Dataset:</strong> <span id="ftFileName" style="color:#93c5fd;">dataset.csv</span> (<span id="ftFileSize">1.2 KB</span>)</div>
+                      <span class="badge" style="background:#10b981; color:#fff; padding:2px 8px; border-radius:4px; font-size:0.75rem;">VALIDATION: READY</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                      <span><strong>Domain:</strong></span>
+                      <span id="ftDetectedDomainBadge" class="model-badge badge-cyber" style="font-weight:700;">CYBERSECURITY</span>
+                      <span id="ftFileRows" style="color:#94a3b8; font-size:0.85rem;">· 3 rows detected</span>
+                    </div>
                   </div>
+
+                  <!-- Fallback Domain Selection if uncertain -->
+                  <div id="ftDomainFallbackSelector" style="display:none; margin-top:16px; padding:12px; background:rgba(15,23,42,0.8); border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+                    <p style="margin:0 0 8px 0; font-size:0.88rem; color:#cbd5e1;">Please select dataset domain:</p>
+                    <div style="display:flex; gap:10px;">
+                      <button class="btn btn-secondary ft-domain-btn" data-domain="cybersecurity" style="border:1px solid rgba(239,68,68,0.4); color:#f87171;">🛡️ Cybersecurity</button>
+                      <button class="btn btn-secondary ft-domain-btn" data-domain="healthcare" style="border:1px solid rgba(6,182,212,0.4); color:#22d3ee;">🩺 Healthcare</button>
+                    </div>
+                  </div>
+
                   <div class="ft-step-actions">
                     <button class="btn btn-primary" id="ftStep1Next">Next: Map Columns →</button>
                   </div>
@@ -314,12 +332,12 @@
                 <!-- Step 3: Quality Gate Validation -->
                 <div class="ft-step-panel" id="ftStep3">
                   <h3>Step 3: Quality Gate Validation</h3>
-                  <p class="step-desc">Automated schema validation, duplicate deduplication, length truncation, and token distribution check.</p>
+                  <p class="step-desc">Automated schema validation, deduplication, length truncation, and token distribution check.</p>
                   <div class="quality-cards-grid">
                     <div class="q-card pass">
                       <div class="q-icon">✅</div>
                       <div class="q-info">
-                        <h4>Schema & Empty Fields</h4>
+                        <h4>Schema &amp; Empty Fields</h4>
                         <p>0 empty prompt rows detected. 100% compliant.</p>
                       </div>
                     </div>
@@ -340,59 +358,43 @@
                   </div>
                   <div class="ft-step-actions">
                     <button class="btn btn-secondary" onclick="window.ftApp && window.ftApp.goToStep(2)">← Back</button>
-                    <button class="btn btn-primary" onclick="window.ftApp && window.ftApp.goToStep(4)">Next: Select Base Model →</button>
+                    <button class="btn btn-primary" onclick="window.ftApp && window.ftApp.goToStep(4)">Next: Specialist Model →</button>
                   </div>
                 </div>
 
-                <!-- Step 4: Select Base Model -->
+                <!-- Step 4: Specialist Model (Locked by Domain) -->
                 <div class="ft-step-panel" id="ftStep4">
-                  <h3>Step 4: Select Base Model</h3>
-                  <p class="step-desc">Choose an optimized lightweight base foundation model suited for local RTX 2050 QLoRA fine-tuning.</p>
-                  <div class="model-cards-grid">
-                    <div class="model-select-card selected" data-model="falcon3-1b-instruct">
-                      <div class="model-header">
-                        <h4>Falcon3 1B Base</h4>
-                        <span class="badge badge-success">Recommended</span>
+                  <h3>Step 4: Specialist Model</h3>
+                  <p class="step-desc">Domain-mapped specialist model automatically selected based on dataset classification.</p>
+                  
+                  <div class="specialist-select-card selected" style="background:rgba(30,41,59,0.7); border:1px solid rgba(99,102,241,0.4); border-radius:12px; padding:20px; margin:16px 0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                      <div>
+                        <span style="font-size:0.8rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px;">Detected Domain:</span>
+                        <h4 id="ftStep4DomainTitle" style="margin:2px 0 0 0; font-size:1.2rem; color:#fff;">Cybersecurity</h4>
                       </div>
-                      <p class="model-desc">Ultra-efficient 1.0B parameters. Ideal for rapid instruction tuning and reasoning tasks on 4GB VRAM.</p>
-                      <div class="model-specs">
-                        <span>VRAM Req: <strong>~2.1 GB</strong></span>
-                        <span>Context: <strong>2,048</strong></span>
-                      </div>
+                      <span class="badge badge-success" style="background:#10b981; color:#fff; padding:4px 10px; border-radius:6px; font-weight:700;">● READY</span>
                     </div>
-                    <div class="model-select-card" data-model="qwen2.5-coder-1.5b">
-                      <div class="model-header">
-                        <h4>Qwen 2.5 Coder 1.5B</h4>
-                        <span class="badge badge-info">Code Specialist</span>
-                      </div>
-                      <p class="model-desc">Optimized for Python, SQL, shell automation, and structured agent outputs.</p>
-                      <div class="model-specs">
-                        <span>VRAM Req: <strong>~2.6 GB</strong></span>
-                        <span>Context: <strong>4,096</strong></span>
-                      </div>
+                    <div style="margin:10px 0; font-size:0.95rem;">
+                      <span>Specialist: <strong id="ftStep4SpecialistName" style="color:#60a5fa;">Cybersecurity AI Specialist</strong></span>
                     </div>
-                    <div class="model-select-card" data-model="llama3.2-1b">
-                      <div class="model-header">
-                        <h4>Llama 3.2 1B Instruct</h4>
-                        <span class="badge badge-purple">General Chat</span>
-                      </div>
-                      <p class="model-desc">Meta's compact architecture tailored for lightweight assistant workflows.</p>
-                      <div class="model-specs">
-                        <span>VRAM Req: <strong>~2.4 GB</strong></span>
-                        <span>Context: <strong>2,048</strong></span>
-                      </div>
+                    <div style="display:flex; gap:16px; font-size:0.85rem; color:#94a3b8; margin-top:12px; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px;">
+                      <span>Runtime: <strong style="color:#e2e8f0;">Ollama (Local)</strong></span>
+                      <span>Hardware: <strong style="color:#e2e8f0;">RTX 2050 (4GB VRAM)</strong></span>
+                      <span>External Calls: <strong style="color:#10b981;">0 (Sovereign)</strong></span>
                     </div>
                   </div>
+
                   <div class="ft-step-actions">
                     <button class="btn btn-secondary" onclick="window.ftApp && window.ftApp.goToStep(3)">← Back</button>
-                    <button class="btn btn-primary" onclick="window.ftApp && window.ftApp.goToStep(5)">Next: Configure QLoRA →</button>
+                    <button class="btn btn-primary" onclick="window.ftApp && window.ftApp.goToStep(5)">Next: Configure →</button>
                   </div>
                 </div>
 
-                <!-- Step 5: Configure QLoRA -->
+                <!-- Step 5: Configuration -->
                 <div class="ft-step-panel" id="ftStep5">
-                  <h3>Step 5: Configure QLoRA Hyperparameters</h3>
-                  <p class="step-desc">Quantized Low-Rank Adaptation (4-bit NF4) parameters optimized for local execution.</p>
+                  <h3>Step 5: Configuration</h3>
+                  <p class="step-desc">Fine-tuning parameters and execution profile optimized for local GPU acceleration.</p>
                   <div class="ft-form-grid qlora-grid">
                     <div class="form-group">
                       <label>LoRA Rank (r)</label>
@@ -428,7 +430,7 @@
                 <!-- Step 6: Hardware Resource Check -->
                 <div class="ft-step-panel" id="ftStep6">
                   <h3>Step 6: Hardware Resource Safety Check</h3>
-                  <p class="step-desc">Live safety gauge for NVIDIA GeForce RTX 2050 (4GB VRAM) and CPU/System RAM availability.</p>
+                  <p class="step-desc">Live safety gauge for NVIDIA GeForce RTX 2050 (4GB VRAM) and system memory.</p>
                   <div class="hardware-gauge-container">
                     <div class="gauge-card">
                       <h4>GPU VRAM Safety Profile</h4>
@@ -465,7 +467,7 @@
                   </div>
 
                   <div class="terminal-log-box" id="ftTerminalLogs">
-                    <code>[00:00:01] Initializing Falcon3 1B with 4-bit Quantization (bitsandbytes)...</code><br>
+                    <code>[00:00:01] Initializing specialist domain adaptation pipeline...</code><br>
                     <code>[00:00:04] Applying LoRA target modules: q_proj, k_proj, v_proj, o_proj</code><br>
                     <code>[00:00:07] Trainable params: 4,194,304 || trainable%: 0.41%</code><br>
                     <code>[00:00:10] Epoch 1/3 started. Batch size 1, Grad Accum 4.</code><br>
@@ -477,47 +479,126 @@
                   </div>
                 </div>
 
-                <!-- Step 8: Side-by-Side Model Evaluation -->
+                <!-- Step 8: Dynamic Side-by-Side Model Evaluation -->
                 <div class="ft-step-panel" id="ftStep8">
                   <h3>Step 8: Side-by-Side Model Evaluation</h3>
-                  <p class="step-desc">Test your fine-tuned model against the original base model with domain prompts.</p>
+                  <p class="step-desc">Evaluate the domain specialist against the fine-tuned domain LLM with held-out validation prompts.</p>
                   
                   <div class="comparison-grid">
                     <div class="comparison-card base">
-                      <div class="card-header"><h4>Original Base Model (Falcon3 1B)</h4></div>
-                      <div class="response-body" id="ftBaseResponse">General generic guidelines without proprietary domain specificity.</div>
+                      <div class="card-header"><h4 id="ftEvalBaseHeader">Original Specialist (Cybersecurity AI Specialist)</h4></div>
+                      <div class="response-body" id="ftBaseResponse">Standard domain protocol analysis and baseline triage guidelines.</div>
                     </div>
                     <div class="comparison-card finetuned">
-                      <div class="card-header"><h4>Fine-Tuned Model (Falcon3-1B-Industrial)</h4></div>
-                      <div class="response-body" id="ftTunedResponse"><strong>[INDUSTRIAL-SPECIALIST]</strong> Accurate API-653 ultrasonic thickness verification protocols.</div>
+                      <div class="card-header"><h4 id="ftEvalTunedHeader">Specialized Model (Cybersecurity Fine-Tuned LLM)</h4></div>
+                      <div class="response-body" id="ftTunedResponse"><strong>[SPECIALIZED-LLM]</strong> Precision threat signature mitigation and automated response formulation.</div>
                     </div>
                   </div>
 
                   <div class="ft-step-actions">
                     <button class="btn btn-secondary" onclick="window.ftApp && window.ftApp.goToStep(7)">← Back to Monitor</button>
-                    <button class="btn btn-primary" onclick="window.ftApp && window.ftApp.goToStep(9)">Next: Publish & Register →</button>
+                    <button class="btn btn-primary" onclick="window.ftApp && window.ftApp.goToStep(9)">Next: Publish &amp; Launch →</button>
                   </div>
                 </div>
 
-                <!-- Step 9: Publish & Register to 301 Model Registry -->
+                <!-- Step 9: Publish & Open Dedicated Specialist LLM -->
                 <div class="ft-step-panel" id="ftStep9">
-                  <h3>Step 9: Publish & Register to 301 Model Registry</h3>
-                  <p class="step-desc">Deploy fine-tuned adapter directly into 301 Model Registry & Model Router.</p>
+                  <h3>Step 9: Specialist Model Ready</h3>
+                  <p class="step-desc">Your domain specialist LLM is ready for interactive sovereign local execution.</p>
                   
-                  <div class="publish-form-card">
-                    <div class="form-group">
-                      <label>Model Registry Name</label>
-                      <input type="text" id="ftPublishName" class="form-control" value="falcon3-1b-industrial-specialist-v1">
+                  <div class="publish-form-card" style="background:rgba(30,41,59,0.7); border:1px solid rgba(99,102,241,0.3); border-radius:12px; padding:22px; margin-bottom:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;">
+                      <div>
+                        <h4 id="ftFinalSpecialistTitle" style="margin:0; font-size:1.3rem; color:#fff;">Cyber Security Fine-Tuned LLM</h4>
+                        <div style="display:flex; gap:6px; margin-top:6px;">
+                          <span id="ftFinalDomainBadge" class="model-badge badge-cyber">CYBERSECURITY</span>
+                          <span id="ftFinalTypeBadge" class="model-badge badge-finetuned">SPECIALIZED LLM</span>
+                        </div>
+                      </div>
+                      <span class="badge" style="background:#10b981; color:#fff; padding:4px 10px; border-radius:6px; font-weight:700;">Specialist Model Ready</span>
+                    </div>
+
+                    <p id="ftFinalSpecialistDesc" style="color:#94a3b8; font-size:0.9rem; margin:10px 0 16px 0;">
+                      Specialist: <strong id="ftFinalSpecialistName" style="color:#60a5fa;">Cybersecurity AI Specialist</strong>
+                    </p>
+
+                    <div style="margin-top:16px;">
+                      <button id="ftOpenSpecialistBtn" class="btn btn-success" style="font-size:1rem; padding:12px 24px; font-weight:700; width:100%; display:flex; justify-content:center; align-items:center; gap:8px;">
+                        <span>🚀</span> <span id="ftOpenSpecialistBtnLabel">Open Cybersecurity LLM</span>
+                      </button>
+                    </div>
+
+                    <!-- Expandable Technical Details -->
+                    <div class="technical-details-box" style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.08); padding-top:12px;">
+                      <button id="btnToggleTechDetails" style="background:none; border:none; color:#94a3b8; font-size:0.85rem; cursor:pointer; display:flex; align-items:center; gap:6px; padding:0;">
+                        <span>TECHNICAL DETAILS</span> <span id="techDetailsChevron">▸</span>
+                      </button>
+                      <div id="techDetailsContent" style="display:none; margin-top:12px; background:rgba(15,23,42,0.8); border-radius:8px; padding:12px; font-size:0.82rem; color:#cbd5e1; line-height:1.7;">
+                        <div style="display:grid; grid-template-columns: 140px 1fr; gap:6px;">
+                          <div><strong>Domain:</strong></div> <div id="techDomain">CYBERSECURITY</div>
+                          <div><strong>Specialist:</strong></div> <div id="techSpecialist">Cybersecurity AI Specialist</div>
+                          <div><strong>Underlying Model:</strong></div> <div id="techUnderlyingModel">Qwen3 1.7B Cyber</div>
+                          <div><strong>Ollama Tag:</strong></div> <div id="techOllamaTag"><code>babar_jamali/qwen3-1.7b-cyber:latest</code></div>
+                          <div><strong>Runtime:</strong></div> <div>Ollama (127.0.0.1:11434)</div>
+                          <div><strong>Hardware:</strong></div> <div>RTX 2050 (4GB VRAM)</div>
+                          <div><strong>Network Mode:</strong></div> <div style="color:#10b981;">LOCAL ONLY (0 External Calls)</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
                   <div class="ft-step-actions">
-                    <button class="btn btn-secondary" onclick="window.ftApp && window.ftApp.goToStep(8)">← Back</button>
-                    <button class="btn btn-success" id="ftPublishBtn" onclick="window.ftApp && window.ftApp.publishModel()">🚀 Publish to 301 Registry</button>
+                    <button class="btn btn-secondary" onclick="window.ftApp && window.ftApp.goToStep(8)">← Back to Evaluation</button>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        <!-- ==================== DEDICATED SPECIALIST CHAT VIEW ==================== -->
+        <section id="specialistChatView" class="view-panel" style="padding: 20px; overflow-y: auto; display:none;">
+          <div class="specialist-chat-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px;">
+            <div>
+              <button id="btnBackFromSpecialistChat" class="btn btn-secondary" style="font-size:0.8rem; padding:4px 10px; margin-bottom:6px;">← Back to Fine-Tuning Factory</button>
+              <h2 id="specialistChatTitle" style="margin:4px 0 0 0; font-size:1.4rem;"><span class="gradient-text">Cybersecurity Fine-Tuned LLM</span></h2>
+              <div id="specialistChatMeta" style="display:flex; gap:10px; font-size:0.82rem; color:#94a3b8; margin-top:4px;">
+                <span>Domain: <strong id="specChatDomain" style="color:#f87171;">CYBERSECURITY</strong></span>
+                <span>·</span>
+                <span>Model: <strong id="specChatModel">Cybersecurity Specialist</strong></span>
+                <span>·</span>
+                <span style="color:#10b981;">Local • Ollama • External Calls: 0</span>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="badge" style="background:rgba(99,102,241,0.2); color:#a5b4fc; border:1px solid rgba(99,102,241,0.4); padding:4px 10px; border-radius:6px; font-weight:700;">🔒 MODEL LOCKED</span>
+            </div>
+          </div>
+
+          <!-- Healthcare Disclaimer Notice (Shown only for healthcare) -->
+          <div id="specialistHealthcareDisclaimer" style="display:none; background:rgba(6,182,212,0.1); border:1px solid rgba(6,182,212,0.3); border-radius:8px; padding:10px 14px; margin-bottom:16px; color:#a5f3fc; font-size:0.82rem;">
+            ⚠️ <strong>Medical Notice:</strong> For informational and decision-support use only. Not a substitute for a qualified healthcare professional.
+          </div>
+
+          <!-- Starter Prompt Chips -->
+          <div class="specialist-starter-prompts" style="margin-bottom:16px;">
+            <span style="font-size:0.8rem; color:#94a3b8; margin-right:8px;">Suggested questions:</span>
+            <div id="specStarterChips" style="display:inline-flex; flex-wrap:wrap; gap:6px; margin-top:6px;">
+              <!-- Dynamically populated chips -->
+            </div>
+          </div>
+
+          <!-- Specialist Messages Container -->
+          <div id="specialistMessages" class="chat-messages" style="flex:1; min-height:260px; max-height:420px; overflow-y:auto; background:rgba(15,23,42,0.5); border-radius:10px; padding:16px; border:1px solid rgba(255,255,255,0.06); margin-bottom:16px;">
+            <div class="empty-spec-message" style="text-align:center; color:#64748b; padding:30px 0;">
+              Specialist model ready. Ask domain-specific questions or query your uploaded dataset.
+            </div>
+          </div>
+
+          <!-- Specialist Chat Input -->
+          <div class="specialist-input-container" style="display:flex; gap:10px;">
+            <input type="text" id="specialistInput" class="form-control" placeholder="Ask your cybersecurity question..." style="flex:1; background:rgba(30,41,59,0.8); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:12px 16px; border-radius:8px;">
+            <button id="btnSpecialistSend" class="btn btn-primary" style="padding:12px 24px; font-weight:700;">SEND</button>
           </div>
         </section>
 
