@@ -571,14 +571,14 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === "POST" && url.pathname === "/api/specialists/detect-domain") {
-      const body = await parseJsonBody(req);
+      const body = await readBody(req);
       const detection = detectDatasetDomain(body.filename, body.columns || [], body.sample_rows || []);
       json(res, 200, { status: "success", ...detection });
       return;
     }
 
     if (req.method === "POST" && url.pathname === "/api/specialists/session/create") {
-      const body = await parseJsonBody(req);
+      const body = await readBody(req);
       try {
         const session = specialistSessionManager.createSession({
           domain: body.domain,
@@ -604,7 +604,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (req.method === "POST" && (url.pathname === "/api/specialists/chat" || url.pathname === "/api/specialists/cybersecurity/chat" || url.pathname === "/api/specialists/healthcare/chat")) {
-      const body = await parseJsonBody(req);
+      const body = await readBody(req);
       let domain = body.domain;
       if (url.pathname.includes("/cybersecurity/")) domain = "cybersecurity";
       else if (url.pathname.includes("/healthcare/")) domain = "healthcare";

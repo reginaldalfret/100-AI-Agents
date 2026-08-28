@@ -280,6 +280,7 @@ export async function querySpecialistModel({ domain, prompt, stream = false, dat
       messages: messages,
       stream: false,
       options: {
+        num_ctx: 2048,
         temperature: 0.2,
         top_p: 0.9
       }
