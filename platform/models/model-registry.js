@@ -695,8 +695,8 @@ export const LOCAL_MODELS = [
   {
     model_id: "qwen3-1.7b-cyber",
     ollama_name: "babar_jamali/qwen3-1.7b-cyber:latest",
-    name: "Qwen3 1.7B Cyber",
-    display_name: "Qwen3 1.7B Cyber",
+    name: "qwen3-1.7b-cyber",
+    display_name: "qwen3-1.7b-cyber",
     provider: "Babar Ali Jamali",
     base_family: "Qwen3 1.7B",
     distribution: "Community Fine-Tuned Model",
@@ -728,10 +728,10 @@ export const LOCAL_MODELS = [
     ],
     recommended_tasks: [
       "cybersecurity-investigation",
-      "owasp-vulnerability-assessment",
-      "auth-log-parsing",
-      "ssh-intrusion-analysis",
-      "secure-code-review"
+      "auth-log-analysis",
+      "owasp-vulnerability-check",
+      "incident-response-triage",
+      "threat-hunting"
     ],
     priority: 2,
     status: "ready"
@@ -739,8 +739,8 @@ export const LOCAL_MODELS = [
   {
     model_id: "medgemma-4b",
     ollama_name: "medgemma:4b-it-q4_K_M",
-    name: "MedGemma 4B",
-    display_name: "MedGemma 4B",
+    name: "medgemma:4b",
+    display_name: "medgemma:4b",
     provider: "Google",
     domain: "HEALTHCARE",
     type: "DOMAIN_SPECIALIST",

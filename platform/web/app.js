@@ -3277,7 +3277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         div.innerHTML = `
             <div class="msg-bubble">
                 <div class="ai-header">
-                    <span>● ${escapeHtml(msg.model)}</span>
+                    <span>● ${escapeHtml(formatModelDisplayName(msg.model))}</span>
                     <span class="zero-egress-tag" title="Runtime: ${escapeHtml(actualRuntime)}">⚡ ${escapeHtml(actualRuntime)} · 0 External Calls</span>
                 </div>
                 <div class="msg-text" style="color:var(--text-primary);line-height:1.65;">
@@ -4112,7 +4112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'qwen3-1.7b-cyber': {
             id: 'qwen3-1.7b-cyber',
             internalId: 'babar_jamali/qwen3-1.7b-cyber:latest',
-            displayName: 'Qwen3 1.7B Cyber',
+            displayName: 'qwen3-1.7b-cyber',
             provider: 'Babar Ali Jamali',
             distribution: 'Community Fine-Tuned Model',
             execution_target: 'AUTO_GPU_CPU',
@@ -4129,7 +4129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'cyber': {
             id: 'qwen3-1.7b-cyber',
             internalId: 'babar_jamali/qwen3-1.7b-cyber:latest',
-            displayName: 'Qwen3 1.7B Cyber',
+            displayName: 'qwen3-1.7b-cyber',
             provider: 'Babar Ali Jamali',
             distribution: 'Community Fine-Tuned Model',
             execution_target: 'AUTO_GPU_CPU',
@@ -4146,7 +4146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'medgemma': {
             id: 'medgemma-4b',
             internalId: 'medgemma:4b-it-q4_K_M',
-            displayName: 'MedGemma 4B',
+            displayName: 'medgemma:4b',
             provider: 'Google',
             distribution: 'Official Google Health Model',
             execution_target: 'GPU',
@@ -4164,7 +4164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'medgemma-4b': {
             id: 'medgemma-4b',
             internalId: 'medgemma:4b-it-q4_K_M',
-            displayName: 'MedGemma 4B',
+            displayName: 'medgemma:4b',
             provider: 'Google',
             distribution: 'Official Google Health Model',
             execution_target: 'GPU',
@@ -4182,7 +4182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'medgemma:4b-it-q4_K_M': {
             id: 'medgemma-4b',
             internalId: 'medgemma:4b-it-q4_K_M',
-            displayName: 'MedGemma 4B',
+            displayName: 'medgemma:4b',
             provider: 'Google',
             distribution: 'Official Google Health Model',
             execution_target: 'GPU',
@@ -4198,6 +4198,18 @@ document.addEventListener('DOMContentLoaded', () => {
             disclaimer: 'For informational/decision-support use. Not a substitute for a qualified healthcare professional.'
         }
     };
+
+    function formatModelDisplayName(name) {
+        if (!name) return 'Super AI (Auto)';
+        const lower = String(name).toLowerCase();
+        if (lower.includes('qwen3-1.7b-cyber') || lower.includes('babar_jamali')) {
+            return 'qwen3-1.7b-cyber';
+        }
+        if (lower.includes('medgemma')) {
+            return 'medgemma:4b';
+        }
+        return name;
+    }
 
     function initModelSelector() {
         if (!elements.modelSelectorBtn || !elements.modelDropdown) return;
@@ -4651,15 +4663,15 @@ document.addEventListener('DOMContentLoaded', () => {
                                 }
                                 // Update model display when pipeline transitions to Stage 2
                                 if (parsed.stage === 2 && parsed.model) {
-                                    modelDisplayName = parsed.model;
+                                    modelDisplayName = formatModelDisplayName(parsed.model);
                                     actualModelTag = parsed.tag || actualModelTag;
-                                    if (modelLabelEl) modelLabelEl.textContent = `● ${parsed.model}`;
+                                    if (modelLabelEl) modelLabelEl.textContent = `● ${formatModelDisplayName(parsed.model)}`;
                                     if (egressTagEl) egressTagEl.textContent = `⚡ ${parsed.tag || actualModelTag} · Vision Pipeline`;
                                 }
                             }
                         } else if (eventType === 'metadata') {
                             actualModelTag = parsed.actualModel || actualModelTag;
-                            modelDisplayName = parsed.modelDisplayName || modelDisplayName;
+                            modelDisplayName = formatModelDisplayName(parsed.modelDisplayName || parsed.model || modelDisplayName);
                             traceId = parsed.requestId || traceId;
                             if (modelLabelEl) modelLabelEl.textContent = `● ${modelDisplayName}`;
                             if (egressTagEl) egressTagEl.textContent = `⚡ ${actualModelTag} · 0 External Calls`;
@@ -4686,7 +4698,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (parsed.workflow) {
                                 workflowMeta = parsed.workflow;
                             }
-                            if (modelLabelEl && !isScopeRedirect) modelLabelEl.textContent = `● ${modelDisplayName}`;
+                            if (modelLabelEl && !isScopeRedirect) modelLabelEl.textContent = `● ${formatModelDisplayName(modelDisplayName)}`;
                             if (egressTagEl) egressTagEl.textContent = `⚡ ${actualModelTag} · 0 External Calls`;
                         } else if (eventType === 'error') {
                             if (statusPill && statusPill.parentNode) statusPill.remove();
