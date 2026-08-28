@@ -1,0 +1,4 @@
+instruction,input,output
+"What are the inspection intervals for heat exchangers?","","Per API-653 standards, ultrasonic testing is conducted every 5 years."
+"Explain emergency shutdown procedures for distillation column.","","Isolate feed valves, initiate nitrogen purge, and monitor overhead pressure."
+"What is pump cavitation?","","Formation and rapid collapse of vapor bubbles causing impeller erosion."

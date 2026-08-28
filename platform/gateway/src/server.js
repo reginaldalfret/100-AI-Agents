@@ -23,6 +23,11 @@ import { orchestratorController } from "../../orchestrator/index.js";
 import { ingestDatasetFile, getDatasetById, listAllDatasets, deleteDataset } from "../../datasets/dataset-registry.js";
 import { analyzeDatasetQuestion } from "../../datasets/dataset-analyst-agent.js";
 import { executeDatasetSQL, validateReadOnlySQL } from "../../datasets/sql-engine.js";
+import { ingestTrainingDataset } from "../../finetuning/dataset-manager.js";
+import { listTrainableModels, getAllTrainableModels } from "../../finetuning/trainable-model-registry.js";
+import { fineTuneJobManager } from "../../finetuning/job-manager.js";
+import { evaluateJobPerformance } from "../../finetuning/evaluation-engine.js";
+import { packageAndRegisterModel } from "../../finetuning/model-packager.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -412,6 +417,139 @@ const server = http.createServer(async (req, res) => {
       const dsId = url.pathname.replace("/api/datasets/", "");
       const ok = deleteDataset(dsId);
       json(res, ok ? 200 : 404, { status: ok ? "success" : "error" });
+      return;
+    }
+
+    // ==========================================================================
+    // FINE-TUNING LLM FACTORY ROUTES
+    // ==========================================================================
+    if (req.method === "GET" && url.pathname === "/api/finetuning/models") {
+      const models = getAllTrainableModels();
+      json(res, 200, { status: "success", models, total: models.length });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/finetuning/datasets") {
+      const body = await parseBody(req);
+      const { filename, content, base64, originalName } = body;
+      let buffer = null;
+      if (base64) buffer = Buffer.from(base64, "base64");
+      else if (content) buffer = Buffer.from(content, "utf8");
+
+      const record = ingestTrainingDataset({
+        filename: filename || originalName || "train_dataset.csv",
+        originalName: originalName || filename,
+        buffer,
+        content
+      });
+      json(res, 200, { status: "success", dataset: record });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname === "/api/finetuning/jobs") {
+      const jobs = fineTuneJobManager.listJobs();
+      json(res, 200, { status: "success", jobs, total: jobs.length });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/finetuning/jobs") {
+      const body = await parseBody(req);
+      try {
+        const job = fineTuneJobManager.createJob(body);
+        json(res, 200, { status: "success", job });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname.startsWith("/api/finetuning/jobs/") && !url.pathname.includes("/start") && !url.pathname.includes("/pause") && !url.pathname.includes("/resume") && !url.pathname.includes("/cancel") && !url.pathname.includes("/logs") && !url.pathname.includes("/evaluation")) {
+      const jobId = url.pathname.replace("/api/finetuning/jobs/", "");
+      const job = fineTuneJobManager.getJob(jobId);
+      if (!job) {
+        json(res, 404, { status: "error", error: "Job not found" });
+        return;
+      }
+      json(res, 200, { status: "success", job });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname.endsWith("/start")) {
+      const jobId = url.pathname.replace("/api/finetuning/jobs/", "").replace("/start", "");
+      try {
+        const job = await fineTuneJobManager.startJob(jobId);
+        json(res, 200, { status: "success", job });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname.endsWith("/pause")) {
+      const jobId = url.pathname.replace("/api/finetuning/jobs/", "").replace("/pause", "");
+      try {
+        const job = await fineTuneJobManager.pauseJob(jobId);
+        json(res, 200, { status: "success", job });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname.endsWith("/resume")) {
+      const jobId = url.pathname.replace("/api/finetuning/jobs/", "").replace("/resume", "");
+      try {
+        const job = await fineTuneJobManager.resumeJob(jobId);
+        json(res, 200, { status: "success", job });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname.endsWith("/cancel")) {
+      const jobId = url.pathname.replace("/api/finetuning/jobs/", "").replace("/cancel", "");
+      try {
+        const job = await fineTuneJobManager.cancelJob(jobId);
+        json(res, 200, { status: "success", job });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname.endsWith("/logs")) {
+      const jobId = url.pathname.replace("/api/finetuning/jobs/", "").replace("/logs", "");
+      const job = fineTuneJobManager.getJob(jobId);
+      if (!job) {
+        json(res, 404, { status: "error", error: "Job not found" });
+        return;
+      }
+      json(res, 200, { status: "success", logs: job.logs || [], loss_history: job.loss_history || [] });
+      return;
+    }
+
+    if (req.method === "GET" && url.pathname.endsWith("/evaluation")) {
+      const jobId = url.pathname.replace("/api/finetuning/jobs/", "").replace("/evaluation", "");
+      const job = fineTuneJobManager.getJob(jobId);
+      if (!job) {
+        json(res, 404, { status: "error", error: "Job not found" });
+        return;
+      }
+      const evalReport = await evaluateJobPerformance(job);
+      json(res, 200, { status: "success", evaluation: evalReport });
+      return;
+    }
+
+    if (req.method === "POST" && url.pathname.startsWith("/api/finetuning/models/") && url.pathname.endsWith("/register")) {
+      const jobId = url.pathname.replace("/api/finetuning/models/", "").replace("/register", "");
+      const job = fineTuneJobManager.getJob(jobId);
+      if (!job) {
+        json(res, 404, { status: "error", error: "Job not found" });
+        return;
+      }
+      const registered = packageAndRegisterModel(job);
+      json(res, 200, { status: "success", registered_model: registered });
       return;
     }
 

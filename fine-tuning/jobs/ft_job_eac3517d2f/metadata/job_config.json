@@ -1,0 +1,87 @@
+{
+  "job_id": "ft_job_eac3517d2f",
+  "name": "Industrial Specialist v1",
+  "base_model_id": "falcon3-1b-instruct",
+  "base_model_name": "Falcon3 1B",
+  "base_model_license": "Apache License 2.0",
+  "domain": "INDUSTRIAL",
+  "specialization": "Domain Task Specialization",
+  "description": "",
+  "state": "QUEUED",
+  "progress": 0,
+  "current_epoch": 0,
+  "total_epochs": 3,
+  "step": 0,
+  "total_steps": 6,
+  "config": {
+    "method": "QLoRA",
+    "epochs": 3,
+    "learning_rate": 0.0002,
+    "batch_size": 1,
+    "gradient_accumulation_steps": 4,
+    "sequence_length": 1024,
+    "lora_rank": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "seed": 42,
+    "optimizer": "adamw_8bit",
+    "lr_scheduler": "cosine",
+    "warmup_ratio": 0.03,
+    "weight_decay": 0.01,
+    "target_modules": [
+      "q_proj",
+      "v_proj",
+      "k_proj",
+      "o_proj"
+    ],
+    "enable_early_stopping": true,
+    "patience": 2,
+    "save_checkpoint_epochs": 1,
+    "logging_steps": 5
+  },
+  "dataset_manifest": {
+    "dataset_hash": "a33b0ae2df299564f56aaaf478ab5476fc4813a354bf338f7cbcb3eff76dc30a",
+    "total_samples": 3,
+    "train_samples": 2,
+    "val_samples": 1,
+    "test_samples": 0
+  },
+  "feasibility": {
+    "status": "SAFE",
+    "canStart": true,
+    "modelName": "Falcon3 1B",
+    "method": "QLoRA",
+    "vramEstimateMb": 1430,
+    "vramPercentage": "35%",
+    "hardware": {
+      "gpu": {
+        "name": "NVIDIA GeForce RTX 2050",
+        "total_vram_mb": 4096,
+        "usable_vram_mb": 3800,
+        "vram_type": "GDDR6"
+      },
+      "cpu": {
+        "model": "Intel(R) Core(TM) i5-11400H @ 2.70GHz",
+        "cores": 6,
+        "threads": 12
+      },
+      "ram": {
+        "total_ram_mb": 16384,
+        "available_ram_mb": 11200
+      },
+      "disk": {
+        "target_drive": "E:",
+        "free_space_gb": 120.5
+      }
+    },
+    "reason": "Feasible on NVIDIA RTX 2050 (1430 MB / 3800 MB)."
+  },
+  "job_dir": "E:\\Smart Automation\\100-AI-Agents\\fine-tuning\\jobs\\ft_job_eac3517d2f",
+  "created_at": "2026-08-28T01:06:29.704Z",
+  "updated_at": "2026-08-28T01:06:29.704Z",
+  "logs": [
+    "[2026-08-28T01:06:29.704Z] Job initialized in state QUEUED"
+  ],
+  "loss_history": [],
+  "metrics": {}
+}

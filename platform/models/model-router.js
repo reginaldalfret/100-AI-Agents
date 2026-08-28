@@ -43,6 +43,8 @@ export async function routeTaskToLocalModel(taskInput = {}) {
       selectedModelId = 'qwen3-1.7b-cyber';
     } else if (taskInput.model_override === 'medgemma-4b' || taskInput.model_override === 'medgemma:4b-it-q4_K_M' || taskInput.model_override === 'medgemma' || taskInput.model_override === 'medical' || taskInput.model_override === 'healthcare') {
       selectedModelId = 'medgemma-4b';
+    } else if (getModelById(taskInput.model_override)) {
+      selectedModelId = taskInput.model_override;
     }
   } else if (taskInput.modelMode && taskInput.modelMode !== 'auto') {
     if (taskInput.modelMode === 'gemma' || taskInput.modelMode === 'gemma3') selectedModelId = 'gemma3-1b';

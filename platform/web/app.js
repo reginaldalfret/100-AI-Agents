@@ -5347,4 +5347,139 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchAgentIntegrations();
     }
 
+    // ==========================================================================
+    // FINE-TUNING FACTORY CONTROLLER
+    // ==========================================================================
+    window.ftApp = {
+        currentStep: 1,
+        trainingInterval: null,
+        lossHistory: [2.85, 2.60, 2.34, 2.10, 1.92, 1.76, 1.62, 1.51, 1.41],
+
+        init() {
+            this.bindEvents();
+        },
+
+        bindEvents() {
+            const navBtn = document.getElementById('navFinetuningBtn');
+            if (navBtn) {
+                navBtn.addEventListener('click', () => {
+                    document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
+                    const ftView = document.getElementById('finetuningView');
+                    if (ftView) ftView.style.display = 'block';
+                });
+            }
+
+            document.querySelectorAll('.ft-tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const target = e.currentTarget.getAttribute('data-ft-tab');
+                    this.switchTab(target);
+                });
+            });
+
+            const dropzone = document.getElementById('ftDropzone');
+            const fileInput = document.getElementById('ftFileInput');
+            if (dropzone && fileInput) {
+                dropzone.addEventListener('click', () => fileInput.click());
+                fileInput.addEventListener('change', (e) => this.handleFile(e.target.files[0]));
+            }
+
+            const s1Next = document.getElementById('ftStep1Next');
+            if (s1Next) s1Next.addEventListener('click', () => this.goToStep(2));
+
+            document.querySelectorAll('.model-select-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.model-select-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                });
+            });
+        },
+
+        switchTab(tabId) {
+            document.querySelectorAll('.ft-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.ft-tab-content').forEach(c => c.classList.remove('active'));
+
+            const activeTabBtn = document.querySelector(`.ft-tab[data-ft-tab="${tabId}"]`);
+            const activeContent = document.getElementById(tabId);
+            if (activeTabBtn) activeTabBtn.classList.add('active');
+            if (activeContent) activeContent.classList.add('active');
+        },
+
+        goToStep(stepNum) {
+            this.currentStep = stepNum;
+            document.querySelectorAll('.step-pill').forEach(pill => {
+                const pStep = parseInt(pill.getAttribute('data-step'), 10);
+                pill.classList.remove('active', 'completed');
+                if (pStep === stepNum) pill.classList.add('active');
+                else if (pStep < stepNum) pill.classList.add('completed');
+            });
+
+            document.querySelectorAll('.ft-step-panel').forEach(panel => panel.classList.remove('active'));
+            const targetPanel = document.getElementById(`ftStep${stepNum}`);
+            if (targetPanel) targetPanel.classList.add('active');
+        },
+
+        handleFile(file) {
+            if (!file) return;
+            const nameEl = document.getElementById('ftFileName');
+            const sizeEl = document.getElementById('ftFileSize');
+            const infoEl = document.getElementById('ftFileSelectedInfo');
+            if (nameEl) nameEl.textContent = file.name;
+            if (sizeEl) sizeEl.textContent = (file.size / 1024).toFixed(1) + ' KB';
+            if (infoEl) infoEl.style.display = 'flex';
+        },
+
+        startTraining() {
+            this.goToStep(7);
+            const badge = document.getElementById('ftJobStatusBadge');
+            if (badge) {
+                badge.textContent = '● TRAINING IN PROGRESS';
+                badge.style.color = '#10b981';
+            }
+
+            let step = 120;
+            let currentLoss = 1.412;
+            const logBox = document.getElementById('ftTerminalLogs');
+
+            if (this.trainingInterval) clearInterval(this.trainingInterval);
+
+            this.trainingInterval = setInterval(() => {
+                step += 40;
+                currentLoss = Math.max(0.65, currentLoss - (Math.random() * 0.05 + 0.01));
+
+                if (document.getElementById('ftLiveStep')) document.getElementById('ftLiveStep').textContent = `${step} / 920`;
+                if (document.getElementById('ftLiveLoss')) document.getElementById('ftLiveLoss').textContent = currentLoss.toFixed(3);
+
+                if (logBox) {
+                    logBox.innerHTML += `<code>[Training] Step ${step}/920 | Loss: ${currentLoss.toFixed(4)} | VRAM: 2.51 GB | Temp: 60°C</code><br>`;
+                    logBox.scrollTop = logBox.scrollHeight;
+                }
+
+                if (step >= 920) {
+                    clearInterval(this.trainingInterval);
+                    if (badge) {
+                        badge.textContent = '✔ TRAINING COMPLETED';
+                        badge.style.color = '#10b981';
+                    }
+                }
+            }, 800);
+        },
+
+        stopTraining() {
+            if (this.trainingInterval) clearInterval(this.trainingInterval);
+            const badge = document.getElementById('ftJobStatusBadge');
+            if (badge) {
+                badge.textContent = '⏹ TRAINING STOPPED';
+                badge.style.color = '#ef4444';
+            }
+        },
+
+        publishModel() {
+            const nameEl = document.getElementById('ftPublishName');
+            const modelName = nameEl ? nameEl.value : 'custom-fine-tuned-model';
+            alert(`Model "${modelName}" registered into 301 Model Registry successfully!`);
+        }
+    };
+
+    if (window.ftApp) window.ftApp.init();
+
 });

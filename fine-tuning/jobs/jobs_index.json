@@ -1,0 +1,18 @@
+[
+  {
+    "job_id": "ft_job_eac3517d2f",
+    "name": "Industrial Specialist v1",
+    "base_model_id": "falcon3-1b-instruct",
+    "base_model_name": "Falcon3 1B",
+    "state": "QUEUED",
+    "progress": 0,
+    "current_epoch": 0,
+    "total_epochs": 3,
+    "created_at": "2026-08-28T01:06:29.704Z",
+    "updated_at": "2026-08-28T01:06:29.704Z",
+    "completed_at": null,
+    "metrics": {},
+    "domain": "INDUSTRIAL",
+    "job_dir": "E:\\Smart Automation\\100-AI-Agents\\fine-tuning\\jobs\\ft_job_eac3517d2f"
+  }
+]
