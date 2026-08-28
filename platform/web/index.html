@@ -19,6 +19,85 @@
       --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
     body { font-family: var(--font-sans); }
+
+    /* ─── Base Model Card Selection Grid ─── */
+    .model-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .model-select-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .model-select-card:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      background: rgba(30, 41, 59, 0.85);
+      transform: translateY(-1px);
+    }
+    .model-select-card.selected {
+      border-color: #6366f1;
+      background: rgba(99, 102, 241, 0.12);
+      box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3);
+    }
+    .model-select-card.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: #6366f1;
+      color: #fff;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .model-select-card .model-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .model-select-card .model-header h4 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #e2e8f0;
+    }
+    .model-select-card .model-desc {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin: 4px 0 8px 0;
+      line-height: 1.4;
+    }
+    .model-select-card .model-specs {
+      display: flex;
+      gap: 14px;
+      font-size: 0.76rem;
+      color: #64748b;
+    }
+    .model-select-card .model-specs strong {
+      color: #cbd5e1;
+    }
+
+    /* ─── Streaming Cursor Blink ─── */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .model-cards-grid { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -240,7 +319,7 @@
                 <div class="step-line"></div>
                 <div class="step-pill" data-step="3"><span>3</span><label>Quality Gate</label></div>
                 <div class="step-line"></div>
-                <div class="step-pill" data-step="4"><span>4</span><label>Specialist</label></div>
+                <div class="step-pill" data-step="4"><span>4</span><label>Base Model</label></div>
                 <div class="step-line"></div>
                 <div class="step-pill" data-step="5"><span>5</span><label>Config</label></div>
                 <div class="step-line"></div>
@@ -358,36 +437,98 @@
                   </div>
                   <div class="ft-step-actions">
                     <button class="btn btn-secondary" onclick="window.ftApp && window.ftApp.goToStep(2)">← Back</button>
-                    <button class="btn btn-primary" onclick="window.ftApp && window.ftApp.goToStep(4)">Next: Specialist Model →</button>
+                    <button class="btn btn-primary" onclick="window.ftApp && window.ftApp.goToStep(4)">Next: Select Base Model →</button>
                   </div>
                 </div>
 
-                <!-- Step 4: Specialist Model (Locked by Domain) -->
+                <!-- Step 4: Select Base Model + Domain Specialist -->
                 <div class="ft-step-panel" id="ftStep4">
-                  <h3>Step 4: Specialist Model</h3>
-                  <p class="step-desc">Domain-mapped specialist model automatically selected based on dataset classification.</p>
-                  
-                  <div class="specialist-select-card selected" style="background:rgba(30,41,59,0.7); border:1px solid rgba(99,102,241,0.4); border-radius:12px; padding:20px; margin:16px 0;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                      <div>
-                        <span style="font-size:0.8rem; color:#94a3b8; text-transform:uppercase; letter-spacing:0.5px;">Detected Domain:</span>
-                        <h4 id="ftStep4DomainTitle" style="margin:2px 0 0 0; font-size:1.2rem; color:#fff;">Cybersecurity</h4>
+                  <h3>Step 4: Select Base Model</h3>
+                  <p class="step-desc">Choose a foundation model architecture for domain fine-tuning. The specialist adapter will be applied on top of the selected base.</p>
+
+                  <!-- Domain Specialist Lock Banner -->
+                  <div style="background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.3); border-radius:8px; padding:10px 14px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="font-size:0.88rem;">
+                      <span style="color:#94a3b8;">Domain:</span> <strong id="ftStep4DomainTitle" style="color:#a5b4fc;">Cybersecurity</strong>
+                      <span style="color:#475569; margin:0 6px;">·</span>
+                      <span style="color:#94a3b8;">Specialist Adapter:</span> <strong id="ftStep4SpecialistName" style="color:#60a5fa;">Cybersecurity AI Specialist</strong>
+                    </div>
+                    <span class="badge" style="background:#10b981; color:#fff; padding:3px 8px; border-radius:5px; font-size:0.75rem; font-weight:700;">● LOCKED</span>
+                  </div>
+
+                  <!-- Base Model Selection Cards -->
+                  <div class="model-cards-grid">
+                    <div class="model-select-card" data-model="gemma3:1b">
+                      <div class="model-header">
+                        <h4>Gemma 3 1B</h4>
+                        <span class="badge badge-info" style="background:rgba(6,182,212,0.15); color:#22d3ee;">Google</span>
                       </div>
-                      <span class="badge badge-success" style="background:#10b981; color:#fff; padding:4px 10px; border-radius:6px; font-weight:700;">● READY</span>
+                      <p class="model-desc">Google's efficient open model. Strong reasoning &amp; instruction following on minimal VRAM.</p>
+                      <div class="model-specs">
+                        <span>Params: <strong>1.0B</strong></span>
+                        <span>VRAM: <strong>~1.4 GB</strong></span>
+                      </div>
                     </div>
-                    <div style="margin:10px 0; font-size:0.95rem;">
-                      <span>Specialist: <strong id="ftStep4SpecialistName" style="color:#60a5fa;">Cybersecurity AI Specialist</strong></span>
+                    <div class="model-select-card selected" data-model="qwen2.5-coder:1.5b">
+                      <div class="model-header">
+                        <h4>Qwen 2.5 Coder 1.5B</h4>
+                        <span class="badge badge-success">Recommended</span>
+                      </div>
+                      <p class="model-desc">Alibaba's code-optimized architecture. Excellent for structured outputs &amp; technical analysis.</p>
+                      <div class="model-specs">
+                        <span>Params: <strong>1.5B</strong></span>
+                        <span>VRAM: <strong>~2.0 GB</strong></span>
+                      </div>
                     </div>
-                    <div style="display:flex; gap:16px; font-size:0.85rem; color:#94a3b8; margin-top:12px; border-top:1px solid rgba(255,255,255,0.06); padding-top:10px;">
-                      <span>Runtime: <strong style="color:#e2e8f0;">Ollama (Local)</strong></span>
-                      <span>Hardware: <strong style="color:#e2e8f0;">RTX 2050 (4GB VRAM)</strong></span>
-                      <span>External Calls: <strong style="color:#10b981;">0 (Sovereign)</strong></span>
+                    <div class="model-select-card" data-model="llama3.2:1b">
+                      <div class="model-header">
+                        <h4>Llama 3.2 1B</h4>
+                        <span class="badge badge-purple" style="background:rgba(168,85,247,0.15); color:#c084fc;">Meta</span>
+                      </div>
+                      <p class="model-desc">Meta's compact instruction-tuned model. Efficient for lightweight assistant &amp; QA tasks.</p>
+                      <div class="model-specs">
+                        <span>Params: <strong>1.2B</strong></span>
+                        <span>VRAM: <strong>~1.6 GB</strong></span>
+                      </div>
+                    </div>
+                    <div class="model-select-card" data-model="falcon3:1b-instruct-q4_K_M">
+                      <div class="model-header">
+                        <h4>Falcon3 1B</h4>
+                        <span class="badge" style="background:rgba(251,146,60,0.15); color:#fb923c;">TII</span>
+                      </div>
+                      <p class="model-desc">Ultra-efficient 1B parameters by TII. Fast convergence for rapid domain instruction tuning.</p>
+                      <div class="model-specs">
+                        <span>Params: <strong>1.0B</strong></span>
+                        <span>VRAM: <strong>~1.3 GB</strong></span>
+                      </div>
+                    </div>
+                    <div class="model-select-card" data-model="phi4-mini:latest">
+                      <div class="model-header">
+                        <h4>Phi-4 Mini</h4>
+                        <span class="badge" style="background:rgba(59,130,246,0.15); color:#60a5fa;">Microsoft</span>
+                      </div>
+                      <p class="model-desc">Microsoft's Phi-4 Mini. Strong at reasoning, math, and structured outputs.</p>
+                      <div class="model-specs">
+                        <span>Params: <strong>3.8B</strong></span>
+                        <span>VRAM: <strong>~3.2 GB</strong></span>
+                      </div>
+                    </div>
+                    <div class="model-select-card" data-model="smollm2:1.7b">
+                      <div class="model-header">
+                        <h4>SmolLM2 1.7B</h4>
+                        <span class="badge" style="background:rgba(234,179,8,0.15); color:#facc15;">HuggingFace</span>
+                      </div>
+                      <p class="model-desc">HuggingFace's small language model. Optimized for edge-device deployment and fast inference.</p>
+                      <div class="model-specs">
+                        <span>Params: <strong>1.7B</strong></span>
+                        <span>VRAM: <strong>~1.8 GB</strong></span>
+                      </div>
                     </div>
                   </div>
 
                   <div class="ft-step-actions">
                     <button class="btn btn-secondary" onclick="window.ftApp && window.ftApp.goToStep(3)">← Back</button>
-                    <button class="btn btn-primary" onclick="window.ftApp && window.ftApp.goToStep(5)">Next: Configure →</button>
+                    <button class="btn btn-primary" onclick="window.ftApp && window.ftApp.goToStep(5)">Next: Configure QLoRA →</button>
                   </div>
                 </div>
 
@@ -539,6 +680,7 @@
                           <div><strong>Specialist:</strong></div> <div id="techSpecialist">Cybersecurity AI Specialist</div>
                           <div><strong>Underlying Model:</strong></div> <div id="techUnderlyingModel">Qwen3 1.7B Cyber</div>
                           <div><strong>Ollama Tag:</strong></div> <div id="techOllamaTag"><code>babar_jamali/qwen3-1.7b-cyber:latest</code></div>
+                          <div><strong>Base Architecture:</strong></div> <div id="techBaseModel">Qwen 2.5 Coder 1.5B</div>
                           <div><strong>Runtime:</strong></div> <div>Ollama (127.0.0.1:11434)</div>
                           <div><strong>Hardware:</strong></div> <div>RTX 2050 (4GB VRAM)</div>
                           <div><strong>Network Mode:</strong></div> <div style="color:#10b981;">LOCAL ONLY (0 External Calls)</div>

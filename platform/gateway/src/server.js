@@ -628,6 +628,104 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
+      const useStream = body.stream === true;
+
+      if (useStream) {
+        // ─── SSE Streaming Mode ───
+        res.writeHead(200, {
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          "Connection": "keep-alive",
+          "X-Accel-Buffering": "no"
+        });
+
+        const normalizedDomain = domain.toLowerCase().trim();
+        const specialist = SPECIALIST_REGISTRY[normalizedDomain];
+        const lockedModel = specialist.model;
+
+        let systemPrompt = '';
+        if (normalizedDomain === 'cybersecurity') {
+          systemPrompt = 'You are the Cybersecurity AI Specialist. Provide rigorous, precise, technical insights on SOC operations, threat intelligence, and vulnerability mitigation. Keep outputs technical and actionable.';
+        } else {
+          systemPrompt = 'You are the Healthcare AI Specialist. Provide informative clinical decision-support and medical context explanations. Note: This output is strictly for informational and decision-support use only and is not a substitute for a qualified healthcare professional.';
+        }
+
+        let userContent = prompt;
+        if (datasetContext) {
+          userContent = `[DOMAIN DATASET CONTEXT]:\n${datasetContext}\n\n[USER QUESTION]:\n${prompt}`;
+        }
+
+        // Send metadata header event
+        res.write(`data: ${JSON.stringify({ type: "meta", domain: normalizedDomain, specialist: specialist.displayName, model: lockedModel, disclaimer: specialist.disclaimer })}\n\n`);
+
+        const ollamaPayload = JSON.stringify({
+          model: lockedModel,
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userContent }
+          ],
+          stream: true,
+          options: { num_ctx: 2048, temperature: 0.2, top_p: 0.9 }
+        });
+
+        const ollamaReq = http.request({
+          hostname: '127.0.0.1',
+          port: 11434,
+          path: '/api/chat',
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(ollamaPayload)
+          }
+        }, (ollamaRes) => {
+          let buffer = '';
+          ollamaRes.on('data', (chunk) => {
+            buffer += chunk.toString();
+            const lines = buffer.split('\n');
+            buffer = lines.pop(); // keep incomplete line in buffer
+            for (const line of lines) {
+              if (!line.trim()) continue;
+              try {
+                const parsed = JSON.parse(line);
+                if (parsed.message && parsed.message.content) {
+                  res.write(`data: ${JSON.stringify({ type: "token", content: parsed.message.content })}\n\n`);
+                }
+                if (parsed.done) {
+                  res.write(`data: ${JSON.stringify({ type: "done" })}\n\n`);
+                }
+              } catch {}
+            }
+          });
+          ollamaRes.on('end', () => {
+            // Process any remaining buffer
+            if (buffer.trim()) {
+              try {
+                const parsed = JSON.parse(buffer);
+                if (parsed.message && parsed.message.content) {
+                  res.write(`data: ${JSON.stringify({ type: "token", content: parsed.message.content })}\n\n`);
+                }
+              } catch {}
+            }
+            res.write(`data: ${JSON.stringify({ type: "done" })}\n\n`);
+            res.end();
+          });
+          ollamaRes.on('error', (err) => {
+            res.write(`data: ${JSON.stringify({ type: "error", error: err.message })}\n\n`);
+            res.end();
+          });
+        });
+
+        ollamaReq.on('error', (err) => {
+          res.write(`data: ${JSON.stringify({ type: "error", error: err.message })}\n\n`);
+          res.end();
+        });
+
+        ollamaReq.write(ollamaPayload);
+        ollamaReq.end();
+        return;
+      }
+
+      // ─── Non-Streaming Mode (original) ───
       try {
         const result = await querySpecialistModel({
           domain,

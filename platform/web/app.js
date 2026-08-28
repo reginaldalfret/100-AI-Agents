@@ -5383,6 +5383,8 @@ document.addEventListener('DOMContentLoaded', () => {
             this.selectedDatasetId = null;
             this.selectedDatasetName = null;
             this.activeSpecialistSession = null;
+            this.selectedBaseModel = 'qwen2.5-coder:1.5b';
+            this.selectedBaseModelName = 'Qwen 2.5 Coder 1.5B';
             this.currentStep = 1;
             this.bindEvents();
         },
@@ -5427,6 +5429,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const s1Next = document.getElementById('ftStep1Next');
             if (s1Next) s1Next.addEventListener('click', () => this.goToStep(2));
 
+            // Base model card selection
+            document.querySelectorAll('.model-select-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.model-select-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    this.selectedBaseModel = card.getAttribute('data-model');
+                    const modelName = card.querySelector('h4')?.textContent || this.selectedBaseModel;
+                    this.selectedBaseModelName = modelName;
+                });
+            });
             // Technical details accordion toggle
             const techBtn = document.getElementById('btnToggleTechDetails');
             const techContent = document.getElementById('techDetailsContent');
@@ -5533,6 +5545,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (document.getElementById('techSpecialist')) document.getElementById('techSpecialist').textContent = isHealth ? 'Healthcare AI Specialist' : 'Cybersecurity AI Specialist';
             if (document.getElementById('techUnderlyingModel')) document.getElementById('techUnderlyingModel').textContent = isHealth ? 'MedGemma 4B' : 'Qwen3 1.7B Cyber';
             if (document.getElementById('techOllamaTag')) document.getElementById('techOllamaTag').innerHTML = isHealth ? '<code>medgemma:4b-it-q4_K_M</code>' : '<code>babar_jamali/qwen3-1.7b-cyber:latest</code>';
+            if (document.getElementById('techBaseModel')) document.getElementById('techBaseModel').textContent = this.selectedBaseModelName || 'Qwen 2.5 Coder 1.5B';
         },
 
         goToStep(stepNum) {
@@ -5689,18 +5702,19 @@ document.addEventListener('DOMContentLoaded', () => {
             userDiv.innerHTML = `<div class="msg-bubble user"><div class="msg-text">${escapeHtml(text)}</div></div>`;
             msgBox.appendChild(userDiv);
 
-            // Append AI Thinking / Stream Bubble
+            // Append AI Streaming Bubble
             const aiDiv = document.createElement('div');
             aiDiv.className = 'msg-row ai';
+            const modelLabel = this.currentDomain === 'healthcare' ? 'medgemma:4b' : 'qwen3-1.7b-cyber';
+            const baseModelLabel = this.selectedBaseModelName || '';
             aiDiv.innerHTML = `
                 <div class="msg-bubble">
                     <div class="ai-header" style="margin-bottom:6px;">
-                        <span>● ${this.currentDomain === 'healthcare' ? 'medgemma:4b' : 'qwen3-1.7b-cyber'}</span>
+                        <span>● ${modelLabel}${baseModelLabel ? ' <span style="color:#94a3b8; font-size:0.78rem; font-weight:400;">(base: ' + escapeHtml(baseModelLabel) + ')</span>' : ''}</span>
                         <span class="zero-egress-tag">⚡ Local Ollama · 0 External Calls</span>
                     </div>
                     <div class="msg-text ai-reply-content" style="color:#e2e8f0; line-height:1.65;">
-                        <span class="spin-icon" style="display:inline-block;width:10px;height:10px;border:1.5px solid currentColor;border-top-color:transparent;border-radius:50%;margin-right:6px;"></span>
-                        Thinking...
+                        <span class="stream-cursor" style="display:inline-block;width:8px;height:14px;background:#60a5fa;margin-left:2px;animation:blink 0.7s step-end infinite;"></span>
                     </div>
                 </div>
             `;
@@ -5708,6 +5722,8 @@ document.addEventListener('DOMContentLoaded', () => {
             msgBox.scrollTop = msgBox.scrollHeight;
 
             const replyTarget = aiDiv.querySelector('.ai-reply-content');
+            let fullText = '';
+            let disclaimerText = '';
 
             try {
                 const res = await fetch('/api/specialists/chat', {
@@ -5716,20 +5732,57 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify({
                         domain: this.currentDomain,
                         message: text,
-                        dataset_id: this.selectedDatasetId
+                        dataset_id: this.selectedDatasetId,
+                        stream: true
                     })
                 });
 
-                const data = await res.json();
-                if (data.status === 'success') {
-                    if (replyTarget) {
-                        replyTarget.innerHTML = formatResponse(data.response);
-                        if (data.disclaimer) {
-                            replyTarget.innerHTML += `<div style="margin-top:10px; font-size:0.78rem; color:#a5f3fc; border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">ℹ ${escapeHtml(data.disclaimer)}</div>`;
-                        }
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+                let sseBuffer = '';
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+
+                    sseBuffer += decoder.decode(value, { stream: true });
+                    const events = sseBuffer.split('\n\n');
+                    sseBuffer = events.pop(); // keep incomplete event
+
+                    for (const event of events) {
+                        const dataLine = event.replace(/^data: /, '').trim();
+                        if (!dataLine) continue;
+                        try {
+                            const parsed = JSON.parse(dataLine);
+                            if (parsed.type === 'meta') {
+                                disclaimerText = parsed.disclaimer || '';
+                            } else if (parsed.type === 'token') {
+                                fullText += parsed.content;
+                                if (replyTarget) {
+                                    replyTarget.innerHTML = formatResponse(fullText) + '<span class="stream-cursor" style="display:inline-block;width:8px;height:14px;background:#60a5fa;margin-left:2px;animation:blink 0.7s step-end infinite;"></span>';
+                                }
+                                msgBox.scrollTop = msgBox.scrollHeight;
+                            } else if (parsed.type === 'done') {
+                                // Final render without cursor
+                                if (replyTarget) {
+                                    replyTarget.innerHTML = formatResponse(fullText);
+                                    if (disclaimerText) {
+                                        replyTarget.innerHTML += `<div style="margin-top:10px; font-size:0.78rem; color:#a5f3fc; border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">ℹ ${escapeHtml(disclaimerText)}</div>`;
+                                    }
+                                }
+                            } else if (parsed.type === 'error') {
+                                if (replyTarget) replyTarget.innerHTML = `<span style="color:#ef4444;">⚠ ${escapeHtml(parsed.error)}</span>`;
+                            }
+                        } catch {}
                     }
-                } else {
-                    if (replyTarget) replyTarget.innerHTML = `<span style="color:#ef4444;">⚠ ${escapeHtml(data.error || 'Specialist model error.')}</span>`;
+                }
+
+                // Ensure final render
+                if (fullText && replyTarget && replyTarget.querySelector('.stream-cursor')) {
+                    replyTarget.innerHTML = formatResponse(fullText);
+                    if (disclaimerText) {
+                        replyTarget.innerHTML += `<div style="margin-top:10px; font-size:0.78rem; color:#a5f3fc; border-top:1px solid rgba(255,255,255,0.06); padding-top:6px;">ℹ ${escapeHtml(disclaimerText)}</div>`;
+                    }
                 }
             } catch (err) {
                 if (replyTarget) replyTarget.innerHTML = `<span style="color:#ef4444;">⚠ Error: ${escapeHtml(err.message)}</span>`;
