@@ -39,7 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
             'workflows': getEl('workflowsView'),
             'approvals': getEl('approvalsView'),
             'models': getEl('modelsView'),
-            'system': getEl('systemView')
+            'system': getEl('systemView'),
+            'finetuning': getEl('finetuningView'),
+            'finetuningView': getEl('finetuningView')
         },
         
         // Nav - sidebar secondary nav buttons
@@ -4868,7 +4870,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.querySelectorAll('.view-panel').forEach(panel => {
             panel.classList.remove('active');
-            panel.style.display = 'none';
         });
         
         let targetEl = document.getElementById(viewIdOrName);
@@ -4878,7 +4879,15 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (targetEl) {
             targetEl.classList.add('active');
-            targetEl.style.display = '';
+        }
+
+        const composer = document.getElementById('composerContainer');
+        if (composer) {
+            if (viewIdOrName === 'agent-workspace' || viewIdOrName === 'chatView' || viewIdOrName === 'chat') {
+                composer.style.display = '';
+            } else {
+                composer.style.display = 'none';
+            }
         }
         
         if (viewIdOrName === 'modelsView' || viewIdOrName === 'models') loadModelsView();
@@ -5362,10 +5371,17 @@ document.addEventListener('DOMContentLoaded', () => {
         bindEvents() {
             const navBtn = document.getElementById('navFinetuningBtn');
             if (navBtn) {
-                navBtn.addEventListener('click', () => {
-                    document.querySelectorAll('.view-panel').forEach(v => v.style.display = 'none');
-                    const ftView = document.getElementById('finetuningView');
-                    if (ftView) ftView.style.display = 'block';
+                navBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchMainView('finetuningView');
+                });
+            }
+
+            // Also support clicking New Chat button or conversation item to return to workspace
+            const btnNewChat = document.getElementById('btnNewChat');
+            if (btnNewChat) {
+                btnNewChat.addEventListener('click', () => {
+                    switchMainView('agent-workspace');
                 });
             }
 
