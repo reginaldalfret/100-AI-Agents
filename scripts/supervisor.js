@@ -25,6 +25,19 @@ const LOG_DIR = path.join(RUNTIME_DIR, 'logs');
 const STATE_DIR = path.join(RUNTIME_DIR, 'service-state');
 const PID_DIR = path.join(RUNTIME_DIR, 'pids');
 
+// Self-contained environment setup — no PowerShell wrapper needed.
+// Task Scheduler launches this file directly via node.exe.
+process.env.PROJECT_ROOT   = process.env.PROJECT_ROOT   || ROOT;
+process.env.PORT           = process.env.PORT           || '8300';
+process.env.HOST           = process.env.HOST           || '0.0.0.0';
+process.env.NODE_ENV       = process.env.NODE_ENV       || 'production';
+process.env.OLLAMA_MODELS  = process.env.OLLAMA_MODELS  || path.join(ROOT, 'models', 'ollama');
+process.env.HF_HOME        = process.env.HF_HOME        || path.join(ROOT, 'cache', 'huggingface');
+process.env.HUGGINGFACE_HUB_CACHE = process.env.HUGGINGFACE_HUB_CACHE || path.join(ROOT, 'cache', 'huggingface');
+process.env.TRANSFORMERS_CACHE    = process.env.TRANSFORMERS_CACHE    || path.join(ROOT, 'cache', 'huggingface');
+process.env.TEMP_PROJECT_DIR      = process.env.TEMP_PROJECT_DIR      || path.join(ROOT, 'temp');
+process.env.LOG_DIR               = process.env.LOG_DIR               || path.join(ROOT, 'logs');
+
 [LOG_DIR, STATE_DIR, PID_DIR].forEach(d => {
   if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
 });
