@@ -1,0 +1,72 @@
+﻿[
+    {
+        "ProcessId":  15844,
+        "ParentProcessId":  13012,
+        "Name":  "powershell.exe",
+        "CommandLine":  "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File \"E:\\Smart Automation\\100-AI-Agents\\scripts\\start-production.ps1\"",
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "ProcessId":  19752,
+        "ParentProcessId":  15844,
+        "Name":  "node.exe",
+        "CommandLine":  "\"C:\\Program Files\\nodejs\\node.exe\" scripts/supervisor.js",
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "ProcessId":  20148,
+        "ParentProcessId":  19752,
+        "Name":  "python.exe",
+        "CommandLine":  "\"E:\\Smart Automation\\100-AI-Agents\\platform\\python-compute\\.venv\\Scripts\\python.exe\" \"E:\\Smart Automation\\100-AI-Agents\\platform\\python-compute\\src\\sovereign_compute\\server.py\"",
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "ProcessId":  9880,
+        "ParentProcessId":  20148,
+        "Name":  "python.exe",
+        "CommandLine":  "\"C:\\Users\\ASUS\\AppData\\Local\\Programs\\Python\\Python312\\python.exe\" \"E:\\Smart Automation\\100-AI-Agents\\platform\\python-compute\\src\\sovereign_compute\\server.py\"",
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "ProcessId":  17780,
+        "ParentProcessId":  19752,
+        "Name":  "node.exe",
+        "CommandLine":  "\"C:\\Program Files\\nodejs\\node.exe\" \"E:\\Smart Automation\\100-AI-Agents\\platform\\gateway\\src\\server.js\"",
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "ProcessId":  10844,
+        "ParentProcessId":  18560,
+        "Name":  "powershell.exe",
+        "CommandLine":  "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File \"E:\\Smart Automation\\100-AI-Agents\\scripts\\start-production.ps1\"",
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "ProcessId":  1368,
+        "ParentProcessId":  10844,
+        "Name":  "ollama.exe",
+        "CommandLine":  "\"C:\\Users\\ASUS\\AppData\\Local\\Programs\\Ollama\\ollama.exe\" serve ",
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "ProcessId":  4876,
+        "ParentProcessId":  10844,
+        "Name":  "node.exe",
+        "CommandLine":  "\"C:\\Program Files\\nodejs\\node.exe\" scripts/supervisor.js",
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "ProcessId":  18192,
+        "ParentProcessId":  9668,
+        "Name":  "powershell.exe",
+        "CommandLine":  "powershell -Command \"powershell -NoProfile -ExecutionPolicy Bypass -File \\\"E:\\Smart Automation\\100-AI-Agents\\scripts\\exam-mode-shutdown.ps1\\\"\"",
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "ProcessId":  21032,
+        "ParentProcessId":  18192,
+        "Name":  "powershell.exe",
+        "CommandLine":  "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -NoProfile -ExecutionPolicy Bypass -File \"E:\\Smart Automation\\100-AI-Agents\\scripts\\exam-mode-shutdown.ps1\"",
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    }
+]

@@ -1,0 +1,50 @@
+﻿[
+    {
+        "TaskName":  "101-Super-AI-Agents-Local-Stack",
+        "TaskPath":  "\\",
+        "PreviousState":  "Ready",
+        "Actions":  {
+                        "Execute":  "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                        "Arguments":  "-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File \"E:\\Smart Automation\\100-AI-Agents\\scripts\\start-production.ps1\"",
+                        "WorkingDirectory":  "E:\\Smart Automation\\100-AI-Agents"
+                    },
+        "Triggers":  "MSFT_TaskLogonTrigger",
+        "Settings":  {
+                         "AllowStartIfOnBatteries":  null,
+                         "RestartCount":  5
+                     },
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "TaskName":  "301-SuperAI-Supervisor",
+        "TaskPath":  "\\",
+        "PreviousState":  "Ready",
+        "Actions":  {
+                        "Execute":  "C:\\Program Files\\nodejs\\node.exe",
+                        "Arguments":  "\"E:\\Smart Automation\\100-AI-Agents\\scripts\\supervisor.js\"",
+                        "WorkingDirectory":  "E:\\Smart Automation\\100-AI-Agents"
+                    },
+        "Triggers":  "MSFT_TaskLogonTrigger",
+        "Settings":  {
+                         "AllowStartIfOnBatteries":  null,
+                         "RestartCount":  5
+                     },
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    },
+    {
+        "TaskName":  "SuperAI-Workbench-101-Agents",
+        "TaskPath":  "\\",
+        "PreviousState":  "Ready",
+        "Actions":  {
+                        "Execute":  "C:\\Windows\\system32\\wscript.exe",
+                        "Arguments":  "\"E:\\Smart Automation\\100-AI-Agents\\scripts\\run-silent-background.vbs\"",
+                        "WorkingDirectory":  "E:\\Smart Automation\\100-AI-Agents"
+                    },
+        "Triggers":  "MSFT_TaskLogonTrigger",
+        "Settings":  {
+                         "AllowStartIfOnBatteries":  null,
+                         "RestartCount":  5
+                     },
+        "Timestamp":  "2026-09-04T23:25:12+05:30"
+    }
+]

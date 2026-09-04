@@ -1,0 +1,9 @@
+[
+  {
+    "Name": "Start-101-Super-AI-Agents.vbs",
+    "OriginalLocation": "C:\\Users\\ASUS\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Start-101-Super-AI-Agents.vbs",
+    "DisabledLocation": "E:\\Smart Automation\\100-AI-Agents\\exam-safety-backup\\startup-disabled\\Start-101-Super-AI-Agents.vbs",
+    "Content": "Set WshShell = CreateObject(\"WScript.Shell\")\r\nWshShell.Run \"powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File \"\"\" & \"E:\\Smart Automation\\100-AI-Agents\\scripts\\start-production.ps1\" & \"\"\"\", 0, False\r\n",
+    "Timestamp": "2026-09-04T23:25:12+05:30"
+  }
+]

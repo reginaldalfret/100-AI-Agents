@@ -1,0 +1,8 @@
+﻿{
+    "Hive":  "HKCU",
+    "KeyPath":  "Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+    "ValueName":  "SuperAIWorkbench",
+    "ValueData":  "\"C:\\Windows\\system32\\wscript.exe\" \"E:\\Smart Automation\\100-AI-Agents\\scripts\\run-silent-background.vbs\"",
+    "ValueType":  "String",
+    "Timestamp":  "2026-09-04T23:25:12+05:30"
+}
