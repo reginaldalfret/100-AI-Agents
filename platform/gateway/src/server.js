@@ -3179,14 +3179,19 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    if (req.method === "GET" && !url.pathname.startsWith("/api/")) {
+    if (req.method === "GET" && !url.pathname.startsWith("/api/") && !url.pathname.startsWith("/v1/")) {
       const sanitized = url.pathname === "/" ? "index.html" : url.pathname.replace(/^\//, "").replace(/\.\./g, "");
-      const file = path.join(
+      let file = path.join(
         ROOT,
         "platform",
         "web",
         sanitized
       );
+
+      // SPA client route fallback: if file does not exist directly, fallback to index.html
+      if (!fs.existsSync(file) || !fs.statSync(file).isFile()) {
+        file = path.join(ROOT, "platform", "web", "index.html");
+      }
 
       if (fs.existsSync(file) && fs.statSync(file).isFile()) {
         const ext = path.extname(file).toLowerCase();

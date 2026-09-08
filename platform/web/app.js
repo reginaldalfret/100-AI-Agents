@@ -6581,4 +6581,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.ftApp) window.ftApp.init();
     if (window.psLabApp) window.psLabApp.init();
 
+    // Route dispatch based on pathname
+    const path = window.location.pathname.toLowerCase();
+    if (path === '/arena' || path.startsWith('/arena')) {
+        switchMainView('modelArenaView');
+    } else if (path === '/personal-style' || path.startsWith('/personal-style')) {
+        switchMainView('personalStyleView');
+    } else if (path === '/fine-tuning' || path.startsWith('/fine-tuning') || path === '/finetuning') {
+        switchMainView('finetuningView');
+    } else if (path === '/knowledge' || path.startsWith('/knowledge')) {
+        switchMainView('knowledgeView');
+    } else if (path === '/datasets' || path.startsWith('/datasets')) {
+        switchMainView('finetuningView');
+    }
 });

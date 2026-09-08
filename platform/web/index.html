@@ -99,7 +99,7 @@
       .model-cards-grid { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
   <!-- Ambient RGB Neon Background Atmosphere -->
@@ -252,7 +252,7 @@
          ======================================================= -->
     <main class="main-workspace">
       <!-- Mobile hamburger toggle button -->
-      <button id="mobileMenuToggle" class="mobile-toggle" aria-label="Toggle Menu">
+      <button id="mobileMenuToggle" class="mobile-toggle mobile-hamburger-btn" aria-label="Toggle Menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
       </button>
 
@@ -722,11 +722,11 @@
                 <button class="ps-back-btn" id="btnPsBack" title="Back to Assistant">←</button>
                 <div class="ps-avatar-circle">K</div>
                 <div class="ps-contact-info">
-                  <div class="ps-contact-name">Gemma Kaviya Style</div>
+                  <div class="ps-contact-name ps-header-name">Gemma Kaviya Style</div>
                   <div class="ps-contact-sub">
                     <span class="ps-status-dot">●</span>
                     <span class="ps-status-text">Local AI</span>
-                    <span class="ps-subtle-disclosure">· AI communication-style model</span>
+                    <span class="ps-subtle-disclosure ps-privacy-disclaimer">· AI communication-style model</span>
                   </div>
                 </div>
               </div>
@@ -788,8 +788,10 @@
 
           <!-- Compatibility Fallback Buttons for Tests & Automation -->
           <div style="display:none;" aria-hidden="true">
+            <input type="text" id="psInput">
             <button id="btnPsNewChat"></button>
             <button id="btnPsReset"></button>
+            <button id="psResetBtn"></button>
             <button id="btnPsStop"></button>
           </div>
 
@@ -1981,6 +1983,6 @@
     </div>
   </div>
 
-  <script src="app.js"></script>
+  <script src="/app.js"></script>
 </body>
 </html>
