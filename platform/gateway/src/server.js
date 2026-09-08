@@ -57,6 +57,7 @@ import {
   DatasetQuerySchema,
   FineTuneJobCreateSchema
 } from "./schemas/index.js";
+import { jobRepository, gpuLock } from "../../jobs/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -2932,6 +2933,45 @@ const server = http.createServer(async (req, res) => {
       } catch (err) {
         json(res, 500, { status: "error", error: err.message });
       }
+      return;
+    }
+
+    // ==========================================================================
+    // BULLMQ & GPU JOB MANAGEMENT ENDPOINTS
+    // ==========================================================================
+
+    // GET /api/jobs/gpu/status
+    if (req.method === "GET" && url.pathname === "/api/jobs/gpu/status") {
+      json(res, 200, {
+        status: "success",
+        gpu_locked: gpuLock.isLocked(),
+        current_holder: gpuLock.getCurrentHolder(),
+        waiting_queue_length: gpuLock.getQueueLength()
+      });
+      return;
+    }
+
+    // GET /api/jobs/:jobId
+    if (req.method === "GET" && url.pathname.startsWith("/api/jobs/")) {
+      const jobId = url.pathname.replace("/api/jobs/", "");
+      const job = jobRepository.getJob(jobId);
+      if (!job) {
+        json(res, 404, { status: "error", error: "Job not found" });
+        return;
+      }
+      json(res, 200, { status: "success", job });
+      return;
+    }
+
+    // POST /api/jobs/:jobId/cancel
+    if (req.method === "POST" && url.pathname.startsWith("/api/jobs/") && url.pathname.endsWith("/cancel")) {
+      const jobId = url.pathname.replace("/api/jobs/", "").replace("/cancel", "");
+      const cancelled = jobRepository.cancelJob(jobId);
+      if (!cancelled) {
+        json(res, 400, { status: "error", error: "Cannot cancel job or job not found" });
+        return;
+      }
+      json(res, 200, { status: "success", message: `Job ${jobId} cancelled` });
       return;
     }
 
