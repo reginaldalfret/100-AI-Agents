@@ -46,6 +46,17 @@ import {
 } from "../../knowledge/index.js";
 import { personalStyleGemmaRuntime } from "../../personal-style/gemma-runtime.js";
 import { modelArenaService } from '../../model-arena/model-arena-service.js';
+import {
+  validate,
+  validationErrorResponse,
+  ChatRequestSchema,
+  ArenaCompareSchema,
+  ArenaActionSchema,
+  PersonalStyleChatSchema,
+  PersonalStyleActionSchema,
+  DatasetQuerySchema,
+  FineTuneJobCreateSchema
+} from "./schemas/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -429,12 +440,18 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "POST" && url.pathname === "/api/datasets/query") {
       const body = await parseBody(req);
-      const { dataset_id, datasetId, question, sql } = body;
-      const effectiveId = dataset_id || datasetId;
-      if (!effectiveId) {
-        json(res, 400, { status: "error", error: "Missing dataset_id" });
+      const effectiveId = body.dataset_id || body.datasetId;
+      const validation = validate(DatasetQuerySchema, {
+        dataset_id: effectiveId || "",
+        question: body.question,
+        query: body.query,
+        sql: body.sql
+      });
+      if (!validation.success) {
+        validationErrorResponse(res, validation.error);
         return;
       }
+      const { question, sql } = body;
       try {
         const result = await analyzeDatasetQuestion({
           datasetId: effectiveId,
@@ -500,8 +517,13 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "POST" && url.pathname === "/api/finetuning/jobs") {
       const body = await parseBody(req);
+      const validation = validate(FineTuneJobCreateSchema, body);
+      if (!validation.success) {
+        validationErrorResponse(res, validation.error);
+        return;
+      }
       try {
-        const job = fineTuneJobManager.createJob(body);
+        const job = fineTuneJobManager.createJob(validation.data);
         json(res, 200, { status: "success", job });
       } catch (err) {
         json(res, 400, { status: "error", error: err.message });
@@ -1056,6 +1078,11 @@ const server = http.createServer(async (req, res) => {
       url.pathname === "/api/chat"
     ) {
       const payload = await readBody(req);
+      const validation = validate(ChatRequestSchema, payload);
+      if (!validation.success) {
+        validationErrorResponse(res, validation.error);
+        return;
+      }
 
       console.log(`[CHAT_ROUTE] Request received — agent_id="${payload.agent_id}" task="${(payload.task || '').slice(0, 60)}" stream=${payload.stream} modelMode=${payload.modelMode} origin=${req.headers.origin || req.headers.referer || 'direct'}`);
 
@@ -2934,13 +2961,12 @@ const server = http.createServer(async (req, res) => {
     // POST /api/model-arena/compare — SSE streaming comparison
     if (req.method === "POST" && url.pathname === "/api/model-arena/compare") {
       const body = await readBody(req);
-      const { prompt, model_ids } = body;
-      
-      if (!prompt || !prompt.trim()) {
-        json(res, 400, { status: "error", error: "Prompt is required" });
+      const validation = validate(ArenaCompareSchema, body);
+      if (!validation.success) {
+        validationErrorResponse(res, validation.error);
         return;
       }
-      
+      const { prompt, model_ids } = validation.data;
       const modelIds = model_ids && model_ids.length > 0 ? model_ids : null;
       
       // Set up SSE response with unbuffered real-time streaming
@@ -3050,6 +3076,11 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && (url.pathname === "/api/personal-style/gemma/chat" || url.pathname === "/api/personal-style/gemma/generate")) {
       try {
         const payload = await readBody(req);
+        const validation = validate(PersonalStyleChatSchema, payload);
+        if (!validation.success) {
+          validationErrorResponse(res, validation.error);
+          return;
+        }
         const isStream = url.pathname === "/api/personal-style/gemma/generate" ? Boolean(payload.stream) : payload.stream !== false;
         const isBase = payload.model === "google/gemma-3-1b-it" || payload.is_base === true;
 
