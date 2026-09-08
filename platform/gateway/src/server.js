@@ -58,6 +58,7 @@ import {
   FineTuneJobCreateSchema
 } from "./schemas/index.js";
 import { jobRepository, gpuLock } from "../../jobs/index.js";
+import { handleOpenAIRoutes } from "./openai/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -298,6 +299,12 @@ const server = http.createServer(async (req, res) => {
   );
 
   try {
+    if (url.pathname.startsWith("/v1/")) {
+      const body = req.method === "POST" ? await readBody(req) : null;
+      const handled = await handleOpenAIRoutes(req, res, url, body);
+      if (handled) return;
+    }
+
     const registry = loadRegistry();
     const agents = registry.agents || [];
 
