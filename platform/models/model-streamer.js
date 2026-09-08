@@ -31,6 +31,10 @@ class ModelStreamerManager {
     this.activeStreams = new Map(); // reqId -> http.ClientRequest
   }
 
+  get isInferencing() {
+    return Boolean(this.currentLockHolder);
+  }
+
   /**
    * Acquire execution lock for RTX 2050 (Single GPU-heavy model at a time).
    * CPU-only models and Jetson LAN models bypass the local laptop GPU lock.

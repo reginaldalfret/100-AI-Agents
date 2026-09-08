@@ -70,14 +70,18 @@ export class AgentLauncher extends EventEmitter {
 
     child.on('error', (err) => {
       this.emit('error', agentId, err);
-      logStream.write(`[ERROR] ${err.message}\n`);
+      if (logStream.writable) {
+        logStream.write(`[ERROR] ${err.message}\n`);
+      }
     });
 
     child.on('exit', (code, signal) => {
       this.processes.delete(agentId);
       this.emit('exit', agentId, code, signal);
-      logStream.write(`[EXIT] Code: ${code}, Signal: ${signal}\n`);
-      logStream.end();
+      if (logStream.writable) {
+        logStream.write(`[EXIT] Code: ${code}, Signal: ${signal}\n`);
+        logStream.end();
+      }
     });
 
     return child.pid;

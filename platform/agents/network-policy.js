@@ -55,8 +55,13 @@ export class NetworkPolicyService {
     }
     
     try {
-      const parsedUrl = new URL(url);
-      const isLocal = ['localhost', '127.0.0.1', '::1'].includes(parsedUrl.hostname);
+      let testUrl = url;
+      if (testUrl.includes('://::1')) {
+        testUrl = testUrl.replace('://::1', '://[::1]');
+      }
+      const parsedUrl = new URL(testUrl);
+      const host = parsedUrl.hostname.replace(/^\[|\]$/g, '');
+      const isLocal = ['localhost', '127.0.0.1', '::1'].includes(host);
       if (isLocal) {
         return { allowed: true, reason: 'Local address' };
       }

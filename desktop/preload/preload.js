@@ -12,5 +12,12 @@ contextBridge.exposeInMainWorld('desktopAPI', {
   launchAgent: (agentId) => ipcRenderer.invoke('agents:launch', agentId),
   stopAgent: (agentId) => ipcRenderer.invoke('agents:stop', agentId),
   getNetworkPolicy: () => ipcRenderer.invoke('network:getPolicy'),
-  setNetworkPolicy: (mode) => ipcRenderer.invoke('network:setPolicy', mode)
+  setNetworkPolicy: (mode) => ipcRenderer.invoke('network:setPolicy', mode),
+  // Knowledge Base IPC
+  getKnowledgeStatus: () => ipcRenderer.invoke('knowledge:status'),
+  syncKnowledge: () => ipcRenderer.invoke('knowledge:sync'),
+  rebuildKnowledge: () => ipcRenderer.invoke('knowledge:rebuild'),
+  searchKnowledge: (query, options) => ipcRenderer.invoke('knowledge:search', query, options),
+  queryKnowledge: (query, options) => ipcRenderer.invoke('knowledge:query', query, options),
+  openKnowledgeNote: (relativePath) => ipcRenderer.invoke('knowledge:open-note', relativePath)
 });

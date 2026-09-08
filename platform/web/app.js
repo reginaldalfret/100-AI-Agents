@@ -43,7 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
             'finetuning': getEl('finetuningView'),
             'finetuningView': getEl('finetuningView'),
             'specialistChat': getEl('specialistChatView'),
-            'specialistChatView': getEl('specialistChatView')
+            'specialistChatView': getEl('specialistChatView'),
+            'personalStyle': getEl('personalStyleView'),
+            'personalStyleView': getEl('personalStyleView'),
+            'modelArena': getEl('modelArenaView'),
+            'modelArenaView': getEl('modelArenaView')
         },
         
         // Nav - sidebar secondary nav buttons
@@ -4895,7 +4899,16 @@ document.addEventListener('DOMContentLoaded', () => {
             targetEl.classList.add('active');
         }
 
-        const composer = document.getElementById('composerContainer');
+        const headerEl = document.getElementById('agentHeader') || elements?.agentHeader;
+        if (headerEl) {
+            if (viewIdOrName === 'personalStyleView' || viewIdOrName === 'personalStyle' || viewIdOrName === 'modelArenaView' || viewIdOrName === 'modelArena') {
+                headerEl.style.display = 'none';
+            } else if (viewIdOrName === 'agent-workspace' || viewIdOrName === 'chatView' || viewIdOrName === 'chat') {
+                headerEl.style.display = '';
+            }
+        }
+
+        const composer = document.getElementById('composerContainer') || elements?.composerContainer;
         if (composer) {
             if (viewIdOrName === 'agent-workspace' || viewIdOrName === 'chatView' || viewIdOrName === 'chat') {
                 composer.style.display = '';
@@ -5791,6 +5804,781 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // ==========================================================================
+    // PERSONAL STYLE LAB CONTROLLER (WHATSAPP-STYLE CHAT)
+    // ==========================================================================
+    window.psLabApp = {
+        activeModel: 'finetuned', // 'finetuned' | 'base'
+        sessionId: 'ps-session-' + Date.now(),
+        abortController: null,
+        isGenerating: false,
+
+        formatTime(date = new Date()) {
+            return date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        },
+
+        init() {
+            const navBtn = document.getElementById('navPersonalStyleBtn');
+            if (navBtn) {
+                navBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (typeof switchMainView === 'function') {
+                        switchMainView('personalStyleView');
+                    }
+                });
+            }
+
+            // Back button
+            const backBtn = document.getElementById('btnPsBack');
+            if (backBtn) {
+                backBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (typeof switchMainView === 'function') {
+                        switchMainView('agent-workspace');
+                    }
+                });
+            }
+
+            // Model toggle button in header & menu
+            const modelBadgeBtn = document.getElementById('psModelBadgeBtn');
+            if (modelBadgeBtn) {
+                modelBadgeBtn.addEventListener('click', () => this.toggleModel());
+            }
+
+            const menuToggleMode = document.getElementById('btnPsMenuToggleMode');
+            if (menuToggleMode) {
+                menuToggleMode.addEventListener('click', () => {
+                    this.toggleModel();
+                    this.closeMenu();
+                });
+            }
+
+            // Menu toggle button
+            const menuToggle = document.getElementById('btnPsMenuToggle');
+            const overflowMenu = document.getElementById('psOverflowMenu');
+            if (menuToggle && overflowMenu) {
+                menuToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    overflowMenu.classList.toggle('show');
+                });
+
+                document.addEventListener('click', (e) => {
+                    if (!overflowMenu.contains(e.target) && e.target !== menuToggle) {
+                        overflowMenu.classList.remove('show');
+                    }
+                });
+            }
+
+            // Menu action items
+            const menuNewChat = document.getElementById('btnPsMenuNewChat');
+            if (menuNewChat) {
+                menuNewChat.addEventListener('click', () => {
+                    this.newChat();
+                    this.closeMenu();
+                });
+            }
+
+            const menuReset = document.getElementById('btnPsMenuReset');
+            if (menuReset) {
+                menuReset.addEventListener('click', () => {
+                    this.resetChat();
+                    this.closeMenu();
+                });
+            }
+
+            const menuCompare = document.getElementById('btnPsMenuCompare');
+            if (menuCompare) {
+                menuCompare.addEventListener('click', () => {
+                    this.openCompareModal();
+                    this.closeMenu();
+                });
+            }
+
+            const menuModelInfo = document.getElementById('btnPsMenuModelInfo');
+            if (menuModelInfo) {
+                menuModelInfo.addEventListener('click', () => {
+                    this.openInfoModal();
+                    this.closeMenu();
+                });
+            }
+
+            // Modal close buttons
+            const closeInfoBtn = document.getElementById('btnClosePsInfoModal');
+            const infoModal = document.getElementById('psModelInfoModal');
+            if (closeInfoBtn && infoModal) {
+                closeInfoBtn.addEventListener('click', () => infoModal.classList.remove('show'));
+                infoModal.addEventListener('click', (e) => {
+                    if (e.target === infoModal) infoModal.classList.remove('show');
+                });
+            }
+
+            const closeCompareBtn = document.getElementById('btnClosePsCompareModal');
+            const compareModal = document.getElementById('psComparisonModal');
+            if (closeCompareBtn && compareModal) {
+                closeCompareBtn.addEventListener('click', () => compareModal.classList.remove('show'));
+                compareModal.addEventListener('click', (e) => {
+                    if (e.target === compareModal) compareModal.classList.remove('show');
+                });
+            }
+
+            // Input and send controls
+            const sendBtn = document.getElementById('psSendBtn');
+            const chatInput = document.getElementById('psChatInput');
+            if (sendBtn && chatInput) {
+                sendBtn.addEventListener('click', () => {
+                    if (this.isGenerating) {
+                        this.stopGeneration();
+                    } else {
+                        this.sendMessage();
+                    }
+                });
+
+                chatInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        if (!this.isGenerating) this.sendMessage();
+                    }
+                });
+            }
+
+            // Comparison modal buttons
+            const btnBase = document.getElementById('btnBaseGemma');
+            const btnFine = document.getElementById('btnFineTunedGemma');
+            if (btnBase && btnFine) {
+                btnBase.addEventListener('click', () => this.setModel('base'));
+                btnFine.addEventListener('click', () => this.setModel('finetuned'));
+            }
+
+            const btnCompare = document.getElementById('btnPsRunCompare');
+            if (btnCompare) {
+                btnCompare.addEventListener('click', () => this.runComparison());
+            }
+
+            // Fallback bindings for existing automation/tests
+            const btnNewChat = document.getElementById('btnPsNewChat');
+            if (btnNewChat && btnNewChat !== menuNewChat) {
+                btnNewChat.addEventListener('click', () => this.newChat());
+            }
+            const btnReset = document.getElementById('btnPsReset');
+            if (btnReset && btnReset !== menuReset) {
+                btnReset.addEventListener('click', () => this.resetChat());
+            }
+            const btnStop = document.getElementById('btnPsStop');
+            if (btnStop) {
+                btnStop.addEventListener('click', () => this.stopGeneration());
+            }
+
+            this.updateModelUI();
+        },
+
+        closeMenu() {
+            const menu = document.getElementById('psOverflowMenu');
+            if (menu) menu.classList.remove('show');
+        },
+
+        openInfoModal() {
+            const modal = document.getElementById('psModelInfoModal');
+            if (modal) modal.classList.add('show');
+        },
+
+        openCompareModal() {
+            const modal = document.getElementById('psComparisonModal');
+            if (modal) modal.classList.add('show');
+        },
+
+        toggleModel() {
+            this.setModel(this.activeModel === 'finetuned' ? 'base' : 'finetuned');
+        },
+
+        setModel(mode) {
+            this.activeModel = mode;
+            this.updateModelUI();
+        },
+
+        updateModelUI() {
+            const isBase = (this.activeModel === 'base');
+            const badgeText = document.getElementById('psActiveModelText');
+            if (badgeText) {
+                badgeText.textContent = isBase ? 'Base Gemma 3 1B' : 'Fine-Tuned Gemma';
+            }
+
+            const badgeBtn = document.getElementById('psModelBadgeBtn');
+            if (badgeBtn) {
+                if (isBase) {
+                    badgeBtn.style.background = 'rgba(59,130,246,0.18)';
+                    badgeBtn.style.borderColor = 'rgba(59,130,246,0.35)';
+                    badgeBtn.style.color = '#93c5fd';
+                } else {
+                    badgeBtn.style.background = 'rgba(236,72,153,0.18)';
+                    badgeBtn.style.borderColor = 'rgba(236,72,153,0.35)';
+                    badgeBtn.style.color = '#f472b6';
+                }
+            }
+
+            const menuModeText = document.getElementById('psMenuToggleModeText');
+            if (menuModeText) {
+                menuModeText.textContent = isBase ? 'Switch to Fine-Tuned Gemma' : 'Switch to Base Gemma';
+            }
+
+            const btnBase = document.getElementById('btnBaseGemma');
+            const btnFine = document.getElementById('btnFineTunedGemma');
+            if (btnBase && btnFine) {
+                if (isBase) {
+                    btnBase.classList.add('active');
+                    btnBase.style.background = '#3b82f6';
+                    btnBase.style.color = '#fff';
+                    btnFine.classList.remove('active');
+                    btnFine.style.background = 'transparent';
+                    btnFine.style.color = '#94a3b8';
+                } else {
+                    btnFine.classList.add('active');
+                    btnFine.style.background = '#ec4899';
+                    btnFine.style.color = '#fff';
+                    btnBase.classList.remove('active');
+                    btnBase.style.background = 'transparent';
+                    btnBase.style.color = '#94a3b8';
+                }
+            }
+        },
+
+        fillAndSend(text) {
+            const input = document.getElementById('psChatInput');
+            if (input) {
+                input.value = text;
+                this.sendMessage();
+            }
+        },
+
+        appendMessage(role, text) {
+            const container = document.getElementById('psChatMessages');
+            if (!container) return null;
+
+            // Hide welcome state once conversation starts
+            const welcome = document.getElementById('psWelcomeState');
+            if (welcome) welcome.style.display = 'none';
+
+            const timeStr = this.formatTime();
+            const bubble = document.createElement('div');
+            bubble.className = `ps-msg-bubble ps-msg-${role}`;
+
+            const textSpan = document.createElement('span');
+            textSpan.className = 'ps-msg-content';
+            textSpan.textContent = text;
+            bubble.appendChild(textSpan);
+
+            const timeSpan = document.createElement('span');
+            timeSpan.className = 'ps-msg-time';
+            timeSpan.textContent = timeStr;
+            bubble.appendChild(timeSpan);
+
+            container.appendChild(bubble);
+            container.scrollTop = container.scrollHeight;
+            return { bubble, textSpan, timeSpan };
+        },
+
+        async sendMessage() {
+            const input = document.getElementById('psChatInput');
+            if (!input || this.isGenerating) return;
+            const text = input.value.trim();
+            if (!text) return;
+
+            input.value = '';
+            this.appendMessage('user', text);
+
+            const isBase = (this.activeModel === 'base');
+            const modelName = isBase ? 'google/gemma-3-1b-it' : '301-gemma-kaviya-style-v1';
+
+            // Create AI bubble with typing indicator
+            const { bubble, textSpan } = this.appendMessage('ai', '');
+            textSpan.innerHTML = '<span class="ps-typing-dots"><span></span><span></span><span></span></span>';
+
+            this.setGeneratingState(true);
+            this.abortController = new AbortController();
+
+            try {
+                const response = await fetch('/api/personal-style/gemma/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: this.abortController.signal,
+                    body: JSON.stringify({
+                        session_id: this.sessionId,
+                        model: modelName,
+                        is_base: isBase,
+                        stream: true,
+                        messages: [{ role: 'user', content: text }]
+                    })
+                });
+
+                if (!response.ok) {
+                    textSpan.textContent = '[Communication error: unable to reach runtime]';
+                    this.setGeneratingState(false);
+                    return;
+                }
+
+                textSpan.textContent = '';
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop(); // preserve incomplete line
+
+                    for (const line of lines) {
+                        const trimmed = line.trim();
+                        if (trimmed.startsWith('data:')) {
+                            const dataStr = trimmed.slice(5).trim();
+                            try {
+                                const parsed = JSON.parse(dataStr);
+                                if (parsed.type === 'token') {
+                                    textSpan.textContent += parsed.text;
+                                    const container = document.getElementById('psChatMessages');
+                                    if (container) container.scrollTop = container.scrollHeight;
+                                } else if (parsed.type === 'done') {
+                                    if (parsed.fullText && !textSpan.textContent) {
+                                        textSpan.textContent = parsed.fullText;
+                                    }
+                                }
+                            } catch (_) {}
+                        }
+                    }
+                }
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    textSpan.textContent = '[Error: ' + err.message + ']';
+                }
+            } finally {
+                this.setGeneratingState(false);
+                this.abortController = null;
+            }
+        },
+
+        setGeneratingState(generating) {
+            this.isGenerating = generating;
+            const sendBtn = document.getElementById('psSendBtn');
+            const icon = document.getElementById('psSendIcon');
+            if (sendBtn && icon) {
+                if (generating) {
+                    sendBtn.classList.add('generating');
+                    icon.textContent = '■';
+                    sendBtn.title = 'Stop generation';
+                } else {
+                    sendBtn.classList.remove('generating');
+                    icon.textContent = '➤';
+                    sendBtn.title = 'Send message';
+                }
+            }
+        },
+
+        async stopGeneration() {
+            if (this.abortController) {
+                this.abortController.abort();
+                this.abortController = null;
+            }
+            this.setGeneratingState(false);
+            try {
+                await fetch('/api/personal-style/gemma/stop', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: this.sessionId })
+                });
+            } catch (_) {}
+        },
+
+        async resetChat() {
+            await this.stopGeneration();
+            try {
+                await fetch('/api/personal-style/gemma/reset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: this.sessionId })
+                });
+            } catch (_) {}
+
+            const container = document.getElementById('psChatMessages');
+            if (container) {
+                container.innerHTML = `
+                  <div class="ps-welcome-card" id="psWelcomeState">
+                    <div class="ps-welcome-avatar">💬</div>
+                    <div class="ps-welcome-title">Gemma Kaviya Style</div>
+                    <div class="ps-welcome-subtitle">Start a conversation</div>
+                    <div class="ps-welcome-chips">
+                      <button class="ps-chip-btn" onclick="window.psLabApp && window.psLabApp.fillAndSend('how are you?')">how are you?</button>
+                      <button class="ps-chip-btn" onclick="window.psLabApp && window.psLabApp.fillAndSend('what are you doing?')">what are you doing?</button>
+                      <button class="ps-chip-btn" onclick="window.psLabApp && window.psLabApp.fillAndSend('tell me something')">tell me something</button>
+                    </div>
+                  </div>
+                `;
+            }
+        },
+
+        newChat() {
+            this.sessionId = 'ps-session-' + Date.now();
+            this.resetChat();
+        },
+
+        async runComparison() {
+            const baseBox = document.getElementById('baseGemmaResponseBox');
+            const styleBox = document.getElementById('styleGemmaResponseBox');
+            const input = document.getElementById('psChatInput');
+            const prompt = (input && input.value.trim()) ? input.value.trim() : 'What are you doing this weekend?';
+
+            if (baseBox) baseBox.textContent = 'Generating Base Gemma response...';
+            if (styleBox) styleBox.textContent = 'Generating Fine-Tuned Gemma response...';
+
+            try {
+                const [baseRes, styleRes] = await Promise.all([
+                    fetch('/api/personal-style/gemma/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            session_id: 'compare-base-' + Date.now(),
+                            model: 'google/gemma-3-1b-it',
+                            is_base: true,
+                            stream: false,
+                            messages: [{ role: 'user', content: prompt }]
+                        })
+                    }).then(r => r.json()),
+                    fetch('/api/personal-style/gemma/chat', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            session_id: 'compare-style-' + Date.now(),
+                            model: '301-gemma-kaviya-style-v1',
+                            is_base: false,
+                            stream: false,
+                            messages: [{ role: 'user', content: prompt }]
+                        })
+                    }).then(r => r.json())
+                ]);
+
+                if (baseBox) baseBox.textContent = (baseRes && baseRes.result && baseRes.result.response) || baseRes.response || 'No response';
+                if (styleBox) styleBox.textContent = (styleRes && styleRes.result && styleRes.result.response) || styleRes.response || 'No response';
+            } catch (err) {
+                if (baseBox) baseBox.textContent = 'Error: ' + err.message;
+                if (styleBox) styleBox.textContent = 'Error: ' + err.message;
+            }
+        }
+    };
+
+    // Knowledge Citations Renderer
+    window.renderKnowledgeCitations = function(citations, container) {
+        if (!container || !citations || !citations.length) return;
+        const wrapper = document.createElement('div');
+        wrapper.className = 'knowledge-citations-container';
+        citations.forEach(c => {
+            const pill = document.createElement('div');
+            pill.className = 'citation-card-pill';
+            pill.innerHTML = `<span class="citation-score-badge">${Math.round((c.score || 1) * 100)}%</span> <a class="citation-obsidian-link" href="#" onclick="openKnowledgeNote('${c.title || c.path}'); return false;">${c.title || 'Note'} — Open in Obsidian</a>`;
+            wrapper.appendChild(pill);
+        });
+        container.appendChild(wrapper);
+    };
+
+    window.openKnowledgeNote = function(noteTitle) {
+        console.log('Open note in Obsidian:', noteTitle);
+    };
+
+    // ==========================================
+    // MODEL ARENA CONTROLLER
+    // ==========================================
+    const DEFAULT_ARENA_MODELS = ['nemotron-3-nano', 'gemma3-1b', 'local-code-specialist', 'llama3.2-1b', 'granite4-1b-h', 'phi4-mini', 'smollm2-1.7b', 'falcon3-1b-instruct'];
+
+    const ArenaController = {
+        models: DEFAULT_ARENA_MODELS,
+        abortController: null,
+        
+        init() {
+            this.renderCards();
+            this.bindEvents();
+        },
+
+        bindEvents() {
+            const btnArenaCompare = document.getElementById('btnArenaCompare');
+            const btnArenaStopAll = document.getElementById('btnArenaStopAll');
+            const btnArenaClear = document.getElementById('btnArenaClear');
+            const btnArenaBack = document.getElementById('btnArenaBack');
+            const btnModelArena = document.getElementById('btnModelArena');
+            const arenaResearchMode = document.getElementById('arenaResearchMode');
+
+            if (btnArenaCompare) btnArenaCompare.addEventListener('click', () => this.runComparison());
+            if (btnArenaStopAll) btnArenaStopAll.addEventListener('click', () => this.stopAll());
+            if (btnArenaClear) btnArenaClear.addEventListener('click', () => this.clearAll());
+            if (btnArenaBack) btnArenaBack.addEventListener('click', () => switchMainView('agent-workspace'));
+            if (btnModelArena) btnModelArena.addEventListener('click', () => switchMainView('modelArena'));
+            
+            if (arenaResearchMode) {
+                arenaResearchMode.addEventListener('change', (e) => {
+                    const metrics = document.querySelectorAll('.arena-card-metrics');
+                    metrics.forEach(m => {
+                        if (e.target.checked) m.classList.add('visible');
+                        else m.classList.remove('visible');
+                    });
+                });
+            }
+        },
+
+        renderCards() {
+            const grid = document.getElementById('arenaGrid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            const MODEL_DISPLAY_NAMES = {
+                'nemotron-3-nano': 'NVIDIA Nemotron 3 Nano',
+                'gemma3-1b': 'Google Gemma 3 1B',
+                'local-code-specialist': 'Qwen 2.5 Coder 1.5B',
+                'llama3.2-1b': 'Meta Llama 3.2 1B',
+                'granite4-1b-h': 'IBM Granite 4 1B-H',
+                'phi4-mini': 'Microsoft Phi-4 Mini',
+                'smollm2-1.7b': 'SmolLM2 1.7B',
+                'falcon3-1b-instruct': 'Falcon3 1B'
+            };
+
+            this.models.forEach(modelId => {
+                const displayName = MODEL_DISPLAY_NAMES[modelId] || modelId.split(':')[0].toUpperCase();
+                
+                const card = document.createElement('div');
+                card.className = 'arena-card';
+                card.dataset.modelId = modelId;
+                
+                card.innerHTML = `
+                  <div class="arena-card-header">
+                    <span class="arena-card-model-name" title="${modelId}">${displayName}</span>
+                    <span class="arena-card-gpu-badge">GPU</span>
+                    <span class="arena-card-status waiting" id="arenaStatus_${modelId}">Ready</span>
+                  </div>
+                  <div class="arena-card-body" id="arenaBody_${modelId}"></div>
+                  <div class="arena-card-metrics">
+                    <span>Time: <span class="metric-value arena-metric-time" id="arenaTime_${modelId}">—</span></span>
+                    <span>Tokens: <span class="metric-value arena-metric-tokens" id="arenaTokens_${modelId}">—</span></span>
+                    <span>tok/s: <span class="metric-value arena-metric-tps" id="arenaTps_${modelId}">—</span></span>
+                  </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            const researchToggle = document.getElementById('arenaResearchMode');
+            if (researchToggle && researchToggle.checked) {
+                document.querySelectorAll('.arena-card-metrics').forEach(m => m.classList.add('visible'));
+            }
+        },
+
+        async runComparison() {
+            const promptInput = document.getElementById('arenaPromptInput');
+            if (!promptInput || !promptInput.value.trim()) return;
+            
+            const prompt = promptInput.value.trim();
+            const btnArenaCompare = document.getElementById('btnArenaCompare');
+            const btnArenaStopAll = document.getElementById('btnArenaStopAll');
+            const btnArenaClear = document.getElementById('btnArenaClear');
+            
+            if (btnArenaCompare) btnArenaCompare.disabled = true;
+            if (btnArenaClear) btnArenaClear.disabled = true;
+            if (btnArenaStopAll) btnArenaStopAll.disabled = false;
+            
+            this.clearAll(false);
+            this.abortController = new AbortController();
+            
+            try {
+                const response = await fetch('/api/model-arena/compare', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, model_ids: this.models }),
+                    signal: this.abortController.signal
+                });
+                
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop();
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            try {
+                                const data = JSON.parse(line.substring(6));
+                                this.handleSSEEvent(data);
+                            } catch (e) {
+                                console.error('Failed to parse SSE event:', e);
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.error('Comparison error:', err);
+                    alert('Error connecting to Model Arena: ' + err.message);
+                }
+            } finally {
+                if (btnArenaCompare) btnArenaCompare.disabled = false;
+                if (btnArenaClear) btnArenaClear.disabled = false;
+                if (btnArenaStopAll) btnArenaStopAll.disabled = true;
+                this.abortController = null;
+            }
+        },
+
+        handleSSEEvent(data) {
+            const eventType = data.type || data.event;
+            if (!eventType) return;
+            
+            if (eventType === 'comparison_complete' || eventType === 'done') {
+                const btnArenaCompare = document.getElementById('btnArenaCompare');
+                const btnArenaClear = document.getElementById('btnArenaClear');
+                const btnArenaStopAll = document.getElementById('btnArenaStopAll');
+                
+                if (btnArenaCompare) btnArenaCompare.disabled = false;
+                if (btnArenaClear) btnArenaClear.disabled = false;
+                if (btnArenaStopAll) btnArenaStopAll.disabled = true;
+                return;
+            }
+            
+            const modelId = data.model_id;
+            if (!modelId) return;
+            
+            const card = document.querySelector(`.arena-card[data-model-id="${modelId}"]`);
+            const statusEl = document.getElementById(`arenaStatus_${modelId}`);
+            const bodyEl = document.getElementById(`arenaBody_${modelId}`);
+            
+            if (!card || !statusEl || !bodyEl) return;
+            
+            switch (eventType) {
+                case 'model_start':
+                    card.classList.remove('complete', 'error');
+                    card.classList.add('generating');
+                    statusEl.className = 'arena-card-status generating';
+                    statusEl.textContent = 'Streaming...';
+                    card.dataset.tokenCount = '0';
+                    card.dataset.startTime = Date.now().toString();
+                    bodyEl.innerHTML = '<span class="arena-cursor"></span>';
+                    const startTokensEl = document.getElementById(`arenaTokens_${modelId}`);
+                    if (startTokensEl) startTokensEl.textContent = '0';
+                    const startTimeEl = document.getElementById(`arenaTime_${modelId}`);
+                    if (startTimeEl) startTimeEl.textContent = '0.0s';
+                    break;
+                    
+                case 'model_token':
+                    if (data.token) {
+                        const curCount = parseInt(card.dataset.tokenCount || '0', 10) + 1;
+                        card.dataset.tokenCount = curCount.toString();
+                        
+                        const liveTokensEl = document.getElementById(`arenaTokens_${modelId}`);
+                        if (liveTokensEl) liveTokensEl.textContent = curCount.toString();
+                        
+                        const sTime = parseInt(card.dataset.startTime || '0', 10);
+                        if (sTime) {
+                            const elapsedSec = (Date.now() - sTime) / 1000;
+                            const liveTimeEl = document.getElementById(`arenaTime_${modelId}`);
+                            if (liveTimeEl && elapsedSec > 0) {
+                                liveTimeEl.textContent = elapsedSec.toFixed(1) + 's';
+                                const liveTpsEl = document.getElementById(`arenaTps_${modelId}`);
+                                if (liveTpsEl) liveTpsEl.textContent = (curCount / elapsedSec).toFixed(1);
+                            }
+                        }
+
+                        const cursor = bodyEl.querySelector('.arena-cursor');
+                        if (cursor) cursor.remove();
+                        bodyEl.appendChild(document.createTextNode(data.token));
+                        const newCursor = document.createElement('span');
+                        newCursor.className = 'arena-cursor';
+                        bodyEl.appendChild(newCursor);
+                        bodyEl.scrollTop = bodyEl.scrollHeight;
+                    }
+                    break;
+                    
+                case 'model_complete':
+                    card.classList.remove('generating');
+                    card.classList.add('complete');
+                    statusEl.className = 'arena-card-status complete';
+                    statusEl.textContent = 'Complete';
+                    
+                    const doneCursor = bodyEl.querySelector('.arena-cursor');
+                    if (doneCursor) doneCursor.remove();
+                    
+                    const metrics = data.result || data.metrics;
+                    if (metrics) {
+                        const timeEl = document.getElementById(`arenaTime_${modelId}`);
+                        const tokensEl = document.getElementById(`arenaTokens_${modelId}`);
+                        const tpsEl = document.getElementById(`arenaTps_${modelId}`);
+                        
+                        const timeVal = metrics.timeMs ? (metrics.timeMs / 1000).toFixed(2) + 's' : (metrics.duration_ms ? (metrics.duration_ms / 1000).toFixed(2) + 's' : '—');
+                        const tokensVal = metrics.tokens ?? metrics.eval_count ?? '—';
+                        const tpsVal = (metrics.tokPerSec || metrics.tokens_per_sec) ? (metrics.tokPerSec || metrics.tokens_per_sec).toFixed(1) : '—';
+                        
+                        if (timeEl) timeEl.textContent = timeVal;
+                        if (tokensEl) tokensEl.textContent = tokensVal;
+                        if (tpsEl) tpsEl.textContent = tpsVal;
+                    }
+                    break;
+                    
+                case 'model_error':
+                    card.classList.remove('generating');
+                    card.classList.add('error');
+                    statusEl.className = 'arena-card-status error';
+                    statusEl.textContent = 'Error';
+                    const errCursor = bodyEl.querySelector('.arena-cursor');
+                    if (errCursor) errCursor.remove();
+                    bodyEl.textContent = data.error || 'Unknown error occurred';
+                    break;
+            }
+        },
+
+        async stopAll() {
+            if (this.abortController) {
+                this.abortController.abort();
+            }
+            try {
+                await fetch('/api/model-arena/cancel', { method: 'POST' });
+            } catch (e) {
+                console.error('Failed to cancel arena comparison:', e);
+            }
+        },
+
+        clearAll(clearPrompt = true) {
+            if (clearPrompt) {
+                const promptInput = document.getElementById('arenaPromptInput');
+                if (promptInput) promptInput.value = '';
+            }
+            
+            this.models.forEach(modelId => {
+                const card = document.querySelector(`.arena-card[data-model-id="${modelId}"]`);
+                const statusEl = document.getElementById(`arenaStatus_${modelId}`);
+                const bodyEl = document.getElementById(`arenaBody_${modelId}`);
+                const timeEl = document.getElementById(`arenaTime_${modelId}`);
+                const tokensEl = document.getElementById(`arenaTokens_${modelId}`);
+                const tpsEl = document.getElementById(`arenaTps_${modelId}`);
+                
+                if (card) {
+                    card.classList.remove('generating', 'complete', 'error');
+                }
+                if (statusEl) {
+                    statusEl.className = 'arena-card-status waiting';
+                    statusEl.textContent = 'Ready';
+                }
+                if (bodyEl) bodyEl.textContent = '';
+                if (timeEl) timeEl.textContent = '—';
+                if (tokensEl) tokensEl.textContent = '—';
+                if (tpsEl) tpsEl.textContent = '—';
+            });
+        }
+    };
+
+    window.ArenaController = ArenaController;
+    ArenaController.init();
+
     if (window.ftApp) window.ftApp.init();
+    if (window.psLabApp) window.psLabApp.init();
 
 });

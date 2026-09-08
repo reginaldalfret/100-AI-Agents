@@ -1,0 +1,26 @@
+# 301 SUPER AI — Fedora WSL 2 AI Research Environment Dependencies
+# Validated compatible configuration for NVIDIA RTX 2050 (4GB VRAM), CUDA 12.4/12.5, and Python 3.11
+
+--extra-index-url https://download.pytorch.org/whl/cu124
+
+# Core Deep Learning & Hardware Acceleration
+torch>=2.4.0,<2.6.0
+torchvision>=0.19.0,<0.21.0
+torchaudio>=2.4.0,<2.6.0
+
+# Transformer & Model Development Toolchain
+transformers>=4.44.0
+tokenizers>=0.19.0
+safetensors>=0.4.3
+huggingface_hub>=0.24.0
+
+# Fine-Tuning & Parameter-Efficient Optimization (PEFT / QLoRA)
+peft>=0.12.0
+accelerate>=0.33.0
+bitsandbytes>=0.43.0
+scipy>=1.11.0
+
+# Datasets & Tokenization Utilities
+datasets>=2.20.0
+sentencepiece>=0.2.0
+protobuf>=4.25.0

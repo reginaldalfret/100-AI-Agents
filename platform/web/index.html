@@ -146,7 +146,7 @@
           </div>
           <div class="brand-text">
             <h1 class="brand-title">301 SUPER AI AGENTS</h1>
-            <p class="brand-subtitle">Intelligent Multi-Agent Workspace</p>
+            <p class="brand-subtitle">Intelligent Multi-Agent Workspace • <span class="active-status-badge">301 Agents Active</span></p>
           </div>
         </div>
         
@@ -227,10 +227,22 @@
 
       <!-- Fine-Tuning Factory Nav Item -->
       <div class="sidebar-panel-divider"></div>
-      <div style="padding: 10px 14px;">
-        <button class="nav-btn" id="navFinetuningBtn" style="width:100%; display:flex; align-items:center; gap:8px; padding:10px 12px; background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.3); border-radius:8px; color:#c7d2fe; cursor:pointer; font-weight:600; font-size:0.85rem;">
-          <span style="font-size:1.1rem;">⚙️</span>
-          <span>Fine-Tuning Factory</span>
+      <div class="sidebar-tools-grid">
+        <button class="nav-btn sidebar-tool-btn" id="navFinetuningBtn" title="Fine-Tuning Factory" style="background:rgba(99,102,241,0.15); border:1px solid rgba(99,102,241,0.3); color:#c7d2fe;">
+          <span style="font-size:0.95rem;">⚙️</span>
+          <span>Factory</span>
+        </button>
+        <button class="nav-btn sidebar-tool-btn" id="navKnowledgeBtn" title="Obsidian Knowledge" style="background:rgba(6,182,212,0.15); border:1px solid rgba(6,182,212,0.3); color:#a5f3fc;">
+          <span style="font-size:0.95rem;">📚</span>
+          <span>Knowledge</span>
+        </button>
+        <button class="nav-btn sidebar-tool-btn" id="navPersonalStyleBtn" title="Personal Style Lab" style="background:rgba(236,72,153,0.15); border:1px solid rgba(236,72,153,0.3); color:#fbcfe8;">
+          <span style="font-size:0.95rem;">💬</span>
+          <span>Style Lab</span>
+        </button>
+        <button id="btnModelArena" class="nav-btn sidebar-tool-btn" data-view="modelArena" title="Model Arena" style="background:rgba(251,146,60,0.15); border:1px solid rgba(251,146,60,0.3); color:#fdba74;">
+          <span style="font-size:0.95rem;">⚔️</span>
+          <span>Arena</span>
         </button>
       </div>
     </aside>
@@ -257,9 +269,10 @@
           </div>
         </div>
         <div class="agent-status">
-          <span class="status-pill status-glow-blue"><span class="dot">●</span> Gateway active</span>
-          <span class="status-pill status-glow-cyan"><span class="dot">●</span> 301 agents active</span>
-          <span class="sovereignty-indicator"><span class="dot">●</span> Local & Secure</span>
+          <span class="status-pill status-glow-green"><span class="dot">●</span> Gateway active</span>
+          <span class="status-pill status-glow-blue"><span class="dot">●</span> 301 agents active</span>
+          <span class="status-pill status-glow-cyan"><span class="dot">●</span> LOCAL AI</span>
+          <span class="sovereignty-indicator"><span class="dot">●</span> Cloudflare protected connection</span>
         </div>
       </header>
 
@@ -698,6 +711,201 @@
           </div>
         </section>
 
+        <!-- ==================== PERSONAL STYLE LAB (WHATSAPP-STYLE CHAT) ==================== -->
+        <section id="personalStyleView" class="view-panel ps-chat-view-container">
+          
+          <div class="ps-chat-wrapper">
+            
+            <!-- Compact WhatsApp-style Header -->
+            <div class="ps-chat-header" id="psChatHeader">
+              <div class="ps-header-left">
+                <button class="ps-back-btn" id="btnPsBack" title="Back to Assistant">←</button>
+                <div class="ps-avatar-circle">K</div>
+                <div class="ps-contact-info">
+                  <div class="ps-contact-name">Gemma Kaviya Style</div>
+                  <div class="ps-contact-sub">
+                    <span class="ps-status-dot">●</span>
+                    <span class="ps-status-text">Local AI</span>
+                    <span class="ps-subtle-disclosure">· AI communication-style model</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ps-header-right">
+                <button class="ps-model-badge-btn" id="psModelBadgeBtn" title="Click to toggle model">
+                  <span id="psActiveModelText">Fine-Tuned Gemma</span>
+                </button>
+                
+                <button class="ps-icon-btn" id="btnPsMenuToggle" title="Options">⋮</button>
+                
+                <!-- Overflow Menu -->
+                <div class="ps-dropdown-menu" id="psOverflowMenu">
+                  <div class="ps-menu-item" id="btnPsMenuNewChat">
+                    <span>✨</span> <span>New Chat</span>
+                  </div>
+                  <div class="ps-menu-item" id="btnPsMenuReset">
+                    <span>↺</span> <span>Reset Chat</span>
+                  </div>
+                  <div class="ps-menu-item" id="btnPsMenuToggleMode">
+                    <span>⇄</span> <span id="psMenuToggleModeText">Switch to Base Gemma</span>
+                  </div>
+                  <div class="ps-menu-divider"></div>
+                  <div class="ps-menu-item" id="btnPsMenuCompare">
+                    <span>⚖</span> <span>Base vs Fine-Tuned</span>
+                  </div>
+                  <div class="ps-menu-item" id="btnPsMenuModelInfo">
+                    <span>ℹ</span> <span>Model Info</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat Messages Scroll Area -->
+            <div class="ps-chat-messages" id="psChatMessages">
+              <!-- Welcome State (shown when chat is empty) -->
+              <div class="ps-welcome-card" id="psWelcomeState">
+                <div class="ps-welcome-avatar">💬</div>
+                <div class="ps-welcome-title">Gemma Kaviya Style</div>
+                <div class="ps-welcome-subtitle">Start a conversation</div>
+                <div class="ps-welcome-chips">
+                  <button class="ps-chip-btn" onclick="window.psLabApp && window.psLabApp.fillAndSend('how are you?')">how are you?</button>
+                  <button class="ps-chip-btn" onclick="window.psLabApp && window.psLabApp.fillAndSend('what are you doing?')">what are you doing?</button>
+                  <button class="ps-chip-btn" onclick="window.psLabApp && window.psLabApp.fillAndSend('tell me something')">tell me something</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bottom Input Bar -->
+            <div class="ps-input-bar" id="psInputBar">
+              <button class="ps-attach-btn" id="btnPsAttach" title="Attach / Actions">+</button>
+              <input type="text" id="psChatInput" placeholder="Type a message..." autocomplete="off">
+              <button class="ps-send-btn" id="psSendBtn" title="Send message">
+                <span id="psSendIcon">➤</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Compatibility Fallback Buttons for Tests & Automation -->
+          <div style="display:none;" aria-hidden="true">
+            <button id="btnPsNewChat"></button>
+            <button id="btnPsReset"></button>
+            <button id="btnPsStop"></button>
+          </div>
+
+          <!-- Model Info Modal (accessible via ⋮ → Model Info) -->
+          <div class="ps-modal-overlay" id="psModelInfoModal">
+            <div class="ps-modal-card">
+              <div class="ps-modal-header">
+                <h3>ℹ️ Model Information</h3>
+                <button class="ps-modal-close" id="btnClosePsInfoModal">✕</button>
+              </div>
+              
+              <!-- Badges & Mandatory Disclosure -->
+              <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;">
+                <span class="badge" style="background:rgba(6,182,212,0.15); color:#22d3ee; padding:4px 8px; border-radius:6px; font-weight:600; font-size:0.75rem;">[ GEMMA ]</span>
+                <span class="badge" style="background:rgba(236,72,153,0.15); color:#f472b6; padding:4px 8px; border-radius:6px; font-weight:600; font-size:0.75rem;">[ PERSONAL STYLE ]</span>
+                <span class="badge" style="background:rgba(16,185,129,0.15); color:#10b981; padding:4px 8px; border-radius:6px; font-weight:600; font-size:0.75rem;">[ LOCAL ]</span>
+                <span class="badge" style="background:rgba(99,102,241,0.15); color:#818cf8; padding:4px 8px; border-radius:6px; font-weight:600; font-size:0.75rem;">[ QLORA ]</span>
+              </div>
+              
+              <div class="ps-modal-disclosure" style="background:rgba(244,63,94,0.08); border:1px solid rgba(244,63,94,0.25); border-radius:8px; padding:10px 12px; margin-bottom:16px; color:#fda4af; font-size:0.8rem;">
+                <strong>Mandatory Disclosure:</strong> AI-generated response using learned communication-style patterns. The model is not the real person and possesses no private records or personal facts.
+              </div>
+
+              <!-- Technical Specs Grid -->
+              <div class="ps-modal-grid">
+                <div class="ps-spec-box">
+                  <span class="ps-spec-label">MODEL</span>
+                  <span class="ps-spec-val">301-gemma-kaviya-style-v1</span>
+                </div>
+                <div class="ps-spec-box">
+                  <span class="ps-spec-label">BASE MODEL</span>
+                  <span class="ps-spec-val">Gemma 3 1B Instruct (google/gemma-3-1b-it)</span>
+                </div>
+                <div class="ps-spec-box">
+                  <span class="ps-spec-label">TRAINING METHOD</span>
+                  <span class="ps-spec-val">QLoRA (r=8, alpha=16)</span>
+                </div>
+                <div class="ps-spec-box">
+                  <span class="ps-spec-label">RUNTIME &amp; DEVICE</span>
+                  <span class="ps-spec-val">Transformers + PEFT (RTX 2050 CUDA)</span>
+                </div>
+                <div class="ps-spec-box">
+                  <span class="ps-spec-label">NETWORK POLICY</span>
+                  <span class="ps-spec-val" style="color:#10b981;">Local Only · 0 External Calls</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Base vs Fine-Tuned Comparison Modal (accessible via ⋮ → Base vs Fine-Tuned) -->
+          <div class="ps-modal-overlay" id="psComparisonModal">
+            <div class="ps-modal-card" style="max-width: 650px;">
+              <div class="ps-modal-header">
+                <h3>⚖️ Base vs Fine-Tuned Comparison</h3>
+                <button class="ps-modal-close" id="btnClosePsCompareModal">✕</button>
+              </div>
+
+              <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+                <div class="style-model-toggle" style="display:flex; gap:6px; background:rgba(15,23,42,0.8); border-radius:8px; padding:3px;">
+                  <button class="btn btn-sm" id="btnBaseGemma" style="padding:6px 12px; font-size:0.8rem; border-radius:6px; font-weight:600; background:transparent; color:#94a3b8; border:none; cursor:pointer;">[ BASE GEMMA ]</button>
+                  <button class="btn btn-sm active" id="btnFineTunedGemma" style="padding:6px 12px; font-size:0.8rem; border-radius:6px; font-weight:600; background:#ec4899; color:#fff; border:none; cursor:pointer;">[ FINE-TUNED GEMMA ]</button>
+                </div>
+                <button class="btn btn-secondary" id="btnPsRunCompare" style="font-size:0.78rem; padding:6px 12px;">[ RUN COMPARE ]</button>
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+                <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:12px;">
+                  <div style="font-size:0.75rem; color:#93c5fd; font-weight:700; margin-bottom:6px;">BASE GEMMA 3 1B</div>
+                  <div id="baseGemmaResponseBox" style="font-size:0.82rem; color:#cbd5e1; min-height:80px; line-height:1.4;">
+                    I am doing well, thank you! How can I assist you with your work or questions today?
+                  </div>
+                </div>
+                <div style="background:rgba(15,23,42,0.8); border:1px solid rgba(236,72,153,0.3); border-radius:8px; padding:12px;">
+                  <div style="font-size:0.75rem; color:#f472b6; font-weight:700; margin-bottom:6px;">FINE-TUNED GEMMA (KAVIYA STYLE)</div>
+                  <div id="styleGemmaResponseBox" style="font-size:0.82rem; color:#fbcfe8; min-height:80px; line-height:1.4;">
+                    ha ha work mudinjithu da... what abt u? planning to rest only
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- MODEL ARENA VIEW                                              -->
+        <!-- ============================================================ -->
+        <section id="modelArenaView" class="view-panel arena-view-container">
+          <div class="arena-header">
+            <button id="btnArenaBack" class="arena-back-btn" title="Back to Workspace">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </button>
+            <div class="arena-header-title">
+              <h2>Model Arena</h2>
+              <span class="arena-subtitle">Side-by-Side GPU Model Comparison</span>
+            </div>
+            <div class="arena-header-actions">
+              <label class="arena-research-toggle" title="Show detailed metrics">
+                <input type="checkbox" id="arenaResearchMode">
+                <span>Research Mode</span>
+              </label>
+              <button id="btnArenaStopAll" class="arena-btn arena-btn-danger" disabled>Stop All</button>
+              <button id="btnArenaClear" class="arena-btn arena-btn-secondary">Clear</button>
+            </div>
+          </div>
+
+          <div class="arena-prompt-bar">
+            <textarea id="arenaPromptInput" class="arena-prompt-input" placeholder="Enter a prompt to compare across all models..." rows="2"></textarea>
+            <button id="btnArenaCompare" class="arena-btn arena-btn-primary">Compare All</button>
+          </div>
+
+          <div class="arena-grid" id="arenaGrid">
+            <!-- 8 model cards rendered by JS -->
+          </div>
+        </section>
+
         <!-- ==================== DEDICATED SPECIALIST CHAT VIEW ==================== -->
         <section id="specialistChatView" class="view-panel" style="padding: 20px; overflow-y: auto; display:none;">
           <div class="specialist-chat-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:12px;">
@@ -788,13 +996,131 @@
           </div>
         </section>
 
-        <section id="knowledgeView" class="view-panel">
-          <h2>Knowledge Base</h2>
-          <div class="search-input-wrapper">
-            <input type="text" id="knowledgeSearchBox" placeholder="Search knowledge...">
-            <button class="btn-primary">Search</button>
+        <!-- ==================== OBSIDIAN KNOWLEDGE BASE VIEW ==================== -->
+        <section id="knowledgeView" class="view-panel" style="padding: 20px; overflow-y: auto;">
+          <div class="kb-header-container" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+            <div class="kb-title-group">
+              <h2 style="font-size:1.6rem; margin:0;"><span class="gradient-text">Obsidian Knowledge Bridge &amp; RAG</span></h2>
+              <p class="subtitle" style="color:#94a3b8; font-size:0.88rem; margin:4px 0 0;">Sovereign Local Knowledge Authoring • Incremental SHA-256 RAG Index • Zero Cloud Dependencies</p>
+            </div>
+            <div class="kb-global-stats" style="display:flex; gap:10px; flex-wrap:wrap;">
+              <div class="stat-pill"><span class="label">Vault:</span> <strong id="kbVaultStatus" style="color:#10b981;">Connected</strong></div>
+              <div class="stat-pill"><span class="label">Notes:</span> <strong id="kbNotesCount" style="color:#60a5fa;">7</strong></div>
+              <div class="stat-pill"><span class="label">Chunks:</span> <strong id="kbChunksCount" style="color:#a855f7;">18</strong></div>
+              <div class="stat-pill"><span class="label">Embeddings:</span> <strong style="color:#38bdf8;">384-dim Dense (CPU)</strong></div>
+              <div class="stat-pill"><span class="label">Storage:</span> <strong style="color:#f59e0b;">E:\ Drive Only</strong></div>
+            </div>
           </div>
-          <div id="knowledgeResultsGrid"></div>
+
+          <!-- Top Action Bar -->
+          <div class="kb-action-bar" style="display:flex; justify-content:space-between; align-items:center; margin: 16px 0; background:rgba(30,41,59,0.5); padding:12px 16px; border-radius:10px; border:1px solid rgba(255,255,255,0.06); flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; align-items:center; gap:10px; font-size:0.85rem; color:#cbd5e1; flex-wrap:wrap;">
+              <span>📂 <strong>Vault Path:</strong></span>
+              <code id="kbVaultPathDisplay" style="background:rgba(15,23,42,0.8); padding:4px 10px; border-radius:6px; color:#38bdf8; font-family:monospace;">knowledge/obsidian-vault</code>
+              <span id="kbWatcherStatusBadge" class="badge" style="background:#10b981; color:#fff; font-size:0.75rem; padding:3px 8px; border-radius:4px;">Live Watcher Active</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button id="kbSyncBtn" class="btn btn-primary" style="padding:8px 16px; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                <span>⚡</span> <span>Sync Changes</span>
+              </button>
+              <button id="kbRebuildBtn" class="btn btn-secondary" style="padding:8px 16px; font-size:0.82rem; font-weight:600; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                <span>↻</span> <span>Rebuild Index</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Sub-navigation Tabs -->
+          <div class="kb-subnav-tabs" style="display:flex; gap:8px; margin: 15px 0; border-bottom:1px solid rgba(255,255,255,0.08); padding-bottom:6px;">
+            <button class="kb-tab active" data-kb-tab="vaultTab" style="background:transparent; border:none; color:#38bdf8; font-weight:600; padding:8px 14px; cursor:pointer; border-bottom:2px solid #38bdf8;"><i class="icon">📝</i> Obsidian Notes</button>
+            <button class="kb-tab" data-kb-tab="documentsTab" style="background:transparent; border:none; color:#94a3b8; font-weight:600; padding:8px 14px; cursor:pointer;"><i class="icon">📄</i> Documents</button>
+            <button class="kb-tab" data-kb-tab="datasetsTab" style="background:transparent; border:none; color:#94a3b8; font-weight:600; padding:8px 14px; cursor:pointer;"><i class="icon">📊</i> Datasets</button>
+            <button class="kb-tab" data-kb-tab="ragTab" style="background:transparent; border:none; color:#94a3b8; font-weight:600; padding:8px 14px; cursor:pointer;"><i class="icon">🧠</i> RAG Subsystem</button>
+            <button class="kb-tab" data-kb-tab="searchTab" style="background:transparent; border:none; color:#94a3b8; font-weight:600; padding:8px 14px; cursor:pointer;"><i class="icon">🔍</i> Hybrid Search Explorer</button>
+          </div>
+
+          <!-- Tab 1: Obsidian Notes -->
+          <div id="kbVaultTab" class="kb-tab-content active">
+            <div class="kb-notes-grid" id="kbNotesGrid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap:14px; margin-top:14px;">
+              <!-- Dynamically populated note cards -->
+            </div>
+          </div>
+
+          <!-- Tab 2: Structured Documents -->
+          <div id="kbDocumentsTab" class="kb-tab-content" style="display:none;">
+            <div style="background:rgba(30,41,59,0.4); border-radius:10px; padding:18px; border:1px solid rgba(255,255,255,0.06);">
+              <h4 style="margin:0 0 10px 0; color:#e2e8f0;">Attached &amp; Processed Documents</h4>
+              <p style="color:#94a3b8; font-size:0.85rem;">Confidential files ingested via multimodality, OCR, and document parsers.</p>
+              <div id="kbDocsList" style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="color:#64748b; font-size:0.82rem; padding:12px; text-align:center;">Local documents ingested into partition storage on E:\ drive.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 3: Connected Datasets -->
+          <div id="kbDatasetsTab" class="kb-tab-content" style="display:none;">
+            <div style="background:rgba(30,41,59,0.4); border-radius:10px; padding:18px; border:1px solid rgba(255,255,255,0.06);">
+              <h4 style="margin:0 0 10px 0; color:#e2e8f0;">Domain Datasets (SQL &amp; Analytics)</h4>
+              <p style="color:#94a3b8; font-size:0.85rem;">Tabular datasets with schema inspection, local DuckDB/SQLite SQL querying, and analyst integration.</p>
+              <div id="kbDatasetsList" style="margin-top:12px; display:flex; flex-direction:column; gap:8px;">
+                <div style="color:#64748b; font-size:0.82rem; padding:12px; text-align:center;">Datasets registered under registry/datasets.json.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 4: RAG Subsystem -->
+          <div id="kbRagTab" class="kb-tab-content" style="display:none;">
+            <div style="background:rgba(30,41,59,0.4); border-radius:10px; padding:18px; border:1px solid rgba(255,255,255,0.06);">
+              <h4 style="margin:0 0 10px 0; color:#e2e8f0;">Local RAG Architecture</h4>
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-top:12px;">
+                <div style="background:rgba(15,23,42,0.6); padding:16px; border-radius:8px; border:1px solid rgba(255,255,255,0.04);">
+                  <h5 style="margin:0 0 8px 0; color:#38bdf8; font-size:0.95rem;">Embedding Engine</h5>
+                  <div style="font-size:0.82rem; color:#cbd5e1; line-height:1.7;">
+                    <div>Model: <strong>384-dim CPU Dense Vector</strong></div>
+                    <div>Target: Intel Core i5-11400H (Air-Gapped)</div>
+                    <div>Normalization: L2 Unit Vector</div>
+                    <div>Partitioning: Hash-based binary vector stores</div>
+                    <div>Path: <code>knowledge/embeddings/</code></div>
+                  </div>
+                </div>
+                <div style="background:rgba(15,23,42,0.6); padding:16px; border-radius:8px; border:1px solid rgba(255,255,255,0.04);">
+                  <h5 style="margin:0 0 8px 0; color:#a855f7; font-size:0.95rem;">Hybrid Retrieval</h5>
+                  <div style="font-size:0.82rem; color:#cbd5e1; line-height:1.7;">
+                    <div>Algorithm: <strong>BM25 + Dense Cosine (RRF)</strong></div>
+                    <div>RRF Constant (k): 60</div>
+                    <div>Top-K Chunks: 5 Grounded Chunks</div>
+                    <div>Citations: Obsidian URI + Markdown Anchor</div>
+                    <div>Provenance: Fully traceable source notes</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab 5: Hybrid Search Explorer -->
+          <div id="kbSearchTab" class="kb-tab-content" style="display:none;">
+            <div style="background:rgba(30,41,59,0.4); border-radius:10px; padding:18px; border:1px solid rgba(255,255,255,0.06);">
+              <div style="display:flex; gap:10px; margin-bottom:12px;">
+                <input type="text" id="kbSearchInput" class="form-control" placeholder="Search knowledge base (e.g. QLoRA, Ollama, Architecture, Medical)..." style="flex:1; background:rgba(15,23,42,0.8); border:1px solid rgba(255,255,255,0.12); color:#fff; padding:10px 14px; border-radius:8px;">
+                <button id="btnExecuteKBSearch" class="btn btn-primary" style="padding:10px 20px; font-weight:600; cursor:pointer;">Search</button>
+              </div>
+
+              <!-- Filter Pills -->
+              <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; align-items:center;">
+                <span style="font-size:0.8rem; color:#94a3b8;">Domain:</span>
+                <button class="kb-filter-pill active" data-kb-domain="all" style="padding:4px 10px; border-radius:20px; font-size:0.75rem; border:1px solid rgba(255,255,255,0.1); background:rgba(56,189,248,0.2); color:#38bdf8; cursor:pointer;">All</button>
+                <button class="kb-filter-pill" data-kb-domain="architecture" style="padding:4px 10px; border-radius:20px; font-size:0.75rem; border:1px solid rgba(255,255,255,0.1); background:transparent; color:#94a3b8; cursor:pointer;">Architecture</button>
+                <button class="kb-filter-pill" data-kb-domain="ai" style="padding:4px 10px; border-radius:20px; font-size:0.75rem; border:1px solid rgba(255,255,255,0.1); background:transparent; color:#94a3b8; cursor:pointer;">AI / Models</button>
+                <button class="kb-filter-pill" data-kb-domain="finetuning" style="padding:4px 10px; border-radius:20px; font-size:0.75rem; border:1px solid rgba(255,255,255,0.1); background:transparent; color:#94a3b8; cursor:pointer;">Fine-Tuning</button>
+                <button class="kb-filter-pill" data-kb-domain="cybersecurity" style="padding:4px 10px; border-radius:20px; font-size:0.75rem; border:1px solid rgba(255,255,255,0.1); background:transparent; color:#94a3b8; cursor:pointer;">Cybersecurity</button>
+                <button class="kb-filter-pill" data-kb-domain="healthcare" style="padding:4px 10px; border-radius:20px; font-size:0.75rem; border:1px solid rgba(255,255,255,0.1); background:transparent; color:#94a3b8; cursor:pointer;">Healthcare</button>
+              </div>
+
+              <!-- Search Results -->
+              <div id="kbSearchResultsContainer" style="display:flex; flex-direction:column; gap:10px;">
+                <div style="color:#64748b; font-size:0.85rem; text-align:center; padding:24px;">Enter a query above to run hybrid search across local notes and vectors.</div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section id="workflowsView" class="view-panel">
@@ -1533,7 +1859,7 @@
                       </div>
                       <div class="model-option-meta">
                         <div class="model-option-title-row">
-                          <span class="model-name">medgemma:4b</span>
+                          <span class="model-name">MedGemma 4B</span>
                           <span class="model-badge badge-healthcare">HEALTHCARE</span>
                           <span class="model-badge badge-medical">MEDICAL AI</span>
                         </div>
@@ -1592,7 +1918,13 @@
               </div>
             </div>
 
-            <div class="composer-hints"><span>Enter to send · Shift+Enter for newline</span></div>
+            <div class="composer-hints" style="display:flex; align-items:center; gap:10px;">
+              <div class="chat-mode-toggle" id="chatModeToggle" style="display:inline-flex; gap:4px; background:rgba(15,23,42,0.6); padding:2px; border-radius:6px; border:1px solid rgba(255,255,255,0.08);">
+                <button class="mode-pill active" id="modeStandardBtn" data-mode="standard" style="background:rgba(56,189,248,0.2); color:#38bdf8; border:none; padding:3px 8px; border-radius:4px; font-size:0.72rem; font-weight:700; cursor:pointer;" title="Standard dynamic multi-agent chat">⚡ STANDARD</button>
+                <button class="mode-pill" id="modeKnowledgeBtn" data-mode="knowledge" style="background:transparent; color:#94a3b8; border:none; padding:3px 8px; border-radius:4px; font-size:0.72rem; font-weight:700; cursor:pointer;" title="Grounded Obsidian Knowledge Base & RAG retrieval">📚 KNOWLEDGE</button>
+              </div>
+              <span>Enter to send · Shift+Enter for newline</span>
+            </div>
           </div>
         </div>
       </div>

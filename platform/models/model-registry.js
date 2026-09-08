@@ -501,197 +501,7 @@ export const LOCAL_MODELS = [
     priority: 2,
     status: "ready"
   },
-  {
-    model_id: "falcon3-1b-instruct",
-    ollama_name: "falcon3:1b-instruct-q4_K_M",
-    name: "Falcon3 1B",
-    display_name: "Falcon3 1B",
-    provider: "Technology Innovation Institute",
-    role: "Science, Mathematics & Lightweight Coding Specialist",
-    badge: "SCIENCE",
-    primaryTag: "SCIENCE",
-    runtime: "local-ollama",
-    runtime_type: RuntimeType.OLLAMA,
-    endpoint: "http://127.0.0.1:11434",
-    execution_target: "GPU",
-    quantization: "Q4_K_M",
-    vram_mb: 1300,
-    ram_mb: 2048,
-    context_length: 8192,
-    supported_modalities: [ModelModality.TEXT, ModelModality.CODE],
-    capabilities: [
-      "science",
-      "mathematics",
-      "coding",
-      "technical",
-      "stem-reasoning",
-      "scientific-analysis",
-      "algorithmic-problem-solving"
-    ],
-    recommended_tasks: [
-      "science-qa",
-      "mathematical-calculations",
-      "lightweight-coding",
-      "technical-inquiries",
-      "stem-analysis"
-    ],
-    priority: 2,
-    status: "ready"
-  },
-  {
-    model_id: "lfm2.5-350m",
-    ollama_name: "LiquidAI/lfm2.5-350m",
-    name: "Liquid AI LFM2.5 350M",
-    provider: "Liquid AI",
-    role: "Lightweight CPU Extraction & Tool Model",
-    badge: "EXTRACTION",
-    runtime: "local-ollama",
-    runtime_type: RuntimeType.OLLAMA,
-    endpoint: "http://127.0.0.1:11434",
-    execution_target: "CPU",
-    quantization: "Q8_0",
-    vram_mb: 0,
-    ram_mb: 466,
-    context_length: 128000,
-    endpoint_options: {
-      num_gpu: 0
-    },
-    supported_modalities: [ModelModality.TEXT],
-    capabilities: [
-      "data-extraction",
-      "structured-output",
-      "classification",
-      "lightweight-tool-use",
-      "simple-transformations",
-      "routing-support",
-      "short-text-processing",
-      "cpu-only-inference"
-    ],
-    recommended_tasks: [
-      "data-extraction",
-      "structured-output",
-      "classification",
-      "lightweight-tool-routing",
-      "simple-rag-preprocessing",
-      "short-text-transformations"
-    ],
-    priority: 3,
-    status: "ready"
-  },
-  {
-    model_id: "rwkv7-0.4b",
-    ollama_name: "mollysama/rwkv-7-g1d:0.4b",
-    name: "RWKV-7 0.4B",
-    provider: "RWKV",
-    role: "Lightweight General Text & Rewriting",
-    badge: "TEXT",
-    runtime: "local-ollama",
-    runtime_type: RuntimeType.OLLAMA,
-    endpoint: "http://127.0.0.1:11434",
-    execution_target: "CPU",
-    quantization: "Q8_0",
-    vram_mb: 0,
-    ram_mb: 547,
-    context_length: 1048576,
-    endpoint_options: {
-      num_gpu: 0
-    },
-    supported_modalities: [ModelModality.TEXT],
-    capabilities: [
-      "general-qa",
-      "lightweight-text-generation",
-      "simple-rewriting",
-      "classification",
-      "simple-summarization",
-      "cpu-fallback",
-      "cpu-only-inference"
-    ],
-    recommended_tasks: [
-      "short-general-questions",
-      "lightweight-text-generation",
-      "simple-rewriting",
-      "classification",
-      "simple-summarization",
-      "cpu-edge-computation"
-    ],
-    priority: 3,
-    status: "ready"
-  },
-  {
-    model_id: "tinyllama-1.1b",
-    ollama_name: "tinyllama:1.1b-chat",
-    name: "TinyLlama 1.1B",
-    provider: "TinyLlama",
-    distribution: "Official Ollama",
-    role: "Lightweight General Chat, Short Rewriting & Q&A",
-    badge: "GENERAL",
-    primaryTag: "GENERAL",
-    runtime: "tinyllama:1.1b-chat",
-    runtime_type: RuntimeType.OLLAMA,
-    endpoint: "http://127.0.0.1:11434",
-    execution_target: "CPU",
-    quantization: "Q4_0",
-    vram_mb: 0,
-    ram_mb: 637,
-    context_length: 2048,
-    endpoint_options: {
-      num_gpu: 0
-    },
-    supported_modalities: [ModelModality.TEXT],
-    capabilities: [
-      "general-chat",
-      "rewriting",
-      "summarization",
-      "simple-qa",
-      "cpu-only-inference"
-    ],
-    recommended_tasks: [
-      "general-chat",
-      "short-rewriting",
-      "simple-summarization",
-      "simple-qa",
-      "general-fallback"
-    ],
-    priority: 3,
-    status: "ready"
-  },
-  {
-    model_id: "stablelm2-1.6b",
-    ollama_name: "stablelm2:1.6b",
-    name: "Stable LM 2 1.6B",
-    provider: "Stability AI",
-    distribution: "Official Ollama",
-    role: "General Text Generation, Summarization & Rewriting",
-    badge: "GENERAL",
-    primaryTag: "GENERAL",
-    runtime: "stablelm2:1.6b",
-    runtime_type: RuntimeType.OLLAMA,
-    endpoint: "http://127.0.0.1:11434",
-    execution_target: "CPU",
-    quantization: "Q4_0",
-    vram_mb: 0,
-    ram_mb: 982,
-    context_length: 4096,
-    endpoint_options: {
-      num_gpu: 0
-    },
-    supported_modalities: [ModelModality.TEXT],
-    capabilities: [
-      "general-text-generation",
-      "rewriting",
-      "multilingual-text",
-      "cpu-only-inference"
-    ],
-    recommended_tasks: [
-      "text-generation",
-      "summarization",
-      "rewriting",
-      "multilingual-text-tasks",
-      "fallback-assistant"
-    ],
-    priority: 3,
-    status: "ready"
-  },
+
   {
     model_id: "qwen3-1.7b-cyber",
     ollama_name: "babar_jamali/qwen3-1.7b-cyber:latest",
@@ -739,8 +549,8 @@ export const LOCAL_MODELS = [
   {
     model_id: "medgemma-4b",
     ollama_name: "medgemma:4b-it-q4_K_M",
-    name: "medgemma:4b",
-    display_name: "medgemma:4b",
+    name: "MedGemma 4B",
+    display_name: "MedGemma 4B",
     provider: "Google",
     domain: "HEALTHCARE",
     type: "DOMAIN_SPECIALIST",
@@ -779,6 +589,132 @@ export const LOCAL_MODELS = [
     disclaimer: "For informational/decision-support use. Not a substitute for a qualified healthcare professional.",
     priority: 2,
     status: "ready"
+  },
+  {
+    model_id: "301-kaviya-style-v1",
+    ollama_name: "301-kaviya-style-v1",
+    name: "Kaviya Communication Style Model",
+    display_name: "Kaviya Communication Style Model",
+    provider: "301 SUPER AI Research",
+    base_model: "HuggingFaceTB/SmolLM2-360M-Instruct",
+    base_family: "SmolLM2",
+    role: "Personal Communication Style Expressive Adapter",
+    badge: "PERSONAL_STYLE",
+    primaryTag: "PERSONAL_STYLE",
+    secondaryTag: "EXPERIMENTAL",
+    category: "PERSONAL_STYLE",
+    type: "PERSONAL_STYLE",
+    runtime: "local-qlora",
+    runtime_type: RuntimeType.PYTORCH,
+    endpoint: "http://127.0.0.1:8305/v1",
+    execution_target: "GPU",
+    quantization: "4-bit NF4",
+    parameters: "362M (1.6M trainable adapter)",
+    model_size: "~6.5MB adapter",
+    vram_mb: 371,
+    ram_mb: 1024,
+    context_length: 8192,
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "personal-style-generation",
+      "conversational-flow",
+      "slang-preservation",
+      "code-switching",
+      "informal-chat"
+    ],
+    recommended_tasks: [
+      "style-evaluation",
+      "conversational-synthesis",
+      "expressive-dialogue"
+    ],
+    priority: 3,
+    status: "ready"
+  },
+  {
+    model_id: "301-kaviya-style-v2",
+    ollama_name: "301-kaviya-style-v2",
+    name: "Kaviya Communication Style Model v2",
+    display_name: "Kaviya Communication Style Model v2",
+    provider: "301 SUPER AI Research",
+    base_model: "HuggingFaceTB/SmolLM2-360M-Instruct",
+    base_family: "SmolLM2",
+    role: "Privacy-Hardened Personal Communication Style Model v2",
+    badge: "PERSONAL_STYLE",
+    primaryTag: "PERSONAL_STYLE",
+    secondaryTag: "QLORA-v2",
+    category: "PERSONAL_STYLE",
+    type: "PERSONAL_STYLE",
+    runtime: "local-qlora",
+    runtime_type: RuntimeType.PYTORCH,
+    endpoint: "http://127.0.0.1:8305/v1",
+    execution_target: "GPU",
+    quantization: "4-bit NF4",
+    parameters: "362M (1.6M trainable adapter)",
+    model_size: "~6.5MB adapter",
+    vram_mb: 375,
+    ram_mb: 1024,
+    context_length: 8192,
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "personal-style-generation",
+      "conversational-flow",
+      "slang-preservation",
+      "code-switching",
+      "informal-chat",
+      "privacy-preserving-refusal",
+      "anti-fabrication"
+    ],
+    recommended_tasks: [
+      "style-evaluation",
+      "conversational-synthesis",
+      "expressive-dialogue",
+      "privacy-safe-chat"
+    ],
+    priority: 3,
+    status: "ready"
+  },
+  {
+    model_id: "301-gemma-kaviya-style-v1",
+    ollama_name: "301-gemma-kaviya-style-v1",
+    name: "Gemma Kaviya Communication Style v1",
+    display_name: "Gemma Kaviya Communication Style v1",
+    provider: "301 SUPER AI Research",
+    base_model: "google/gemma-3-1b-it",
+    base_family: "gemma3",
+    role: "Gemma 3 1B Personal Communication Style Model v1",
+    badge: "PERSONAL_STYLE",
+    primaryTag: "GEMMA",
+    secondaryTag: "QLORA",
+    category: "PERSONAL_STYLE",
+    type: "PERSONAL_STYLE",
+    runtime: "TRANSFORMERS_PEFT",
+    runtime_type: RuntimeType.PYTORCH,
+    endpoint: "http://127.0.0.1:8305/v1",
+    execution_target: "GPU",
+    quantization: "4-bit NF4",
+    parameters: "1B (LoRA r=8, alpha=16)",
+    model_size: "~18MB adapter",
+    vram_mb: 1250,
+    ram_mb: 2048,
+    context_length: 2048,
+    supported_modalities: [ModelModality.TEXT],
+    capabilities: [
+      "personal-style-generation",
+      "conversational-flow",
+      "slang-preservation",
+      "code-switching",
+      "informal-chat",
+      "privacy-preserving-refusal",
+      "anti-fabrication"
+    ],
+    recommended_tasks: [
+      "style-evaluation",
+      "conversational-synthesis",
+      "expressive-dialogue",
+      "privacy-safe-chat"
+    ],
+    priority: 3,
+    status: "EXPERIMENTAL"
   }
 ];
 
@@ -791,6 +727,9 @@ export function getModelById(modelId) {
     m.model_id.toLowerCase() === lower ||
     (m.ollama_name && m.ollama_name.toLowerCase() === lower) ||
     (m.name && m.name.toLowerCase() === lower) ||
+    (lower.includes("gemma-kaviya") && m.model_id === "301-gemma-kaviya-style-v1") ||
+    (lower.includes("kaviya-style-v2") && m.model_id === "301-kaviya-style-v2") ||
+    (lower.includes("kaviya") && (m.model_id === "301-gemma-kaviya-style-v1" || m.model_id === "301-kaviya-style-v2" || m.model_id === "301-kaviya-style-v1")) ||
     (lower.includes("medgemma") && m.model_id === "medgemma-4b") ||
     (lower.includes("medical") && m.model_id === "medgemma-4b") ||
     (lower.includes("healthcare") && m.model_id === "medgemma-4b") ||
@@ -834,7 +773,7 @@ export function isDomainSpecialistModel(modelIdOrName) {
 }
 
 export function getGpuModels() {
-  return LOCAL_MODELS.filter(m => m.execution_target === "GPU" || m.execution_target === "JETSON_GPU");
+  return LOCAL_MODELS.filter(m => (m.execution_target === "GPU" || m.execution_target === "JETSON_GPU") && m.status === "ready" && m.type !== "PERSONAL_STYLE");
 }
 
 export function getCpuModels() {
@@ -855,6 +794,19 @@ export function isFineTunedModel(modelIdOrName) {
   if (typeof modelIdOrName === "string") {
     const lower = modelIdOrName.toLowerCase();
     return lower.includes("cyber") || lower.includes("babar_jamali");
+  }
+  return false;
+}
+
+export function getPersonalStyleModels() {
+  return LOCAL_MODELS.filter(m => m.type === "PERSONAL_STYLE" || m.category === "PERSONAL_STYLE");
+}
+
+export function isPersonalStyleModel(modelIdOrName) {
+  const m = getModelById(modelIdOrName);
+  if (m) return m.type === "PERSONAL_STYLE" || m.category === "PERSONAL_STYLE";
+  if (typeof modelIdOrName === "string") {
+    return modelIdOrName.toLowerCase().includes("kaviya") || modelIdOrName.toLowerCase().includes("personal-style");
   }
   return false;
 }

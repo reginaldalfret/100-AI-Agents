@@ -145,6 +145,7 @@ export class OrchestratorController extends EventEmitter {
    */
   _classifyIntent(userInput) {
     const input = (userInput || '').toLowerCase();
+    if (input.includes('note') || input.includes('obsidian') || input.includes('vault') || input.includes('what did i learn') || input.includes('what did i write') || input.includes('what did i document') || input.includes('my notes') || input.includes('knowledge base')) return 'KNOWLEDGE_QUERY';
     if (input.includes('code') || input.includes('debug') || input.includes('bug') || input.includes('function') || input.includes('script') || input.includes('python') || input.includes('javascript') || input.includes('refactor')) return 'CODING';
     if (input.includes('math') || input.includes('calculate') || input.includes('equation') || input.includes('integral') || input.includes('algebra')) return 'MATH';
     if (input.includes('research') || input.includes('find') || input.includes('search') || input.includes('investigate')) return 'RESEARCH';
@@ -168,13 +169,18 @@ export class OrchestratorController extends EventEmitter {
       };
     }
 
-    // 2. Check if any agent integrations are running and capable
+    // 2. Knowledge Query Routing
+    if (intent === 'KNOWLEDGE_QUERY') {
+      return { type: 'specialist', agentId: '301-knowledge-specialist' };
+    }
+
+    // 3. Check if any agent integrations are running and capable
     const runningIntegrations = context.integrationsRunning || [];
     if (runningIntegrations.length > 0) {
       return { type: 'integration', agentId: runningIntegrations[0] };
     }
     
-    // 3. Otherwise fall through to existing 301 specialist routing
+    // 4. Otherwise fall through to existing 301 specialist routing
     return { type: 'specialist', agentId: `301-${intent.toLowerCase()}-specialist` };
   }
 }

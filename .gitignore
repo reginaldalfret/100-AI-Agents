@@ -11,6 +11,9 @@ node_modules/
 *.pfx
 secrets/
 credentials/
+.cloudflared/
+*.tunnel-token
+cloudflared.yml
 
 # Model Blobs and Large Weights
 *.bin

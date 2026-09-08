@@ -1,0 +1,19 @@
+{
+  "total_examples": 656,
+  "train_count": 526,
+  "val_count": 65,
+  "test_count": 65,
+  "average_target_length": 65.6,
+  "median_target_length": 49,
+  "target_length_histogram": {
+    "0-10": 68,
+    "11-25": 107,
+    "26-50": 166,
+    "51-100": 181,
+    "101-200": 109,
+    "200+": 25
+  },
+  "target_speaker": "Kaviya",
+  "context_speaker": "Reginald",
+  "reginald_target_turns": 0
+}

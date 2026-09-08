@@ -12,7 +12,7 @@ import * as FacultyService from "../services/faculty-service.js";
 import * as AuditService from "../services/audit-service.js";
 
 import { processScannedDocumentOCR, analyzeEngineeringDrawing, analyzeSitePhotograph } from "../multimodal/index.js";
-import { queryLocalKnowledgeBase } from "../knowledge/index.js";
+import { queryLocalKnowledgeBase, knowledgeService } from "../knowledge/index.js";
 import { queryRAG, ingestDocument, codebaseIndexer, IngestionNamespace } from "../rag/index.js";
 import { executeInCodeSandbox } from "../sandbox/index.js";
 import { generateApprovalNoteDOCX, generateInspectionWorkbookXLSX, generateManagementBriefingPPTX } from "../deliverables/index.js";
@@ -432,11 +432,29 @@ export const TOOL_DEFINITIONS = {
   search_knowledge: {
     name: "search_knowledge",
     domain: "knowledge",
-    description: "Perform local on-premise semantic search across refinery SOPs and technical manuals",
-    parameters: { query: "string" },
-    handler: async ({ query, text, prompt }) => {
+    description: "Perform local on-premise semantic search across Obsidian notes, refinery SOPs, and technical manuals",
+    parameters: { query: "string", top_k: "number", domain: "string", tag: "string" },
+    handler: async ({ query, text, prompt, top_k, topK, domain, tag }) => {
       const q = query || text || prompt || "";
-      const ragRes = await queryRAG(q, { topK: 3, namespace: IngestionNamespace.GLOBAL });
+      const k = top_k || topK || 3;
+      try {
+        const kRes = await knowledgeService.search(q, { topK: k, domain, tag });
+        if (kRes && kRes.totalMatches > 0) {
+          return {
+            query: q,
+            total_matches: kRes.totalMatches,
+            citations: kRes.citations,
+            chunks: kRes.chunks,
+            synthesized_guidance: kRes.chunks[0]?.text || "",
+            is_air_gapped: true,
+            external_calls: 0
+          };
+        }
+      } catch (err) {
+        console.warn("[SEARCH_KNOWLEDGE_OBSIDIAN_WARN]", err.message);
+      }
+
+      const ragRes = await queryRAG(q, { topK: k, namespace: IngestionNamespace.GLOBAL });
       if (ragRes && ragRes.totalMatches > 0) {
         return {
           query: q,

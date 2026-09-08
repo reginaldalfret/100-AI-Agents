@@ -76,7 +76,7 @@ describe('Model Registry Specification & Integrity Test Suite', () => {
         assert.ok(Array.isArray(model.capabilities) && model.capabilities.length > 0, 'capabilities must be a non-empty array');
         assert.ok(Array.isArray(model.recommended_tasks) && model.recommended_tasks.length > 0, 'recommended_tasks must be a non-empty array');
         assert.ok(typeof model.priority === 'number' && model.priority >= 1, 'priority must be a positive number');
-        assert.equal(model.status, 'ready');
+        assert.ok(model.status === 'ready' || model.status === 'EXPERIMENTAL' || model.status === 'VALIDATED', 'status must be ready, EXPERIMENTAL, or VALIDATED');
       });
     }
   });

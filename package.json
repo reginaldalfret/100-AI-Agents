@@ -14,8 +14,10 @@
     "fleet:start": "node scripts/run-fleet.js",
     "supervisor": "node scripts/supervisor.js",
     "desktop:test": "node --test tests/desktop/*.test.js",
+    "test:personal-style": "node --test tests/personal-style/*.test.js",
     "desktop:start": "node desktop/main/main.js",
-    "desktop:build": "node scripts/build-desktop.js"
+    "desktop:build": "node scripts/build-desktop.js",
+    "test:deployment": "node --test tests/deployment/*.test.js"
   },
   "keywords": [
     "super-ai",
@@ -28,7 +30,7 @@
   "author": "Smart India Hackathon Team",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.19.2",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
   }
 }

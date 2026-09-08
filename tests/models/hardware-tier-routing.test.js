@@ -6,7 +6,7 @@ test('Hardware Tiering & Capacity Partitioning', () => {
   const gpu = getGpuModels();
   const cpu = getCpuModels();
 
-  assert.strictEqual(gpu.length, 8, 'Must have 8 active GPU models');
+  assert.strictEqual(gpu.length, 9, 'Must have 9 active GPU models');
   assert.strictEqual(cpu.length, 4, 'Must have 4 active CPU models');
 
   for (const g of gpu) {

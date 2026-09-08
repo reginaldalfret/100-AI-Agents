@@ -131,6 +131,61 @@ ipcMain.handle('network:setPolicy', async (_, mode) => {
   } catch (e) { return { error: e.message }; }
 });
 
+// Knowledge Base IPC Handlers
+ipcMain.handle('knowledge:status', async () => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/knowledge/status`);
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
+ipcMain.handle('knowledge:sync', async () => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/knowledge/sources/obsidian/sync`, { method: 'POST' });
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
+ipcMain.handle('knowledge:rebuild', async () => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/knowledge/sources/obsidian/rebuild`, { method: 'POST' });
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
+ipcMain.handle('knowledge:search', async (_, query, options = {}) => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/knowledge/search`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, ...options })
+    });
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
+ipcMain.handle('knowledge:query', async (_, query, options = {}) => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/knowledge/query`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, ...options })
+    });
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
+ipcMain.handle('knowledge:open-note', async (_, relativePath) => {
+  try {
+    const res = await fetch(`http://127.0.0.1:${DesktopConfig.ports.gateway}/api/knowledge/open-note`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: relativePath })
+    });
+    return await res.json();
+  } catch (e) { return { error: e.message }; }
+});
+
 app.whenReady().then(async () => {
   createSplashWindow();
 

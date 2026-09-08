@@ -1,0 +1,296 @@
+{
+  "updatedAt": "2026-09-08T07:18:01.186Z",
+  "totalLinks": 19,
+  "nodes": [
+    {
+      "id": "301 Architecture",
+      "relativePath": "01-Architecture/301 Architecture.md",
+      "tags": [
+        "architecture",
+        "orchestrator",
+        "airgapped"
+      ]
+    },
+    {
+      "id": "Ollama",
+      "relativePath": "02-Models/Ollama.md",
+      "tags": [
+        "ollama",
+        "models",
+        "local"
+      ]
+    },
+    {
+      "id": "QLoRA",
+      "relativePath": "04-Fine-Tuning/QLoRA.md",
+      "tags": [
+        "qlora",
+        "finetuning",
+        "rtx2050"
+      ]
+    },
+    {
+      "id": "Mobile LLM Research",
+      "relativePath": "06-Mobile-LLM/Mobile LLM Research.md",
+      "tags": [
+        "mobile",
+        "edge",
+        "quantization"
+      ]
+    },
+    {
+      "id": "Quantization",
+      "relativePath": "07-Quantization/Quantization.md",
+      "tags": [
+        "quantization",
+        "gguf",
+        "q4_k_m"
+      ]
+    },
+    {
+      "id": "Cybersecurity",
+      "relativePath": "12-Cybersecurity/Cybersecurity.md",
+      "tags": [
+        "cybersecurity",
+        "security",
+        "airgapped"
+      ]
+    },
+    {
+      "id": "Healthcare",
+      "relativePath": "13-Healthcare/Healthcare.md",
+      "tags": [
+        "healthcare",
+        "medgemma",
+        "clinical"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "01-Architecture/301 Architecture.md",
+      "target": "NVIDIA GeForce RTX 2050"
+    },
+    {
+      "source": "01-Architecture/301 Architecture.md",
+      "target": "Obsidian Knowledge Bridge"
+    },
+    {
+      "source": "01-Architecture/301 Architecture.md",
+      "target": "Ollama"
+    },
+    {
+      "source": "01-Architecture/301 Architecture.md",
+      "target": "Quantization"
+    },
+    {
+      "source": "01-Architecture/301 Architecture.md",
+      "target": "QLoRA"
+    },
+    {
+      "source": "02-Models/Ollama.md",
+      "target": "Quantization"
+    },
+    {
+      "source": "02-Models/Ollama.md",
+      "target": "301 Architecture"
+    },
+    {
+      "source": "04-Fine-Tuning/QLoRA.md",
+      "target": "Quantization"
+    },
+    {
+      "source": "04-Fine-Tuning/QLoRA.md",
+      "target": "Mobile LLM Research"
+    },
+    {
+      "source": "04-Fine-Tuning/QLoRA.md",
+      "target": "Cybersecurity"
+    },
+    {
+      "source": "06-Mobile-LLM/Mobile LLM Research.md",
+      "target": "Quantization"
+    },
+    {
+      "source": "06-Mobile-LLM/Mobile LLM Research.md",
+      "target": "QLoRA"
+    },
+    {
+      "source": "07-Quantization/Quantization.md",
+      "target": "Ollama"
+    },
+    {
+      "source": "07-Quantization/Quantization.md",
+      "target": "301 Architecture"
+    },
+    {
+      "source": "07-Quantization/Quantization.md",
+      "target": "QLoRA"
+    },
+    {
+      "source": "12-Cybersecurity/Cybersecurity.md",
+      "target": "301 Architecture"
+    },
+    {
+      "source": "12-Cybersecurity/Cybersecurity.md",
+      "target": "QLoRA"
+    },
+    {
+      "source": "13-Healthcare/Healthcare.md",
+      "target": "301 Architecture"
+    },
+    {
+      "source": "13-Healthcare/Healthcare.md",
+      "target": "Quantization"
+    }
+  ],
+  "links": {
+    "01-Architecture/301 Architecture.md": [
+      {
+        "raw": "[[NVIDIA GeForce RTX 2050]]",
+        "target": "NVIDIA GeForce RTX 2050",
+        "alias": "NVIDIA GeForce RTX 2050",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[Obsidian Knowledge Bridge]]",
+        "target": "Obsidian Knowledge Bridge",
+        "alias": "Obsidian Knowledge Bridge",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[Ollama]]",
+        "target": "Ollama",
+        "alias": "Ollama",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[Quantization]]",
+        "target": "Quantization",
+        "alias": "Quantization",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[QLoRA]]",
+        "target": "QLoRA",
+        "alias": "QLoRA",
+        "anchor": "",
+        "type": "WIKILINK"
+      }
+    ],
+    "02-Models/Ollama.md": [
+      {
+        "raw": "[[Quantization]]",
+        "target": "Quantization",
+        "alias": "Quantization",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[301 Architecture]]",
+        "target": "301 Architecture",
+        "alias": "301 Architecture",
+        "anchor": "",
+        "type": "WIKILINK"
+      }
+    ],
+    "04-Fine-Tuning/QLoRA.md": [
+      {
+        "raw": "[[Quantization]]",
+        "target": "Quantization",
+        "alias": "Quantization",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[Mobile LLM Research]]",
+        "target": "Mobile LLM Research",
+        "alias": "Mobile LLM Research",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[Cybersecurity]]",
+        "target": "Cybersecurity",
+        "alias": "Cybersecurity",
+        "anchor": "",
+        "type": "WIKILINK"
+      }
+    ],
+    "06-Mobile-LLM/Mobile LLM Research.md": [
+      {
+        "raw": "[[Quantization]]",
+        "target": "Quantization",
+        "alias": "Quantization",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[QLoRA]]",
+        "target": "QLoRA",
+        "alias": "QLoRA",
+        "anchor": "",
+        "type": "WIKILINK"
+      }
+    ],
+    "07-Quantization/Quantization.md": [
+      {
+        "raw": "[[Ollama]]",
+        "target": "Ollama",
+        "alias": "Ollama",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[301 Architecture]]",
+        "target": "301 Architecture",
+        "alias": "301 Architecture",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[QLoRA]]",
+        "target": "QLoRA",
+        "alias": "QLoRA",
+        "anchor": "",
+        "type": "WIKILINK"
+      }
+    ],
+    "12-Cybersecurity/Cybersecurity.md": [
+      {
+        "raw": "[[301 Architecture]]",
+        "target": "301 Architecture",
+        "alias": "301 Architecture",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[QLoRA]]",
+        "target": "QLoRA",
+        "alias": "QLoRA",
+        "anchor": "",
+        "type": "WIKILINK"
+      }
+    ],
+    "13-Healthcare/Healthcare.md": [
+      {
+        "raw": "[[301 Architecture]]",
+        "target": "301 Architecture",
+        "alias": "301 Architecture",
+        "anchor": "",
+        "type": "WIKILINK"
+      },
+      {
+        "raw": "[[Quantization]]",
+        "target": "Quantization",
+        "alias": "Quantization",
+        "anchor": "",
+        "type": "WIKILINK"
+      }
+    ]
+  }
+}

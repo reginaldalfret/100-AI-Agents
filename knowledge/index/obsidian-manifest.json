@@ -1,0 +1,264 @@
+{
+  "vaultPath": "E:\\Smart Automation\\100-AI-Agents\\knowledge\\obsidian-vault",
+  "updatedAt": "2026-09-08T07:18:01.185Z",
+  "lastSync": "2026-09-07T08:45:40.137Z",
+  "totalNotes": 7,
+  "totalChunks": 18,
+  "notes": {
+    "01-Architecture/301 Architecture.md": {
+      "title": "301 Architecture",
+      "filename": "301 Architecture.md",
+      "relativePath": "01-Architecture/301 Architecture.md",
+      "fullPath": "E:\\Smart Automation\\100-AI-Agents\\knowledge\\obsidian-vault\\01-Architecture\\301 Architecture.md",
+      "contentHash": "ccc9876a207f3d6bd0123bad7c4452809f45a3dca5fa9af91d0f9565bef6b77d",
+      "mtime": 1788717256345.4937,
+      "charCount": 859,
+      "wordCount": 103,
+      "headings": [
+        "301 Super AI Architecture",
+        "Core Pillars",
+        "Related Systems"
+      ],
+      "tags": [
+        "architecture",
+        "orchestrator",
+        "airgapped"
+      ],
+      "frontmatter": {
+        "title": "301 Super AI Architecture",
+        "domain": "engineering",
+        "status": "VERIFIED",
+        "tags": [
+          "architecture",
+          "orchestrator",
+          "airgapped"
+        ]
+      },
+      "chunkCount": 3,
+      "indexedAt": "2026-09-08T07:18:01.177Z"
+    },
+    "02-Models/Ollama.md": {
+      "title": "Ollama",
+      "filename": "Ollama.md",
+      "relativePath": "02-Models/Ollama.md",
+      "fullPath": "E:\\Smart Automation\\100-AI-Agents\\knowledge\\obsidian-vault\\02-Models\\Ollama.md",
+      "contentHash": "eab14ae097e6a657eb15b9b9bf1b82b657289fda5b25b10e7b38312fda80ec99",
+      "mtime": 1788717256345.4937,
+      "charCount": 854,
+      "wordCount": 86,
+      "headings": [
+        "Local Ollama Management",
+        "Service Configuration",
+        "Key Local Models"
+      ],
+      "tags": [
+        "ollama",
+        "models",
+        "local"
+      ],
+      "frontmatter": {
+        "title": "Local Ollama Management",
+        "domain": "infrastructure",
+        "status": "VERIFIED",
+        "tags": [
+          "ollama",
+          "models",
+          "local"
+        ]
+      },
+      "chunkCount": 3,
+      "indexedAt": "2026-09-08T07:18:01.174Z"
+    },
+    "04-Fine-Tuning/QLoRA.md": {
+      "title": "QLoRA",
+      "filename": "QLoRA.md",
+      "relativePath": "04-Fine-Tuning/QLoRA.md",
+      "fullPath": "E:\\Smart Automation\\100-AI-Agents\\knowledge\\obsidian-vault\\04-Fine-Tuning\\QLoRA.md",
+      "contentHash": "6b09b54e10734942ed5ecd4e1adb14f4b0ba8565867b1c0ba92b53160c2a5fe6",
+      "mtime": 1788717256346.026,
+      "charCount": 827,
+      "wordCount": 92,
+      "headings": [
+        "QLoRA Fine-Tuning Protocols",
+        "GPU VRAM Efficiency",
+        "Hyperparameter Standards"
+      ],
+      "tags": [
+        "qlora",
+        "finetuning",
+        "rtx2050"
+      ],
+      "frontmatter": {
+        "title": "QLoRA Fine-Tuning Protocols",
+        "domain": "ml-engineering",
+        "status": "VERIFIED",
+        "tags": [
+          "qlora",
+          "finetuning",
+          "rtx2050"
+        ]
+      },
+      "chunkCount": 3,
+      "indexedAt": "2026-09-08T07:18:01.159Z"
+    },
+    "06-Mobile-LLM/Mobile LLM Research.md": {
+      "title": "Mobile LLM Research",
+      "filename": "Mobile LLM Research.md",
+      "relativePath": "06-Mobile-LLM/Mobile LLM Research.md",
+      "fullPath": "E:\\Smart Automation\\100-AI-Agents\\knowledge\\obsidian-vault\\06-Mobile-LLM\\Mobile LLM Research.md",
+      "contentHash": "5aff6471a9cc30baf05c7b6bcd6bbfcecafbefefbce6823cb9d354d985ea72c1",
+      "mtime": 1788717256346.5415,
+      "charCount": 732,
+      "wordCount": 71,
+      "headings": [
+        "Mobile & Edge LLM Research",
+        "Edge Deployment Architectures"
+      ],
+      "tags": [
+        "mobile",
+        "edge",
+        "quantization"
+      ],
+      "frontmatter": {
+        "title": "Mobile & Edge LLM Research",
+        "domain": "mobile-computing",
+        "status": "RESEARCH",
+        "tags": [
+          "mobile",
+          "edge",
+          "quantization"
+        ]
+      },
+      "chunkCount": 2,
+      "indexedAt": "2026-09-08T07:18:01.183Z"
+    },
+    "07-Quantization/Quantization.md": {
+      "title": "Quantization",
+      "filename": "Quantization.md",
+      "relativePath": "07-Quantization/Quantization.md",
+      "fullPath": "E:\\Smart Automation\\100-AI-Agents\\knowledge\\obsidian-vault\\07-Quantization\\Quantization.md",
+      "contentHash": "aafda18c7f86d220880e40585619d885e6042130f2aa1bd37a1a0d9b7fd3ff35",
+      "mtime": 1788717256346.5415,
+      "charCount": 876,
+      "wordCount": 98,
+      "headings": [
+        "Quantization Formats & Benchmarks",
+        "GGUF Quantization Types",
+        "RTX 2050 Benchmarks"
+      ],
+      "tags": [
+        "quantization",
+        "gguf",
+        "q4_k_m"
+      ],
+      "frontmatter": {
+        "title": "Quantization Formats & Benchmarks",
+        "domain": "optimization",
+        "status": "VERIFIED",
+        "tags": [
+          "quantization",
+          "gguf",
+          "q4_k_m"
+        ]
+      },
+      "chunkCount": 3,
+      "indexedAt": "2026-09-08T07:18:01.181Z"
+    },
+    "12-Cybersecurity/Cybersecurity.md": {
+      "title": "Cybersecurity",
+      "filename": "Cybersecurity.md",
+      "relativePath": "12-Cybersecurity/Cybersecurity.md",
+      "fullPath": "E:\\Smart Automation\\100-AI-Agents\\knowledge\\obsidian-vault\\12-Cybersecurity\\Cybersecurity.md",
+      "contentHash": "53ef364a53f46c865b8065d618cae48b68a9064bf7ef0f9960635233de98fd90",
+      "mtime": 1788717256347.0723,
+      "charCount": 639,
+      "wordCount": 57,
+      "headings": [
+        "Sovereign Cybersecurity Intelligence",
+        "Threat Analysis Model"
+      ],
+      "tags": [
+        "cybersecurity",
+        "security",
+        "airgapped"
+      ],
+      "frontmatter": {
+        "title": "Sovereign Cybersecurity Intelligence",
+        "domain": "cybersecurity",
+        "status": "VERIFIED",
+        "tags": [
+          "cybersecurity",
+          "security",
+          "airgapped"
+        ]
+      },
+      "chunkCount": 2,
+      "indexedAt": "2026-09-08T07:18:01.168Z"
+    },
+    "13-Healthcare/Healthcare.md": {
+      "title": "Healthcare",
+      "filename": "Healthcare.md",
+      "relativePath": "13-Healthcare/Healthcare.md",
+      "fullPath": "E:\\Smart Automation\\100-AI-Agents\\knowledge\\obsidian-vault\\13-Healthcare\\Healthcare.md",
+      "contentHash": "4b1315116256a6c0d183f57e00ee46f25f9abd92d8c33a3fd8794c4531c4570c",
+      "mtime": 1788717256347.0723,
+      "charCount": 628,
+      "wordCount": 58,
+      "headings": [
+        "Healthcare Clinical Intelligence",
+        "Specialist Model"
+      ],
+      "tags": [
+        "healthcare",
+        "medgemma",
+        "clinical"
+      ],
+      "frontmatter": {
+        "title": "Healthcare Clinical Intelligence",
+        "domain": "healthcare",
+        "status": "VERIFIED",
+        "tags": [
+          "healthcare",
+          "medgemma",
+          "clinical"
+        ]
+      },
+      "chunkCount": 2,
+      "indexedAt": "2026-09-08T07:18:01.170Z"
+    }
+  },
+  "fileChunks": {
+    "04-Fine-Tuning/QLoRA.md": [
+      "obsidian_ec0a61e31d695c63_chk_0000",
+      "obsidian_ec0a61e31d695c63_chk_0001",
+      "obsidian_ec0a61e31d695c63_chk_0002"
+    ],
+    "12-Cybersecurity/Cybersecurity.md": [
+      "obsidian_6dee2c05fb4fc802_chk_0000",
+      "obsidian_6dee2c05fb4fc802_chk_0001"
+    ],
+    "13-Healthcare/Healthcare.md": [
+      "obsidian_c7b6dcda6c95f645_chk_0000",
+      "obsidian_c7b6dcda6c95f645_chk_0001"
+    ],
+    "02-Models/Ollama.md": [
+      "obsidian_6e04464cf444e28a_chk_0000",
+      "obsidian_6e04464cf444e28a_chk_0001",
+      "obsidian_6e04464cf444e28a_chk_0002"
+    ],
+    "01-Architecture/301 Architecture.md": [
+      "obsidian_d84d2ff2eee4b42c_chk_0000",
+      "obsidian_d84d2ff2eee4b42c_chk_0001",
+      "obsidian_d84d2ff2eee4b42c_chk_0002"
+    ],
+    "07-Quantization/Quantization.md": [
+      "obsidian_f3b7b72c59b398df_chk_0000",
+      "obsidian_f3b7b72c59b398df_chk_0001",
+      "obsidian_f3b7b72c59b398df_chk_0002"
+    ],
+    "06-Mobile-LLM/Mobile LLM Research.md": [
+      "obsidian_177b1a6a84d9f3ee_chk_0000",
+      "obsidian_177b1a6a84d9f3ee_chk_0001"
+    ]
+  }
+}

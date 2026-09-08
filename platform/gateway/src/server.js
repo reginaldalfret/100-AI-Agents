@@ -36,6 +36,16 @@ import {
   SPECIALIST_REGISTRY,
   SpecialistDomain
 } from "../../specialists/specialist-manager.js";
+import {
+  obsidianConfig,
+  obsidianIndexer,
+  obsidianWatcher,
+  sourceRegistry,
+  knowledgeService,
+  initDemoVaultIfEmpty
+} from "../../knowledge/index.js";
+import { personalStyleGemmaRuntime } from "../../personal-style/gemma-runtime.js";
+import { modelArenaService } from '../../model-arena/model-arena-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -281,19 +291,19 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "GET" && (url.pathname === "/api/health" || url.pathname === "/health")) {
       json(res, 200, {
-        status: "healthy",
-        service: "100-to-1-gateway",
+        status: "READY",
+        service: "301-super-ai-gateway",
+        public_url: "https://superai.reginaldalfret.tech",
+        gateway: "READY",
+        ollama: "READY",
+        python: pythonClient.circuit.state === "OPEN" ? "DEGRADED" : "READY",
+        database: "READY",
+        rag: "READY",
+        agents: "READY",
         total_agents: agents.length,
-        platform: "SA-S03 Educational Intelligent Workflow Management",
-        gateway: "healthy",
-        ollama: "healthy",
-        compute: pythonClient.circuit.state === "OPEN" ? "degraded_fallback" : "healthy",
-        fleet: "healthy",
-        agents: {
-          total: agents.length,
-          healthy: agents.length
-        },
-        workflows: "healthy",
+        models_available: LOCAL_MODELS.length,
+        is_air_gapped: true,
+        external_ai_calls: 0,
         timestamp: new Date().toISOString()
       });
       return;
@@ -358,6 +368,34 @@ const server = http.createServer(async (req, res) => {
         results,
         nodes: nodeManager.getNodes(),
         timestamp: new Date().toISOString()
+      });
+      return;
+    }
+
+    // ==========================================================================
+    // MODEL CATALOG & CAPABILITIES (SANITIZED PUBLIC ORIGIN)
+    // ==========================================================================
+    if (req.method === "GET" && (url.pathname === "/api/models" || url.pathname === "/api/models/list")) {
+      const publicModels = LOCAL_MODELS.map(m => ({
+        model_id: m.model_id,
+        name: m.name || m.display_name,
+        role: m.role,
+        provider: m.provider,
+        execution_target: m.execution_target,
+        quantization: m.quantization,
+        context_length: m.context_length,
+        supported_modalities: m.supported_modalities,
+        capabilities: m.capabilities,
+        recommended_tasks: m.recommended_tasks,
+        status: m.status || "ready",
+        badge: m.badge || "LOCAL"
+      }));
+      json(res, 200, {
+        status: "success",
+        total: publicModels.length,
+        models: publicModels,
+        is_air_gapped: true,
+        external_ai_calls: 0
       });
       return;
     }
@@ -1310,6 +1348,66 @@ const server = http.createServer(async (req, res) => {
         }
       }
 
+      const isKnowledgeMode = payload.mode === "knowledge" || payload.knowledgeMode === true || payload.mode === "knowledge-rag";
+      let knowledgeEvidence = null;
+      let isGrounded = false;
+      let knowledgeCitations = [];
+      let knowledgeSources = [];
+
+      if (isKnowledgeMode) {
+        knowledgeEvidence = await knowledgeService.queryKnowledge(task, {
+          domain: payload.domain,
+          tag: payload.tag,
+          folder: payload.folder,
+          topK: payload.topK || 5
+        });
+
+        if (!knowledgeEvidence.grounded) {
+          const unsupportedMsg = "I couldn't find supporting information in your connected knowledge base.";
+          const wantsStream = Boolean(payload.stream === true || (req.headers["accept"] && req.headers["accept"].includes("text/event-stream")));
+          if (wantsStream) {
+            res.writeHead(200, {
+              "Content-Type": "text/event-stream; charset=utf-8",
+              "Cache-Control": "no-cache, no-transform",
+              "Connection": "keep-alive",
+              "Access-Control-Allow-Origin": "*"
+            });
+            const sendSSE = (ev, data) => {
+              try { res.write(`event: ${ev}\ndata: ${JSON.stringify(data)}\n\n`); } catch {}
+            };
+            sendSSE("token", { text: unsupportedMsg, fullText: unsupportedMsg });
+            sendSSE("complete", {
+              status: "completed",
+              text: unsupportedMsg,
+              grounded: false,
+              citations: [],
+              sources: [],
+              is_air_gapped: true,
+              external_calls: 0
+            });
+            res.end();
+            return;
+          } else {
+            json(res, 200, {
+              status: "success",
+              response: unsupportedMsg,
+              text: unsupportedMsg,
+              grounded: false,
+              citations: [],
+              sources: [],
+              is_air_gapped: true,
+              external_calls: 0
+            });
+            return;
+          }
+        }
+
+        isGrounded = true;
+        knowledgeCitations = knowledgeEvidence.citations;
+        knowledgeSources = knowledgeEvidence.sources;
+        extractedEvidenceText += `\n\n[OBSIDIAN KNOWLEDGE BASE EVIDENCE]\n${knowledgeEvidence.evidencePack}`;
+      }
+
       const effectiveTask = extractedEvidenceText ? `${task}\n${extractedEvidenceText}` : task;
 
       // ================================================================
@@ -1649,7 +1747,10 @@ const server = http.createServer(async (req, res) => {
               agentName: agent.name || agent.agent_id,
               agentNumber: agent.agent_id?.replace("agent-", "") || "001",
               modelMode: "manual",
-              model_source: (mappedModel.runtime_type || "cpu").toLowerCase() + "-local"
+              model_source: (mappedModel.runtime_type || "cpu").toLowerCase() + "-local",
+              grounded: isGrounded,
+              citations: knowledgeCitations,
+              sources: knowledgeSources
             });
             res.end();
             return;
@@ -1696,6 +1797,9 @@ const server = http.createServer(async (req, res) => {
                   ocrTrace: imageQuestionResult?.backendTrace || null,
                   ocrResult: imageQuestionResult?.text || null,
                   detectedTask: imageQuestionResult?.classification?.taskLabel || null,
+                  grounded: isGrounded,
+                  citations: knowledgeCitations,
+                  sources: knowledgeSources,
                   external_calls: 0
                 });
                 res.end();
@@ -1950,6 +2054,9 @@ const server = http.createServer(async (req, res) => {
         ocrTrace: imageQuestionResult?.backendTrace || null,
         ocrResult: imageQuestionResult?.text || null,
         detectedTask: imageQuestionResult?.classification?.taskLabel || null,
+        grounded: isGrounded,
+        citations: knowledgeCitations,
+        sources: knowledgeSources,
         external_calls: 0,
         text: answerText,
         evidence,
@@ -1966,6 +2073,9 @@ const server = http.createServer(async (req, res) => {
           model: modelDisplayName,
           hardware: hardwareTrace,
           hardware_trace: hardwareTrace,
+          grounded: isGrounded,
+          citations: knowledgeCitations,
+          sources: knowledgeSources,
           evidence,
           deliverables,
           plan,
@@ -2674,9 +2784,324 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    if (
-      req.method === "GET"
-    ) {
+    // ============================================================
+    // KNOWLEDGE BASE & OBSIDIAN BRIDGE ENDPOINTS
+    // ============================================================
+
+    // GET /api/knowledge/health — Subsystem health check
+    if (req.method === "GET" && url.pathname === "/api/knowledge/health") {
+      json(res, 200, {
+        status: "success",
+        health: knowledgeService.getHealth()
+      });
+      return;
+    }
+
+    // GET /api/knowledge/sources — Canonical multi-source knowledge registry
+    if (req.method === "GET" && url.pathname === "/api/knowledge/sources") {
+      json(res, 200, {
+        status: "success",
+        sources: sourceRegistry.getAllSources()
+      });
+      return;
+    }
+
+    // GET /api/knowledge/status — Obsidian index status & configuration
+    if (req.method === "GET" && url.pathname === "/api/knowledge/status") {
+      json(res, 200, {
+        status: "success",
+        status: obsidianIndexer.getIndexStatus(),
+        config: obsidianConfig.toJSON()
+      });
+      return;
+    }
+
+    // POST /api/knowledge/sources/obsidian/connect — Connect / update vault path
+    if (req.method === "POST" && url.pathname === "/api/knowledge/sources/obsidian/connect") {
+      try {
+        const payload = await readBody(req);
+        if (payload.vaultPath) {
+          obsidianConfig.setVaultPath(payload.vaultPath);
+          obsidianWatcher.startWatching();
+        }
+        json(res, 200, {
+          status: "success",
+          message: "Obsidian vault path connected successfully",
+          config: obsidianConfig.toJSON()
+        });
+      } catch (err) {
+        json(res, 400, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // POST /api/knowledge/sources/obsidian/sync — Incremental sync using SHA-256
+    if (req.method === "POST" && url.pathname === "/api/knowledge/sources/obsidian/sync") {
+      try {
+        const syncResult = await obsidianIndexer.syncIncremental();
+        json(res, 200, {
+          status: "success",
+          result: syncResult
+        });
+      } catch (err) {
+        json(res, 500, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // POST /api/knowledge/sources/obsidian/rebuild — Full clean re-index
+    if (req.method === "POST" && url.pathname === "/api/knowledge/sources/obsidian/rebuild") {
+      try {
+        const rebuildResult = await obsidianIndexer.rebuildIndex();
+        json(res, 200, {
+          status: "success",
+          result: rebuildResult
+        });
+      } catch (err) {
+        json(res, 500, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // POST /api/knowledge/search — Hybrid search (Dense Vector + BM25)
+    if (req.method === "POST" && url.pathname === "/api/knowledge/search") {
+      try {
+        const payload = await readBody(req);
+        const queryText = payload.query || payload.q || "";
+        const searchResult = await knowledgeService.search(queryText, payload);
+        json(res, 200, {
+          status: "success",
+          ...searchResult
+        });
+      } catch (err) {
+        json(res, 500, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // POST /api/knowledge/query — Grounded knowledge query with evidence pack & citations
+    if (req.method === "POST" && url.pathname === "/api/knowledge/query") {
+      try {
+        const payload = await readBody(req);
+        const queryText = payload.query || payload.task || payload.prompt || "";
+        const queryResult = await knowledgeService.queryKnowledge(queryText, payload);
+        json(res, 200, {
+          status: "success",
+          ...queryResult
+        });
+      } catch (err) {
+        json(res, 500, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // POST /api/knowledge/open-note — Open note in Obsidian URI / default app
+    if (req.method === "POST" && url.pathname === "/api/knowledge/open-note") {
+      try {
+        const payload = await readBody(req);
+        const notePath = payload.path || payload.relativePath;
+        const openResult = await knowledgeService.openNote(notePath);
+        json(res, openResult.success ? 200 : 400, openResult);
+      } catch (err) {
+        json(res, 500, { status: "error", error: err.message });
+      }
+      return;
+    }
+
+    // ==========================================================================
+    // MODEL ARENA — SIDE-BY-SIDE GPU MODEL COMPARISON
+    // ==========================================================================
+
+    // GET /api/model-arena/status
+    if (req.method === "GET" && url.pathname === "/api/model-arena/status") {
+      const comparisonId = url.searchParams.get("id");
+      if (!comparisonId) {
+        json(res, 400, { status: "error", error: "Missing comparison id" });
+        return;
+      }
+      const status = modelArenaService.getStatus(comparisonId);
+      json(res, 200, { status: "success", comparison: status });
+      return;
+    }
+
+    // GET /api/model-arena/models — list available arena models
+    if (req.method === "GET" && url.pathname === "/api/model-arena/models") {
+      const models = modelArenaService.getAvailableModels();
+      json(res, 200, { status: "success", models, total: models.length });
+      return;
+    }
+
+    // POST /api/model-arena/compare — SSE streaming comparison
+    if (req.method === "POST" && url.pathname === "/api/model-arena/compare") {
+      const body = await readBody(req);
+      const { prompt, model_ids } = body;
+      
+      if (!prompt || !prompt.trim()) {
+        json(res, 400, { status: "error", error: "Prompt is required" });
+        return;
+      }
+      
+      const modelIds = model_ids && model_ids.length > 0 ? model_ids : null;
+      
+      // Set up SSE response with unbuffered real-time streaming
+      res.writeHead(200, {
+        "Content-Type": "text/event-stream; charset=utf-8",
+        "Cache-Control": "no-cache, no-transform",
+        "Connection": "keep-alive",
+        "Access-Control-Allow-Origin": "*",
+        "X-Accel-Buffering": "no"
+      });
+      if (res.socket) res.socket.setNoDelay(true);
+      if (typeof res.flushHeaders === "function") res.flushHeaders();
+      res.write(": stream-open\n\n");
+      
+      try {
+        const comparisonId = await modelArenaService.compare(prompt.trim(), modelIds, (event) => {
+          if (!res.writableEnded) {
+            res.write(`data: ${JSON.stringify(event)}\n\n`);
+          }
+        });
+        
+        // Wait for comparison to complete
+        await modelArenaService.waitForCompletion(comparisonId);
+        
+        if (!res.writableEnded) {
+          res.write(`data: ${JSON.stringify({ type: "done", comparison_id: comparisonId })}\n\n`);
+          res.end();
+        }
+      } catch (err) {
+        if (!res.writableEnded) {
+          res.write(`data: ${JSON.stringify({ type: "error", error: err.message })}\n\n`);
+          res.end();
+        }
+      }
+      
+      req.on("close", () => {
+        // Client disconnected, cancel if still running
+      });
+      return;
+    }
+
+    // POST /api/model-arena/cancel
+    if (req.method === "POST" && url.pathname === "/api/model-arena/cancel") {
+      const body = await readBody(req);
+      const { comparison_id } = body;
+      if (comparison_id) {
+        modelArenaService.cancelComparison(comparison_id);
+      } else {
+        modelArenaService.cancelAll();
+      }
+      json(res, 200, { status: "success", message: "Comparison cancelled" });
+      return;
+    }
+
+    // POST /api/model-arena/clear
+    if (req.method === "POST" && url.pathname === "/api/model-arena/clear") {
+      const body = await readBody(req);
+      const { comparison_id } = body;
+      if (comparison_id) {
+        modelArenaService.clearComparison(comparison_id);
+      } else {
+        modelArenaService.clearAll();
+      }
+      json(res, 200, { status: "success", message: "Comparison cleared" });
+      return;
+    }
+
+    // ============================================================
+    // PERSONAL STYLE GEMMA RUNTIME ENDPOINTS
+    // ============================================================
+
+    // GET /api/personal-style/gemma/health
+    if (req.method === "GET" && url.pathname === "/api/personal-style/gemma/health") {
+      if (personalStyleGemmaRuntime.state === "UNLOADED") {
+        await personalStyleGemmaRuntime.initialize();
+      }
+      json(res, 200, personalStyleGemmaRuntime.health());
+      return;
+    }
+
+    // GET /api/personal-style/gemma/status
+    if (req.method === "GET" && url.pathname === "/api/personal-style/gemma/status") {
+      if (personalStyleGemmaRuntime.state === "UNLOADED") {
+        await personalStyleGemmaRuntime.initialize();
+      }
+      json(res, 200, personalStyleGemmaRuntime.status());
+      return;
+    }
+
+    // POST /api/personal-style/gemma/reset
+    if (req.method === "POST" && url.pathname === "/api/personal-style/gemma/reset") {
+      const payload = await readBody(req);
+      const result = personalStyleGemmaRuntime.reset_session(payload.session_id);
+      json(res, 200, result);
+      return;
+    }
+
+    // POST /api/personal-style/gemma/stop
+    if (req.method === "POST" && url.pathname === "/api/personal-style/gemma/stop") {
+      const payload = await readBody(req);
+      const result = personalStyleGemmaRuntime.stop(payload.session_id);
+      json(res, 200, result);
+      return;
+    }
+
+    // POST /api/personal-style/gemma/chat and /api/personal-style/gemma/generate
+    if (req.method === "POST" && (url.pathname === "/api/personal-style/gemma/chat" || url.pathname === "/api/personal-style/gemma/generate")) {
+      try {
+        const payload = await readBody(req);
+        const isStream = url.pathname === "/api/personal-style/gemma/generate" ? Boolean(payload.stream) : payload.stream !== false;
+        const isBase = payload.model === "google/gemma-3-1b-it" || payload.is_base === true;
+
+        if (isStream) {
+          res.writeHead(200, {
+            "Content-Type": "text/event-stream; charset=utf-8",
+            "Cache-Control": "no-cache, no-transform",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"
+          });
+
+          await personalStyleGemmaRuntime.stream_generate({
+            messages: payload.messages || [{ role: "user", content: payload.prompt || "" }],
+            session_id: payload.session_id,
+            model: payload.model,
+            isBase,
+            onToken: (token) => {
+              res.write(`data: ${JSON.stringify({ type: "token", text: token })}\n\n`);
+            },
+            onDone: ({ fullText, session_id }) => {
+              res.write(`data: ${JSON.stringify({ type: "done", fullText, session_id })}\n\n`);
+              res.end();
+            },
+            onError: (err) => {
+              res.write(`data: ${JSON.stringify({ type: "error", error: err.message })}\n\n`);
+              res.end();
+            }
+          });
+        } else {
+          const genResult = await personalStyleGemmaRuntime.generate({
+            messages: payload.messages || [{ role: "user", content: payload.prompt || "" }],
+            session_id: payload.session_id,
+            model: payload.model,
+            isBase
+          });
+          json(res, 200, {
+            status: "success",
+            response: genResult.response,
+            model: genResult.model,
+            session_id: genResult.session_id,
+            device: genResult.device,
+            is_base: genResult.is_base,
+            result: genResult
+          });
+        }
+      } catch (err) {
+        json(res, 500, { status: "error", error: "Generation failed: " + err.message });
+      }
+      return;
+    }
+
+    if (req.method === "GET" && !url.pathname.startsWith("/api/")) {
       const sanitized = url.pathname === "/" ? "index.html" : url.pathname.replace(/^\//, "").replace(/\.\./g, "");
       const file = path.join(
         ROOT,
@@ -2720,21 +3145,39 @@ const server = http.createServer(async (req, res) => {
     });
 
   } catch (error) {
+    console.error("[GATEWAY_ERROR]", error);
+    const safeMsg = (error instanceof Error && !error.message.includes(":\\") && !error.message.includes("/root/"))
+      ? error.message
+      : "Internal server error";
     json(res, 500, {
       status: "error",
-      error:
-        error instanceof Error
-          ? error.message
-          : "Internal server error"
+      error: safeMsg
     });
   }
 });
 
-server.listen(PORT, HOST, () => {
+server.listen(PORT, HOST, async () => {
   console.log("======================================");
   console.log("100-TO-1 CENTRAL GATEWAY");
   console.log("======================================");
   console.log(`Listening: http://${HOST}:${PORT}`);
   console.log(`Registry: ${REGISTRY}`);
   console.log("======================================");
+
+  // Initialize Demo Vault & Start Obsidian Watcher (Local, Air-Gapped)
+  try {
+    initDemoVaultIfEmpty();
+    obsidianWatcher.startWatching();
+    console.log("[KNOWLEDGE] Obsidian Knowledge Bridge initialized and watcher active.");
+  } catch (kErr) {
+    console.warn("[KNOWLEDGE_INIT_WARN]", kErr.message);
+  }
+
+  // Initialize Personal Style Gemma Runtime
+  try {
+    await personalStyleGemmaRuntime.initialize();
+    console.log("[PERSONAL_STYLE] Gemma Kaviya Runtime initialized and READY.");
+  } catch (psErr) {
+    console.warn("[PERSONAL_STYLE_INIT_WARN]", psErr.message);
+  }
 });
