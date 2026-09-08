@@ -16,8 +16,11 @@
     "desktop:test": "node --test tests/desktop/*.test.js",
     "test:personal-style": "node --test tests/personal-style/*.test.js",
     "desktop:start": "node desktop/main/main.js",
-    "desktop:build": "node scripts/build-desktop.js",
-    "test:deployment": "node --test tests/deployment/*.test.js"
+    "test:deployment": "node --test tests/deployment/*.test.js",
+    "dev:next": "next dev platform/web",
+    "build:next": "next build platform/web",
+    "start:next": "next start platform/web",
+    "test:next": "node --test tests/nextjs-migration/*.test.js"
   },
   "keywords": [
     "super-ai",
@@ -31,6 +34,17 @@
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "next": "^16.3.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.3",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@types/node": "^26.5.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "typescript": "^7.0.2"
   }
 }

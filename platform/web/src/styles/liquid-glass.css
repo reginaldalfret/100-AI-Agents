@@ -1,0 +1,276 @@
+/* ==========================================================================
+   301 SUPER AI — APPLE LIQUID GLASS DESIGN SYSTEM
+   Inspired by Apple's Liquid Glass Design Language
+   Translucent, Spatial, Restrained, Concentric, Accessible
+   ========================================================================== */
+
+:root {
+  /* System Typography Stack */
+  --lg-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --lg-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Surface & Canvas (Dark Appearance - Default) */
+  --lg-bg-canvas: #090a0f;
+  --lg-surface-base: #12131a;
+  --lg-surface-elevated: #1a1b24;
+  --lg-surface-overlay: rgba(18, 19, 26, 0.75);
+
+  /* Liquid Glass Material Tokens (Navigation & Controls Layer Only) */
+  --lg-glass-bg: rgba(255, 255, 255, 0.05);
+  --lg-glass-bg-hover: rgba(255, 255, 255, 0.08);
+  --lg-glass-bg-active: rgba(255, 255, 255, 0.12);
+  --lg-glass-border: rgba(255, 255, 255, 0.10);
+  --lg-glass-highlight: rgba(255, 255, 255, 0.18);
+  --lg-glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --lg-glass-shadow-sm: 0 4px 16px 0 rgba(0, 0, 0, 0.25);
+  --lg-glass-shadow-lg: 0 16px 48px 0 rgba(0, 0, 0, 0.45);
+  --lg-glass-blur: blur(20px) saturate(180%);
+
+  /* Specular Highlight (Subtle Top-Edge Illumination) */
+  --lg-glass-specular: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(255, 255, 255, 0.03) 35%,
+    rgba(255, 255, 255, 0.00) 100%
+  );
+
+  /* Typography & Contrast */
+  --lg-text-primary: #f5f5f7;
+  --lg-text-secondary: #a1a1a6;
+  --lg-text-muted: #6e6e73;
+
+  /* Restrained Accents */
+  --lg-accent: #2997ff;
+  --lg-accent-glow: rgba(41, 151, 255, 0.25);
+  --lg-accent-tint: rgba(41, 151, 255, 0.12);
+  --lg-accent-border: rgba(41, 151, 255, 0.35);
+
+  --lg-success: #30d158;
+  --lg-warning: #ffd60a;
+  --lg-danger: #ff453a;
+  --lg-danger-tint: rgba(255, 69, 58, 0.15);
+
+  /* Concentric Geometry (Outer Radius > Inner Radius) */
+  --lg-radius-xs: 6px;
+  --lg-radius-sm: 8px;
+  --lg-radius-md: 12px;
+  --lg-radius-lg: 16px;
+  --lg-radius-xl: 22px;
+  --lg-radius-capsule: 9999px;
+
+  /* Motion & Dynamics */
+  --lg-transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --lg-transition-normal: 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Light Appearance */
+[data-theme="light"] {
+  --lg-bg-canvas: #f5f5f7;
+  --lg-surface-base: #ffffff;
+  --lg-surface-elevated: #e8e8ed;
+  --lg-surface-overlay: rgba(245, 245, 247, 0.85);
+
+  --lg-glass-bg: rgba(255, 255, 255, 0.65);
+  --lg-glass-bg-hover: rgba(255, 255, 255, 0.78);
+  --lg-glass-bg-active: rgba(255, 255, 255, 0.90);
+  --lg-glass-border: rgba(0, 0, 0, 0.08);
+  --lg-glass-highlight: rgba(255, 255, 255, 0.75);
+  --lg-glass-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.08);
+  --lg-glass-shadow-sm: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+  --lg-glass-shadow-lg: 0 16px 36px 0 rgba(0, 0, 0, 0.12);
+  --lg-glass-blur: blur(24px) saturate(190%);
+
+  --lg-glass-specular: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.25) 35%,
+    rgba(255, 255, 255, 0.00) 100%
+  );
+
+  --lg-text-primary: #1d1d1f;
+  --lg-text-secondary: #515154;
+  --lg-text-muted: #86868b;
+
+  --lg-accent: #0071e3;
+  --lg-accent-glow: rgba(0, 113, 227, 0.20);
+  --lg-accent-tint: rgba(0, 113, 227, 0.10);
+  --lg-accent-border: rgba(0, 113, 227, 0.30);
+}
+
+/* ==========================================================================
+   LIQUID GLASS REUSABLE UTILITY CLASSES
+   ========================================================================== */
+
+.lg-glass {
+  background: var(--lg-glass-bg);
+  backdrop-filter: var(--lg-glass-blur);
+  -webkit-backdrop-filter: var(--lg-glass-blur);
+  border: 1px solid var(--lg-glass-border);
+  box-shadow: var(--lg-glass-shadow);
+  position: relative;
+}
+
+.lg-glass::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--lg-glass-highlight);
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.lg-glass-surface {
+  background: var(--lg-glass-bg);
+  backdrop-filter: var(--lg-glass-blur);
+  -webkit-backdrop-filter: var(--lg-glass-blur);
+  border: 1px solid var(--lg-glass-border);
+  border-radius: var(--lg-radius-xl);
+  box-shadow: var(--lg-glass-shadow);
+}
+
+/* Glass Buttons */
+.lg-glass-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  font-family: var(--lg-font-sans);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--lg-text-primary);
+  background: var(--lg-glass-bg);
+  border: 1px solid var(--lg-glass-border);
+  border-radius: var(--lg-radius-capsule);
+  cursor: pointer;
+  transition: background var(--lg-transition-fast), transform var(--lg-transition-fast), border-color var(--lg-transition-fast);
+  outline: none;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.lg-glass-btn:hover:not(:disabled) {
+  background: var(--lg-glass-bg-hover);
+  border-color: var(--lg-glass-highlight);
+}
+
+.lg-glass-btn:active:not(:disabled) {
+  transform: scale(0.97);
+  background: var(--lg-glass-bg-active);
+}
+
+.lg-glass-btn:focus-visible {
+  box-shadow: 0 0 0 2px var(--lg-accent);
+}
+
+.lg-glass-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.lg-glass-btn-primary {
+  background: var(--lg-accent);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 8px var(--lg-accent-glow);
+}
+
+.lg-glass-btn-primary:hover:not(:disabled) {
+  background: #1a85ff;
+  border-color: transparent;
+}
+
+.lg-glass-btn-destructive {
+  background: var(--lg-danger-tint);
+  color: var(--lg-danger);
+  border-color: rgba(255, 69, 58, 0.3);
+}
+
+.lg-glass-btn-destructive:hover:not(:disabled) {
+  background: rgba(255, 69, 58, 0.25);
+  border-color: var(--lg-danger);
+}
+
+/* Glass Input Capsule */
+.lg-glass-input {
+  background: var(--lg-glass-bg);
+  backdrop-filter: var(--lg-glass-blur);
+  -webkit-backdrop-filter: var(--lg-glass-blur);
+  border: 1px solid var(--lg-glass-border);
+  border-radius: var(--lg-radius-capsule);
+  padding: 10px 18px;
+  color: var(--lg-text-primary);
+  font-family: var(--lg-font-sans);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color var(--lg-transition-normal), box-shadow var(--lg-transition-normal);
+}
+
+.lg-glass-input:focus {
+  border-color: var(--lg-accent);
+  box-shadow: 0 0 0 3px var(--lg-accent-glow);
+}
+
+.lg-glass-input::placeholder {
+  color: var(--lg-text-muted);
+}
+
+/* Content Surface (NON-GLASS / CLEAN CALM MATTE) */
+.lg-content-surface {
+  background: var(--lg-surface-base);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--lg-radius-lg);
+  color: var(--lg-text-primary);
+}
+
+[data-theme="light"] .lg-content-surface {
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+/* Status Indicator Pills */
+.lg-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border-radius: var(--lg-radius-capsule);
+  background: var(--lg-glass-bg);
+  border: 1px solid var(--lg-glass-border);
+  color: var(--lg-text-secondary);
+}
+
+.lg-status-pill.ready { color: var(--lg-text-secondary); }
+.lg-status-pill.generating { color: var(--lg-accent); border-color: var(--lg-accent-border); }
+.lg-status-pill.complete { color: var(--lg-success); border-color: rgba(48, 209, 88, 0.3); }
+.lg-status-pill.error { color: var(--lg-danger); border-color: rgba(255, 69, 58, 0.3); }
+
+/* ==========================================================================
+   ACCESSIBILITY & REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Backdrop-Filter Fallback */
+@supports not (backdrop-filter: blur(10px)) {
+  .lg-glass,
+  .lg-glass-surface,
+  .lg-glass-input,
+  .lg-glass-btn {
+    background: var(--lg-surface-elevated) !important;
+    opacity: 0.96 !important;
+  }
+}

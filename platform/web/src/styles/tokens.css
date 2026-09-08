@@ -1,0 +1,193 @@
+/**
+ * 301 Super AI Workbench — Design Tokens
+ * Liquid Glass Dark Architecture · RGB Neon Cosmic Atmosphere
+ */
+
+:root {
+  /* ==========================================================================
+     CORE VOID & MIDNIGHT SURFACES
+     ========================================================================== */
+  --bg-0: #030511;
+  --bg-1: #060919;
+  --bg-2: #0b1028;
+  --bg-3: #111738;
+  --bg-void: var(--bg-0);
+  --bg-app: var(--bg-1);
+  --bg-panel: var(--bg-2);
+
+  /* ==========================================================================
+     5-LEVEL LIQUID GLASS HIERARCHY
+     ========================================================================== */
+  --glass-1: rgba(6, 10, 26, 0.45);   /* Level 1: Underlay / Ambient Mesh */
+  --glass-2: rgba(9, 14, 32, 0.72);   /* Level 2: Sidebar & Shell Surfaces */
+  --glass-3: rgba(12, 18, 42, 0.62);  /* Level 3: Standard Cards / Views */
+  --glass-4: rgba(10, 15, 36, 0.86);  /* Level 4: Active Cards / Composer */
+  --glass-5: rgba(7, 11, 28, 0.95);   /* Level 5: Floating Menus / Modals */
+
+  /* Glass Component Aliases */
+  --glass-base: var(--glass-2);
+  --glass-sidebar: var(--glass-2);
+  --glass-card: var(--glass-3);
+  --glass-card-hover: rgba(22, 32, 70, 0.78);
+  --glass-active: rgba(30, 44, 92, 0.88);
+  --glass-input: rgba(6, 9, 24, 0.85);
+  --glass-subtle: rgba(255, 255, 255, 0.04);
+  --glass-modal: var(--glass-5);
+
+  /* ==========================================================================
+     HIGH-CONTRAST TYPOGRAPHY
+     ========================================================================== */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --text-muted: #475569;
+  --text-inverted: #030511;
+
+  /* Font Families */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* ==========================================================================
+     COSMIC RGB NEON ACCENTS & GLOWS
+     ========================================================================== */
+  /* Cyan Neon */
+  --neon-cyan: #00f0ff;
+  --neon-cyan-dim: #06b6d4;
+  --neon-cyan-glow: rgba(0, 240, 255, 0.45);
+  --neon-cyan-subtle: rgba(0, 240, 255, 0.12);
+
+  /* Violet Neon */
+  --neon-violet: #8b5cf6;
+  --neon-purple: #a855f7;
+  --neon-violet-glow: rgba(139, 92, 246, 0.45);
+  --neon-violet-subtle: rgba(139, 92, 246, 0.12);
+
+  /* Electric Blue */
+  --neon-blue: #3b82f6;
+  --neon-blue-glow: rgba(59, 130, 246, 0.45);
+  --neon-blue-subtle: rgba(59, 130, 246, 0.12);
+
+  /* Emerald Green / Matrix */
+  --neon-green: #10b981;
+  --neon-green-bright: #00ff88;
+  --neon-green-glow: rgba(0, 255, 136, 0.40);
+  --neon-green-subtle: rgba(16, 185, 129, 0.12);
+
+  /* Sunset Amber */
+  --neon-amber: #f59e0b;
+  --neon-amber-glow: rgba(245, 158, 11, 0.40);
+
+  /* Danger Red */
+  --neon-red: #ef4444;
+  --neon-red-glow: rgba(239, 68, 68, 0.40);
+
+  /* Magenta / Hot Pink */
+  --neon-magenta: #ec4899;
+  --neon-magenta-glow: rgba(236, 72, 153, 0.40);
+
+  /* ==========================================================================
+     BORDERS & GRADIENTS
+     ========================================================================== */
+  --border-glass: rgba(139, 92, 246, 0.18);
+  --border-glass-strong: rgba(168, 85, 247, 0.35);
+  --border-glass-bright: rgba(0, 240, 255, 0.40);
+  --border-neon-cyan: rgba(0, 240, 255, 0.55);
+  --border-neon-violet: rgba(168, 85, 247, 0.55);
+  --border-neon-blue: rgba(59, 130, 246, 0.55);
+
+  --border-gradient-rgb: linear-gradient(
+    135deg,
+    rgba(168, 85, 247, 0.7) 0%,
+    rgba(59, 130, 246, 0.5) 50%,
+    rgba(0, 240, 255, 0.7) 100%
+  );
+
+  --gradient-neon-cyan-violet: linear-gradient(135deg, var(--neon-cyan) 0%, var(--neon-violet) 100%);
+  --gradient-glass-surface: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.01) 100%);
+
+  /* ==========================================================================
+     LAYERED SHADOWS & GLOWS
+     ========================================================================== */
+  --glow-top: inset 0 1px 1px 0 rgba(255, 255, 255, 0.16);
+  --glow-subtle: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --glass-reflection: inset 0 1px 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.3);
+
+  --shadow-glass: 0 18px 60px rgba(0, 0, 0, 0.5);
+  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.38);
+  --shadow-elevated: 0 24px 64px rgba(0, 0, 0, 0.75);
+  --shadow-neon-cyan: 0 0 22px -3px rgba(0, 240, 255, 0.45);
+  --shadow-neon-violet: 0 0 22px -3px rgba(168, 85, 247, 0.45);
+  --shadow-neon-blue: 0 0 22px -3px rgba(59, 130, 246, 0.45);
+
+  /* ==========================================================================
+     BLUR TOKENS
+     ========================================================================== */
+  --blur-xs: 4px;
+  --blur-sm: 8px;
+  --blur-md: 18px;
+  --blur-lg: 28px;
+  --blur-xl: 40px;
+
+  /* ==========================================================================
+     RADII TOKENS
+     ========================================================================== */
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-hero: 32px;
+  --radius-pill: 9999px;
+
+  /* ==========================================================================
+     RESPONSIVE GRID VARIABLES
+     ========================================================================== */
+  --grid-columns: 12;
+  --grid-gutter: 20px;
+  --grid-gutter-sm: 12px;
+  --grid-gutter-lg: 28px;
+
+  --sidebar-width: 320px;
+  --inspector-width: 340px;
+
+  /* Arena Grid: Adaptive for Model Comparison Cards */
+  --arena-grid-columns: repeat(auto-fit, minmax(320px, 1fr));
+  --arena-grid-gap: 20px;
+
+  /* Responsive Breakpoints */
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+
+  /* Max Container Widths */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1600px;
+
+  /* ==========================================================================
+     TRANSITIONS & MOTION
+     ========================================================================== */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-spring: 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ==========================================================================
+     Z-INDEX HIERARCHY
+     ========================================================================== */
+  --z-underlay: -1;
+  --z-base: 1;
+  --z-card: 10;
+  --z-sticky: 100;
+  --z-sidebar: 500;
+  --z-header: 600;
+  --z-modal-backdrop: 900;
+  --z-modal: 1000;
+  --z-toast: 1100;
+  --z-tooltip: 1200;
+}
