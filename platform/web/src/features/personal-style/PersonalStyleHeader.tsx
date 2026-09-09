@@ -31,6 +31,8 @@ export const PersonalStyleHeader: React.FC<PersonalStyleHeaderProps> = ({
 
   return (
     <header
+      id="psChatHeader"
+      className="ps-chat-header"
       style={{
         height: '64px',
         minHeight: '64px',
@@ -131,6 +133,7 @@ export const PersonalStyleHeader: React.FC<PersonalStyleHeaderProps> = ({
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span
+              className="ps-header-name"
               style={{
                 color: '#f8fafc',
                 fontWeight: 600,
@@ -246,6 +249,7 @@ export const PersonalStyleHeader: React.FC<PersonalStyleHeaderProps> = ({
 
         {/* Reset Chat Session Button */}
         <button
+          id="psResetBtn"
           type="button"
           onClick={() => void resetSession()}
           title="Reset conversation"

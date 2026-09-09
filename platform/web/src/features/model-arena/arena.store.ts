@@ -84,7 +84,7 @@ export interface ArenaState {
 let activeAbortController: AbortController | null = null;
 
 export const useArenaStore = create<ArenaState>((set, get) => ({
-  prompt: 'Write a quick, optimal binary search function in Python with docstrings and time complexity analysis.',
+  prompt: '',
   models: [...DEFAULT_ARENA_MODELS],
   results: createInitialResults(DEFAULT_ARENA_MODELS),
   activeGeneratingModelId: null,

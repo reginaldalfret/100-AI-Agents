@@ -29,9 +29,15 @@ export default defineConfig({
     {
       name: 'mobile-chrome',
       use: {
-        channel: 'chrome',
-        ...devices['iPhone 13']
+        ...devices['Pixel 7'],
+        channel: 'chrome'
       }
     }
-  ]
+  ],
+  webServer: {
+    command: 'node platform/gateway/src/server.js',
+    url: 'http://127.0.0.1:8300/api/health',
+    reuseExistingServer: true,
+    timeout: 30000
+  }
 });

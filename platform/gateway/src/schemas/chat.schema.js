@@ -6,34 +6,38 @@ export const ChatMessageSchema = z.object({
 });
 
 export const ChatRequestSchema = z.object({
-  agent_id: z.string().optional(),
-  task: z.string().optional(),
-  message: z.string().optional(),
-  prompt: z.string().optional(),
-  stream: z.boolean().optional(),
-  modelMode: z.enum(['auto', 'manual']).optional(),
-  model_override: z.string().optional(),
-  requested_model: z.string().optional(),
-  model: z.string().optional(),
-  messages: z.array(ChatMessageSchema).optional(),
-  session_id: z.string().optional(),
-  conversation_id: z.string().optional(),
-  parameters: z.record(z.string(), z.unknown()).optional(),
-  mode: z.string().optional(),
-  knowledgeMode: z.boolean().optional(),
-  domain: z.string().optional(),
-  tag: z.string().optional(),
-  folder: z.string().optional(),
-  topK: z.number().int().positive().optional(),
+  agent_id: z.string().nullable().optional(),
+  task: z.string().nullable().optional(),
+  message: z.string().nullable().optional(),
+  prompt: z.string().nullable().optional(),
+  stream: z.boolean().nullable().optional(),
+  modelMode: z.enum(['auto', 'manual']).nullable().optional(),
+  model_override: z.string().nullable().optional(),
+  requested_model: z.string().nullable().optional(),
+  model: z.string().nullable().optional(),
+  messages: z.array(ChatMessageSchema).nullable().optional(),
+  session_id: z.string().nullable().optional(),
+  conversation_id: z.string().nullable().optional(),
+  conversationId: z.string().nullable().optional(),
+  original_task: z.string().nullable().optional(),
+  replyTo: z.any().nullable().optional(),
+  parameters: z.record(z.string(), z.unknown()).nullable().optional(),
+  mode: z.string().nullable().optional(),
+  knowledgeMode: z.boolean().nullable().optional(),
+  domain: z.string().nullable().optional(),
+  tag: z.string().nullable().optional(),
+  folder: z.string().nullable().optional(),
+  topK: z.number().int().positive().nullable().optional(),
   attachments: z.array(z.object({
     name: z.string(),
-    type: z.string().optional(),
-    content: z.string().optional(),
-    base64: z.string().optional(),
-    size: z.number().optional()
-  })).optional(),
-  trace_id: z.string().optional()
-}).refine(data => {
+    type: z.string().nullable().optional(),
+    content: z.string().nullable().optional(),
+    base64: z.string().nullable().optional(),
+    data: z.string().nullable().optional(),
+    size: z.number().nullable().optional()
+  })).nullable().optional(),
+  trace_id: z.string().nullable().optional()
+}).passthrough().refine(data => {
   return Boolean(
     data.message ||
     data.prompt ||

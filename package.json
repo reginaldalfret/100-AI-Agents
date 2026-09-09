@@ -20,7 +20,10 @@
     "dev:next": "next dev platform/web",
     "build:next": "next build platform/web",
     "start:next": "next start platform/web",
-    "test:next": "node --test tests/nextjs-migration/*.test.js"
+    "test:next": "node --test tests/nextjs-migration/*.test.js",
+    "db:migrate": "node platform/database/migrations/migrator.js",
+    "db:seed": "node platform/database/seed/seed.js",
+    "test:db": "node --test tests/database/*.test.js"
   },
   "keywords": [
     "super-ai",
@@ -39,6 +42,7 @@
     "express": "^4.19.2",
     "ioredis": "^6.0.0",
     "next": "^16.3.4",
+    "pg": "^8.23.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.3",

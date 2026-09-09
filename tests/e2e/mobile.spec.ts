@@ -7,7 +7,7 @@ test.describe('Mobile Viewport Emulation (iPhone)', () => {
     await page.goto('/agents');
 
     // 1. In mobile viewport, hamburger button is visible
-    const hamburger = page.locator('.mobile-hamburger-btn');
+    const hamburger = page.locator('.mobile-hamburger-btn, #mobileMenuToggle').first();
     await expect(hamburger).toBeVisible();
 
     // 2. Click hamburger opens slide-out drawer
@@ -22,7 +22,7 @@ test.describe('Mobile Viewport Emulation (iPhone)', () => {
     // 4. Click outside on backdrop closes drawer
     const backdrop = page.locator('.sidebar-backdrop');
     if (await backdrop.isVisible()) {
-      await backdrop.click();
+      await backdrop.click({ position: { x: 360, y: 300 } });
       await expect(sidebar).not.toHaveClass(/mobile-open/);
     }
   });

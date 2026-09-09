@@ -1,4 +1,15 @@
-document.addEventListener('DOMContentLoaded', () => {
+function initApp() {
+    // Route detection to guard default workspace activation
+    const initialPath = window.location.pathname.toLowerCase();
+    const isDefaultWorkspaceRoute = initialPath === '/' || initialPath === '/agents' || initialPath === '';
+
+    // If not a default workspace route, immediately remove active from default panels
+    if (!isDefaultWorkspaceRoute) {
+        document.querySelectorAll('.view-panel').forEach(panel => {
+            panel.classList.remove('active');
+        });
+    }
+
     // 1. STATE
     const state = {
         agents: [],
@@ -13,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
         chatHistories: {},
         currentAttachments: [],
         isGenerating: false,
-        activeView: 'agent-workspace',
+        activeView: isDefaultWorkspaceRoute ? 'agent-workspace' : '',
         inspectorOpen: false,
         sidebarOpen: false
     };
@@ -1964,6 +1975,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createNewConversation() {
+        if (window.location.pathname !== '/' && window.location.pathname !== '/agents') {
+            window.history.pushState({}, '', '/');
+        }
         const targetAgent = state.agents.find(a => a.id === 'auto') || state.agents[0];
         state.currentConversationId = null; // Fresh unsaved session
         selectAgent('auto', true);
@@ -1976,6 +1990,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function selectConversation(id) {
         try {
+            if (window.location.pathname !== '/' && window.location.pathname !== '/agents') {
+                window.history.pushState({}, '', '/');
+            }
             const res = await fetch(`/api/chats/${id}`).catch(() => null);
             if (res && res.ok) {
                 const data = await res.json();
@@ -1986,6 +2003,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const matchingAgent = state.agents.find(a => a.id === chat.agentId || a.internalId === chat.agentId || a.agent_id === chat.agentId);
                 if (matchingAgent) {
                     selectAgent(matchingAgent.id, false);
+                } else if (state.activeView !== 'agent-workspace') {
+                    switchMainView('agent-workspace');
                 }
 
                 // Restore model mode
@@ -2205,7 +2224,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
             
-            div.addEventListener('click', () => selectAgent(agent.id, true));
+            div.addEventListener('click', () => {
+                if (window.location.pathname !== '/' && window.location.pathname !== '/agents') {
+                    window.history.pushState({}, '', '/');
+                }
+                selectAgent(agent.id, true);
+            });
             elements.agentList.appendChild(div);
         });
     }
@@ -2236,7 +2260,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Switch view if not on workspace
-        if (state.activeView !== 'agent-workspace') {
+        const p = (window.location.pathname || '').toLowerCase();
+        const isNonWorkspaceRoute = p.startsWith('/arena') || p.startsWith('/personal-style') || p.startsWith('/fine-tuning') || p.startsWith('/finetuning') || p.startsWith('/knowledge') || p.startsWith('/datasets');
+        if (!isNonWorkspaceRoute && state.activeView !== 'agent-workspace') {
             switchMainView('agent-workspace');
         }
         
@@ -4569,7 +4595,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 _debugChunkCount++;
 
                 buffer += decoder.decode(value, { stream: true });
-                const events = buffer.split('\n\n');
+                // Normalize Windows / Cloudflare proxy \r\n to \n for reliable SSE chunk splitting
+                const normalized = buffer.replace(/\r\n/g, '\n');
+                const events = normalized.split('\n\n');
                 buffer = events.pop() || '';
 
 
@@ -4695,6 +4723,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 });
                             }
                         } else if (eventType === 'complete') {
+                            if (parsed.text && !accumulatedText) {
+                                accumulatedText = parsed.text;
+                            }
                             if (!isScopeRedirect) {
                                 textTarget.innerHTML = formatResponse(accumulatedText);
                             }
@@ -4725,7 +4756,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('[STREAM] Streaming error:', err.message, err.stack);
                 if (statusPill && statusPill.parentNode) statusPill.remove();
                 if (!accumulatedText) {
-                    textTarget.innerHTML = `<span style="color:var(--neon-red);">An error occurred connecting to local model inference. Please verify Ollama is active.</span>`;
+                    const isTimeout = err.message?.includes('timeout') || err.message?.includes('Timeout') || err.name === 'TimeoutError';
+                    const isNetworkErr = err.message?.includes('Failed to fetch') || err.message?.includes('NetworkError') || err.message?.includes('network');
+                    let errMsg;
+                    if (isNetworkErr) {
+                        errMsg = 'Cannot reach the gateway server. Please verify the gateway is running on port 8300.';
+                    } else if (isTimeout) {
+                        errMsg = 'The model took too long to respond. The GPU may be loading a large model — please try again.';
+                    } else {
+                        errMsg = 'An error occurred connecting to local model inference. Please verify Ollama is active.';
+                    }
+                    textTarget.innerHTML = `<span style="color:var(--neon-red);">${errMsg}</span>`;
+                } else {
+                    textTarget.innerHTML = formatResponse(accumulatedText) + `<br><span style="color:var(--neon-red);font-size:12px;">⚠ Stream interrupted: ${escapeHtml(err.message || 'Connection lost')}</span>`;
                 }
             }
         } finally {
@@ -4901,10 +4944,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const headerEl = document.getElementById('agentHeader') || elements?.agentHeader;
         if (headerEl) {
-            if (viewIdOrName === 'personalStyleView' || viewIdOrName === 'personalStyle' || viewIdOrName === 'modelArenaView' || viewIdOrName === 'modelArena') {
-                headerEl.style.display = 'none';
-            } else if (viewIdOrName === 'agent-workspace' || viewIdOrName === 'chatView' || viewIdOrName === 'chat') {
+            if (viewIdOrName === 'agent-workspace' || viewIdOrName === 'chatView' || viewIdOrName === 'chat') {
                 headerEl.style.display = '';
+            } else {
+                headerEl.style.display = 'none';
             }
         }
 
@@ -4919,6 +4962,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (viewIdOrName === 'modelsView' || viewIdOrName === 'models') loadModelsView();
         else if (viewIdOrName === 'systemView' || viewIdOrName === 'system') loadSystemView();
+        else if (viewIdOrName === 'modelArenaView' || viewIdOrName === 'modelArena') {
+            if (window.ArenaController && typeof window.ArenaController.renderCards === 'function') {
+                window.ArenaController.renderCards();
+            }
+        }
         
         if (window.innerWidth <= 768) {
             closeSidebar();
@@ -5054,8 +5102,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleSidebar() {
         state.sidebarOpen = !state.sidebarOpen;
         if (state.sidebarOpen) {
-            elements.sidebar.classList.add('open');
-            elements.sidebarOverlay.classList.add('open');
+            elements.sidebar.classList.add('open', 'mobile-open');
+            elements.sidebarOverlay.classList.add('open', 'active');
         } else {
             closeSidebar();
         }
@@ -5063,8 +5111,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function closeSidebar() {
         state.sidebarOpen = false;
-        elements.sidebar.classList.remove('open');
-        elements.sidebarOverlay.classList.remove('open');
+        elements.sidebar.classList.remove('open', 'mobile-open');
+        elements.sidebarOverlay.classList.remove('open', 'active');
     }
 
     // 10. EVENT LISTENERS & INIT
@@ -5923,7 +5971,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Input and send controls
             const sendBtn = document.getElementById('psSendBtn');
-            const chatInput = document.getElementById('psChatInput');
+            const chatInput = document.getElementById('psInput') || document.getElementById('psChatInput');
             if (sendBtn && chatInput) {
                 sendBtn.addEventListener('click', () => {
                     if (this.isGenerating) {
@@ -5939,6 +5987,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (!this.isGenerating) this.sendMessage();
                     }
                 });
+            }
+
+            // Reset button in input bar or header
+            const resetBtn = document.getElementById('psResetBtn');
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => this.resetChat());
             }
 
             // Comparison modal buttons
@@ -6042,7 +6096,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
 
         fillAndSend(text) {
-            const input = document.getElementById('psChatInput');
+            const input = document.getElementById('psInput') || document.getElementById('psChatInput');
             if (input) {
                 input.value = text;
                 this.sendMessage();
@@ -6077,7 +6131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
 
         async sendMessage() {
-            const input = document.getElementById('psChatInput');
+            const input = document.getElementById('psInput') || document.getElementById('psChatInput');
             if (!input || this.isGenerating) return;
             const text = input.value.trim();
             if (!text) return;
@@ -6223,7 +6277,7 @@ document.addEventListener('DOMContentLoaded', () => {
         async runComparison() {
             const baseBox = document.getElementById('baseGemmaResponseBox');
             const styleBox = document.getElementById('styleGemmaResponseBox');
-            const input = document.getElementById('psChatInput');
+            const input = document.getElementById('psInput') || document.getElementById('psChatInput');
             const prompt = (input && input.value.trim()) ? input.value.trim() : 'What are you doing this weekend?';
 
             if (baseBox) baseBox.textContent = 'Generating Base Gemma response...';
@@ -6581,17 +6635,42 @@ document.addEventListener('DOMContentLoaded', () => {
     if (window.ftApp) window.ftApp.init();
     if (window.psLabApp) window.psLabApp.init();
 
-    // Route dispatch based on pathname
-    const path = window.location.pathname.toLowerCase();
-    if (path === '/arena' || path.startsWith('/arena')) {
-        switchMainView('modelArenaView');
-    } else if (path === '/personal-style' || path.startsWith('/personal-style')) {
-        switchMainView('personalStyleView');
-    } else if (path === '/fine-tuning' || path.startsWith('/fine-tuning') || path === '/finetuning') {
-        switchMainView('finetuningView');
-    } else if (path === '/knowledge' || path.startsWith('/knowledge')) {
-        switchMainView('knowledgeView');
-    } else if (path === '/datasets' || path.startsWith('/datasets')) {
-        switchMainView('finetuningView');
+    // Wire navigation buttons
+    const navKnowledgeBtn = document.getElementById('navKnowledgeBtn');
+    if (navKnowledgeBtn) {
+        navKnowledgeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            switchMainView('knowledgeView');
+        });
     }
-});
+
+    // Client-side Route Dispatcher
+    function dispatchRoute() {
+        const path = window.location.pathname.toLowerCase();
+        if (path === '/arena' || path.startsWith('/arena')) {
+            switchMainView('modelArenaView');
+        } else if (path === '/personal-style' || path.startsWith('/personal-style')) {
+            switchMainView('personalStyleView');
+        } else if (path === '/fine-tuning' || path.startsWith('/fine-tuning') || path === '/finetuning') {
+            switchMainView('finetuningView');
+        } else if (path === '/knowledge' || path.startsWith('/knowledge')) {
+            switchMainView('knowledgeView');
+        } else if (path === '/datasets' || path.startsWith('/datasets')) {
+            switchMainView('finetuningView');
+            if (window.ftApp && typeof window.ftApp.switchTab === 'function') {
+                window.ftApp.switchTab('datasetsTab');
+            }
+        } else {
+            switchMainView('agent-workspace');
+        }
+    }
+
+    dispatchRoute();
+    window.addEventListener('popstate', dispatchRoute);
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}

@@ -30,7 +30,8 @@ export const PersonalStyleLab: React.FC<PersonalStyleLabProps> = ({ onBack }) =>
 
   return (
     <div
-      className="personal-style-lab-root"
+      id="personalStyleView"
+      className="personal-style-lab-root view-panel ps-chat-view-container active"
       style={{
         flex: 1,
         height: '100%',

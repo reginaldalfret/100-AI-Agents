@@ -100,6 +100,8 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
             top: 0;
             bottom: 0;
             left: 0;
+            width: 300px !important;
+            max-width: 80vw !important;
             transform: translateX(-105%);
             transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 100 !important;

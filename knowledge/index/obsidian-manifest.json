@@ -1,6 +1,6 @@
 {
   "vaultPath": "E:\\Smart Automation\\100-AI-Agents\\knowledge\\obsidian-vault",
-  "updatedAt": "2026-09-08T07:18:01.185Z",
+  "updatedAt": "2026-09-09T09:17:42.286Z",
   "lastSync": "2026-09-07T08:45:40.137Z",
   "totalNotes": 7,
   "totalChunks": 18,
@@ -35,7 +35,7 @@
         ]
       },
       "chunkCount": 3,
-      "indexedAt": "2026-09-08T07:18:01.177Z"
+      "indexedAt": "2026-09-09T09:17:42.278Z"
     },
     "02-Models/Ollama.md": {
       "title": "Ollama",
@@ -67,7 +67,7 @@
         ]
       },
       "chunkCount": 3,
-      "indexedAt": "2026-09-08T07:18:01.174Z"
+      "indexedAt": "2026-09-09T09:17:42.272Z"
     },
     "04-Fine-Tuning/QLoRA.md": {
       "title": "QLoRA",
@@ -99,7 +99,7 @@
         ]
       },
       "chunkCount": 3,
-      "indexedAt": "2026-09-08T07:18:01.159Z"
+      "indexedAt": "2026-09-09T09:17:42.284Z"
     },
     "06-Mobile-LLM/Mobile LLM Research.md": {
       "title": "Mobile LLM Research",
@@ -130,7 +130,7 @@
         ]
       },
       "chunkCount": 2,
-      "indexedAt": "2026-09-08T07:18:01.183Z"
+      "indexedAt": "2026-09-09T09:17:42.274Z"
     },
     "07-Quantization/Quantization.md": {
       "title": "Quantization",
@@ -162,7 +162,7 @@
         ]
       },
       "chunkCount": 3,
-      "indexedAt": "2026-09-08T07:18:01.181Z"
+      "indexedAt": "2026-09-09T09:17:42.281Z"
     },
     "12-Cybersecurity/Cybersecurity.md": {
       "title": "Cybersecurity",
@@ -193,7 +193,7 @@
         ]
       },
       "chunkCount": 2,
-      "indexedAt": "2026-09-08T07:18:01.168Z"
+      "indexedAt": "2026-09-09T09:17:42.276Z"
     },
     "13-Healthcare/Healthcare.md": {
       "title": "Healthcare",
@@ -224,19 +224,10 @@
         ]
       },
       "chunkCount": 2,
-      "indexedAt": "2026-09-08T07:18:01.170Z"
+      "indexedAt": "2026-09-09T09:17:42.259Z"
     }
   },
   "fileChunks": {
-    "04-Fine-Tuning/QLoRA.md": [
-      "obsidian_ec0a61e31d695c63_chk_0000",
-      "obsidian_ec0a61e31d695c63_chk_0001",
-      "obsidian_ec0a61e31d695c63_chk_0002"
-    ],
-    "12-Cybersecurity/Cybersecurity.md": [
-      "obsidian_6dee2c05fb4fc802_chk_0000",
-      "obsidian_6dee2c05fb4fc802_chk_0001"
-    ],
     "13-Healthcare/Healthcare.md": [
       "obsidian_c7b6dcda6c95f645_chk_0000",
       "obsidian_c7b6dcda6c95f645_chk_0001"
@@ -245,6 +236,14 @@
       "obsidian_6e04464cf444e28a_chk_0000",
       "obsidian_6e04464cf444e28a_chk_0001",
       "obsidian_6e04464cf444e28a_chk_0002"
+    ],
+    "06-Mobile-LLM/Mobile LLM Research.md": [
+      "obsidian_177b1a6a84d9f3ee_chk_0000",
+      "obsidian_177b1a6a84d9f3ee_chk_0001"
+    ],
+    "12-Cybersecurity/Cybersecurity.md": [
+      "obsidian_6dee2c05fb4fc802_chk_0000",
+      "obsidian_6dee2c05fb4fc802_chk_0001"
     ],
     "01-Architecture/301 Architecture.md": [
       "obsidian_d84d2ff2eee4b42c_chk_0000",
@@ -256,9 +255,10 @@
       "obsidian_f3b7b72c59b398df_chk_0001",
       "obsidian_f3b7b72c59b398df_chk_0002"
     ],
-    "06-Mobile-LLM/Mobile LLM Research.md": [
-      "obsidian_177b1a6a84d9f3ee_chk_0000",
-      "obsidian_177b1a6a84d9f3ee_chk_0001"
+    "04-Fine-Tuning/QLoRA.md": [
+      "obsidian_ec0a61e31d695c63_chk_0000",
+      "obsidian_ec0a61e31d695c63_chk_0001",
+      "obsidian_ec0a61e31d695c63_chk_0002"
     ]
   }
 }

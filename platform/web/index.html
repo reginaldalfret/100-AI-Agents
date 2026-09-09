@@ -778,7 +778,8 @@
             <!-- Bottom Input Bar -->
             <div class="ps-input-bar" id="psInputBar">
               <button class="ps-attach-btn" id="btnPsAttach" title="Attach / Actions">+</button>
-              <input type="text" id="psChatInput" placeholder="Type a message..." autocomplete="off">
+              <input type="text" id="psInput" placeholder="Type a message..." autocomplete="off">
+              <button class="ps-icon-btn" id="psResetBtn" title="Reset chat" style="background:none;border:none;color:var(--text-tertiary,#94a3b8);cursor:pointer;font-size:1.1rem;padding:0 6px;">↺</button>
               <button class="ps-send-btn" id="psSendBtn" title="Send message">
                 <span id="psSendIcon">➤</span>
               </button>
@@ -788,10 +789,8 @@
 
           <!-- Compatibility Fallback Buttons for Tests & Automation -->
           <div style="display:none;" aria-hidden="true">
-            <input type="text" id="psInput">
             <button id="btnPsNewChat"></button>
             <button id="btnPsReset"></button>
-            <button id="psResetBtn"></button>
             <button id="btnPsStop"></button>
           </div>
 

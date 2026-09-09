@@ -41,7 +41,7 @@ export const KnowledgeView: React.FC = () => {
   const [selectedDoc, setSelectedDoc] = useState<KnowledgeDoc>(INITIAL_DOCS[0]);
 
   return (
-    <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div id="knowledgeView" className="view-panel" style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <header>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <span style={{ fontSize: '24px' }}>📚</span>

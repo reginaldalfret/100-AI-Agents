@@ -102,6 +102,7 @@ export const PersonalStyleInput = forwardRef<PersonalStyleInputRef, PersonalStyl
           }}
         >
           <input
+            id="psInput"
             ref={inputRef}
             type="text"
             value={inputValue}
@@ -125,6 +126,7 @@ export const PersonalStyleInput = forwardRef<PersonalStyleInputRef, PersonalStyl
 
         {/* Send / Stop Button */}
         <button
+          id="psSendBtn"
           type="button"
           onClick={handleSend}
           disabled={isSendDisabled}

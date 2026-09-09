@@ -59,6 +59,7 @@ import {
 } from "./schemas/index.js";
 import { jobRepository, gpuLock } from "../../jobs/index.js";
 import { handleOpenAIRoutes } from "./openai/index.js";
+import { checkDbHealth } from "../../database/health.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -89,7 +90,7 @@ async function getAvailableModelsCached() {
     return cachedAvailableModels;
   }
   try {
-    const tagsRes = await fetch("http://127.0.0.1:11434/api/tags", { signal: AbortSignal.timeout(1200) }).catch(() => null);
+    const tagsRes = await fetch("http://127.0.0.1:11434/api/tags", { signal: AbortSignal.timeout(5000) }).catch(() => null);
     if (tagsRes && tagsRes.ok) {
       const tagsData = await tagsRes.json();
       cachedAvailableModels = (tagsData.models || []).map(m => m.name || m.model);
@@ -309,6 +310,19 @@ const server = http.createServer(async (req, res) => {
     const agents = registry.agents || [];
 
     if (req.method === "GET" && (url.pathname === "/api/health" || url.pathname === "/health")) {
+      let dbHealth = { status: "UNAVAILABLE", latencyMs: 0 };
+      try {
+        const check = await checkDbHealth();
+        if (check && typeof check === "object") {
+          dbHealth = {
+            status: check.status || "UNAVAILABLE",
+            latencyMs: typeof check.latencyMs === "number" ? check.latencyMs : 0
+          };
+        }
+      } catch {
+        dbHealth = { status: "UNAVAILABLE", latencyMs: 0 };
+      }
+
       json(res, 200, {
         status: "READY",
         service: "301-super-ai-gateway",
@@ -316,7 +330,11 @@ const server = http.createServer(async (req, res) => {
         gateway: "READY",
         ollama: "READY",
         python: pythonClient.circuit.state === "OPEN" ? "DEGRADED" : "READY",
-        database: "READY",
+        database: dbHealth.status,
+        db: {
+          status: dbHealth.status,
+          latencyMs: dbHealth.latencyMs
+        },
         rag: "READY",
         agents: "READY",
         total_agents: agents.length,
@@ -1583,6 +1601,21 @@ const server = http.createServer(async (req, res) => {
           }
         };
 
+        // SSE keepalive heartbeat — prevents Cloudflare tunnel, reverse proxies,
+        // and browser fetch from timing out during long model-loading phases.
+        // SSE comment lines (":ping") are silently ignored by EventSource clients.
+        const heartbeatInterval = setInterval(() => {
+          if (res.writableEnded || res.closed || res.destroyed) {
+            clearInterval(heartbeatInterval);
+            return;
+          }
+          try {
+            res.write(`:ping ${Date.now()}\n\n`);
+          } catch {
+            clearInterval(heartbeatInterval);
+          }
+        }, 15000);
+
         const requestId = payload.trace_id || `req_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
 
         sendSSE("status", {
@@ -1613,6 +1646,7 @@ const server = http.createServer(async (req, res) => {
         });
 
         req.on("close", () => {
+          clearInterval(heartbeatInterval);
           modelStreamer.cancelStream(requestId);
         });
         
@@ -1725,6 +1759,7 @@ const server = http.createServer(async (req, res) => {
                 },
                 external_calls: 0
               });
+              clearInterval(heartbeatInterval);
               res.end();
               return;
             }
@@ -1787,6 +1822,7 @@ const server = http.createServer(async (req, res) => {
               citations: knowledgeCitations,
               sources: knowledgeSources
             });
+            clearInterval(heartbeatInterval);
             res.end();
             return;
           }
@@ -1837,9 +1873,11 @@ const server = http.createServer(async (req, res) => {
                   sources: knowledgeSources,
                   external_calls: 0
                 });
+                clearInterval(heartbeatInterval);
                 res.end();
               },
               onError: (err) => {
+                clearInterval(heartbeatInterval);
                 sendSSE("error", {
                   message: err.message,
                   status: "error"
@@ -1848,6 +1886,7 @@ const server = http.createServer(async (req, res) => {
               }
             });
         } catch (streamErr) {
+          clearInterval(heartbeatInterval);
           let errorStatus = "INFERENCE_FAILED";
           if (streamErr.message.includes("status 404")) {
             errorStatus = "MODEL_NOT_FOUND";

@@ -79,6 +79,7 @@ export const PersonalStyleChat: React.FC<PersonalStyleChatProps> = ({ onSelectPr
 
       {/* Intrinsic Privacy Disclaimer Pill */}
       <div
+        className="ps-privacy-disclaimer"
         style={{
           alignSelf: 'center',
           maxWidth: '92%',
