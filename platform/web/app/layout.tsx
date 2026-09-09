@@ -1,4 +1,5 @@
 import React from 'react';
+import '../styles.css';
 import '../src/styles/tokens.css';
 import '../src/styles/main.css';
 import '../src/styles/liquid-glass.css';
